@@ -2608,6 +2608,8 @@ async function reminderAction(e){
 }
 ["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); } });
 function downloadIcs(time){
+  let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
+  if(framed){ toast("Nesta página de pré-visualização os downloads são bloqueados. No app instalado, este botão gera o lembrete do calendário."); return; }
   const [hh,mm]=time.split(":"); const d=new Date(); const pad=n=>String(n).padStart(2,"0");
   const ymd=`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
