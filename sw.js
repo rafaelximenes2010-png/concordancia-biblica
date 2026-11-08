@@ -1,6 +1,6 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "sola-v32";
+const CACHE = "sola-v33";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json", "./docs/index.json",
   "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png"];
@@ -30,8 +30,11 @@ self.addEventListener("fetch", e => {
     return;
   }
   // App: rede primeiro (para receber atualizações), cópia guardada se estiver offline
-  e.respondWith(fetch(e.request).then(res => {
-    if (res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+  // Página e arquivos do app sempre conferidos no servidor (ignora o cache de 10 min do GitHub Pages)
+  const fresh = e.request.mode === "navigate" || /(\/|\.html|\.webmanifest|index\.json)$/.test(url.pathname);
+  const req = fresh ? fetch(url.href, { cache: "no-cache", credentials: "same-origin" }) : fetch(e.request);
+  e.respondWith(req.then(res => {
+    if (res.ok) { const copy=res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
     return res;
   }).catch(() => caches.match(e.request).then(r => r || caches.match("./index.html"))));
 });

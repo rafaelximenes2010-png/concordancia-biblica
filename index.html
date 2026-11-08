@@ -974,9 +974,13 @@ dialog.reader.has-sel .reader-nav{display:none}
   .act-chip{padding:7px 12px;font-size:14px}
 }
 
-.sola-verse{text-align:center;padding:20px 18px}
+.sola-verse{text-align:center!important;padding:20px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.sola-verse blockquote,.sola-verse figcaption{text-align:center!important;width:100%}
 .sola-verse blockquote{font-size:22px}
 .sola-verse::after{right:50%;transform:translateX(50%);top:-50px;width:220px;height:160px}
+
+[data-theme="dark"] .news-banner{background:#2a2414!important;color:#f4f1ea!important;border-color:#b8892f!important}
+[data-theme="dark"] .news-banner strong{color:#f3d48a}
 </style>
 </head>
 <body>
@@ -4442,7 +4446,12 @@ async function checkUpdate(manual){
   }catch(e){ if(manual) st.textContent="Não foi possível verificar agora."; }
 }
 $("#cfgUpdate").addEventListener("click",()=>checkUpdate(true));
-if("serviceWorker" in navigator){ let reloaded=false; const hadCtl=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded || !hadCtl) return; reloaded=true; toast("App atualizado para a versão mais recente.", 4000); }); }
+if("serviceWorker" in navigator){ let reloaded=false; const hadCtl=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded || !hadCtl) return; reloaded=true;
+    const busy = $("#noteDialog")?.open || document.activeElement?.matches?.("input,textarea");
+    if(busy) toast("Nova versão do SOLA instalada. Feche e abra o app para ver.", 5000); else location.reload(); });
+  /* Procura versão nova ao abrir e ao voltar para o app */
+  navigator.serviceWorker.getRegistration().then(r=>{ if(!r) return; r.update().catch(()=>{});
+    document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") r.update().catch(()=>{}); }); }); }
 paintAvatar();
 /* ---------- Tradução de versículos em outros idiomas (para português ou inglês) ---------- */
 const LANG_PT = { pt:"português", en:"inglês", he:"hebraico", grc:"grego", el:"grego", la:"latim", es:"espanhol", fr:"francês", de:"alemão", nl:"holandês", ru:"russo", zh:"chinês", hu:"húngaro", pl:"polonês", sv:"sueco" };
