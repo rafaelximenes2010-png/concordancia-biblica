@@ -1,0 +1,17 @@
+# Mantém o ramo gh-pages (que publica o app no GitHub Pages) igual ao main.
+name: Publicar app no GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Atualizar gh-pages com o conteúdo do main
+        run: git push --force origin HEAD:refs/heads/gh-pages
