@@ -8,12 +8,22 @@ App de estudo e busca bíblica (PWA): Bíblia completa em várias versões livre
 ## Versões incluídas (`/biblias`)
 | Código | Versão | Licença |
 |---|---|---|
-| BLIVRE | Bíblia Livre — Copyright © Diego Santos, Mario Sérgio e Marco Teles | Creative Commons Atribuição (CC BY) Brasil |
-| KJV | King James Version (1769) | Domínio público |
-| ASV | American Standard Version (1901) | Domínio público |
-| WLC | Westminster Leningrad Codex (hebraico, AT) | Domínio público |
-| TR | Textus Receptus (grego, NT) | Domínio público |
-| VULG | Vulgata Clementina (latim, sem deuterocanônicos) | Domínio público |
+| BLIVRE | Bíblia Livre — Copyright © Diego Santos, Mario Sérgio e Marco Teles | Bíblia Livre (BLIVRE), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil. Baseada na tradução de João Ferreira de Almeida (1819). Reprodução permitida desde que mencionados fonte e autores. |
+| KJV | King James Version (1769) | Domínio público. |
+| ASV | American Standard Version (1901) | Domínio público. |
+| WLC | Westminster Leningrad Codex (hebraico, AT) | Domínio público. |
+| TR | Textus Receptus (grego, NT, 1550/1894) | Domínio público. |
+| VULG | Vulgata Clementina (latim) | Domínio público. Livros deuterocanônicos não incluídos neste app. |
+| RV1909 | Reina-Valera 1909 (espanhol) | Domínio público. |
+| MARTIN | Bible David Martin 1744 (francês) | Domínio público. |
+| ELB1905 | Elberfelder 1905 (alemão) | Domínio público. |
+| SV | Statenvertaling (holandês) | Domínio público. Livros apócrifos não incluídos neste app. |
+| SYNOD | Tradução Sinodal (russo) | Domínio público. Livros deuterocanônicos não incluídos neste app. |
+| CUV | 和合本 Chinese Union Version 1919 (chinês tradicional) | Domínio público. |
+| VAMVAS | Neophytos Vamvas 1850 (grego moderno) | Domínio público. |
+| KAROLI | Károli revisada 1908 (húngaro) | Domínio público. |
+| GDANSKA | Biblia Gdańska 1881 (polonês) | Domínio público. |
+| SWE1917 | Bíblia sueca de 1917 | Domínio público. Livros apócrifos não incluídos neste app. |
 
 Textos obtidos de [scrollmapper/bible_databases](https://github.com/scrollmapper/bible_databases) (MIT), que os reúne a partir de eBible.org/CrossWire.
 Versões como ARA, ARC, NVI, NAA e NTLH têm direitos autorais e só podem ser incluídas com licença das detentoras (SBB, Biblica etc.).

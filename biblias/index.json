@@ -58,5 +58,105 @@
   "books": 66,
   "verses": 31442,
   "bytes": 3633350
+ },
+ {
+  "code": "RV1909",
+  "name": "Reina-Valera 1909 (espanhol)",
+  "lang": "es",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 4004418
+ },
+ {
+  "code": "MARTIN",
+  "name": "Bible David Martin 1744 (francês)",
+  "lang": "fr",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31170,
+  "bytes": 4661676
+ },
+ {
+  "code": "ELB1905",
+  "name": "Elberfelder 1905 (alemão)",
+  "lang": "de",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31104,
+  "bytes": 4397687
+ },
+ {
+  "code": "SV",
+  "name": "Statenvertaling (holandês)",
+  "lang": "nl",
+  "dir": "ltr",
+  "license": "Domínio público. Livros apócrifos não incluídos neste app.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 4386781
+ },
+ {
+  "code": "SYNOD",
+  "name": "Tradução Sinodal (russo)",
+  "lang": "ru",
+  "dir": "ltr",
+  "license": "Domínio público. Livros deuterocanônicos não incluídos neste app.",
+  "books": 66,
+  "verses": 31350,
+  "bytes": 6212124
+ },
+ {
+  "code": "CUV",
+  "name": "和合本 Chinese Union Version 1919 (chinês tradicional)",
+  "lang": "zh",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31104,
+  "bytes": 3292743
+ },
+ {
+  "code": "VAMVAS",
+  "name": "Neophytos Vamvas 1850 (grego moderno)",
+  "lang": "el",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 7643392
+ },
+ {
+  "code": "KAROLI",
+  "name": "Károli revisada 1908 (húngaro)",
+  "lang": "hu",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31170,
+  "bytes": 4248331
+ },
+ {
+  "code": "GDANSKA",
+  "name": "Biblia Gdańska 1881 (polonês)",
+  "lang": "pl",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 4070157
+ },
+ {
+  "code": "SWE1917",
+  "name": "Bíblia sueca de 1917",
+  "lang": "sv",
+  "dir": "ltr",
+  "license": "Domínio público. Livros apócrifos não incluídos neste app.",
+  "books": 66,
+  "verses": 31104,
+  "bytes": 4343557
  }
 ]
