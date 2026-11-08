@@ -658,6 +658,11 @@ p.meta .author-btn{font-size:13px}
 .spotify-box.inner{margin:6px 10px 10px}
 .sp-t{display:flex;gap:6px;align-items:center;margin:0 0 8px;font-size:14px}
 .btn-sp{border-color:#1db95466}
+.btn-pplx{border-color:#20808d88!important;color:#1d6f7a!important}
+[data-theme="dark"] .btn-pplx{color:#6fd3de!important}
+a.link-btn.btn-pplx{border:0;text-decoration:underline}
+.pplx-all{margin:4px 0 12px}
+.pplx-all .btn,.br-links .btn{white-space:normal;max-width:100%;text-align:left}
 .cfg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
 .cfg-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:12px;padding:14px 16px}
 .cfg-card h3{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:17px}
@@ -2199,6 +2204,9 @@ const searchLinks = q => [
   ["Perplexity","https://www.perplexity.ai/search?q="+encodeURIComponent(q)],
   ["Google","https://www.google.com/search?q="+encodeURIComponent(q)]
 ];
+/* Perplexity: pergunta pronta, em português, sobre o comentário de um autor */
+const pplxUrl = (author, ref) => "https://www.perplexity.ai/search?q="+encodeURIComponent(`O que ${author} comenta sobre ${ref}? Explique em português, citando a obra e as fontes, e indique a perspectiva teológica do autor.`);
+const pplxBtn = (author, ref, cls="btn btn-sm btn-pplx") => `<a class="${cls}" href="${esc(pplxUrl(author,ref))}" target="_blank" rel="noopener noreferrer" title="Pesquisar no Perplexity o que ${esc(author)} diz sobre ${esc(ref)}">Perplexity ↗</a>`;
 const extA = (label,url) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗<span class="sr-only"> (abre em nova aba)</span></a>`;
 
 
@@ -2343,7 +2351,7 @@ async function fillCardCommentary(li, force){
     const lim = viewBusca.dataset.mode==="busca" ? 900 : 320;
     const snip=r.text.length>lim ? r.text.slice(0,lim).replace(/\s+\S*$/,"")+"…" : r.text;
     box.innerHTML=`<strong>${esc(info.label)}${r.section?` (v. ${r.from}…)`:""}:</strong> ${esc(snip)}
-      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button></span>`;
+      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button> ${pplxBtn(info.label, refLabel(b,+c,+v), "link-btn")}</span>`;
     box.dataset.ref=`${b}.${c}.${v}`; box.dataset.author=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
     box._shown=snip; box._lang="en"; box._snip=snip; box._label=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
     if(Tr.auto) translateCardCom(li);
@@ -2355,7 +2363,7 @@ async function translateCardCom(li){
   const btn=box.querySelector('[data-act="comtr"]'); if(btn){ btn.disabled=true; btn.textContent="Traduzindo…"; }
   try{ const pt=await Tr.toPt(box._snip);
     box.innerHTML=`<strong>${esc(box._label)}:</strong> ${esc(pt)} <span class="tr-tag" style="display:inline">(tradução automática)</span>
-      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button></span>`;
+      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button> ${pplxBtn(box.dataset.author||"comentaristas reformados", refLabel(...box.dataset.ref.split(".").map((x,i)=>i?+x:x)), "link-btn")}</span>`;
     box._shown=pt; box._lang="pt"; applyTextMarks(box);
   }catch(e){ if(btn){ btn.disabled=false; btn.textContent="Traduzir"; } toast(e.message==="quota"?"Limite diário do tradutor gratuito atingido. Use o Google Tradutor no painel de comentários.":"Não foi possível traduzir agora."); }
 }
@@ -2381,7 +2389,7 @@ async function renderFullCommentaries(v){
       if(!r){ body.innerHTML=`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`; return; }
       const author=list.find(x=>x.id===d.dataset.id)?.label||"Comentário";
       body.innerHTML = `<div class="tr-actions"><button type="button" class="btn btn-sm btn-primary" data-trbtn>Traduzir para o português</button>
-        <button type="button" class="btn btn-sm" data-savecom><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar comentário</button> ${extA("Google Tradutor", translateUrl(r.text))}</div>
+        <button type="button" class="btn btn-sm" data-savecom><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar comentário</button> ${pplxBtn(author, refLabel(v.b,v.c,v.v))} ${extA("Google Tradutor", translateUrl(r.text))}</div>
         <div class="tr-box" data-ref="${v.b}.${v.c}.${v.v}" data-author="${esc(author)}">${comNote(r,v)+comParas(r.text)}</div>`;
       const box=body.querySelector(".tr-box"), btn=body.querySelector("[data-trbtn]");
       btn.addEventListener("click",()=>translateBlock(box, r.text, btn));
@@ -2405,7 +2413,7 @@ async function renderReaderCommentary(v){
     const list=await Comm.available(); const id=box.dataset.id || await Comm.defaultId(); box.dataset.id=id;
     const r=await Comm.forVerse(id,v.b,v.c,v.v);
     box.innerHTML=`<div class="rd-com-head"><select id="rdComSel" aria-label="Escolher comentário">${list.map(c=>`<option value="${c.id}" ${c.id===id?"selected":""}>${esc(c.label)}</option>`).join("")}</select>
-      ${r?`<button type="button" class="btn btn-sm" id="rdTr">Traduzir para o português</button> <button type="button" class="btn btn-sm" id="rdSaveCom"><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar</button>`:""}</div>
+      ${r?`<button type="button" class="btn btn-sm" id="rdTr">Traduzir para o português</button> <button type="button" class="btn btn-sm" id="rdSaveCom"><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar</button>`:""} ${pplxBtn(list.find(x=>x.id===id)?.label||"comentaristas reformados", refLabel(v.b,v.c,v.v))}</div>
       <p class="hint" style="margin:4px 0">Dica: selecione um trecho do comentário para grifá-lo.</p><div class="tr-box" id="rdComBox" data-ref="${v.b}.${v.c}.${v.v}" data-author="${esc(list.find(x=>x.id===id)?.label||"")}">${r?comNote(r,v)+comParas(r.text):`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`}</div>`;
     if(r){ const btn=$("#rdTr"), cb=$("#rdComBox"); btn.addEventListener("click",()=>translateBlock(cb, r.text, btn)); applyTextMarks(cb);
       $("#rdSaveCom").addEventListener("click",()=>Saved.add({ b:v.b,c:v.c,v:v.v, author:cb.dataset.author, text: cb.dataset.state==="pt"?cb._pt:r.text, lang: cb.dataset.state==="pt"?"pt":"en" })); if(Tr.auto) translateBlock($("#rdComBox"), r.text, btn); }
@@ -2422,6 +2430,7 @@ function renderCommentary(){
      <div class="com-links">${searchLinks(q).map(([n,u])=>extA(n,u)).join("")}</div></div>`;
   const hub = BIBLEHUB[v.b] ? extA("BibleHub — comentários clássicos deste versículo", `https://biblehub.com/commentaries/${BIBLEHUB[v.b]}/${v.c}-${v.v}.htm`) : "";
   box.innerHTML = `
+    <div class="pplx-all"><a class="btn btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(`Comentário bíblico de ${ref} segundo autores reformados (Calvino, Matthew Henry, Hernandes Dias Lopes, Augustus Nicodemus e outros). Explique em português, com fontes.`))}" target="_blank" rel="noopener noreferrer">Perguntar ao Perplexity: o que os reformados dizem sobre ${esc(ref)} ↗</a></div>
     <div class="section-title">${esc(ref)} — comentaristas brasileiros</div>
     <p class="com-intro">Autores reformados em português. As obras deles têm direitos autorais, por isso o app não copia o texto: cada botão leva direto ao comentário impresso, às pregações e aos artigos do autor sobre <strong>${esc(ref)}</strong>.</p>
     <div class="br-list">${REFORMED.brazil.map(c=>brItem(c, v)).join("")}</div>
@@ -3769,7 +3778,7 @@ async function renderHlList(){
     + (tms.length?`<div class="section-title" style="margin-top:14px">Trechos de comentários (${tms.length})</div>`+tms.map(m=>`<article class="hl-item" data-tm="${m.id}">
       <div class="hl-item-head"><strong>${esc(refLabel(m.b,m.c,m.v))}</strong> <span class="muted">${esc(m.author)}${m.lang==="pt"?" · tradução automática":""}</span></div>
       <p><mark class="hl hl-${m.color}">${esc(m.text)}</mark></p>
-      <div class="row-actions"><button type="button" class="btn btn-sm" data-hla="tmopen">Abrir versículo</button><a class="btn btn-sm btn-wa" target="_blank" rel="noopener noreferrer" href="${esc(waUrl(`“${m.text.trim()}” — ${m.author}, sobre ${refLabel(m.b,m.c,m.v)}`))}">WhatsApp</a><button type="button" class="btn btn-sm btn-ghost" data-hla="tmdel">Remover</button></div></article>`).join(""):"");
+      <div class="row-actions"><button type="button" class="btn btn-sm" data-hla="tmopen">Abrir versículo</button>${pplxBtn(m.author, refLabel(m.b,m.c,m.v))}<a class="btn btn-sm btn-wa" target="_blank" rel="noopener noreferrer" href="${esc(waUrl(`“${m.text.trim()}” — ${m.author}, sobre ${refLabel(m.b,m.c,m.v)}`))}">WhatsApp</a><button type="button" class="btn btn-sm btn-ghost" data-hla="tmdel">Remover</button></div></article>`).join(""):"");
 }
 $("#hlFilter").addEventListener("click",e=>{ const b=e.target.closest("[data-hf]"); if(b){ hlColorFilter=b.dataset.hf; renderHlList(); } });
 $("#hlList").addEventListener("click",e=>{
@@ -3788,7 +3797,7 @@ function renderSavedList(){
   host.innerHTML = a.map(x=>`<article class="hl-item saved" data-id="${x.id}">
     <div class="hl-item-head"><strong>${esc(x.ref)}</strong> <span class="muted">${esc(x.author)}${x.lang==="pt"?" · tradução automática":" · original em inglês"} · ${esc(new Date(x.at).toLocaleDateString("pt-BR"))}</span></div>
     <div class="saved-text tr-box" data-ref="${x.b}.${x.c}.${x.v}" data-author="${esc(x.author)}" ${x.lang==="pt"?'data-state="pt"':""}>${comParas(x.text)}</div>
-    <div class="row-actions"><button type="button" class="btn btn-sm" data-sa="open">Abrir versículo</button><button type="button" class="btn btn-sm" data-sa="copy">Copiar</button>
+    <div class="row-actions"><button type="button" class="btn btn-sm" data-sa="open">Abrir versículo</button><button type="button" class="btn btn-sm" data-sa="copy">Copiar</button>${pplxBtn(x.author, x.ref)}
       <a class="btn btn-sm btn-wa" target="_blank" rel="noopener noreferrer" href="${esc(waUrl(`${x.author} sobre ${x.ref}:\n\n${x.text.slice(0,1200)}${x.text.length>1200?"…":""}`))}">WhatsApp</a>
       <button type="button" class="btn btn-sm" data-sa="note">Levar para uma nota</button><button type="button" class="btn btn-sm btn-ghost" data-sa="del">Remover</button></div></article>`).join("");
   host.querySelectorAll(".saved-text").forEach(applyTextMarks);
@@ -3814,7 +3823,7 @@ function brItem(c, v){
   ].filter(Boolean);
   return `<div class="br-item${off?" off":""}"><div class="br-head"><h4>${authorBtn(c.name,c.meta)}</h4><span class="tag">Reformado · PT</span></div>
     <p class="meta">${esc(c.meta)}${off?` · obra voltada ao ${c.nt?"Novo":"Antigo"} Testamento`:""}</p>
-    <div class="br-links">${links.map(([n,u])=>`<a class="btn btn-sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)} ↗</a>`).join("")}</div></div>`;
+    <div class="br-links">${pplxBtn(c.name.replace(/ \(em português\)/,""), ref)}${links.map(([n,u])=>`<a class="btn btn-sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)} ↗</a>`).join("")}</div></div>`;
 }
 
 /* ---------- Louvores no Spotify ligados ao tema ---------- */
@@ -3844,7 +3853,7 @@ function spotifyBox(theme, ps, inner){
 /* ---------- Ajuda por seção e explicação dos botões ---------- */
 const HELP = {
   inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Engrenagem ou sua foto","Perfil, configurações, cópia de segurança e atualizações."]]],
-  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Seleciona o versículo e abre o comentário dele em português, logo abaixo."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
+  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Seleciona o versículo e abre o comentário dele em português, logo abaixo."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity","Abre uma pesquisa pronta no Perplexity sobre o que aquele comentarista diz do versículo, com fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
   busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Mostra o comentário logo abaixo do resultado; tocar de novo abre os comentários completos."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
