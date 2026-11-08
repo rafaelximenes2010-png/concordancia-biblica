@@ -936,6 +936,43 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
   dialog.drawer.side{pointer-events:none;z-index:200} dialog.drawer.side .cd-panel{pointer-events:auto}
   .cd-panel{width:min(560px,40vw)}
 }
+
+/* ===== Seleção estilo YouVersion + rolagem lateral ===== */
+.h-scroll{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+.h-scroll::-webkit-scrollbar{display:none}
+.h-scroll > *{flex:none!important;scroll-snap-align:start}
+.cd-foot.h-scroll .btn{min-width:auto;white-space:nowrap}
+.multi-mode .rd-verse::before{display:none}
+.rd-verse.msel{background:none!important;text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:6px;outline:none}
+.rd-verse.msel sup{color:var(--gold)}
+.reader-multi{gap:10px;box-shadow:0 -8px 24px rgba(0,0,0,.12)}
+.rm-top strong{font-size:17px}
+.rm-colors{display:flex;align-items:center;gap:12px;padding:2px 2px}
+.rm-colors .hl-dot{width:34px;height:34px}
+.rm-colors .hl-dot.on{outline:3px solid var(--accent);outline-offset:2px}
+.rm-clear{border:1px solid var(--border);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.act-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--bg);color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;text-decoration:none}
+.act-chip .icon{width:18px;height:18px}
+.act-chip.act-main{background:var(--accent);border-color:var(--accent);color:#fff}
+.act-chip.act-wa{border-color:#25d36688;color:#128c4a}
+dialog.reader.has-sel .reader-nav{display:none}
+/* Nomes dos comentaristas menores */
+.cd-chip{font-size:13.5px!important;padding:6px 12px!important;min-height:34px!important;font-weight:600}
+.cd-lbl{font-size:10px!important}
+.cd-author h3{font-size:19px!important;padding-bottom:6px}
+.cd-top h2{font-size:18px!important}
+.cd-eyebrow{font-size:10px!important}
+
+.cd-chip{font-size:12.5px!important;padding:5px 11px!important;min-height:30px!important}
+.cd-author h3{font-size:17px!important}
+@media (max-width:760px){
+  dialog.reader.has-sel .rd-pick,dialog.reader.has-sel .reader-bar,dialog.reader.has-sel .rd-ext{display:none!important}
+  .reader-multi{padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:8px}
+  .rm-top strong{font-size:15px}
+  .rm-top .btn-icon{min-height:34px;width:34px;height:34px}
+  .rm-colors{gap:10px} .rm-colors .hl-dot{width:28px;height:28px}
+  .act-chip{padding:7px 12px;font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -1619,12 +1656,12 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
       <div id="cdChips" class="cd-chips" role="group" aria-label="Escolha o comentarista"></div>
     </div>
     <div class="cd-body" id="cdBody"></div>
-    <div class="cd-foot" id="cdFoot">
+    <div class="cd-foot h-scroll" id="cdFoot">
       <button type="button" class="btn btn-sm" data-cd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
       <button type="button" class="btn btn-sm" data-cd="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
       <button type="button" class="btn btn-sm" data-cd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
-      <button type="button" class="btn btn-sm" data-cd="multi">Vários</button>
-      <button type="button" class="btn btn-sm" data-cd="all">Mais</button>
+      <button type="button" class="btn btn-sm" data-cd="multi"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Marcar vários</button>
+      <button type="button" class="btn btn-sm" data-cd="all">Mais recursos</button>
     </div>
   </div>
 </dialog>
@@ -1717,13 +1754,23 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
     <button type="button" class="btn btn-sm btn-primary" data-rd="multi"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Selecionar vários</button>
   </div>
   <div class="reader-multi" id="rdMultiBar" hidden>
-    <div class="rm-top"><strong id="rmCount"></strong><button type="button" class="btn btn-sm" data-rm="all">Todos</button><button type="button" class="btn btn-sm btn-primary" data-rm="done">Concluir</button></div>
-    <div class="rm-actions">
-      <button type="button" class="btn btn-sm" data-rm="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
-      <a class="btn btn-sm btn-wa" id="rmWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
-      <button type="button" class="btn btn-sm" data-rm="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
-      <button type="button" class="btn btn-sm" data-rm="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
-      <button type="button" class="btn btn-sm" data-rm="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentário</button>
+    <div class="rm-top"><strong id="rmCount"></strong><button type="button" class="btn btn-icon btn-ghost" data-rm="done" aria-label="Limpar seleção"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+    <div class="rm-colors" role="group" aria-label="Grifar com cor">
+      <button type="button" class="hl-dot hl-y" data-rmc="y" aria-label="Grifar em amarelo"></button>
+      <button type="button" class="hl-dot hl-g" data-rmc="g" aria-label="Grifar em verde"></button>
+      <button type="button" class="hl-dot hl-p" data-rmc="p" aria-label="Grifar em rosa"></button>
+      <button type="button" class="hl-dot hl-b" data-rmc="b" aria-label="Grifar em azul"></button>
+      <button type="button" class="hl-dot hl-o" data-rmc="o" aria-label="Grifar em laranja"></button>
+      <button type="button" class="rm-clear" data-rmc="" aria-label="Remover grifo">✕ cor</button>
+    </div>
+    <div class="rm-actions h-scroll">
+      <button type="button" class="act-chip act-main" data-rm="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentário</button>
+      <button type="button" class="act-chip" data-rm="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
+      <a class="act-chip act-wa" id="rmWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+      <button type="button" class="act-chip" data-rm="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+      <button type="button" class="act-chip" data-rm="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+      <button type="button" class="act-chip" data-rm="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
+      <button type="button" class="act-chip" data-rm="all"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Todos</button>
     </div>
   </div>
 </dialog>
@@ -2341,7 +2388,7 @@ async function renderReader(){
       cmpCh ? `<span class="rd-cmp-text" dir="${cv.dir}" lang="${cv.lang}">${cmpCh[x.v-1]?esc(cmpCh[x.v-1]):"<em>— sem este versículo nesta versão —</em>"}</span>` : ""}</p>`).join("")
     + `<p class="rd-license">${esc(ver.name)}: ${esc(ver.license)}${cv?`<br>${esc(cv.name)}: ${esc(cv.license)}`:""}</p>`;
   if(rd.cmp && !cmpCh.length) el.dlgBody.insertAdjacentHTML("afterbegin",`<div class="notice">${esc(BOOK[rd.b].name)} não existe na versão ${esc(rd.cmp)}.</div>`);
-  rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true; if(typeof Multi!=="undefined" && Multi.on) endMulti();
+  rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true; if(typeof Multi!=="undefined" && Multi.set.size) endMulti();
   if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && (TR_PROXY || ("Translator" in self))) translateReaderChapter("pt", true); }
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
@@ -4285,7 +4332,7 @@ function spotifyBox(theme, ps, inner){
 /* ---------- Ajuda por seção e explicação dos botões ---------- */
 const HELP = {
   inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Círculo azul com aro dourado","Seu perfil e cadastro, configurações (inclusive o tamanho do texto), cópia de segurança e atualizações."],["Navegar rápido","Toque nas abas de baixo para trocar de seção: cada uma guarda onde você parou. Tocar de novo na aba aberta volta ao topo. No app instalado, deslize da borda esquerda para voltar."]]],
-  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Abre o painel de comentários na parte de baixo da tela, e o versículo continua visível em cima. Escolha o comentarista nos botões redondos. Puxe a barrinha para cima para ampliar, para baixo para fechar, ou use ⤢."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
+  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar nos versículos","Marca o versículo (sublinhado pontilhado). Toque em quantos quiser; embaixo aparece a barra com as cores para grifar e as ações: Comentário, Copiar, WhatsApp, Compartilhar, Anotar, Favoritar e Todos. Deslize a fileira de ações para o lado para ver todas. O X limpa a seleção."],["Comentário","Abre o painel de comentários e o versículo continua visível em cima. Escolha o comentarista nos botões redondos."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
   busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Abre a gaveta de comentários ao lado, onde você escolhe o comentarista."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
@@ -4606,11 +4653,15 @@ async function openComDrawer(v, pick){
   if(Drawer.pick.startsWith("c:") && !Drawer.list.some(c=>"c:"+c.id===Drawer.pick)) Drawer.pick = def ? "c:"+def : "b:"+brDefault();
   renderDrawerChips(); renderDrawerBody();
 }
+const SHORT = { "Hernandes Dias Lopes":"Hernandes D. Lopes", "Augustus Nicodemus Lopes":"A. Nicodemus", "Bíblia de Estudo de Genebra":"Genebra", "Russell P. Shedd":"R. Shedd",
+  "William Hendriksen":"Hendriksen", "João Calvino (em português)":"Calvino (PT)", "Série Cultura Bíblica":"Cultura Bíblica", "Heber Carlos de Campos":"Heber C. Campos",
+  "Jamieson, Fausset & Brown":"Jamieson-Fausset-Brown", "Tyndale Open Study Notes":"Tyndale", "Matthew Henry":"Matthew Henry", "Keil & Delitzsch":"Keil & Delitzsch" };
+const shortName = n => SHORT[n] || n;
 function renderDrawerChips(){
   const def=Drawer.def, bdef=brDefault();
-  const chip=(key,label,isDef)=>`<button type="button" class="cd-chip${Drawer.pick===key?" on":""}" data-pick="${esc(key)}" aria-pressed="${Drawer.pick===key}">${esc(label)}${isDef?' <span class="cd-star" title="Seu padrão">★</span>':""}</button>`;
+  const chip=(key,label,isDef)=>`<button type="button" class="cd-chip${Drawer.pick===key?" on":""}" data-pick="${esc(key)}" aria-pressed="${Drawer.pick===key}">${esc(shortName(label))}${isDef?' <span class="cd-star" title="Seu padrão">★</span>':""}</button>`;
   $("#cdChips").innerHTML = (Drawer.list.length?`<div class="cd-row"><span class="cd-lbl">Texto completo (traduzido)</span><div class="cd-scroll">${Drawer.list.map(c=>chip("c:"+c.id,c.label,c.id===def)).join("")}</div></div>`:"")
-    + `<div class="cd-row"><span class="cd-lbl">Brasileiros (links)</span><div class="cd-scroll">${brOrdered().map(c=>chip("b:"+c.name,c.name.replace(/ \(em português\)/," (PT)"),c.name===bdef)).join("")}</div></div>`;
+    + `<div class="cd-row"><span class="cd-lbl">Brasileiros (links)</span><div class="cd-scroll">${brOrdered().map(c=>chip("b:"+c.name,c.name,c.name===bdef)).join("")}</div></div>`;
   $("#cdChips .cd-chip.on")?.scrollIntoView({ inline:"center", block:"nearest" });
 }
 async function renderDrawerBody(){
@@ -4701,130 +4752,45 @@ function multiVerses(){ const ch=Bible.data[rd.t].books[rd.b][rd.c-1]; return [.
 function multiText(withNums=true){ const vs=multiVerses(); const ver=Repo.version(rd.t);
   const body = vs.map(x=>withNums && vs.length>1 ? `${x.v} ${x.text}` : x.text).join(" ");
   return `“${body}”\n— ${multiRef()} (${ver?ver.name:rd.t})`; }
-function startMulti(firstV){
-  Multi.on=true; Multi.set.clear(); if(firstV) Multi.set.add(+firstV);
-  el.dlg.classList.add("multi-mode"); paintMulti();
-  toast("Toque nos versículos para escolher. Depois use Copiar ou WhatsApp.", 3200);
-}
-function endMulti(){ Multi.on=false; Multi.set.clear(); el.dlg.classList.remove("multi-mode");
-  el.dlgBody.querySelectorAll(".rd-verse.msel").forEach(p=>p.classList.remove("msel")); $("#rdMultiBar").hidden=true; }
+function startMulti(firstV){ if(firstV){ Multi.set.add(+firstV); } paintMulti(); }
+function endMulti(){ Multi.set.clear(); paintMulti(); }
 function paintMulti(){
   el.dlgBody.querySelectorAll(".rd-verse").forEach(p=>p.classList.toggle("msel", Multi.set.has(+p.dataset.v)));
-  rdEl.actions.hidden=true; const bar=$("#rdMultiBar"); bar.hidden=false;
-  const n=Multi.set.size;
-  $("#rmCount").textContent = n ? `${multiRef()} · ${n} ${n===1?"versículo":"versículos"}` : "Toque nos versículos";
-  bar.querySelectorAll("[data-rm]:not([data-rm=all]):not([data-rm=done])").forEach(b=>b.disabled=!n);
-  $("#rmWA").classList.toggle("disabled",!n);
-  $("#rmWA").href = n ? waUrl(multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`) : "#";
+  rdEl.actions.hidden=true; const bar=$("#rdMultiBar"); const n=Multi.set.size;
+  bar.hidden=!n; el.dlg.classList.toggle("has-sel", !!n); if(!n) return;
+  $("#rmCount").textContent = `${multiRef()}${n>1?` · ${n} versículos`:""}`;
+  const keys=[...Multi.set].map(x=>`${rd.b}.${rd.c}.${x}`); const cur=Hl.get(keys[0]);
+  bar.querySelectorAll("[data-rmc]").forEach(b=>b.classList.toggle("on", !!b.dataset.rmc && keys.every(k=>Hl.get(k)===b.dataset.rmc)));
+  bar.querySelector('[data-rmc=""]').hidden = !keys.some(k=>Hl.get(k));
+  $("#rmWA").href = waUrl(multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`);
 }
 async function copyText(txt, okMsg){ try{ await navigator.clipboard.writeText(txt); toast(okMsg); }
   catch(e){ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
     try{ document.execCommand("copy"); toast(okMsg); }catch(_){ toast("Não foi possível copiar automaticamente."); } ta.remove(); } }
 $("#rdMultiBar").addEventListener("click",e=>{
+  const c=e.target.closest("[data-rmc]");
+  if(c){ const keys=[...Multi.set].map(x=>`${rd.b}.${rd.c}.${x}`); Hl.set(keys, c.dataset.rmc);
+    toast(c.dataset.rmc?`Grifado: ${multiRef()}.`:"Grifo removido."); return paintMulti(); }
   const b=e.target.closest("[data-rm]"); if(!b) return;
   const a=b.dataset.rm;
   if(a==="done") return endMulti();
   if(a==="all"){ const n=Bible.data[rd.t].books[rd.b][rd.c-1].length; const full=Multi.set.size===n; Multi.set.clear(); if(!full) for(let i=1;i<=n;i++) Multi.set.add(i); return paintMulti(); }
   if(!Multi.set.size) return;
-  if(a==="copy") copyText(multiText(), `${Multi.set.size} ${Multi.set.size===1?"versículo copiado":"versículos copiados"}: ${multiRef()}.`);
-  if(a==="hl") openHlPop(b, [...Multi.set].map(n=>`${rd.b}.${rd.c}.${n}`));
+  if(a==="copy") copyText(multiText(), `Copiado: ${multiRef()}.`);
+  if(a==="share"){ const t=multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`; if(navigator.share) navigator.share({ text:t }).catch(()=>{}); else copyText(t,"Texto copiado para compartilhar."); }
   if(a==="note") openNoteEditor({ type:"estudo", title:`Estudo de ${multiRef()}`, ref:multiRef(), text:multiText()+"\n\n" });
-  if(a==="com") openComDrawer({ t:rd.t, b:rd.b, c:rd.c, v:Math.min(...Multi.set), text:multiVerses()[0].text });
+  if(a==="fav"){ multiVerses().forEach(x=>toggleFav({ t:rd.t, b:rd.b, c:rd.c, v:x.v, text:x.text })); }
+  if(a==="com"){ const v1=Math.min(...Multi.set); openComDrawer({ t:rd.t, b:rd.b, c:rd.c, v:v1, text:multiVerses()[0].text }); }
 });
-/* No modo de seleção, tocar no versículo marca/desmarca em vez de abrir o comentário */
-el.dlgBody.addEventListener("click",e=>{ if(!Multi.on) return; const p=e.target.closest(".rd-verse"); if(!p) return;
+/* Tocar no versículo marca/desmarca (como no YouVersion); as ações aparecem na barra de baixo */
+el.dlgBody.addEventListener("click",e=>{ const p=e.target.closest(".rd-verse"); if(!p || e.target.closest("[data-rdtr]")) return;
+  if(String(getSelection()).length>2) return;
   e.stopImmediatePropagation(); const n=+p.dataset.v; Multi.set.has(n)?Multi.set.delete(n):Multi.set.add(n); paintMulti(); }, true);
-/* Atalhos para entrar no modo */
-rdEl.actions.addEventListener("click",e=>{ const b=e.target.closest('[data-rd="multi"]'); if(b && rd.sel) startMulti(rd.sel.v); });
+/* Atalho da gaveta: "Vários" volta para a Bíblia com o versículo marcado */
 $("#cdFoot").addEventListener("click",e=>{ const b=e.target.closest('[data-cd="multi"]'); if(!b) return; const v=Drawer.v; closeComDrawer();
   if(el.dlg.open && rd.b===v.b && rd.c===v.c) startMulti(v.v);
   else { openContext({ t:v.t||store.get("version",DEFAULT_VERSION), b:v.b, c:v.c, v:v.v }); setTimeout(()=>startMulti(v.v),700); } });
-/* =====================================================================
-   PENSADORES — filosofia, psicologia e política segundo a fé reformada
-   ===================================================================== */
-const PENSADORES = [
-  { cat:"fil", name:"Jonathan Edwards", years:"1703–1758", where:"EUA", area:"Teologia e filosofia",
-    idea:"Uniu rigor filosófico e piedade: a verdadeira religião está nas afeições santas, despertadas pela beleza de Deus.", works:"Afeições Religiosas; A Liberdade da Vontade" },
-  { cat:"fil", name:"Abraham Kuyper", years:"1837–1920", where:"Holanda", area:"Teologia, filosofia e política",
-    idea:"“Não há um centímetro quadrado da existência humana sobre o qual Cristo não diga: é meu.” Desenvolveu a soberania das esferas.", works:"Calvinismo (Lectures on Calvinism)" },
-  { cat:"fil", name:"Herman Bavinck", years:"1854–1921", where:"Holanda", area:"Teologia e cosmovisão",
-    idea:"A graça não destrói a natureza, mas a restaura; toda a realidade é revelação de Deus.", works:"Dogmática Reformada" },
-  { cat:"fil", name:"Herman Dooyeweerd", years:"1894–1977", where:"Holanda", area:"Filosofia",
-    idea:"Nenhum pensamento é neutro: toda filosofia parte de um motivo religioso de base. Criou a Filosofia da Ideia Cosmonômica.", works:"No Crepúsculo do Pensamento Ocidental" },
-  { cat:"fil", name:"Cornelius Van Til", years:"1895–1987", where:"Holanda / EUA", area:"Apologética e filosofia",
-    idea:"Apologética pressuposicional: só a revelação de Deus dá sentido à razão, à lógica e à ciência.", works:"A Defesa da Fé" },
-  { cat:"fil", name:"Francis Schaeffer", years:"1912–1984", where:"EUA / Suíça", area:"Apologética e cultura",
-    idea:"Levou a fé reformada ao diálogo com a arte, a filosofia e a cultura moderna, a partir da comunidade L’Abri.", works:"O Deus que Intervém; O Deus que se Revela" },
-  { cat:"fil", name:"Alvin Plantinga", years:"1932–", where:"EUA", area:"Filosofia (epistemologia)",
-    idea:"Epistemologia reformada: crer em Deus pode ser racional e justificado mesmo sem provas prévias.", works:"Warranted Christian Belief" },
-  { cat:"fil", name:"Nicholas Wolterstorff", years:"1932–", where:"EUA", area:"Filosofia, estética e justiça",
-    idea:"Fé e razão, arte e justiça pensadas a partir da tradição reformada.", works:"Reason within the Bounds of Religion" },
-  { cat:"fil", name:"John Frame", years:"1939–", where:"EUA", area:"Teologia e filosofia",
-    idea:"Teologia do senhorio e perspectivismo: conhecer a Deus envolve a norma, a situação e a pessoa.", works:"A Doutrina do Conhecimento de Deus" },
-  { cat:"fil", name:"James K. A. Smith", years:"1970–", where:"Canadá / EUA", area:"Filosofia e cultura",
-    idea:"Somos formados pelo que amamos: hábitos e “liturgias culturais” moldam o coração.", works:"Você é Aquilo que Ama" },
-  { cat:"fil", name:"Timothy Keller", years:"1950–2023", where:"EUA", area:"Apologética e cultura urbana",
-    idea:"Apresentou o evangelho de forma inteligente ao cético moderno, com sensibilidade cultural e pastoral.", works:"A Fé na Era do Ceticismo; Deuses Falsos" },
-  { cat:"fil", name:"Jonas Madureira", years:"", where:"Brasil", area:"Filosofia",
-    idea:"Pastor e filósofo brasileiro; escreve sobre fé, razão e humildade intelectual.", works:"Inteligência Humilhada" },
-  { cat:"fil", name:"Guilherme de Carvalho", years:"", where:"Brasil", area:"Teologia e cosmovisão",
-    idea:"Pastor e teólogo brasileiro ligado ao L’Abri no Brasil; escreve sobre cosmovisão cristã e cultura.", works:"" },
 
-  { cat:"psi", name:"D. Martyn Lloyd-Jones", years:"1899–1981", where:"País de Gales / Londres", area:"Medicina e cuidado pastoral",
-    idea:"Médico que se tornou pastor; tratou o abatimento da alma unindo diagnóstico cuidadoso e verdade bíblica.", works:"Depressão Espiritual" },
-  { cat:"psi", name:"Jay E. Adams", years:"1929–2020", where:"EUA", area:"Aconselhamento bíblico",
-    idea:"Fundou o aconselhamento noutético: as Escrituras são suficientes para tratar os problemas da vida.", works:"Conselheiro Capaz" },
-  { cat:"psi", name:"David Powlison", years:"1949–2019", where:"EUA (CCEF)", area:"Aconselhamento bíblico",
-    idea:"Aprofundou o aconselhamento bíblico olhando os “ídolos do coração” e a graça que transforma.", works:"Uma Nova Visão" },
-  { cat:"psi", name:"Edward T. Welch", years:"", where:"EUA (CCEF)", area:"Psicologia e aconselhamento",
-    idea:"Psicólogo (PhD) e conselheiro: medo, vergonha, vícios e depressão à luz do evangelho.", works:"Quando as Pessoas São Grandes e Deus é Pequeno" },
-  { cat:"psi", name:"Paul David Tripp", years:"1950–", where:"EUA", area:"Aconselhamento e vida cristã",
-    idea:"Mostra como cada cristão pode ser instrumento de Deus na mudança de outras pessoas.", works:"Instrumentos nas Mãos do Redentor" },
-  { cat:"psi", name:"Michael R. Emlet", years:"", where:"EUA (CCEF)", area:"Medicina e aconselhamento",
-    idea:"Médico e conselheiro: como pensar biblicamente sobre diagnósticos e medicação psiquiátrica.", works:"Descriptions and Prescriptions" },
-  { cat:"psi", name:"Heath Lambert", years:"", where:"EUA", area:"Aconselhamento bíblico",
-    idea:"Pastor e conselheiro; escreve sobre teologia do aconselhamento e pureza sexual.", works:"Teologia do Aconselhamento Bíblico" },
-
-  { cat:"pol", name:"João Calvino", years:"1509–1564", where:"França / Genebra", area:"Teologia e governo civil",
-    idea:"Ensinou que o magistrado é servo de Deus e que a autoridade civil tem limites, base para o pensamento político reformado.", works:"Institutas, livro IV, cap. 20" },
-  { cat:"pol", name:"Johannes Althusius", years:"1557–1638", where:"Alemanha", area:"Teoria política",
-    idea:"Pensou a sociedade como associações e alianças (federalismo), com poder vindo de baixo para cima.", works:"Politica" },
-  { cat:"pol", name:"Samuel Rutherford", years:"1600–1661", where:"Escócia", area:"Teoria política",
-    idea:"Defendeu que a lei está acima do rei: o governante também se submete à lei.", works:"Lex, Rex" },
-  { cat:"pol", name:"Guillaume Groen van Prinsterer", years:"1801–1876", where:"Holanda", area:"História e política",
-    idea:"Criticou a Revolução Francesa como incredulidade aplicada à política e inspirou o movimento político cristão holandês.", works:"Incredulidade e Revolução" },
-  { cat:"pol", name:"Abraham Kuyper (política)", years:"1837–1920", where:"Holanda", area:"Política e sociedade",
-    idea:"Primeiro-ministro da Holanda (1901–1905); família, igreja, escola e Estado têm cada um sua esfera de autoridade.", works:"Calvinismo; Soberania das Esferas" },
-  { cat:"pol", name:"Franklin Ferreira", years:"", where:"Brasil", area:"Teologia e política",
-    idea:"Teólogo batista reformado brasileiro; analisa os limites do poder do Estado à luz das Escrituras.", works:"Contra a Idolatria do Estado" }
-];
-const PEN_CATS = { fil:["Filosofia e teologia","#3f6c99"], psi:["Psicologia e aconselhamento","#4f7a63"], pol:["Política e sociedade","#8c2f39"] };
-let penCat="";
-function renderPensadores(){
-  const q=norm($("#penQ").value.trim());
-  $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
-  const list=PENSADORES.filter(p=>(!penCat||p.cat===penCat) && (!q || norm(p.name+" "+p.area+" "+p.idea+" "+p.works+" "+p.where).includes(q)));
-  const byCat=Object.keys(PEN_CATS).map(k=>[k,list.filter(p=>p.cat===k)]).filter(([,a])=>a.length);
-  $("#penList").innerHTML = byCat.length ? byCat.map(([k,arr])=>`<div class="pen-group" style="--pc:${PEN_CATS[k][1]}"><h3>${PEN_CATS[k][0]}</h3><div class="pen-grid">${arr.map(penCard).join("")}</div></div>`).join("")
-    : `<p class="muted">Nenhum pensador encontrado.</p>`;
-}
-function penCard(p){
-  const nm=p.name.replace(/ \(política\)$/,"");
-  const q=`Quem foi ${nm} e quais são suas principais ideias${p.cat==="pol"?" sobre política e sociedade":p.cat==="psi"?" sobre psicologia, aconselhamento e saúde da alma":" filosóficas e teológicas"}, na perspectiva da fé reformada? Responda em português, com fontes.`;
-  return `<article class="pen-card">
-    <header><h4>${authorBtn(nm, p.area)}</h4><span class="pen-meta">${esc([p.years,p.where].filter(Boolean).join(" · "))}</span></header>
-    <p class="pen-area">${esc(p.area)}</p>
-    <p class="pen-idea">${esc(p.idea)}</p>
-    ${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
-    <div class="br-links">
-      <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
-      <a class="btn btn-sm btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">ChatGPT ↗</a>
-      <a class="btn btn-sm" href="${esc("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(nm))}" target="_blank" rel="noopener noreferrer">Livros ↗</a>
-      <a class="btn btn-sm" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(nm+" palestra"))}" target="_blank" rel="noopener noreferrer">Vídeos ↗</a>
-    </div></article>`;
-}
-$("#penQ").addEventListener("input",renderPensadores);
-$("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
 /* =====================================================================
    ESCOLHER LIVRO E CAPÍTULO (grade grande, simples, com busca)
    ===================================================================== */
