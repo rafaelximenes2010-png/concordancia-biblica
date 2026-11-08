@@ -671,9 +671,14 @@ p.meta .author-btn{font-size:13px}
 .avatar-big{width:76px;height:76px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;overflow:hidden;flex:none;border:2px solid var(--gold)}
 .avatar-big img,.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
 .profile-photo-btns{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-.avatar-btn{padding:0!important;width:34px;height:34px;border-radius:50%!important;overflow:hidden;display:inline-flex;align-items:center;justify-content:center}
+.avatar-btn{padding:0!important;width:38px;height:38px;border-radius:50%!important;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;
+  background:#1c2747!important;border:2px solid var(--gold)!important;color:#fff!important;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.avatar-btn .icon{stroke:#fff}
+#themeBtn{border-color:transparent!important;background:transparent!important;box-shadow:none!important;opacity:.85}
+#themeBtn::after{content:attr(data-label);font-size:10px;display:block;line-height:1;margin-top:2px;color:var(--ink-2)}
+#themeBtn{display:inline-flex;flex-direction:column;align-items:center}
 .avatar-btn #cfgAvatar{display:flex;width:100%;height:100%;align-items:center;justify-content:center}
-.avatar-btn .ini{font-size:13px;font-weight:700;color:var(--accent)}
+.avatar-btn .ini{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px}
 .changelog{margin:6px 0 8px 18px;padding:0 10px 0 0}
 .changelog li{margin:3px 0;font-size:14px}
 .help-list dt{font-weight:650;margin-top:10px;color:var(--accent)} .help-list dd{margin:2px 0 0;color:var(--ink-2)}
@@ -789,7 +794,7 @@ p.meta .author-btn{font-size:13px}
     </nav>
     <div class="header-tools">
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
-      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Perfil, configurações e atualizações" title="Perfil e configurações"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg></span></button>
+      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Meu perfil e cadastro, configurações e atualizações" title="Meu perfil e cadastro"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -1729,6 +1734,7 @@ function applyTheme(t){
   document.documentElement.dataset.theme=t;
   el.themeIcon.setAttribute("href", t==="dark" ? "#i-sun" : "#i-moon");
   el.theme.setAttribute("aria-label", t==="dark" ? "Alternar para tema claro" : "Alternar para tema escuro");
+  el.theme.dataset.label = t==="dark" ? "Dia" : "Noite"; el.theme.title = t==="dark" ? "Modo dia (claro)" : "Modo noite (escuro)";
 }
 applyTheme(store.get("theme", matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
 el.theme.addEventListener("click",()=>{ const t=document.documentElement.dataset.theme==="dark"?"light":"dark"; applyTheme(t); store.set("theme",t); });
@@ -3627,7 +3633,7 @@ const Profile = {
 const initials = n => (n||"").trim().split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join("");
 function paintAvatar(){
   const p=Profile.get(), a=$("#cfgAvatar");
-  a.innerHTML = p.photo ? `<img src="${esc(p.photo)}" alt="">` : p.name ? `<span class="ini">${esc(initials(p.name))}</span>` : `<svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg>`;
+  a.innerHTML = p.photo ? `<img src="${esc(p.photo)}" alt="">` : p.name ? `<span class="ini">${esc(initials(p.name))}</span>` : `<svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>`;
   const big=$("#pfAvatar"); if(big) big.innerHTML = p.photo ? `<img src="${esc(p.photo)}" alt="">` : `<span>${esc(initials(p.name)||"?")}</span>`;
 }
 function trEmailParam(){ const p=Profile.get(); return (store.get("trEmail",false) && /\S+@\S+\.\S+/.test(p.email)) ? "&de="+encodeURIComponent(p.email) : ""; }
