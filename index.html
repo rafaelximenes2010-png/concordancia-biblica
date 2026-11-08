@@ -715,6 +715,28 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .edge-hint{position:fixed;left:0;top:0;bottom:0;width:6px;background:linear-gradient(90deg,rgba(184,137,47,.5),transparent);z-index:60;opacity:0;transition:opacity .15s;pointer-events:none}
 .edge-hint.on{opacity:1}
 @media (prefers-reduced-motion: reduce){ .view.v-in-r,.view.v-in-l{animation:none} }
+
+/* ===== Comentários organizados (acordeão + padrões) ===== */
+html,body{overflow-x:hidden} #views{overflow-x:clip}
+.com-defaults{display:grid;gap:8px;background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:10px 12px;margin:0 0 12px}
+.com-defaults label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.com-defaults select{border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px;font:inherit;font-weight:400;max-width:100%}
+.br-list{gap:0}
+details.br-acc,details.com-text{border-left:3px solid var(--coral)}
+details.com-text{border-left-color:var(--sky)}
+details.br-acc.off{opacity:.75}
+details.br-acc > summary,details.com-text > summary{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sum-name{font-weight:650}
+.tag-def{background:var(--gold)!important;color:#1b1606!important;border-color:var(--gold)!important}
+.acc-body{padding:0 10px 10px}
+.acc-body .meta{margin:2px 0 8px;font-size:13px;color:var(--ink-2)}
+.set-def{display:block;margin-top:8px;font-size:13px}
+.rd-br{font-family:var(--font-ui);font-size:13px;margin:4px 0}
+.com-opts > summary{font-size:14px;color:var(--ink-2)}
+
+.layout > *{min-width:0} .panel{max-width:100%}
+.panel [role="tablist"]{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.panel [role="tablist"]::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
@@ -1242,6 +1264,7 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
     <section class="cfg-card" aria-labelledby="cfgComT">
       <h3 id="cfgComT"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Comentários bíblicos</h3>
       <div class="cfg-form">
+        <label>Comentarista brasileiro padrão<select id="cfgBr"></select></label>
         <label>Comentário clássico padrão<select id="cfgCom"><option value="">Carregando…</option></select></label>
         <label class="radio"><input type="checkbox" id="cfgAutoTr"><span>Mostrar comentários sempre em português (tradução automática)</span></label>
         <label class="radio"><input type="checkbox" id="cfgInline"><span>Mostrar trecho do comentário em cada resultado da busca</span></label>
@@ -2005,7 +2028,7 @@ async function renderReader(){
     + `<p class="rd-license">${esc(ver.name)}: ${esc(ver.license)}${cv?`<br>${esc(cv.name)}: ${esc(cv.license)}`:""}</p>`;
   if(rd.cmp && !cmpCh.length) el.dlgBody.insertAdjacentHTML("afterbegin",`<div class="notice">${esc(BOOK[rd.b].name)} não existe na versão ${esc(rd.cmp)}.</div>`);
   rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true;
-  if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto) translateReaderChapter("pt", true); }
+  if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && ("Translator" in self)) translateReaderChapter("pt", true); }
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
   $("#rdYV").href = `https://www.bible.com/bible/compare/${rd.b}.${rd.c}.1-${verses.length||1}`;
@@ -2352,7 +2375,7 @@ async function translateBlock(box, text, btn){
     box.innerHTML = `<p class="tr-tag">Tradução automática para o português · pode conter imprecisões</p>${comParas(pt)}`;
     box.dataset.state="pt"; box._pt=pt; if(btn) btn.textContent="Ver original em inglês"; applyTextMarks(box);
   }catch(e){
-    box.insertAdjacentHTML("afterbegin",`<p class="notice" style="font-size:13px">Não foi possível traduzir aqui ${e.message==="quota"?"(limite diário do tradutor gratuito atingido)":"(sem conexão ou serviço indisponível)"}. ${extA("Abrir no Google Tradutor", translateUrl(text))}</p>`);
+    box.insertAdjacentHTML("afterbegin",`<p class="notice" style="font-size:13px">Não foi possível traduzir aqui ${e.message==="quota"?"(limite diário do tradutor gratuito atingido)":"(sem conexão ou serviço indisponível)"}. ${extA("Abrir no Google Tradutor", translateUrl(text))}${e.message==="quota"&&!trEmailParam()?` · <button type="button" class="link-btn" data-view="config">Aumentar o limite (10×) com seu e-mail</button>`:""}</p>`);
     if(btn) btn.textContent="Traduzir para o português";
   }finally{ if(btn) btn.disabled=false; }
 }
@@ -2380,7 +2403,7 @@ async function fillCardCommentary(li, force){
       <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button> ${pplxBtn(info.label, refLabel(b,+c,+v), "link-btn")}</span>`;
     box.dataset.ref=`${b}.${c}.${v}`; box.dataset.author=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
     box._shown=snip; box._lang="en"; box._snip=snip; box._label=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
-    if(Tr.auto) translateCardCom(li);
+    if(Tr.auto && ("Translator" in self)) translateCardCom(li);
   }catch(e){ box.innerHTML=`<span class="muted">${esc(comErr())}</span>`; }
 }
 
@@ -2400,14 +2423,15 @@ async function renderFullCommentaries(v){
   host.innerHTML=`<p class="muted">Carregando comentários…</p>`;
   let list; try{ list=await Comm.available(); }catch(e){ host.innerHTML=`<p class="muted">${esc(comErr())}</p>`; return; }
   const def=await Comm.defaultId();
-  host.innerHTML = list.map(c=>`<details class="com-group com-text" data-id="${c.id}" ${c.id===def?"open":""}>
-      <summary>${esc(c.label)}${c.reformed?' <span class="tag">Reformado</span>':""}</summary>
-      <p class="meta" style="padding:0 10px">${esc(c.trad)} · ${authorBtn(c.label,c.trad,"Quem é o autor?")}</p><div class="com-body"><p class="muted">Carregando…</p></div></details>`).join("")
-    + `<label class="radio" style="margin-top:6px"><input type="checkbox" id="comInline" ${Comm.inline?"checked":""}><span>Mostrar comentário em cada resultado da busca</span></label>
-       <label class="field" style="display:block;margin-top:6px"><span class="muted">Comentário padrão:</span>
-       <select id="comDefault" style="width:100%;margin-top:4px;border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:6px">${list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join("")}</select></label>
+  const ordered=[...list].sort((a,b)=>(b.id===def)-(a.id===def));
+  host.innerHTML = ordered.map(c=>`<details class="com-group com-text" data-id="${c.id}" ${c.id===def?"open":""}>
+      <summary><span class="sum-name">${esc(c.label)}</span>${c.id===def?' <span class="tag tag-def">Padrão</span>':""}${c.reformed?' <span class="tag">Reformado</span>':""}</summary>
+      <p class="meta" style="padding:0 10px">${esc(c.trad)} · ${authorBtn(c.label,c.trad,"Quem é o autor?")}${c.id===def?"":` · <button type="button" class="link-btn" data-setcom="${c.id}">Tornar padrão</button>`}</p><div class="com-body"><p class="muted">Carregando…</p></div></details>`).join("")
+    + `<details class="com-group com-opts"><summary>Opções dos comentários</summary><div class="acc-body">
+       <label class="radio"><input type="checkbox" id="comInline" ${Comm.inline?"checked":""}><span>Mostrar comentário em cada resultado da busca</span></label>
+       <select id="comDefault" hidden>${list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join("")}</select>
        <label class="radio" style="margin-top:6px"><input type="checkbox" id="comAutoTr" ${Tr.auto?"checked":""}><span>Traduzir automaticamente os comentários para o português</span></label>
-       <p class="hint">Comentários em inglês, de domínio público, via Free Use Bible API (bible.helloao.org). A tradução é automática: usa o tradutor do próprio navegador quando disponível; senão, o serviço gratuito MyMemory (limite diário). Sempre confira trechos importantes no original.</p>`;
+       <p class="hint">Comentários em inglês, de domínio público, via Free Use Bible API (bible.helloao.org). A tradução é automática: usa o tradutor do próprio navegador quando disponível; senão, o serviço gratuito MyMemory (limite diário). Sempre confira trechos importantes no original.</p></div></details>`;
   $("#comAutoTr").addEventListener("change",e=>{ Tr.auto=e.target.checked; toast(Tr.auto?"Os comentários serão traduzidos automaticamente.":"Tradução automática desligada."); renderFullCommentaries(v); });
   const load=async d=>{
     if(d.dataset.loaded) return; d.dataset.loaded="1"; const body=d.querySelector(".com-body");
@@ -2440,6 +2464,7 @@ async function renderReaderCommentary(v){
     const r=await Comm.forVerse(id,v.b,v.c,v.v);
     box.innerHTML=`<div class="rd-com-head"><select id="rdComSel" aria-label="Escolher comentário">${list.map(c=>`<option value="${c.id}" ${c.id===id?"selected":""}>${esc(c.label)}</option>`).join("")}</select>
       ${r?`<button type="button" class="btn btn-sm" id="rdTr">Traduzir para o português</button> <button type="button" class="btn btn-sm" id="rdSaveCom"><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar</button>`:""} ${pplxBtn(list.find(x=>x.id===id)?.label||"comentaristas reformados", refLabel(v.b,v.c,v.v))}</div>
+      <p class="rd-br">${(()=>{ const bd=brDefault(); const ref=refLabel(v.b,v.c,v.v); return `<strong>${esc(bd)}:</strong> ${pplxBtn(bd.replace(/ \(em português\)/,""), ref, "link-btn")} · <a class="link-btn" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(bd+" "+refLabel(v.b,v.c)))}" target="_blank" rel="noopener noreferrer">Pregações ↗</a>`; })()}</p>
       <p class="hint" style="margin:4px 0">Dica: selecione um trecho do comentário para grifá-lo.</p><div class="tr-box" id="rdComBox" data-ref="${v.b}.${v.c}.${v.v}" data-author="${esc(list.find(x=>x.id===id)?.label||"")}">${r?comNote(r,v)+comParas(r.text):`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`}</div>`;
     if(r){ const btn=$("#rdTr"), cb=$("#rdComBox"); btn.addEventListener("click",()=>translateBlock(cb, r.text, btn)); applyTextMarks(cb);
       $("#rdSaveCom").addEventListener("click",()=>Saved.add({ b:v.b,c:v.c,v:v.v, author:cb.dataset.author, text: cb.dataset.state==="pt"?cb._pt:r.text, lang: cb.dataset.state==="pt"?"pt":"en" })); if(Tr.auto) translateBlock($("#rdComBox"), r.text, btn); }
@@ -2459,11 +2484,15 @@ function renderCommentary(){
     <div class="pplx-all">${(()=>{ const q=`Comentário bíblico de ${ref} segundo autores reformados (Calvino, Matthew Henry, Hernandes Dias Lopes, Augustus Nicodemus e outros). Explique em português, com fontes.`;
       return `<a class="btn btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perguntar ao Perplexity: o que os reformados dizem sobre ${esc(ref)} ↗</a>
       <a class="btn btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">Perguntar ao ChatGPT (gratuito) ↗</a>`; })()}</div>
-    <div class="section-title">${esc(ref)} — comentaristas brasileiros</div>
-    <p class="com-intro">Autores reformados em português. As obras deles têm direitos autorais, por isso o app não copia o texto: cada botão leva direto ao comentário impresso, às pregações e aos artigos do autor sobre <strong>${esc(ref)}</strong>.</p>
-    <div class="br-list">${REFORMED.brazil.map(c=>brItem(c, v)).join("")}</div>
-    <div class="section-title" style="margin-top:14px">${esc(ref)} — comentários clássicos completos</div>
-    <p class="hint">Domínio público (Calvino, Matthew Henry, Gill, Keil &amp; Delitzsch…), exibidos em português por tradução automática. Toque em “Ver original em inglês” para conferir.</p>
+    <div class="com-defaults">
+      <label>Meu comentarista brasileiro<select id="brDefSel">${REFORMED.brazil.map(c=>`<option ${c.name===brDefault()?"selected":""}>${esc(c.name)}</option>`).join("")}</select></label>
+      <label>Meu comentário clássico (traduzido)<select id="comDefSel"><option>Carregando…</option></select></label>
+    </div>
+    <div class="section-title">Comentaristas brasileiros <span class="count-pill">(${REFORMED.brazil.length})</span></div>
+    <p class="hint">Toque no nome para abrir. Obras com direitos autorais: os botões levam ao comentário impresso, às pregações e aos artigos sobre <strong>${esc(ref)}</strong>.</p>
+    <div class="br-list">${brOrdered().map(c=>brItem(c, v)).join("")}</div>
+    <div class="section-title" style="margin-top:14px">Comentários clássicos, texto completo</div>
+    <p class="hint">Domínio público, mostrados em português por tradução automática. Toque no nome para abrir.</p>
     <div id="comFull"></div>
     <details class="com-group"><summary><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg> Louvores sobre o tema (Spotify)</summary>
       ${spotifyBox(theme || themeOf(v.text||""), {label:ref, b:v.b, c:v.c}, true)}</details>
@@ -2480,6 +2509,11 @@ function renderCommentary(){
     <details class="com-group"><summary>Sites reformados (busca filtrada)<span class="count-pill">(${data.sites.length})</span></summary>
       <div class="com-item"><div class="com-links">${data.sites.map(s=>extA(s.name, "https://www.google.com/search?q="+encodeURIComponent(`site:${s.domain} "${BOOK[v.b].name} ${v.c}:${v.v}" OR "${ref}"`))).join("")}</div></div></details>`;
   renderFullCommentaries(v);
+  $("#brDefSel").addEventListener("change",e=>{ store.set("brPreferred",e.target.value); toast(`${e.target.value} agora é o seu comentarista brasileiro padrão.`); renderCommentary(); });
+  Comm.available().then(async list=>{ const def=await Comm.defaultId(); const sel=$("#comDefSel"); if(!sel) return;
+    sel.innerHTML=list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join("");
+    sel.onchange=e=>{ Comm.preferred=e.target.value; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); };
+  }).catch(()=>{ const sel=$("#comDefSel"); if(sel) sel.innerHTML=`<option>Indisponível sem conexão</option>`; });
 }
 
 
@@ -3840,6 +3874,16 @@ $("#savedList").addEventListener("click",e=>{
 });
 
 /* ---------- Comentaristas brasileiros: links por versículo ---------- */
+const brDefault = () => { const n=store.get("brPreferred",""); return REFORMED.brazil.some(c=>c.name===n) ? n : REFORMED.brazil[0].name; };
+const brOrdered = () => { const d=brDefault(); return [...REFORMED.brazil].sort((a,b)=>(b.name===d)-(a.name===d)); };
+/* Acordeão: abrir um comentarista fecha os outros do mesmo grupo */
+document.addEventListener("toggle",e=>{ const d=e.target; if(!(d instanceof HTMLDetailsElement) || !d.open) return;
+  const grp=d.classList.contains("br-acc")?".br-acc":d.classList.contains("com-text")?".com-text":null; if(!grp) return;
+  d.parentElement.querySelectorAll(":scope > details"+grp).forEach(x=>{ if(x!==d) x.open=false; }); }, true);
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-setbr]"); if(b){ store.set("brPreferred",b.dataset.setbr); toast(`${b.dataset.setbr} agora é o seu comentarista brasileiro padrão.`); renderCommentary(); return; }
+  const c=e.target.closest("[data-setcom]"); if(c){ Comm.preferred=c.dataset.setcom; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); }
+});
 function brItem(c, v){
   const ref=refLabel(v.b,v.c,v.v), chap=refLabel(v.b,v.c), bookN=BOOK[v.b].name, tst=BOOK[v.b].testament;
   const off=(c.nt && tst!=="NT") || (c.ot && tst!=="AT");
@@ -3850,9 +3894,12 @@ function brItem(c, v){
     ["Artigos e estudos", g(`${c.q} "${ref}"`)],
     c.pub ? ["Livro na editora", g(`site:${c.pub} ${c.q.replace(/ comentário| nota/,"")} ${bookN}`)] : null
   ].filter(Boolean);
-  return `<div class="br-item${off?" off":""}"><div class="br-head"><h4>${authorBtn(c.name,c.meta)}</h4><span class="tag">Reformado · PT</span></div>
-    <p class="meta">${esc(c.meta)}${off?` · obra voltada ao ${c.nt?"Novo":"Antigo"} Testamento`:""}</p>
-    <div class="br-links">${pplxBtn(c.name.replace(/ \(em português\)/,""), ref)}${links.map(([n,u])=>`<a class="btn btn-sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)} ↗</a>`).join("")}</div></div>`;
+  const isDef = c.name===brDefault();
+  return `<details class="com-group br-acc${off?" off":""}" data-br="${esc(c.name)}" ${isDef?"open":""}>
+    <summary><span class="sum-name">${esc(c.name)}</span>${isDef?' <span class="tag tag-def">Padrão</span>':""}</summary>
+    <div class="acc-body"><p class="meta">${esc(c.meta)}${off?` · obra voltada ao ${c.nt?"Novo":"Antigo"} Testamento`:""} · ${authorBtn(c.name,c.meta,"Quem é o autor?")}</p>
+    <div class="br-links">${pplxBtn(c.name.replace(/ \(em português\)/,""), ref)}${links.map(([n,u])=>`<a class="btn btn-sm" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)} ↗</a>`).join("")}</div>
+    ${isDef?"":`<button type="button" class="link-btn set-def" data-setbr="${esc(c.name)}">Tornar este o meu comentarista brasileiro padrão</button>`}</div></details>`;
 }
 
 /* ---------- Louvores no Spotify ligados ao tema ---------- */
@@ -3923,6 +3970,7 @@ function renderConfig(){
   $("#cfgTheme").value=document.documentElement.dataset.theme||"light";
   $("#cfgSize").value=rd.size; $("#cfgSizeV").textContent=rd.size+" px";
   fillVersionSelect($("#cfgVersion"), store.get("version",DEFAULT_VERSION));
+  $("#cfgBr").innerHTML=REFORMED.brazil.map(c=>`<option ${c.name===brDefault()?"selected":""}>${esc(c.name)}</option>`).join("");
   $("#cfgAutoTr").checked=Tr.auto; $("#cfgInline").checked=!!Comm.inline; $("#cfgTrEmail").checked=store.get("trEmail",false);
   $("#cfgTips").checked=store.get("tips",true);
   $("#cfgVer").textContent=APP_VERSION;
@@ -3946,6 +3994,7 @@ $("#cfgTheme").addEventListener("change",e=>{ applyTheme(e.target.value); store.
 $("#cfgSize").addEventListener("input",e=>{ rd.size=+e.target.value; store.set("fontSize",rd.size); document.documentElement.style.setProperty("--rd-size",rd.size+"px"); $("#cfgSizeV").textContent=rd.size+" px"; });
 $("#cfgVersion").addEventListener("change",e=>{ const v=e.target.value; if(!Repo.version(v)){ toast("Escolha uma versão embutida no app."); return; }
   el.tr.value=v; el.tr.dispatchEvent(new Event("change")); rd.t=v; toast(`Versão padrão: ${v}.`); });
+$("#cfgBr").addEventListener("change",e=>{ store.set("brPreferred",e.target.value); toast("Comentarista brasileiro padrão alterado."); });
 $("#cfgCom").addEventListener("change",e=>{ if(!e.target.value) return; Comm.preferred=e.target.value; store.set("comPreferred",Comm.preferred); toast("Comentário padrão alterado."); });
 $("#cfgAutoTr").addEventListener("change",e=>{ Tr.auto=e.target.checked; toast(Tr.auto?"Comentários sempre em português.":"Comentários no original em inglês; use o botão Traduzir."); });
 $("#cfgInline").addEventListener("change",e=>{ Comm.inline=e.target.checked; store.set("comInline",Comm.inline); });
@@ -4009,7 +4058,7 @@ function setupCardTranslation(li, v){
   li.querySelector(".verse").insertAdjacentHTML("afterend", `<p class="v-tr" hidden></p>`);
   li.querySelector(".card-actions, .actions, .row-actions")?.insertAdjacentHTML("afterbegin", vtrButtons(lang,"data-vtr"));
   li.addEventListener("click",e=>{ const b=e.target.closest("[data-vtr]"); if(b) translateInto(li.querySelector(".v-tr"), v.text, lang, b.dataset.vtr); });
-  if(Tr.auto && vtrObserver) vtrObserver.observe(li);
+  if(Tr.auto && ("Translator" in self) && vtrObserver) vtrObserver.observe(li);
 }
 /* Leitor: traduz o capítulo inteiro (com cache), em pequenos lotes */
 let rdTrJob=0;
