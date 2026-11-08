@@ -782,6 +782,46 @@ dialog.picker[open]{display:flex}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
   .btn{min-height:40px}
 }
+
+/* ===== Gaveta lateral de comentários ===== */
+dialog.drawer{position:fixed;inset:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0;padding:0;border:0;background:transparent;overflow:hidden}
+dialog.drawer::backdrop{background:rgba(15,20,35,.45)}
+.cd-panel{position:absolute;top:0;right:0;bottom:0;width:min(520px,92vw);background:var(--bg);color:var(--ink);display:flex;flex-direction:column;
+  box-shadow:-12px 0 32px rgba(0,0,0,.25);border-radius:18px 0 0 18px;animation:cdIn .24s cubic-bezier(.2,.8,.2,1);transition:transform .15s}
+dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
+@keyframes cdIn{from{transform:translateX(100%)}to{transform:none}}
+@keyframes cdOut{to{transform:translateX(100%)}}
+.cd-head{padding:12px 14px 8px;padding-top:calc(10px + env(safe-area-inset-top));background:var(--surface);border-bottom:1px solid var(--border)}
+.cd-grip{width:5px;height:42px;border-radius:3px;background:var(--border);position:absolute;left:6px;top:50%;transform:translateY(-50%)}
+.cd-top{display:flex;align-items:center;gap:8px}
+.cd-top h2{flex:1;margin:0;font-size:22px;font-family:var(--font-text);color:var(--accent)}
+.cd-verse{margin:6px 0 10px;font-family:var(--font-text);font-size:17px;line-height:1.55;max-height:7.5em;overflow:auto}
+.cd-ver{font-size:12px}
+.cd-row{margin:6px 0}
+.cd-lbl{display:block;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-2);font-weight:700;margin-bottom:5px}
+.cd-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cd-scroll::-webkit-scrollbar{display:none}
+.cd-chip{flex:none;border:1.5px solid var(--border);background:var(--bg);color:var(--ink);border-radius:999px;padding:9px 14px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;min-height:42px}
+.cd-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.cd-star{color:var(--gold)} .cd-chip.on .cd-star{color:#ffd88a}
+.cd-body{flex:1;overflow:auto;padding:14px 16px 20px;-webkit-overflow-scrolling:touch}
+.cd-author h3{margin:0 0 2px;font-size:20px;font-family:var(--font-text)}
+.cd-author .meta{margin:0 0 10px;font-size:13.5px;color:var(--ink-2)}
+.cd-bio{font-size:15px;line-height:1.6;margin:0 0 10px}
+.cd-actions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.cd-text{font-family:var(--font-text);font-size:17px;line-height:1.7}
+.cd-text p{margin:0 0 12px}
+.cd-links .acc-body{padding:0}
+.cd-links .acc-body > .meta{display:none}
+.cd-links .br-links .btn{font-size:15px;padding:10px 14px}
+.cd-def{margin-top:12px}
+.cd-who .cd-bio{padding:0 10px 10px;margin:0}
+.cd-links .set-def{display:none}
+.cd-foot{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--border);background:var(--surface)}
+.cd-foot .btn{flex:1;justify-content:center;min-width:0}
+.card .verse{cursor:pointer}
+.card .verse:active{background:var(--gold-soft);border-radius:8px}
+.rd-verse{cursor:pointer}
 </style>
 </head>
 <body>
@@ -1385,6 +1425,23 @@ dialog.picker[open]{display:flex}
     </div>
   </div>
   <div class="picker-body" id="pkBody"></div>
+</dialog>
+<dialog id="comDrawer" class="drawer" aria-labelledby="cdRef">
+  <div class="cd-panel">
+    <div class="cd-head">
+      <div class="cd-grip" aria-hidden="true"></div>
+      <div class="cd-top"><h2 id="cdRef"></h2><button type="button" class="btn btn-icon btn-ghost" id="cdClose" aria-label="Fechar comentário"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+      <p class="cd-verse" id="cdVerse"></p>
+      <div id="cdChips" class="cd-chips" role="group" aria-label="Escolha o comentarista"></div>
+    </div>
+    <div class="cd-body" id="cdBody"></div>
+    <div class="cd-foot" id="cdFoot">
+      <button type="button" class="btn btn-sm" data-cd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
+      <button type="button" class="btn btn-sm" data-cd="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
+      <button type="button" class="btn btn-sm" data-cd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+      <button type="button" class="btn btn-sm" data-cd="all">Mais</button>
+    </div>
+  </div>
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
@@ -1990,13 +2047,13 @@ function cardFor(v){
   li.addEventListener("click",e=>{
     const b=e.target.closest("[data-act]"); if(!b) return;
     ({ copy:()=>copyVerse(v), ctx:()=>openContext(v), fav:()=>toggleFav(v), note:()=>startNote(v), rel:()=>{ setFocus(v); selectTab("rel"); openStudyOnMobile(); },
-       com:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); },
-       comfull:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); },
+       com:()=>{ setFocus(v); openComDrawer(v); },
+       comfull:()=>{ setFocus(v); openComDrawer(v); },
        comtr:()=>translateCardCom(li), comsave:()=>{ const bx=li.querySelector(".card-com"); Saved.add({ b:v.b,c:v.c,v:v.v, author:bx._label||"Comentário", text:bx._shown||bx._snip||"", lang:bx._lang||"en" }); },
        hl:()=>openHlPop(b,[`${v.b}.${v.c}.${v.v}`]) })[b.dataset.act]();
   });
   li.querySelector(".verse").addEventListener("click",e=>{ if(window.getSelection && String(getSelection()).length>2) return;
-    const bx=li.querySelector(".card-com"); if(bx.hidden || !bx._snip) fillCardCommentary(li,true); else { setFocus(v); selectTab("com"); openStudyOnMobile(); } });
+    setFocus(v); openComDrawer(v); });
   setupCardTranslation(li, v);
   if(Comm.inline || viewBusca.dataset.mode==="busca"){ comObserver ? comObserver.observe(li) : fillCardCommentary(li); }
   return li;
@@ -2124,7 +2181,7 @@ function selectVerse(p){
   rd.sel = { t:rd.t, b:rd.b, c:rd.c, v:vn, text:(Bible.data[rd.t].books[rd.b][rd.c-1][vn-1]) };
   rdEl.selRef.textContent = refLabel(rd.b,rd.c,vn); rdEl.actions.hidden=false;
   $("#rdWA").href = waUrl(verseShareText(rd.sel));
-  renderReaderCommentary(rd.sel);
+  $("#rdCom").hidden=true; openComDrawer(rd.sel);
 }
 el.dlgBody.addEventListener("click",e=>{ const p=e.target.closest(".rd-verse"); if(p) selectVerse(p); });
 el.dlgBody.addEventListener("keydown",e=>{ const p=e.target.closest(".rd-verse"); if(p && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); selectVerse(p); } });
@@ -2132,7 +2189,7 @@ rdEl.actions.addEventListener("click",e=>{
   const b=e.target.closest("[data-rd]"); if(!b || !rd.sel) return; const v=rd.sel;
   if(b.dataset.rd==="copy") copyVerse(v);
   if(b.dataset.rd==="fav") toggleFav(v);
-  if(b.dataset.rd==="com"){ closeReader(); showView("busca"); setFocus(v); selectTab("com"); openStudyOnMobile(); }
+  if(b.dataset.rd==="com"){ openComDrawer(v); }
   if(b.dataset.rd==="note"){ startNote(v); }
   if(b.dataset.rd==="hl"){ openHlPop(b,[`${v.b}.${v.c}.${v.v}`]); }
 });
@@ -4002,8 +4059,8 @@ function spotifyBox(theme, ps, inner){
 /* ---------- Ajuda por seção e explicação dos botões ---------- */
 const HELP = {
   inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Círculo azul com aro dourado","Seu perfil e cadastro, configurações (inclusive o tamanho do texto), cópia de segurança e atualizações."],["Navegar rápido","Toque nas abas de baixo para trocar de seção: cada uma guarda onde você parou. Tocar de novo na aba aberta volta ao topo. No app instalado, deslize da borda esquerda para voltar."]]],
-  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Seleciona o versículo e abre o comentário dele em português, logo abaixo."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
-  busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Mostra o comentário logo abaixo do resultado; tocar de novo abre os comentários completos."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
+  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Abre a gaveta de comentários ao lado. No topo, escolha o comentarista: os clássicos mostram o texto completo traduzido; os brasileiros levam às obras, pregações e ao Perplexity/ChatGPT. Deslize para a direita ou toque fora para fechar."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
+  busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Abre a gaveta de comentários ao lado, onde você escolhe o comentarista."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
@@ -4275,6 +4332,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); 
 /* Voltar: primeiro fecha o que estiver aberto dentro da página (documento, editor);
    depois volta à página anterior; sem histórico, vai para o Início. */
 function goBack(){
+  if($("#comDrawer")?.open){ closeComDrawer(); return; }
   if($("#bookPicker")?.open){ if(bp.book) renderBookGrid(); else $("#bookPicker").close(); return; }
   if($("#noteDialog").open){ $("#noteDialog").close(); return; }
   if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
@@ -4292,6 +4350,89 @@ window.addEventListener("hashchange",()=>{
 });
 
 
+/* =====================================================================
+   GAVETA LATERAL DE COMENTÁRIOS — toque no versículo e escolha o comentarista
+   ===================================================================== */
+const Drawer = { v:null, pick:null, list:[] };
+const drw=$("#comDrawer");
+async function openComDrawer(v, pick){
+  if(!v || !v.b) return;
+  if(!v.text){ try{ v.text=(await Repo.getChapter(v.t||store.get("version",DEFAULT_VERSION), v.b, +v.c)).find(x=>x.v===+v.v)?.text||""; }catch(e){} }
+  Drawer.v={ ...v, c:+v.c, v:+v.v };
+  const ref=refLabel(v.b,+v.c,+v.v);
+  $("#cdRef").textContent=ref;
+  $("#cdVerse").innerHTML=`<span class="vt ${Hl.cls(v.b+"."+v.c+"."+v.v)}" data-hk="${v.b}.${v.c}.${v.v}">${esc(v.text||"")}</span>${v.t?` <span class="muted cd-ver">${esc(v.t)}</span>`:""}`;
+  if(!drw.open) drw.showModal();
+  drw.classList.remove("closing");
+  $("#cdBody").innerHTML=`<p class="muted">Carregando comentaristas…</p>`;
+  try{ Drawer.list=await Comm.available(); }catch(e){ Drawer.list=[]; }
+  const def = Drawer.list.length ? await Comm.defaultId() : null; Drawer.def=def;
+  Drawer.pick = pick || Drawer.pick || (def ? "c:"+def : "b:"+brDefault());
+  if(Drawer.pick.startsWith("c:") && !Drawer.list.some(c=>"c:"+c.id===Drawer.pick)) Drawer.pick = def ? "c:"+def : "b:"+brDefault();
+  renderDrawerChips(); renderDrawerBody();
+}
+function renderDrawerChips(){
+  const def=Drawer.def, bdef=brDefault();
+  const chip=(key,label,isDef)=>`<button type="button" class="cd-chip${Drawer.pick===key?" on":""}" data-pick="${esc(key)}" aria-pressed="${Drawer.pick===key}">${esc(label)}${isDef?' <span class="cd-star" title="Seu padrão">★</span>':""}</button>`;
+  $("#cdChips").innerHTML = (Drawer.list.length?`<div class="cd-row"><span class="cd-lbl">Texto completo (traduzido)</span><div class="cd-scroll">${Drawer.list.map(c=>chip("c:"+c.id,c.label,c.id===def)).join("")}</div></div>`:"")
+    + `<div class="cd-row"><span class="cd-lbl">Brasileiros (links)</span><div class="cd-scroll">${brOrdered().map(c=>chip("b:"+c.name,c.name.replace(/ \(em português\)/," (PT)"),c.name===bdef)).join("")}</div></div>`;
+  $("#cdChips .cd-chip.on")?.scrollIntoView({ inline:"center", block:"nearest" });
+}
+async function renderDrawerBody(){
+  const v=Drawer.v, ref=refLabel(v.b,v.c,v.v), body=$("#cdBody"), key=Drawer.pick;
+  if(key.startsWith("b:")){
+    const c=REFORMED.brazil.find(x=>x.name===key.slice(2)); if(!c){ body.innerHTML=""; return; }
+    const bio=BIOS[c.name];
+    body.innerHTML=`<div class="cd-author"><h3>${esc(c.name)}</h3><p class="meta">${esc(c.meta)}</p></div>
+      ${brItem(c,v).replace(/<details[^>]*>/,'<div class="cd-links">').replace(/<summary>[\s\S]*?<\/summary>/,"").replace(/<\/details>$/,"</div>")}
+      <p class="hint">Obra com direitos autorais: o app não copia o texto; os botões levam ao que ${esc(c.name.split(" ")[0])} diz sobre <strong>${esc(ref)}</strong>.</p>
+      ${bio?`<details class="com-group cd-who"><summary>Quem é ${esc(c.name.split(" ")[0])}?</summary><p class="cd-bio">${esc(bio)}</p></details>`:""}
+      ${c.name===brDefault()?"":`<button type="button" class="btn btn-sm cd-def" data-setbr="${esc(c.name)}">★ Tornar meu brasileiro padrão</button>`}`;
+    return;
+  }
+  const id=key.slice(2), info=Drawer.list.find(x=>x.id===id);
+  body.innerHTML=`<div class="cd-author"><h3>${esc(info?.label||"")}</h3><p class="meta">${esc(info?.trad||"")} · ${authorBtn(info?.label||"",info?.trad||"","Quem é?")}</p></div><p class="muted">Carregando comentário…</p>`;
+  let r=null; try{ r=await Comm.forVerse(id,v.b,v.c,v.v); }catch(e){ body.querySelector(".muted").textContent=comErr(); return; }
+  if(Drawer.pick!==key) return;   // trocou de comentarista enquanto carregava
+  if(!r){ body.querySelector("p.muted").outerHTML=`<p class="muted">${esc(info.label)} não comenta ${esc(BOOK[v.b].name)} ${v.c}. Escolha outro comentarista acima.</p>`; return; }
+  body.querySelector("p.muted").outerHTML=`
+    <div class="cd-actions">
+      <button type="button" class="btn btn-sm" id="cdTr">Traduzir para o português</button>
+      <button type="button" class="btn btn-sm" id="cdSave"><svg class="icon" aria-hidden="true"><use href="#i-bookmark"/></svg>Salvar</button>
+      ${pplxBtn(info.label, ref)}
+    </div>
+    <div class="tr-box cd-text" id="cdText" data-ref="${v.b}.${v.c}.${v.v}" data-author="${esc(info.label)}">${comNote(r,v)+comParas(r.text)}</div>
+    <p class="hint">Dica: selecione um trecho com o dedo para grifá-lo.</p>
+    ${id===Drawer.def?"":`<button type="button" class="btn btn-sm cd-def" data-setcom="${esc(id)}">★ Tornar meu comentário padrão</button>`}`;
+  const box=$("#cdText"), btn=$("#cdTr");
+  btn.addEventListener("click",()=>translateBlock(box, r.text, btn));
+  $("#cdSave").addEventListener("click",()=>Saved.add({ b:v.b,c:v.c,v:v.v, author:info.label, text: box.dataset.state==="pt"?box._pt:r.text, lang: box.dataset.state==="pt"?"pt":"en" }));
+  applyTextMarks(box);
+  if(Tr.auto) translateBlock(box, r.text, btn);
+}
+function closeComDrawer(){ if(!drw.open) return; drw.classList.add("closing"); setTimeout(()=>{ drw.close(); drw.classList.remove("closing"); },180); }
+$("#cdChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pick]"); if(!b) return; Drawer.pick=b.dataset.pick; renderDrawerChips(); renderDrawerBody(); $("#cdBody").scrollTop=0; });
+$("#cdClose").addEventListener("click",closeComDrawer);
+drw.addEventListener("click",e=>{ if(e.target===drw) closeComDrawer(); });          // toque fora fecha
+drw.addEventListener("cancel",e=>{ e.preventDefault(); closeComDrawer(); });
+$("#cdFoot").addEventListener("click",e=>{ const b=e.target.closest("[data-cd]"); if(!b) return; const v=Drawer.v;
+  if(b.dataset.cd==="hl") openHlPop(b,[`${v.b}.${v.c}.${v.v}`]);
+  if(b.dataset.cd==="copy") copyVerse({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) });
+  if(b.dataset.cd==="note") { closeComDrawer(); startNote({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) }); }
+  if(b.dataset.cd==="all"){ closeComDrawer(); if(el.dlg.open) closeReader(); showView("busca"); setFocus({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) }); selectTab("com"); openStudyOnMobile(); }
+});
+/* Deslizar para a direita fecha a gaveta */
+(function(){ let sx=null, sy=0; const pnl=drw.querySelector(".cd-panel");
+  pnl.addEventListener("touchstart",e=>{ const t=e.touches[0]; sx=t.clientX; sy=t.clientY; },{passive:true});
+  pnl.addEventListener("touchmove",e=>{ if(sx===null) return; const dx=e.touches[0].clientX-sx; if(dx>0 && Math.abs(e.touches[0].clientY-sy)<40 && !getSelection().toString()) pnl.style.transform=`translateX(${dx}px)`; },{passive:true});
+  pnl.addEventListener("touchend",e=>{ if(sx===null) return; const dx=e.changedTouches[0].clientX-sx; pnl.style.transform="";
+    if(dx>90 && Math.abs(e.changedTouches[0].clientY-sy)<60 && !getSelection().toString()) closeComDrawer(); sx=null; },{passive:true});
+})();
+/* Versículos do Texto do dia, Devocional e Início: tocar abre a gaveta */
+document.addEventListener("click",e=>{
+  const s=e.target.closest(".day-text .vt[data-hk], .hl-item .vt[data-hk]"); if(!s || String(getSelection()).length>2) return;
+  const [b,c,v]=s.dataset.hk.split("."); const box=s.closest("[id]"); openComDrawer({ t:box?._ps?.t, b, c:+c, v:+v, text:s.textContent });
+});
 /* =====================================================================
    ESCOLHER LIVRO E CAPÍTULO (grade grande, simples, com busca)
    ===================================================================== */
