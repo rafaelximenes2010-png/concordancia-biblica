@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- PWA: permite instalar na tela inicial do celular -->
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2b3a67">
+<meta name="theme-color" content="#1c2747">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -459,6 +459,47 @@ dialog.note-dlg{max-width:620px}
   .view-head svg.ill{width:56px;height:56px}
 }
 
+
+/* =========================================================
+   10. AJUSTES DE ESTILO FORMAL
+   ========================================================= */
+:root{ --gold:#b8892f; --gold-soft:#f6ecd6; --coral:#8c2f39; --sage:#4f7a63; --sage-soft:#e6efe9; --sky:#3f6c99; --sky-soft:#e6eef7; --plum:#5e4a72;
+       --hero-a:#1c2747; --hero-b:#2b3a67; --radius:12px }
+[data-theme="dark"]{ --coral:#d8848c; --gold:#d9b25f; --sage:#8fb8a1; --plum:#b9a3cc }
+.hero h2,.view-head h2,.home-card h3,.day-ref,.brand span,.bp-card h3,.note-card h3{font-family:var(--font-text);font-weight:600;letter-spacing:.1px}
+.hero{border-radius:16px}
+.hero h2{font-size:28px}
+.hero .eyebrow{color:#e3c47e;letter-spacing:1.4px}
+.hero-mark{width:96px;height:96px;border-radius:22px;box-shadow:0 6px 18px rgba(0,0,0,.25);flex:none}
+.eyebrow{color:var(--coral);letter-spacing:1.2px}
+.home-card,.bp-card,.note-card,.day-card,.streak{border-radius:12px}
+.home-card{border-top:3px solid var(--gold)!important}
+.home-card .badge-ill,.view-head svg.ill,.bp-thumb{display:none}
+.view-head{border-left:3px solid var(--gold);padding-left:14px}
+.streak .flame{width:30px;height:30px;color:var(--gold)}
+.nav-btn{border-radius:8px}
+.top-nav .nav-btn[aria-current="page"]{background:transparent;color:var(--accent);box-shadow:inset 0 -2px 0 var(--gold);border-radius:0}
+.pill{border-radius:6px}
+.btn{border-radius:8px}
+.note-card{border-left-width:3px}
+.devo-block h4{letter-spacing:1px}
+/* Aba Bíblia: o leitor ocupa a área entre o topo e a barra inferior */
+body.reading{overflow:hidden}
+dialog.reader.as-view{position:fixed;top:66px;bottom:14px;left:0;right:0;margin:0 auto;height:auto;max-height:none;width:calc(100% - 24px);max-width:900px;z-index:20;box-shadow:var(--shadow)}
+.rd-mid{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+#rdYV{font-size:12px}
+dialog.reader.as-view .rd-com{max-height:24vh}
+.rd-verse.sel{cursor:default}
+@media (max-width:899px){
+  dialog.reader.as-view{top:60px;bottom:calc(64px + env(safe-area-inset-bottom));width:100%;max-width:100%;border-radius:0;border-left:0;border-right:0}
+  .bottom-nav .nav-btn{font-size:10px;padding:6px 0}
+  .bottom-nav .nav-btn .icon{width:21px;height:21px}
+}
+@media (max-width:760px){
+  .hero-mark{width:64px;height:64px;border-radius:15px}
+  .hero h2{font-size:22px}
+  .rd-mid #rdPos{display:none}
+}
 </style>
 </head>
 <body>
@@ -541,6 +582,7 @@ dialog.note-dlg{max-width:620px}
     <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/icon.svg" alt="" width="34" height="34"><span>Concordância Bíblica</span></a></h1>
     <nav class="top-nav" aria-label="Seções do aplicativo">
       <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
+      <button type="button" class="nav-btn" data-view="biblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Bíblia</button>
       <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca bíblica</button>
       <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto do dia</button>
       <button type="button" class="nav-btn" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
@@ -548,7 +590,6 @@ dialog.note-dlg{max-width:620px}
       <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Minhas notas</button>
     </nav>
     <div class="header-tools">
-      <button type="button" class="btn" id="readBtn" aria-label="Ler a Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Ler</button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -565,7 +606,7 @@ dialog.note-dlg{max-width:620px}
       <h2 id="homeTitle">Seu tempo com a Palavra hoje</h2>
       <p id="heroDate"></p>
     </div>
-    <svg aria-hidden="true"><use href="#ill-sunrise"/></svg>
+    <img class="hero-mark" src="icons/icon.svg" alt="" width="96" height="96">
   </div>
   <div id="remBanner"></div>
   <div class="streak" id="streakBox" aria-live="polite"></div>
@@ -603,6 +644,9 @@ dialog.note-dlg{max-width:620px}
     </article>
   </div>
 </section>
+
+<!-- ===================== BÍBLIA (leitor do próprio app) ===================== -->
+<section class="view" id="view-biblia" hidden aria-label="Bíblia"></section>
 
 <!-- ===================== BUSCA BÍBLICA ===================== -->
 <section class="view" id="view-busca" hidden aria-label="Busca bíblica">
@@ -826,6 +870,7 @@ dialog.note-dlg{max-width:620px}
 <!-- Navegação inferior (celular) -->
 <nav class="bottom-nav" aria-label="Seções do aplicativo">
   <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
+  <button type="button" class="nav-btn" data-view="biblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Bíblia</button>
   <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca</button>
   <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto</button>
   <button type="button" class="nav-btn" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
@@ -881,7 +926,8 @@ dialog.note-dlg{max-width:620px}
   <div class="dlg-body" id="ctxBody"></div>
   <div class="reader-nav">
     <button type="button" class="btn" id="rdPrev" aria-label="Capítulo anterior">‹ Anterior</button>
-    <span id="rdPos" class="muted"></span>
+    <span class="rd-mid"><span id="rdPos" class="muted"></span>
+      <a class="btn btn-sm btn-ext" id="rdYV" target="_blank" rel="noopener noreferrer" title="Abre este capítulo no YouVersion, onde você escolhe ARA, NVI, NAA e outras versões">Abrir no YouVersion ↗</a></span>
     <button type="button" class="btn" id="rdNext" aria-label="Próximo capítulo">Próximo ›</button>
   </div>
   <div class="rd-com" id="rdCom" hidden></div>
@@ -1445,9 +1491,15 @@ function openDialog(d){ if(typeof d.showModal==="function"){ if(!d.open) d.showM
 async function openReader(opts={}){
   const last=store.get("reader",{});
   Object.assign(rd, { t:last.t||el.tr.value||DEFAULT_VERSION, b:last.b||"JHN", c:last.c||1, cmp:last.cmp||"" }, opts);
-  rd.sel=null; openDialog(el.dlg); await renderReader();
+  rd.sel=null;
+  const asView=!!opts.asView;
+  if(el.dlg.open && el.dlg.classList.contains("as-view")!==asView) el.dlg.close();
+  el.dlg.classList.toggle("as-view",asView); document.body.classList.toggle("reading",asView);
+  if(!el.dlg.open){ if(asView) el.dlg.show(); else openDialog(el.dlg); }
+  await renderReader();
 }
-function openContext(v){ setFocus(v); openReader({ t:v.t, b:v.b, c:v.c, hi:v.v }); }
+function closeReader(){ if(el.dlg.open) el.dlg.close(); el.dlg.classList.remove("as-view"); document.body.classList.remove("reading"); }
+function openContext(v){ setFocus(v); openReader({ t:v.t, b:v.b, c:v.c, hi:v.v, asView:false }); }
 
 async function renderReader(){
   document.documentElement.style.setProperty("--rd-size", rd.size+"px");
@@ -1478,6 +1530,7 @@ async function renderReader(){
   rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true;
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
+  $("#rdYV").href = `https://www.bible.com/bible/compare/${rd.b}.${rd.c}.1-${verses.length||1}`;
 }
 function neighbor(step){
   const books=Repo.booksIn(rd.t); const i=books.findIndex(b=>b.id===rd.b);
@@ -1493,9 +1546,10 @@ rdEl.b.addEventListener("change",()=>{ rd.b=rdEl.b.value; rd.c=1; rd.hi=null; re
 rdEl.c.addEventListener("change",()=>{ rd.c=+rdEl.c.value; rd.hi=null; renderReader(); });
 $("#rdSmaller").addEventListener("click",()=>{ rd.size=Math.max(14,rd.size-1); store.set("fontSize",rd.size); document.documentElement.style.setProperty("--rd-size",rd.size+"px"); });
 $("#rdBigger").addEventListener("click",()=>{ rd.size=Math.min(30,rd.size+1); store.set("fontSize",rd.size); document.documentElement.style.setProperty("--rd-size",rd.size+"px"); });
-$("#readBtn").addEventListener("click",()=>openReader({hi:null}));
+
 
 function selectVerse(p){
+  if(p.classList.contains("sel")){ p.classList.remove("sel"); rd.sel=null; rdEl.actions.hidden=true; $("#rdCom").hidden=true; return; }
   el.dlgBody.querySelectorAll(".rd-verse.sel").forEach(x=>x.classList.remove("sel"));
   const vn=+p.dataset.v; p.classList.add("sel");
   rd.sel = { t:rd.t, b:rd.b, c:rd.c, v:vn, text:(Bible.data[rd.t].books[rd.b][rd.c-1][vn-1]) };
@@ -1508,12 +1562,12 @@ rdEl.actions.addEventListener("click",e=>{
   const b=e.target.closest("[data-rd]"); if(!b || !rd.sel) return; const v=rd.sel;
   if(b.dataset.rd==="copy") copyVerse(v);
   if(b.dataset.rd==="fav") toggleFav(v);
-  if(b.dataset.rd==="com"){ el.dlg.close(); setFocus(v); selectTab("com"); openStudyOnMobile(); }
-  if(b.dataset.rd==="note"){ el.dlg.close(); startNote(v); }
+  if(b.dataset.rd==="com"){ closeReader(); showView("busca"); setFocus(v); selectTab("com"); openStudyOnMobile(); }
+  if(b.dataset.rd==="note"){ startNote(v); }
 });
 document.addEventListener("keydown",e=>{ if(!el.dlg.open || ["SELECT","INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
   if(e.key==="ArrowLeft") goChapter(-1); if(e.key==="ArrowRight") goChapter(1); });
-el.dlgClose.addEventListener("click",()=>el.dlg.close?el.dlg.close():el.dlg.removeAttribute("open"));
+el.dlgClose.addEventListener("click",()=>{ const wasView=el.dlg.classList.contains("as-view"); closeReader(); if(wasView) showView(lastView||"inicio"); });
 
 
 /* ---------- Favoritos ---------- */
@@ -2258,7 +2312,7 @@ function renderStreak(){
   const n=Streak.count(), done=Streak.isDone(), set=new Set(Streak.days());
   const dots=Array.from({length:7},(_,i)=>{ const d=addDays(i-6); const k=todayKey(d);
     return `<span class="dot ${set.has(k)?"on":""} ${i===6?"today":""}" title="${esc(d.toLocaleDateString("pt-BR"))}"><i></i>${esc(d.toLocaleDateString("pt-BR",{weekday:"narrow"}))}</span>`; }).join("");
-  box.innerHTML = `<svg class="flame" aria-hidden="true"><use href="#ill-flame"/></svg>
+  box.innerHTML = `<svg class="flame icon" aria-hidden="true"><use href="#i-calendar"/></svg>
     <div><strong>${n} ${n===1?"dia seguido":"dias seguidos"}</strong><br><span class="muted">${done?"Estudo de hoje concluído. Volte amanhã para continuar a sequência!":"Leia o texto do dia ou o devocional e marque como concluído."}</span></div>
     <div class="dots" aria-label="Últimos 7 dias">${dots}</div>`;
   document.querySelectorAll(".done-btn").forEach(b=>{ b.setAttribute("aria-pressed",done); b.lastChild.textContent = done?"Concluído hoje":"Marcar como concluído"; });
@@ -2384,7 +2438,7 @@ async function renderHome(){
 $("#view-inicio").addEventListener("click",e=>{
   const g=e.target.closest("[data-go]"); if(g) return showView(g.dataset.go);
   if(e.target.closest("[data-newnote]")) return openNoteEditor({});
-  if(e.target.closest("[data-read]")) return openReader({hi:null});
+  if(e.target.closest("[data-read]")) return showView("biblia");
 });
 $("#homeSearch").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#homeQ").value.trim();
   showView("busca"); if(v){ el.q.value=v; runSearch(); } else el.q.focus(); });
@@ -2464,7 +2518,7 @@ function openNoteEditor(pre={}){
   nd.ref.value=n?.ref||pre.ref||""; nd.text.value=n?.text||pre.text||""; nd.extra.value=n?.extra||pre.extra||"";
   const type=n?.type||pre.type||"estudo"; document.querySelector(`input[name="neType"][value="${type}"]`).checked=true;
   nd.err.textContent="";
-  if(el.dlg.open) el.dlg.close();
+  if(el.dlg.open && !el.dlg.classList.contains("as-view")) el.dlg.close();
   openDialog(nd.dlg); (nd.title.value?nd.text:nd.title).focus();
 }
 const closeNoteEditor = () => nd.dlg.close();
@@ -2632,7 +2686,8 @@ function renderReminderBanner(){
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","busca","texto","devocional","estudos","notas"];
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","notas"];
+let lastView="inicio";
 let currentView="inicio", bpReady=false;
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
@@ -2646,6 +2701,8 @@ function showView(name, {push=true}={}){
   if(name==="devocional"){ renderDevo(); renderReminders(); }
   if(name==="estudos"){ if(!bpReady){ initBP(); bpReady=true; } renderBP(); }
   if(name==="notas") renderNotesView();
+  if(name==="biblia") openReader({ hi:null, asView:true });
+  else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b){ e.preventDefault(); showView(b.dataset.view); } });
 window.addEventListener("hashchange",()=>showView(location.hash.slice(1),{push:false}));

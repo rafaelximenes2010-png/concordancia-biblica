@@ -9,7 +9,7 @@
   "display": "standalone",
   "orientation": "any",
   "background_color": "#fbf7f0",
-  "theme_color": "#2b3a67",
+  "theme_color": "#1c2747",
   "categories": ["books", "education", "lifestyle"],
   "icons": [
     { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" },
