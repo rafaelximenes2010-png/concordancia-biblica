@@ -737,6 +737,51 @@ details.br-acc > summary,details.com-text > summary{display:flex;align-items:cen
 .layout > *{min-width:0} .panel{max-width:100%}
 .panel [role="tablist"]{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .panel [role="tablist"]::-webkit-scrollbar{display:none}
+
+/* ===== Escolha de livro amigável + barra inferior maior ===== */
+.rd-pick{display:flex;align-items:center;gap:10px;width:calc(100% - 20px);margin:8px 10px 2px;padding:12px 16px;border-radius:14px;border:2px solid var(--gold);
+  background:var(--gold-soft);color:var(--ink);font:inherit;font-size:20px;font-weight:700;cursor:pointer;text-align:left}
+.rd-pick .icon{width:26px;height:26px;color:var(--accent)}
+.rd-pick #rdPickLbl{flex:1;font-family:var(--font-text)}
+.rd-pick-hint{font-size:13px;font-weight:600;color:var(--ink-2)}
+.rd-pick .chev{font-size:18px;color:var(--accent)}
+@media (max-width:899px){ .reader-bar #rdBook,.reader-bar #rdChap{display:none} }
+dialog.picker{width:min(760px,100vw);max-width:100vw;height:min(92vh,900px);max-height:100dvh;padding:0;border:0;border-radius:18px;display:none;flex-direction:column;background:var(--bg);color:var(--ink)}
+dialog.picker[open]{display:flex}
+@media (max-width:760px){ dialog.picker{width:100vw;height:100dvh;border-radius:0;margin:0} }
+.picker-head{display:flex;align-items:center;gap:10px;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top));border-bottom:1px solid var(--border);background:var(--surface)}
+.picker-head h2{flex:1;margin:0;font-size:20px;font-family:var(--font-text)}
+.picker-tools{padding:10px 14px;display:flex;flex-direction:column;gap:10px;background:var(--surface);border-bottom:1px solid var(--border)}
+.picker-search{display:flex;align-items:center;gap:8px;border:2px solid var(--border);border-radius:14px;padding:10px 12px;background:var(--bg)}
+.picker-search:focus-within{border-color:var(--gold)}
+.picker-search input{flex:1;border:0;background:transparent;font:inherit;font-size:18px;color:var(--ink);outline:none;min-width:0}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--accent-soft);padding:4px;border-radius:12px}
+.seg button{border:0;background:transparent;padding:10px 6px;border-radius:9px;font:inherit;font-size:15px;font-weight:650;color:var(--ink-2);cursor:pointer}
+.seg button[aria-checked="true"]{background:var(--surface);color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.picker-body{flex:1;overflow:auto;padding:12px 14px calc(24px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+.bk-group{margin:4px 0 14px}
+.bk-group h3{font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-2);margin:6px 2px 8px;display:flex;align-items:center;gap:8px}
+.bk-group h3 i{width:12px;height:12px;border-radius:50%;background:var(--gc)}
+.bk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.bk{border:1px solid var(--border);border-left:6px solid var(--gc);background:var(--surface);border-radius:12px;padding:14px 12px;font:inherit;font-size:17px;font-weight:650;
+  color:var(--ink);text-align:left;cursor:pointer;min-height:56px;display:flex;flex-direction:column;gap:2px}
+.bk small{font-size:12px;font-weight:500;color:var(--ink-2)}
+.bk:active{transform:scale(.98)} .bk.cur{outline:3px solid var(--gold)}
+.bk[disabled]{opacity:.35;cursor:not-allowed}
+.ch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:8px}
+.ch{border:1px solid var(--border);background:var(--surface);border-radius:12px;font:inherit;font-size:20px;font-weight:700;color:var(--ink);min-height:60px;cursor:pointer}
+.ch.cur{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ch:active{transform:scale(.96)}
+.bk-recent{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:10px}
+.bk-recent .bk{min-width:130px;flex:none}
+@media (max-width:899px){
+  .bottom-nav{padding:6px 2px calc(6px + env(safe-area-inset-bottom))}
+  .bottom-nav .nav-btn{font-size:11.5px!important;gap:3px;padding:7px 0!important;font-weight:650}
+  .bottom-nav .nav-btn .icon{width:28px!important;height:28px!important;stroke-width:2}
+  body{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
+  .btn{min-height:40px}
+}
 </style>
 </head>
 <body>
@@ -1327,6 +1372,20 @@ details.br-acc > summary,details.com-text > summary{display:flex;align-items:cen
 </section>
 </div><!-- /views -->
 
+<dialog id="bookPicker" class="picker" aria-labelledby="bpTitle">
+  <div class="picker-head">
+    <button type="button" class="btn btn-sm back-btn" id="pkBack"><span aria-hidden="true">‹</span> Voltar</button>
+    <h2 id="pkTitle">Escolha o livro</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="pkClose" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="picker-tools" id="pkTools">
+    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Procurar livro</span><input id="pkQ" type="search" placeholder="Digite o livro… (ex.: Salmos, Jo, Rm)" autocomplete="off"></label>
+    <div class="seg" role="radiogroup" aria-label="Testamento">
+      <button type="button" data-t="AT" role="radio">Antigo Testamento</button><button type="button" data-t="NT" role="radio">Novo Testamento</button>
+    </div>
+  </div>
+  <div class="picker-body" id="pkBody"></div>
+</dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
     <h2 id="helpTitle">Ajuda</h2>
@@ -1344,7 +1403,7 @@ details.br-acc > summary,details.com-text > summary{display:flex;align-items:cen
   <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca</button>
   <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto</button>
   <button type="button" class="nav-btn" data-view="devocional" data-group="estudos"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Estudos</button>
-  <button type="button" class="nav-btn" data-view="catecismos"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg>Catecismos</button>
+  <button type="button" class="nav-btn" data-view="catecismos"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg>Credos</button>
   <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Notas</button>
 </nav>
 
@@ -1384,6 +1443,8 @@ details.br-acc > summary,details.com-text > summary{display:flex;align-items:cen
     <h2 id="ctxTitle">Bíblia</h2>
     <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
+  <button type="button" class="rd-pick" id="rdPick" aria-haspopup="dialog" aria-label="Escolher livro e capítulo">
+    <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span id="rdPickLbl">João 1</span><span class="rd-pick-hint">Trocar livro</span><span class="chev" aria-hidden="true">▾</span></button>
   <div class="reader-bar">
     <label class="sr-only" for="rdVersion">Versão</label><select id="rdVersion"></select>
     <label class="sr-only" for="rdBook">Livro</label><select id="rdBook"></select>
@@ -2017,7 +2078,7 @@ async function renderReader(){
   rdEl.b.innerHTML = Repo.booksIn(rd.t).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join(""); rdEl.b.value=rd.b;
   const n=Repo.chapterCount(rd.t, rd.b);
   rdEl.c.innerHTML = Array.from({length:n},(_,i)=>`<option value="${i+1}">Cap. ${i+1}</option>`).join(""); rdEl.c.value=rd.c;
-  el.dlgTitle.textContent = `${BOOK[rd.b].name} ${rd.c}`;
+  el.dlgTitle.textContent = `${BOOK[rd.b].name} ${rd.c}`; $("#rdPickLbl").textContent = `${BOOK[rd.b].name} ${rd.c}`;
   rdEl.pos.textContent = `${rd.t}${rd.cmp?" + "+rd.cmp:""}`;
 
   const ver=Repo.version(rd.t), cv=rd.cmp?Repo.version(rd.cmp):null;
@@ -4045,7 +4106,7 @@ async function checkUpdate(manual){
   }catch(e){ if(manual) st.textContent="Não foi possível verificar agora."; }
 }
 $("#cfgUpdate").addEventListener("click",()=>checkUpdate(true));
-if("serviceWorker" in navigator){ let reloaded=false; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded) return; reloaded=true; toast("App atualizado para a versão mais recente.", 4000); }); }
+if("serviceWorker" in navigator){ let reloaded=false; const hadCtl=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded || !hadCtl) return; reloaded=true; toast("App atualizado para a versão mais recente.", 4000); }); }
 paintAvatar();
 /* ---------- Tradução de versículos em outros idiomas (para português ou inglês) ---------- */
 const LANG_PT = { pt:"português", en:"inglês", he:"hebraico", grc:"grego", el:"grego", la:"latim", es:"espanhol", fr:"francês", de:"alemão", nl:"holandês", ru:"russo", zh:"chinês", hu:"húngaro", pl:"polonês", sv:"sueco" };
@@ -4214,6 +4275,7 @@ document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); 
 /* Voltar: primeiro fecha o que estiver aberto dentro da página (documento, editor);
    depois volta à página anterior; sem histórico, vai para o Início. */
 function goBack(){
+  if($("#bookPicker")?.open){ if(bp.book) renderBookGrid(); else $("#bookPicker").close(); return; }
   if($("#noteDialog").open){ $("#noteDialog").close(); return; }
   if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
   if(currentView==="catecismos" && !$("#catDoc").hidden){ renderCatHome(); window.scrollTo({top:0}); return; }
@@ -4229,6 +4291,67 @@ window.addEventListener("hashchange",()=>{
   showView(name,{push:false});
 });
 
+
+/* =====================================================================
+   ESCOLHER LIVRO E CAPÍTULO (grade grande, simples, com busca)
+   ===================================================================== */
+const BK_GROUPS = [
+  ["Pentateuco",0,5,"#b8892f"],["Livros históricos",5,17,"#8c2f39"],["Poéticos e sabedoria",17,22,"#4f7a63"],
+  ["Profetas maiores",22,27,"#3f6c99"],["Profetas menores",27,39,"#5e4a72"],
+  ["Evangelhos",39,43,"#b8892f"],["Atos",43,44,"#8c2f39"],["Cartas de Paulo",44,57,"#3f6c99"],["Cartas gerais",57,65,"#4f7a63"],["Apocalipse",65,66,"#5e4a72"]
+];
+const bp = { t:"NT", book:null };
+const picker=$("#bookPicker");
+function openBookPicker(){
+  bp.book=null; bp.t = BOOK[rd.b]?.testament || "NT"; $("#pkQ").value="";
+  renderBookGrid(); picker.showModal(); setTimeout(()=>picker.querySelector(".bk.cur")?.scrollIntoView({block:"center"}),30);
+}
+function renderBookGrid(){
+  bp.book=null; $("#pkTitle").textContent="Escolha o livro"; $("#pkTools").hidden=false;
+  picker.querySelectorAll(".seg button").forEach(b=>b.setAttribute("aria-checked", String(b.dataset.t===bp.t)));
+  const avail=new Set(Repo.booksIn(rd.t).map(b=>b.id)); const q=norm($("#pkQ").value.trim()).replace(/\s+/g,"");
+  const match=b=>{ if(!q) return true; const n=norm(b.name).replace(/\s+/g,""); return n.startsWith(q) || n.replace(/^\d/,"").startsWith(q) || (b.alias||[]).some(a=>a.replace(/\s+/g,"").startsWith(q)); };
+  const recent=store.get("recentBooks",[]).filter(id=>BOOK[id] && avail.has(id) && id!==rd.b).slice(0,5);
+  let html="";
+  if(!q && recent.length) html+=`<div class="bk-group"><h3>Lidos recentemente</h3><div class="bk-recent">${recent.map(id=>bkBtn(CANON_IDX[id],avail)).join("")}</div></div>`;
+  BK_GROUPS.forEach(([name,a,b,color])=>{
+    const idx=[]; for(let i=a;i<b;i++){ const bk=CANON_OBJ[i]; if(q ? match(bk) : bk.testament===bp.t) idx.push(i); }
+    if(!idx.length) return;
+    html+=`<div class="bk-group" style="--gc:${color}"><h3><i></i>${esc(name)}</h3><div class="bk-grid">${idx.map(i=>bkBtn(i,avail)).join("")}</div></div>`;
+  });
+  $("#pkBody").innerHTML = html || `<p class="muted" style="font-size:17px">Nenhum livro encontrado. Tente só o começo do nome, como “Sal” ou “Rom”.</p>`;
+  $("#pkBody").scrollTop=0;
+}
+function bkBtn(i, avail){
+  const b=CANON_OBJ[i]; const g=BK_GROUPS.find(([,a,z])=>i>=a&&i<z);
+  const n = avail.has(b.id) ? Repo.chapterCount(rd.t,b.id) : 0;
+  return `<button type="button" class="bk${b.id===rd.b?" cur":""}" data-bk="${b.id}" style="--gc:${g[3]}" ${n?"":"disabled"}>${esc(b.name)}<small>${n?`${n} ${n===1?"capítulo":"capítulos"}`:"não existe nesta versão"}</small></button>`;
+}
+function renderChapterGrid(id){
+  bp.book=id; const n=Repo.chapterCount(rd.t,id);
+  if(n===1) return pickChapter(id,1);
+  $("#pkTitle").textContent=`${BOOK[id].name}: escolha o capítulo`; $("#pkTools").hidden=true;
+  $("#pkBody").innerHTML=`<div class="ch-grid">${Array.from({length:n},(_,k)=>`<button type="button" class="ch${id===rd.b&&k+1===rd.c?" cur":""}" data-ch="${k+1}" aria-label="Capítulo ${k+1}">${k+1}</button>`).join("")}</div>`;
+  $("#pkBody").scrollTop=0;
+}
+function pickChapter(id,c){
+  rd.b=id; rd.c=c; rd.hi=null; picker.close();
+  const r=store.get("recentBooks",[]).filter(x=>x!==id); r.unshift(id); store.set("recentBooks",r.slice(0,8));
+  renderReader();
+}
+const CANON_OBJ = CANON.map(b=>({ id:b.id, name:b.name, testament:b.testament, alias:(b.aliases||[]).map(x=>norm(x)) }));
+const CANON_IDX = Object.fromEntries(CANON_OBJ.map((b,i)=>[b.id,i]));
+$("#rdPick").addEventListener("click",openBookPicker);
+el.dlgTitle.style.cursor="pointer"; el.dlgTitle.addEventListener("click",openBookPicker);
+$("#pkQ").addEventListener("input",renderBookGrid);
+picker.querySelector(".seg").addEventListener("click",e=>{ const b=e.target.closest("[data-t]"); if(!b) return; bp.t=b.dataset.t; $("#pkQ").value=""; renderBookGrid(); });
+$("#pkBody").addEventListener("click",e=>{
+  const b=e.target.closest("[data-bk]"); if(b && !b.disabled) return renderChapterGrid(b.dataset.bk);
+  const c=e.target.closest("[data-ch]"); if(c) return pickChapter(bp.book,+c.dataset.ch);
+});
+$("#pkBack").addEventListener("click",()=>{ if(bp.book) renderBookGrid(); else picker.close(); });
+$("#pkClose").addEventListener("click",()=>picker.close());
+$("#pkQ").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); const f=$("#pkBody .bk:not([disabled])"); if(f) renderChapterGrid(f.dataset.bk); } });
 /* =====================================================================
    TAMANHO DO TEXTO DO APP + NAVEGAÇÃO MAIS ÁGIL (estilo iOS)
    ===================================================================== */
