@@ -190,6 +190,20 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:3p
 .lex b{font-family:var(--font-text);font-size:15px}
 .section-title{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-3);margin:12px 0 6px}
 
+/* Comentários e autores */
+.com-intro{font-size:12px;color:var(--ink-2);background:var(--ext-soft);border:1px dashed var(--ext-border);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.com-group{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;background:var(--bg)}
+.com-group>summary{cursor:pointer;padding:9px 10px;font-weight:650;font-size:14px;list-style-position:inside}
+.com-group>summary:hover{background:var(--surface-2)}
+.com-group .count-pill{font-size:11px;color:var(--ink-3);font-weight:500;margin-left:4px}
+.com-item{padding:8px 10px;border-top:1px solid var(--border)}
+.com-item h4{margin:0;font-size:14px}
+.com-item .meta{font-size:12px;color:var(--ink-3);margin:2px 0 6px}
+.com-links{display:flex;gap:6px;flex-wrap:wrap}
+.com-links a{font-size:12px;padding:3px 8px;border-radius:6px;border:1px solid var(--ext-border);color:var(--ext);text-decoration:none;background:var(--surface)}
+.com-links a:hover{background:var(--ext-soft)}
+.com-sites{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+
 /* Modal de contexto */
 dialog{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;max-width:680px;width:calc(100% - 24px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
 dialog::backdrop{background:rgba(20,15,10,.45)}
@@ -415,6 +429,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
           <button class="tab" role="tab" id="tab-hist" aria-controls="tp-hist" aria-selected="false" tabindex="-1">Histórico</button>
           <button class="tab" role="tab" id="tab-notes" aria-controls="tp-notes" aria-selected="false" tabindex="-1">Notas</button>
           <button class="tab" role="tab" id="tab-rel" aria-controls="tp-rel" aria-selected="false" tabindex="-1">Relacionadas</button>
+          <button class="tab" role="tab" id="tab-com" aria-controls="tp-com" aria-selected="false" tabindex="-1">Comentários</button>
         </div>
         <div class="tabpanel" role="tabpanel" id="tp-fav" aria-labelledby="tab-fav"></div>
         <div class="tabpanel" role="tabpanel" id="tp-hist" aria-labelledby="tab-hist" hidden></div>
@@ -430,6 +445,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
           <ul class="mini-list" id="noteList"></ul>
         </div>
         <div class="tabpanel" role="tabpanel" id="tp-rel" aria-labelledby="tab-rel" hidden></div>
+        <div class="tabpanel" role="tabpanel" id="tp-com" aria-labelledby="tab-com" hidden></div>
       </div>
     </div>
   </aside>
@@ -929,11 +945,13 @@ function cardFor(v){
       <button type="button" class="btn btn-sm" data-act="ctx" aria-label="Abrir contexto do capítulo de ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Contexto</button>
       <button type="button" class="btn btn-sm fav" data-act="fav" aria-pressed="${fav}" aria-label="${fav?"Remover dos favoritos":"Favoritar"} ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>${fav?"Favorito":"Favoritar"}</button>
       <button type="button" class="btn btn-sm" data-act="note" aria-label="Criar nota sobre ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+      <button type="button" class="btn btn-sm" data-act="com" aria-label="Ver comentários e autores reformados sobre ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
       <button type="button" class="btn btn-sm btn-ghost" data-act="rel" aria-label="Ver referências relacionadas a ${esc(label)}">Relacionadas</button>
     </div>`;
   li.addEventListener("click",e=>{
     const b=e.target.closest("[data-act]"); if(!b) return;
-    ({ copy:()=>copyVerse(v), ctx:()=>openContext(v), fav:()=>toggleFav(v), note:()=>startNote(v), rel:()=>{ setFocus(v); selectTab("rel"); openStudyOnMobile(); } })[b.dataset.act]();
+    ({ copy:()=>copyVerse(v), ctx:()=>openContext(v), fav:()=>toggleFav(v), note:()=>startNote(v), rel:()=>{ setFocus(v); selectTab("rel"); openStudyOnMobile(); },
+       com:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); } })[b.dataset.act]();
   });
   return li;
 }
@@ -1072,7 +1090,7 @@ function setFocus(v){
   state.focusKey=favKey(v); state.focusVerse=v;
   document.querySelectorAll(".card.is-focus").forEach(c=>c.classList.remove("is-focus"));
   document.querySelector(`.card[data-key="${CSS.escape(favKey(v))}"]`)?.classList.add("is-focus");
-  renderRelated(); renderExternal();
+  renderRelated(); renderCommentary(); renderExternal();
 }
 function renderRelated(){
   const v=state.focusVerse; let html="";
@@ -1099,6 +1117,106 @@ function goToRef(label, tr){
   el.q.value=label; setMode("ref");
   if(tr && el.tr.value!=="all" && el.tr.value!==tr) el.tr.value=tr, updateTranslationHint();
   runSearch(); window.scrollTo({top:0,behavior:"smooth"});
+}
+
+
+/* =====================================================================
+   COMENTÁRIOS E AUTORES REFORMADOS
+   ---------------------------------------------------------------------
+   Catálogo de REFERÊNCIA (nomes, obras e áreas). Nenhum trecho de
+   comentário é reproduzido: cada item gera links de pesquisa externa
+   para o versículo selecionado. >>> Para integrar comentários licenciados
+   (ex.: via API de uma editora), substitua getCommentaryFor(). <<<
+   covers: "all" | "NT" | "AT" | lista de livros; except: livros sem volume.
+   ===================================================================== */
+const REFORMED = {
+  commentators: [
+    { name:"João Calvino", meta:"Reformador (séc. XVI) · Comentários bíblicos", covers:"all", except:["PRO","SNG","REV","2JN","3JN","JUD","1SA","2SA","1KI","2KI","1CH","2CH","EZR","NEH","EST","JOB","ECC","RUT","JDG"] },
+    { name:"Matthew Henry", meta:"Puritano (séc. XVII–XVIII) · Comentário da Bíblia inteira", covers:"all" },
+    { name:"John Gill", meta:"Batista calvinista (séc. XVIII) · Exposition of the Old and New Testament", covers:"all" },
+    { name:"William Hendriksen e Simon Kistemaker", meta:"Comentário do Novo Testamento (Baker; ed. brasileira Cultura Cristã)", covers:"NT" },
+    { name:"D. A. Carson", meta:"The Gospel According to John (Pillar)", covers:["JHN"] },
+    { name:"Douglas J. Moo", meta:"The Epistle to the Romans (NICNT)", covers:["ROM"] },
+    { name:"Thomas R. Schreiner", meta:"Romans (BECNT)", covers:["ROM"] },
+    { name:"D. Martyn Lloyd-Jones", meta:"Séries expositivas em Romanos e Efésios", covers:["ROM","EPH"] },
+    { name:"R. C. Sproul", meta:"St. Andrew’s Expositional Commentary · editor da Reformation Study Bible", covers:"all", check:true },
+    { name:"Reformed Expository Commentary", meta:"Série expositiva (P&R) escrita por pastores reformados", covers:"all", check:true },
+    { name:"Hernandes Dias Lopes", meta:"Comentários Expositivos (Hagnos)", covers:"all", check:true },
+    { name:"Bíblia de Estudo de Genebra", meta:"Notas de estudo reformadas (Cultura Cristã)", covers:"all" }
+  ],
+  thinkers: [
+    { name:"Jonathan Edwards", meta:"Teólogo e filósofo puritano · Afeições Religiosas" },
+    { name:"Abraham Kuyper", meta:"Teólogo e estadista · Lectures on Calvinism (soberania das esferas)" },
+    { name:"Herman Bavinck", meta:"Teólogo · Dogmática Reformada" },
+    { name:"Herman Dooyeweerd", meta:"Filósofo · Filosofia da Ideia Cosmonômica" },
+    { name:"Cornelius Van Til", meta:"Apologeta · apologética pressuposicional" },
+    { name:"Francis Schaeffer", meta:"Apologeta e pensador cultural · O Deus que Intervém" },
+    { name:"Alvin Plantinga", meta:"Filósofo · epistemologia reformada (Warranted Christian Belief)" },
+    { name:"Nicholas Wolterstorff", meta:"Filósofo · fé, razão e justiça" },
+    { name:"John Frame", meta:"Teólogo e filósofo · teologia do senhorio" },
+    { name:"James K. A. Smith", meta:"Filósofo · liturgias culturais (Você é aquilo que ama)" },
+    { name:"Timothy Keller", meta:"Pastor e apologeta · A Fé na Era do Ceticismo" }
+  ],
+  counseling: [
+    { name:"D. Martyn Lloyd-Jones", meta:"Médico e pastor · Depressão Espiritual" },
+    { name:"Jay E. Adams", meta:"Pastor · fundador do aconselhamento noutético" },
+    { name:"David Powlison", meta:"Conselheiro bíblico (CCEF) · Seeing with New Eyes" },
+    { name:"Edward T. Welch", meta:"Psicólogo (PhD) e conselheiro (CCEF) · When People Are Big and God Is Small" },
+    { name:"Paul David Tripp", meta:"Pastor e conselheiro · Instrumentos nas Mãos do Redentor" },
+    { name:"Michael R. Emlet", meta:"Médico e conselheiro (CCEF) · fé e medicação psiquiátrica" },
+    { name:"Heath Lambert", meta:"Pastor e conselheiro (ACBC)" }
+  ],
+  // Sites de referência (abrem pesquisa já filtrada para o versículo)
+  sites: [
+    { name:"Ligonier", domain:"ligonier.org" }, { name:"Monergism", domain:"monergism.com" },
+    { name:"Desiring God", domain:"desiringgod.org" }, { name:"The Gospel Coalition", domain:"thegospelcoalition.org" },
+    { name:"CCEL (Calvino)", domain:"ccel.org" }, { name:"CCEF", domain:"ccef.org" },
+    { name:"Ministério Fiel", domain:"ministeriofiel.com.br" }, { name:"Voltemos ao Evangelho", domain:"voltemosaoevangelho.com" }
+  ]
+};
+/* Nomes dos livros no BibleHub (comentários clássicos: Henry, Gill e outros) */
+const BIBLEHUB = { GEN:"genesis", DEU:"deuteronomy", PSA:"psalms", PRO:"proverbs", ISA:"isaiah", HAB:"habakkuk", MRK:"mark",
+  JHN:"john", ROM:"romans", "1CO":"1_corinthians", "2CO":"2_corinthians", EPH:"ephesians", HEB:"hebrews", JAS:"james", "1JN":"1_john" };
+
+function coversBook(c, b){
+  if(c.except && c.except.includes(b)) return false;
+  if(c.covers==="all") return true;
+  if(c.covers==="NT"||c.covers==="AT") return BOOK[b].testament===c.covers;
+  return c.covers.includes(b);
+}
+function getCommentaryFor(v){
+  return {
+    commentators: REFORMED.commentators.filter(c=>coversBook(c,v.b)),
+    thinkers: REFORMED.thinkers, counseling: REFORMED.counseling, sites: REFORMED.sites
+  };
+}
+const searchLinks = q => [
+  ["Perplexity","https://www.perplexity.ai/search?q="+encodeURIComponent(q)],
+  ["Google","https://www.google.com/search?q="+encodeURIComponent(q)]
+];
+const extA = (label,url) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗<span class="sr-only"> (abre em nova aba)</span></a>`;
+
+function renderCommentary(){
+  const box=$("#tp-com"); const v=state.focusVerse;
+  if(!v){ box.innerHTML=`<p class="muted">Toque em “Comentários” em um resultado para ver comentaristas, pensadores e conselheiros reformados ligados ao versículo.</p>`; return; }
+  const ref=refLabel(v.b,v.c,v.v); const data=getCommentaryFor(v);
+  const theme = state.lastMode && state.lastMode!=="ref" && state.lastQuery ? state.lastQuery : "";
+  const item = (p, q) => `<div class="com-item"><h4>${esc(p.name)}</h4><p class="meta">${esc(p.meta)}${p.check?" · verifique se há volume para este livro":""}</p>
+     <div class="com-links">${searchLinks(q).map(([n,u])=>extA(n,u)).join("")}</div></div>`;
+  const hub = BIBLEHUB[v.b] ? extA("BibleHub — comentários clássicos deste versículo", `https://biblehub.com/commentaries/${BIBLEHUB[v.b]}/${v.c}-${v.v}.htm`) : "";
+  box.innerHTML = `
+    <div class="section-title">${esc(ref)}</div>
+    <p class="com-intro"><strong>Pesquisa externa.</strong> Os links abrem buscas em sites de terceiros. Nada aqui é trecho de comentário nem foi verificado por esta página. “Reformado” é usado em sentido amplo (calvinista, puritano, presbiteriano, batista reformado).</p>
+    <div class="com-links" style="margin-bottom:10px">${hub}</div>
+    <details class="com-group" open><summary>Comentaristas bíblicos<span class="count-pill">(${data.commentators.length})</span></summary>
+      ${data.commentators.map(c=>item(c, `${c.name} comentário ${ref}`)).join("")}</details>
+    <details class="com-group"><summary>Teólogos, pensadores e filósofos<span class="count-pill">(${data.thinkers.length})</span></summary>
+      ${data.thinkers.map(t=>item(t, `${t.name} ${ref}${theme?" "+theme:""}`)).join("")}</details>
+    <details class="com-group"><summary>Psicologia, aconselhamento e saúde mental<span class="count-pill">(${data.counseling.length})</span></summary>
+      <p class="hint" style="padding:0 10px">A formação real de cada autor é indicada. Há poucos psiquiatras com obra pública de referência no meio reformado; esta área é dominada por médicos, psicólogos e conselheiros bíblicos. Não substitui acompanhamento profissional.</p>
+      ${data.counseling.map(t=>item(t, `${t.name} ${ref}${theme?" "+theme:""}`)).join("")}</details>
+    <details class="com-group"><summary>Sites reformados (busca filtrada)<span class="count-pill">(${data.sites.length})</span></summary>
+      <div class="com-item"><div class="com-links">${data.sites.map(s=>extA(s.name, "https://www.google.com/search?q="+encodeURIComponent(`site:${s.domain} "${BOOK[v.b].name} ${v.c}:${v.v}" OR "${ref}"`))).join("")}</div></div></details>`;
 }
 
 /* =====================================================================
@@ -1131,7 +1249,7 @@ function renderExternal(){
 /* =====================================================================
    ABAS, PAINÉIS RECOLHÍVEIS E EVENTOS GERAIS
    ===================================================================== */
-const TABS=["fav","hist","notes","rel"];
+const TABS=["fav","hist","notes","rel","com"];
 function selectTab(id){
   TABS.forEach(t=>{ const on=t===id; const tab=$("#tab-"+t);
     tab.setAttribute("aria-selected",on); tab.tabIndex=on?0:-1; $("#tp-"+t).hidden=!on; });
@@ -1159,7 +1277,7 @@ el.form.addEventListener("submit",e=>{ e.preventDefault(); runSearch(); });
 el.clear.addEventListener("click",()=>{
   el.q.value=""; state.results=[]; state.lastQuery=""; state.focusVerse=null; state.focusKey=null;
   el.list.innerHTML=""; el.notices.innerHTML=""; el.moreWrap.hidden=true;
-  el.count.textContent="Digite uma busca para começar."; renderWelcome(); renderExternal(); renderRelated(); el.q.focus();
+  el.count.textContent="Digite uma busca para começar."; renderWelcome(); renderExternal(); renderRelated(); renderCommentary(); el.q.focus();
 });
 el.q.addEventListener("input",renderExternal);
 el.more.addEventListener("click",()=>renderResults(false));
@@ -1196,7 +1314,7 @@ let toastTimer;
 function toast(msg){ el.toast.textContent=msg; el.toast.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.toast.classList.remove("show"),2200); }
 
 /* ---------- Primeira renderização ---------- */
-renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotes(); renderRelated();
+renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotes(); renderRelated(); renderCommentary();
 
 /* =====================================================================
    PWA — registro do service worker e convite para instalar
