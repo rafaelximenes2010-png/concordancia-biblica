@@ -1,0 +1,145 @@
+[
+ {
+  "id": "credo-apostolico",
+  "title": "Credo Apostólico",
+  "titleEn": "Apostles' Creed",
+  "year": "séc. II–VIII",
+  "group": "Credos ecumênicos",
+  "desc": "Resumo antigo da fé cristã, usado no batismo e no culto.",
+  "kind": "credo",
+  "lang": "pt",
+  "count": 1
+ },
+ {
+  "id": "credo-niceno",
+  "title": "Credo Niceno-Constantinopolitano",
+  "titleEn": "Nicene Creed",
+  "year": "325/381",
+  "group": "Credos ecumênicos",
+  "desc": "Confissão da plena divindade do Filho e do Espírito Santo (325/381).",
+  "kind": "credo",
+  "lang": "pt",
+  "count": 1
+ },
+ {
+  "id": "credo-atanasiano",
+  "title": "Credo de Atanásio",
+  "titleEn": "Athanasian Creed",
+  "year": "séc. V–VI",
+  "group": "Credos ecumênicos",
+  "desc": "Exposição clássica da Trindade e da encarnação.",
+  "kind": "credo",
+  "lang": "pt",
+  "count": 1
+ },
+ {
+  "id": "calcedonia",
+  "title": "Definição de Calcedônia",
+  "titleEn": "Chalcedonian Definition",
+  "year": "451",
+  "group": "Credos ecumênicos",
+  "desc": "As duas naturezas de Cristo em uma só pessoa (451).",
+  "kind": "credo",
+  "lang": "pt",
+  "count": 1
+ },
+ {
+  "id": "confissao-belga",
+  "title": "Confissão Belga",
+  "titleEn": "Belgic Confession",
+  "year": "1561",
+  "group": "Três Formas de Unidade",
+  "desc": "Confissão das igrejas reformadas dos Países Baixos, de Guido de Brès.",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 37
+ },
+ {
+  "id": "heidelberg",
+  "title": "Catecismo de Heidelberg",
+  "titleEn": "Heidelberg Catechism",
+  "year": "1563",
+  "group": "Três Formas de Unidade",
+  "desc": "129 perguntas sobre o único conforto na vida e na morte.",
+  "kind": "catecismo",
+  "lang": "en",
+  "count": 129
+ },
+ {
+  "id": "dort",
+  "title": "Cânones de Dort",
+  "titleEn": "Canons of Dort",
+  "year": "1619",
+  "group": "Três Formas de Unidade",
+  "desc": "Resposta do Sínodo de Dort sobre a graça soberana de Deus na salvação.",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 93
+ },
+ {
+  "id": "confissao-westminster",
+  "title": "Confissão de Fé de Westminster",
+  "titleEn": "Westminster Confession of Faith",
+  "year": "1646",
+  "group": "Padrões de Westminster",
+  "desc": "Confissão das igrejas presbiterianas, em 33 capítulos.",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 172
+ },
+ {
+  "id": "catecismo-maior",
+  "title": "Catecismo Maior de Westminster",
+  "titleEn": "Westminster Larger Catechism",
+  "year": "1647",
+  "group": "Padrões de Westminster",
+  "desc": "196 perguntas para o ensino aprofundado da fé.",
+  "kind": "catecismo",
+  "lang": "en",
+  "count": 196
+ },
+ {
+  "id": "breve-catecismo",
+  "title": "Breve Catecismo de Westminster",
+  "titleEn": "Westminster Shorter Catechism",
+  "year": "1647",
+  "group": "Padrões de Westminster",
+  "desc": "107 perguntas: “Qual é o fim principal do homem?”",
+  "kind": "catecismo",
+  "lang": "en",
+  "count": 107
+ },
+ {
+  "id": "segunda-helvetica",
+  "title": "Segunda Confissão Helvética",
+  "titleEn": "Second Helvetic Confession",
+  "year": "1566",
+  "group": "Outras confissões reformadas",
+  "desc": "Confissão de Heinrich Bullinger adotada pelas igrejas reformadas suíças (1566).",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 278
+ },
+ {
+  "id": "confissao-escocesa",
+  "title": "Confissão Escocesa",
+  "titleEn": "Scots Confession",
+  "year": "1560",
+  "group": "Outras confissões reformadas",
+  "desc": "Confissão da Reforma na Escócia, de John Knox e outros (1560).",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 25
+ },
+ {
+  "id": "batista-1689",
+  "title": "Confissão Batista de Londres (1689)",
+  "titleEn": "1689 London Baptist Confession",
+  "year": "1677/1689",
+  "group": "Outras confissões reformadas",
+  "desc": "Confissão dos batistas reformados, baseada na de Westminster.",
+  "kind": "confissao",
+  "lang": "en",
+  "count": 160
+ }
+]
