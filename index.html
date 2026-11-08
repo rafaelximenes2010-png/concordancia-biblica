@@ -547,6 +547,9 @@ dialog.reader.as-view .rd-com{max-height:24vh}
   .kwic li{grid-template-columns:1fr;gap:2px}
   .dist button{grid-template-columns:100px 1fr 36px}
 }
+
+.tr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 8px}
+.tr-tag{font-family:var(--font-ui);font-size:11.5px;color:var(--ext);background:var(--ext-soft);border:1px solid var(--ext-border);border-radius:6px;padding:2px 8px;display:inline-block;margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -1525,7 +1528,8 @@ function cardFor(v){
     const b=e.target.closest("[data-act]"); if(!b) return;
     ({ copy:()=>copyVerse(v), ctx:()=>openContext(v), fav:()=>toggleFav(v), note:()=>startNote(v), rel:()=>{ setFocus(v); selectTab("rel"); openStudyOnMobile(); },
        com:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); },
-       comfull:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); } })[b.dataset.act]();
+       comfull:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); },
+       comtr:()=>translateCardCom(li) })[b.dataset.act]();
   });
   if(Comm.inline){ comObserver ? comObserver.observe(li) : fillCardCommentary(li); }
   return li;
@@ -1763,8 +1767,17 @@ const REFORMED = {
     { name:"D. Martyn Lloyd-Jones", meta:"Séries expositivas em Romanos e Efésios", covers:["ROM","EPH"] },
     { name:"R. C. Sproul", meta:"St. Andrew’s Expositional Commentary · editor da Reformation Study Bible", covers:"all", check:true },
     { name:"Reformed Expository Commentary", meta:"Série expositiva (P&R) escrita por pastores reformados", covers:"all", check:true },
-    { name:"Hernandes Dias Lopes", meta:"Comentários Expositivos (Hagnos)", covers:"all", check:true },
     { name:"Bíblia de Estudo de Genebra", meta:"Notas de estudo reformadas (Cultura Cristã)", covers:"all" }
+  ],
+  brazil: [
+    { name:"Hernandes Dias Lopes", meta:"Pastor presbiteriano · Comentários Expositivos (Hagnos), cobrindo boa parte da Bíblia", q:"Hernandes Dias Lopes comentário expositivo" },
+    { name:"Augustus Nicodemus Lopes", meta:"Pastor presbiteriano e teólogo · livros, sermões e séries expositivas", q:"Augustus Nicodemus" },
+    { name:"Russell P. Shedd", meta:"Teólogo e missionário radicado no Brasil · notas da Bíblia Shedd (Vida Nova)", q:"Russell Shedd" },
+    { name:"Bíblia de Estudo de Genebra", meta:"Notas reformadas em português (Cultura Cristã e SBB)", q:"Bíblia de Estudo de Genebra" },
+    { name:"Série Cultura Bíblica", meta:"Comentários Tyndale traduzidos para o português (Vida Nova)", q:"Série Cultura Bíblica comentário" },
+    { name:"William Hendriksen", meta:"Comentário do Novo Testamento em português (Cultura Cristã)", q:"Hendriksen comentário" },
+    { name:"Franklin Ferreira", meta:"Teólogo batista reformado · teologia sistemática e história da igreja", q:"Franklin Ferreira" },
+    { name:"Heber Carlos de Campos", meta:"Teólogo presbiteriano · doutrinas da fé reformada", q:"Heber Carlos de Campos" }
   ],
   thinkers: [
     { name:"Jonathan Edwards", meta:"Teólogo e filósofo puritano · Afeições Religiosas" },
@@ -1793,7 +1806,9 @@ const REFORMED = {
     { name:"Ligonier", domain:"ligonier.org" }, { name:"Monergism", domain:"monergism.com" },
     { name:"Desiring God", domain:"desiringgod.org" }, { name:"The Gospel Coalition", domain:"thegospelcoalition.org" },
     { name:"CCEL (Calvino)", domain:"ccel.org" }, { name:"CCEF", domain:"ccef.org" },
-    { name:"Ministério Fiel", domain:"ministeriofiel.com.br" }, { name:"Voltemos ao Evangelho", domain:"voltemosaoevangelho.com" }
+    { name:"Ministério Fiel", domain:"ministeriofiel.com.br" }, { name:"Voltemos ao Evangelho", domain:"voltemosaoevangelho.com" },
+    { name:"Editora Fiel", domain:"editorafiel.com.br" }, { name:"Cultura Cristã", domain:"editoraculturacrista.com.br" },
+    { name:"Vida Nova", domain:"vidanova.com.br" }, { name:"Hagnos", domain:"hagnos.com.br" }
   ]
 };
 /* Nomes dos livros no BibleHub (comentários clássicos: Henry, Gill e outros) */
@@ -1873,6 +1888,69 @@ const translateUrl = t => "https://translate.google.com/?sl=en&tl=pt&op=translat
 const comErr = () => navigator.onLine
   ? "Não foi possível carregar o comentário nesta página. No app instalado (GitHub Pages) ele aparece normalmente."
   : "Sem conexão. Os comentários já abertos antes ficam disponíveis offline.";
+/* =====================================================================
+   TRADUÇÃO DOS COMENTÁRIOS (inglês → português)
+   1º) Tradutor embutido do navegador (API "Translator", ex.: Chrome
+       recente) — roda no aparelho, sem enviar o texto a terceiros.
+   2º) Serviço gratuito MyMemory (api.mymemory.translated.net), com
+       limite diário de uso; o texto é enviado a esse serviço.
+   3º) Se nada funcionar: link para o Google Tradutor.
+   Toda tradução é automática e pode conter imprecisões.
+   ===================================================================== */
+const Tr = {
+  autoKey:"comAutoTr",
+  get auto(){ return store.get(this.autoKey,false); },
+  set auto(v){ store.set(this.autoKey,v); },
+  key(t){ let h=0; for(let i=0;i<t.length;i++){ h=(h*31+t.charCodeAt(i))|0; } return "tr:"+t.length+":"+h; },
+  mem:new Map(),
+  async toPt(text){
+    const k=this.key(text); if(this.mem.has(k)) return this.mem.get(k);
+    try{ const c=sessionStorage.getItem(k); if(c) return c; }catch(e){}
+    let out=null;
+    // 1) API do navegador
+    try{
+      if("Translator" in self){
+        const limit=(pr,ms)=>Promise.race([pr,new Promise((_,rej)=>setTimeout(()=>rej(new Error("timeout")),ms))]);
+        const av=await limit(self.Translator.availability({ sourceLanguage:"en", targetLanguage:"pt" }),3000);
+        if(av==="available" || av==="downloadable" || av==="downloading"){
+          const tr=await limit(self.Translator.create({ sourceLanguage:"en", targetLanguage:"pt" }), av==="available"?5000:8000);
+          out=(await limit(Promise.all(text.split(/\n+/).map(p=>p.trim()?tr.translate(p):"")),20000)).join("\n"); }
+      }
+    }catch(e){ out=null; }
+    // 2) MyMemory, em pedaços de até ~450 caracteres
+    if(!out){
+      const parts=[]; text.split(/\n+/).forEach(par=>{ let cur="";
+        (par.match(/[^.!?;:]+[.!?;:]*\s*/g)||[par]).forEach(sn=>{ if((cur+sn).length>450){ if(cur) parts.push(cur); cur=sn.slice(0,450); } else cur+=sn; });
+        if(cur) parts.push(cur); parts.push("\n"); });
+      const res=[];
+      for(const part of parts){
+        if(part==="\n"){ res.push("\n"); continue; }
+        const r=await fetch("https://api.mymemory.translated.net/get?langpair=en|pt-br&q="+encodeURIComponent(part));
+        const d=await r.json();
+        if(!r.ok || d.quotaFinished || Number(d.responseStatus)!==200 || /MYMEMORY WARNING|QUOTA/i.test(d.responseData?.translatedText||"")) throw new Error("quota");
+        res.push(d.responseData.translatedText+" ");
+      }
+      out=res.join("").replace(/ *\n */g,"\n").trim();
+    }
+    this.mem.set(k,out); try{ sessionStorage.setItem(k,out); }catch(e){}
+    return out;
+  }
+};
+/* Mostra a tradução dentro de um bloco; guarda o original para alternar */
+async function translateBlock(box, text, btn){
+  if(box.dataset.state==="pt"){ box.innerHTML=box._orig; box.dataset.state="en"; if(btn) btn.textContent="Traduzir para o português"; return; }
+  box._orig = box._orig || box.innerHTML;
+  if(btn){ btn.disabled=true; btn.textContent="Traduzindo…"; }
+  try{
+    const pt=await Tr.toPt(text);
+    box.innerHTML = `<p class="tr-tag">Tradução automática para o português · pode conter imprecisões</p>${comParas(pt)}`;
+    box.dataset.state="pt"; if(btn) btn.textContent="Ver original em inglês";
+  }catch(e){
+    box.insertAdjacentHTML("afterbegin",`<p class="notice" style="font-size:13px">Não foi possível traduzir aqui ${e.message==="quota"?"(limite diário do tradutor gratuito atingido)":"(sem conexão ou serviço indisponível)"}. ${extA("Abrir no Google Tradutor", translateUrl(text))}</p>`);
+    if(btn) btn.textContent="Traduzir para o português";
+  }finally{ if(btn) btn.disabled=false; }
+}
+
 function comNote(r, v){
   if(!r) return `<p class="muted">Sem comentário para este capítulo.</p>`;
   return r.intro ? `<p class="hint">Introdução ao capítulo ${v.c}:</p>` : (r.section ? `<p class="hint">Comentário do trecho a partir do v. ${r.from}:</p>` : "");
@@ -1892,8 +1970,19 @@ async function fillCardCommentary(li){
     if(!r){ box.hidden=true; return; }
     const snip=r.text.length>320 ? r.text.slice(0,320).replace(/\s+\S*$/,"")+"…" : r.text;
     box.innerHTML=`<strong>${esc(info.label)}${r.section?` (v. ${r.from}…)`:""}:</strong> ${esc(snip)}
-      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> ${extA("Traduzir", translateUrl(r.text))}</span>`;
+      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button></span>`;
+    box._snip=snip; box._label=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
+    if(Tr.auto) translateCardCom(li);
   }catch(e){ box.innerHTML=`<span class="muted">${esc(comErr())}</span>`; }
+}
+
+async function translateCardCom(li){
+  const box=li.querySelector(".card-com"); if(!box || !box._snip) return;
+  const btn=box.querySelector('[data-act="comtr"]'); if(btn){ btn.disabled=true; btn.textContent="Traduzindo…"; }
+  try{ const pt=await Tr.toPt(box._snip);
+    box.innerHTML=`<strong>${esc(box._label)}:</strong> ${esc(pt)} <span class="tr-tag" style="display:inline">(tradução automática)</span>
+      <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button></span>`;
+  }catch(e){ if(btn){ btn.disabled=false; btn.textContent="Traduzir"; } toast(e.message==="quota"?"Limite diário do tradutor gratuito atingido. Use o Google Tradutor no painel de comentários.":"Não foi possível traduzir agora."); }
 }
 
 /* Lista completa no painel de estudo */
@@ -1908,11 +1997,18 @@ async function renderFullCommentaries(v){
     + `<label class="radio" style="margin-top:6px"><input type="checkbox" id="comInline" ${Comm.inline?"checked":""}><span>Mostrar comentário em cada resultado da busca</span></label>
        <label class="field" style="display:block;margin-top:6px"><span class="muted">Comentário padrão:</span>
        <select id="comDefault" style="width:100%;margin-top:4px;border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:6px">${list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join("")}</select></label>
-       <p class="hint">Comentários em inglês, de domínio público, via Free Use Bible API (bible.helloao.org). Use “Traduzir” para ler em português.</p>`;
+       <label class="radio" style="margin-top:6px"><input type="checkbox" id="comAutoTr" ${Tr.auto?"checked":""}><span>Traduzir automaticamente os comentários para o português</span></label>
+       <p class="hint">Comentários em inglês, de domínio público, via Free Use Bible API (bible.helloao.org). A tradução é automática: usa o tradutor do próprio navegador quando disponível; senão, o serviço gratuito MyMemory (limite diário). Sempre confira trechos importantes no original.</p>`;
+  $("#comAutoTr").addEventListener("change",e=>{ Tr.auto=e.target.checked; toast(Tr.auto?"Os comentários serão traduzidos automaticamente.":"Tradução automática desligada."); renderFullCommentaries(v); });
   const load=async d=>{
     if(d.dataset.loaded) return; d.dataset.loaded="1"; const body=d.querySelector(".com-body");
     try{ const r=await Comm.forVerse(d.dataset.id,v.b,v.c,v.v);
-      body.innerHTML = r ? comNote(r,v)+comParas(r.text)+`<p>${extA("Traduzir para o português", translateUrl(r.text))}</p>` : `<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`;
+      if(!r){ body.innerHTML=`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`; return; }
+      body.innerHTML = `<div class="tr-actions"><button type="button" class="btn btn-sm btn-primary" data-trbtn>Traduzir para o português</button> ${extA("Google Tradutor", translateUrl(r.text))}</div>
+        <div class="tr-box">${comNote(r,v)+comParas(r.text)}</div>`;
+      const box=body.querySelector(".tr-box"), btn=body.querySelector("[data-trbtn]");
+      btn.addEventListener("click",()=>translateBlock(box, r.text, btn));
+      if(Tr.auto) translateBlock(box, r.text, btn);
     }catch(e){ delete d.dataset.loaded; body.innerHTML=`<p class="muted">${esc(comErr())}</p>`; }
   };
   host.querySelectorAll("details.com-text").forEach(d=>{ if(d.open) load(d); d.addEventListener("toggle",()=>{ if(d.open) load(d); }); });
@@ -1930,7 +2026,8 @@ async function renderReaderCommentary(v){
     const list=await Comm.available(); const id=box.dataset.id || await Comm.defaultId(); box.dataset.id=id;
     const r=await Comm.forVerse(id,v.b,v.c,v.v);
     box.innerHTML=`<div class="rd-com-head"><select id="rdComSel" aria-label="Escolher comentário">${list.map(c=>`<option value="${c.id}" ${c.id===id?"selected":""}>${esc(c.label)}</option>`).join("")}</select>
-      ${r?extA("Traduzir", translateUrl(r.text)):""}</div>${r?comNote(r,v)+comParas(r.text):`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`}`;
+      ${r?`<button type="button" class="btn btn-sm" id="rdTr">Traduzir para o português</button>`:""}</div><div class="tr-box" id="rdComBox">${r?comNote(r,v)+comParas(r.text):`<p class="muted">Este comentário não cobre ${esc(BOOK[v.b].name)} ${v.c}.</p>`}</div>`;
+    if(r){ const btn=$("#rdTr"); btn.addEventListener("click",()=>translateBlock($("#rdComBox"), r.text, btn)); if(Tr.auto) translateBlock($("#rdComBox"), r.text, btn); }
     $("#rdComSel").addEventListener("change",e=>{ box.dataset.id=e.target.value; renderReaderCommentary(v); });
   }catch(e){ box.innerHTML=`<p class="muted">${esc(comErr())}</p>`; }
 }
@@ -1951,6 +2048,9 @@ function renderCommentary(){
     <div class="com-links" style="margin-bottom:10px">${hub}</div>
     <details class="com-group" open><summary>Comentaristas bíblicos<span class="count-pill">(${data.commentators.length})</span></summary>
       ${data.commentators.map(c=>item(c, `${c.name} comentário ${ref}`)).join("")}</details>
+    <details class="com-group" open><summary>Comentaristas e obras brasileiras<span class="count-pill">(${REFORMED.brazil.length})</span></summary>
+      <p class="hint" style="padding:0 10px">Obras com direitos autorais: o app não reproduz o texto, mas leva você direto à busca do versículo no autor ou na editora.</p>
+      ${REFORMED.brazil.map(c=>item(c, `${c.q} ${ref}`)).join("")}</details>
     <details class="com-group"><summary>Teólogos, pensadores e filósofos<span class="count-pill">(${data.thinkers.length})</span></summary>
       ${data.thinkers.map(t=>item(t, `${t.name} ${ref}${theme?" "+theme:""}`)).join("")}</details>
     <details class="com-group"><summary>Psicologia, aconselhamento e saúde mental<span class="count-pill">(${data.counseling.length})</span></summary>
