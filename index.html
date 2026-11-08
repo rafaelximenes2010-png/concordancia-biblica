@@ -2028,7 +2028,7 @@ async function renderReader(){
     + `<p class="rd-license">${esc(ver.name)}: ${esc(ver.license)}${cv?`<br>${esc(cv.name)}: ${esc(cv.license)}`:""}</p>`;
   if(rd.cmp && !cmpCh.length) el.dlgBody.insertAdjacentHTML("afterbegin",`<div class="notice">${esc(BOOK[rd.b].name)} não existe na versão ${esc(rd.cmp)}.</div>`);
   rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true;
-  if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && ("Translator" in self)) translateReaderChapter("pt", true); }
+  if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && (TR_PROXY || ("Translator" in self))) translateReaderChapter("pt", true); }
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
   $("#rdYV").href = `https://www.bible.com/bible/compare/${rd.b}.${rd.c}.1-${verses.length||1}`;
@@ -2322,6 +2322,9 @@ const comErr = () => navigator.onLine
    3º) Se nada funcionar: link para o Google Tradutor.
    Toda tradução é automática e pode conter imprecisões.
    ===================================================================== */
+/* Endereço da ponte de tradução no Cloudflare (ex.: "https://tradutor.SEUNOME.workers.dev").
+   Vazio = usa o tradutor do aparelho e, na falta dele, o MyMemory. */
+const TR_PROXY = "";
 const Tr = {
   autoKey:"comAutoTr",
   get auto(){ return store.get(this.autoKey,true); },
@@ -2345,7 +2348,16 @@ const Tr = {
           out=(await limit(Promise.all(text.split(/\n+/).map(p=>p.trim()?tr.translate(p):"")),20000)).join("\n"); }
       }
     }catch(e){ out=null; }
-    // 2) MyMemory, em pedaços de até ~450 caracteres
+    // 2) Ponte própria (Microsoft Translator + cache compartilhado) — ver /tradutor/worker.js
+    if(!out && TR_PROXY){
+      try{
+        const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),25000);
+        const r=await fetch(TR_PROXY,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, from, to }), signal:ctl.signal });
+        clearTimeout(tm); const d=await r.json().catch(()=>({}));
+        if(r.ok && typeof d.text==="string" && d.text) out=d.text;
+      }catch(e){ out=null; }
+    }
+    // 3) MyMemory (reserva), em pedaços de até ~450 caracteres
     if(!out){
       const parts=[]; text.split(/\n+/).forEach(par=>{ let cur="";
         (par.match(/[^.!?;:]+[.!?;:]*\s*/g)||[par]).forEach(sn=>{ if((cur+sn).length>450){ if(cur) parts.push(cur); cur=sn.slice(0,450); } else cur+=sn; });
@@ -2403,7 +2415,7 @@ async function fillCardCommentary(li, force){
       <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button> <button type="button" class="link-btn" data-act="comsave">Salvar</button> ${pplxBtn(info.label, refLabel(b,+c,+v), "link-btn")}</span>`;
     box.dataset.ref=`${b}.${c}.${v}`; box.dataset.author=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
     box._shown=snip; box._lang="en"; box._snip=snip; box._label=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
-    if(Tr.auto && ("Translator" in self)) translateCardCom(li);
+    if(Tr.auto && (TR_PROXY || ("Translator" in self))) translateCardCom(li);
   }catch(e){ box.innerHTML=`<span class="muted">${esc(comErr())}</span>`; }
 }
 
@@ -4058,7 +4070,7 @@ function setupCardTranslation(li, v){
   li.querySelector(".verse").insertAdjacentHTML("afterend", `<p class="v-tr" hidden></p>`);
   li.querySelector(".card-actions, .actions, .row-actions")?.insertAdjacentHTML("afterbegin", vtrButtons(lang,"data-vtr"));
   li.addEventListener("click",e=>{ const b=e.target.closest("[data-vtr]"); if(b) translateInto(li.querySelector(".v-tr"), v.text, lang, b.dataset.vtr); });
-  if(Tr.auto && ("Translator" in self) && vtrObserver) vtrObserver.observe(li);
+  if(Tr.auto && (TR_PROXY || ("Translator" in self)) && vtrObserver) vtrObserver.observe(li);
 }
 /* Leitor: traduz o capítulo inteiro (com cache), em pequenos lotes */
 let rdTrJob=0;
