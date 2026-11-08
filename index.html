@@ -981,6 +981,30 @@ dialog.reader.has-sel .reader-nav{display:none}
 
 [data-theme="dark"] .news-banner{background:#2a2414!important;color:#f4f1ea!important;border-color:#b8892f!important}
 [data-theme="dark"] .news-banner strong{color:#f3d48a}
+
+/* ===== Instalar no celular ===== */
+.inst-top{display:inline-flex;align-items:center;gap:5px;background:var(--gold)!important;color:#1b1606!important;border-color:var(--gold)!important;font-weight:700;padding:6px 11px;border-radius:999px}
+.inst-top .icon{width:18px;height:18px}
+@media (max-width:420px){ .inst-top span{display:none} .inst-top{padding:8px} }
+.inst-banner{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;border-radius:14px;background:var(--surface);border:2px solid var(--gold);box-shadow:0 4px 14px rgba(0,0,0,.08);position:relative}
+.inst-banner[hidden]{display:none}
+.inst-banner img{width:56px;height:56px;border-radius:13px;flex:none;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+.ib-txt{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ib-txt strong{font-size:16px} .ib-txt span{font-size:13px;color:var(--ink-2)}
+.inst-banner .btn-primary{display:inline-flex;align-items:center;gap:6px;flex:none}
+.ib-x{position:absolute;top:4px;right:6px;border:0;background:none;color:var(--ink-2);font-size:14px;cursor:pointer;padding:4px}
+.inst-dlg h2{display:flex;align-items:center;gap:10px}
+.inst-dlg h2 img{border-radius:9px}
+.inst-steps{list-style:none;margin:6px 0 10px;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:st}
+.inst-steps li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:1.4;counter-increment:st}
+.inst-steps li::before{content:counter(st);flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.inst-ico{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:#0a7aff;flex:none}
+.inst-ico .icon{width:22px;height:22px}
+.inst-arrow{display:block;text-align:center;font-size:13px;color:var(--ink-2);margin-top:6px}
+
+.inst-steps li{display:block!important;position:relative;padding-left:44px;min-height:34px}
+.inst-steps li::before{position:absolute;left:0;top:2px}
+.inst-ico{vertical-align:middle;margin:0 2px;width:30px!important;height:30px!important}
 </style>
 </head>
 <body>
@@ -1112,6 +1136,9 @@ dialog.reader.has-sel .reader-nav{display:none}
   <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
   <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 19h14"/></symbol>
+  <symbol id="i-ios-share" viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M7 10H5v11h14V10h-2"/></symbol>
+  <symbol id="i-plus-sq" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></symbol>
 </svg>
 
@@ -1129,6 +1156,7 @@ dialog.reader.has-sel .reader-nav{display:none}
       <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Minhas notas</button>
     </nav>
     <div class="header-tools">
+      <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
       <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Meu perfil e cadastro, configurações e atualizações" title="Meu perfil e cadastro"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
@@ -1157,6 +1185,12 @@ dialog.reader.has-sel .reader-nav{display:none}
     <blockquote>“A minha graça te basta.”</blockquote>
     <figcaption>2 Coríntios 12:9</figcaption>
   </figure>
+  <div class="inst-banner" id="instBanner" hidden>
+    <img src="icons/apple-touch-180.png?v=3" alt="" width="56" height="56">
+    <div class="ib-txt"><strong>Instale o SOLA no seu celular</strong><span>Ícone na tela de início, tela cheia e leitura sem internet.</span></div>
+    <button type="button" class="btn btn-primary" id="instBannerBtn"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Instalar</button>
+    <button type="button" class="ib-x" id="instBannerX" aria-label="Agora não">✕</button>
+  </div>
   <div id="newsBanner"></div>
   <div id="remBanner"></div>
   <div class="streak" id="streakBox" aria-live="polite"></div>
@@ -1673,6 +1707,13 @@ dialog.reader.has-sel .reader-nav{display:none}
       <button type="button" class="btn btn-sm" data-cd="all">Mais recursos</button>
     </div>
   </div>
+</dialog>
+<dialog id="installDialog" class="note-dlg inst-dlg" aria-labelledby="instTitle">
+  <div class="dlg-head">
+    <h2 id="instTitle"><img src="icons/apple-touch-180.png?v=3" alt="" width="34" height="34">Instalar o SOLA</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="instClose" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="dlg-body" id="instBody"></div>
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
@@ -5075,6 +5116,44 @@ renderReminders(); Reminders.schedule();
     bar.classList.add("show");
   }
   $("#installClose").addEventListener("click", ()=>{ bar.classList.remove("show"); store.set("installDismissed", true); });
+})();
+/* Botões "Instalar" com ícone: topo, faixa no Início e guia passo a passo */
+(function installUI(){
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
+  if(standalone) return;
+  const ua=navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+  const iosOther = isIOS && /crios|fxios|edgios|instagram|fbav|whatsapp/i.test(ua);
+  const isAndroid = /android/i.test(ua);
+  let deferred=null;
+  window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); deferred=e; });
+  window.addEventListener("appinstalled", ()=>{ $("#instTop").hidden=true; $("#instBanner").hidden=true; toast("SOLA instalado! Procure o ícone do farol na tela de início.",4000); });
+  $("#instTop").hidden=false;
+  if(!store.get("instBannerOff",false)) $("#instBanner").hidden=false;
+  const share=`<span class="inst-ico"><svg class="icon" aria-hidden="true"><use href="#i-ios-share"/></svg></span>`;
+  const plus=`<span class="inst-ico"><svg class="icon" aria-hidden="true"><use href="#i-plus-sq"/></svg></span>`;
+  function guide(){
+    let html="";
+    if(framed) html=`<p>Você está vendo uma prévia. Para instalar, abra o endereço oficial do SOLA:</p><p><a class="btn btn-primary" href="${esc(APP_URL)}" target="_blank" rel="noopener">Abrir o SOLA</a></p>`;
+    else if(iosOther) html=`<p>No iPhone, a instalação é feita pelo <strong>Safari</strong>.</p><ol class="inst-steps"><li>Copie o endereço do app e abra no <strong>Safari</strong>.</li><li>Toque em ${share} <strong>Compartilhar</strong>.</li><li>Toque em ${plus} <strong>Adicionar à Tela de Início</strong>.</li></ol>
+      <button type="button" class="btn btn-sm" id="instCopy">Copiar endereço do app</button>`;
+    else if(isIOS) html=`<ol class="inst-steps"><li>Toque em ${share} <strong>Compartilhar</strong>, na barra de baixo do Safari.</li><li>Role a lista e toque em ${plus} <strong>Adicionar à Tela de Início</strong>.</li><li>Confira o nome <strong>SOLA</strong> e toque em <strong>Adicionar</strong>.</li></ol>
+      <span class="inst-arrow">⬇ O botão Compartilhar fica na barra do Safari, embaixo</span>`;
+    else if(isAndroid) html=`<ol class="inst-steps"><li>Toque nos <strong>três pontinhos ⋮</strong> do Chrome, no alto.</li><li>Toque em <strong>Instalar app</strong> (ou <strong>Adicionar à tela inicial</strong>).</li><li>Confirme em <strong>Instalar</strong>.</li></ol>`;
+    else html=`<ol class="inst-steps"><li>No <strong>Chrome</strong> ou <strong>Edge</strong>, clique no ícone de instalar, à direita da barra de endereço.</li><li>Clique em <strong>Instalar</strong>.</li></ol>`;
+    $("#instBody").innerHTML=html+`<p class="hint">O SOLA abre em tela cheia, com o ícone do farol, e suas notas e grifos continuam salvos.</p>`;
+    $("#instCopy")?.addEventListener("click",()=>copyText(APP_URL,"Endereço copiado. Cole no Safari."));
+    $("#installDialog").showModal();
+  }
+  async function install(){
+    if(deferred){ deferred.prompt(); const r=await deferred.userChoice.catch(()=>null); deferred=null; if(r && r.outcome==="accepted") return; }
+    guide();
+  }
+  $("#instTop").addEventListener("click",install);
+  $("#instBannerBtn").addEventListener("click",install);
+  $("#instBannerX").addEventListener("click",()=>{ $("#instBanner").hidden=true; store.set("instBannerOff",true); });
+  $("#instClose").addEventListener("click",()=>$("#installDialog").close());
 })();
 </script>
 </body>
