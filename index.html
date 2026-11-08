@@ -12,6 +12,23 @@
 <meta name="apple-mobile-web-app-title" content="SOLA">
 <meta name="application-name" content="SOLA">
 <link rel="apple-touch-icon" href="icons/apple-touch-180.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-180.png?v=3">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/apple-touch-167.png?v=3">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-152.png?v=3">
+<link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-120.png?v=3">
+<link rel="mask-icon" href="icons/mark.svg?v=3" color="#132447">
+<meta name="description" content="SOLA | Bíblia &amp; Teologia — Bíblia, comentários bíblicos reformados, concordância, devocional, credos e catecismos. Gratuito.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SOLA | Bíblia &amp; Teologia">
+<meta property="og:title" content="SOLA | Bíblia &amp; Teologia">
+<meta property="og:description" content="“A minha graça te basta.” Bíblia, comentários reformados, concordância e devocional. Gratuito — instale no celular.">
+<meta property="og:url" content="https://rafaelximenes2010-png.github.io/concordancia-biblica/">
+<meta property="og:image" content="https://rafaelximenes2010-png.github.io/concordancia-biblica/icons/og-sola.png?v=3">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Farol do SOLA | Bíblia &amp; Teologia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rafaelximenes2010-png.github.io/concordancia-biblica/icons/og-sola.png?v=3">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg?v=3">
 <link rel="icon" type="image/png" href="icons/favicon-64.png?v=3">
 <title>SOLA | Bíblia &amp; Teologia</title>
@@ -1228,6 +1245,7 @@ dialog.reader.has-sel .reader-nav{display:none}
       <p style="margin:0;color:var(--ink-2)">Envie o app SOLA | Bíblia & Teologia para amigos, família ou o grupo da igreja.</p>
       <div class="row-actions">
         <a class="btn btn-sm btn-wa" id="inviteWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+        <button type="button" class="btn btn-sm btn-primary" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar com o farol</button>
         <button type="button" class="btn btn-sm" id="copyAppLink"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
       </div>
     </article>
@@ -3364,6 +3382,20 @@ async function shareText(title, text){
   catch(e){ toast("Não foi possível compartilhar neste navegador."); }
 }
 
+/* Compartilhar o SOLA com o farol (imagem) no menu do iPhone/Android */
+async function shareSola(){
+  const text="Conheça o SOLA | Bíblia & Teologia — “A minha graça te basta.” Bíblia, comentários reformados, concordância e devocional. Gratuito; instale no celular:";
+  try{
+    if(navigator.share){
+      let files=null;
+      try{ const blob=await fetch("icons/og-sola.png?v=3").then(r=>r.blob()); const f=new File([blob],"SOLA.png",{type:"image/png"}); if(navigator.canShare && navigator.canShare({ files:[f] })) files=[f]; }catch(e){}
+      await navigator.share(files ? { files, title:"SOLA | Bíblia & Teologia", text:`${text} ${APP_URL}` } : { title:"SOLA | Bíblia & Teologia", text, url:APP_URL });
+      return;
+    }
+  }catch(e){ if(e && e.name==="AbortError") return; }
+  copyText(`${text} ${APP_URL}`,"Convite copiado — cole onde quiser enviar.");
+}
+
 /* ---------- Sequência de estudo (incentivo diário) ---------- */
 const Streak = {
   days(){ return store.get("studyDays",[]); },
@@ -3788,6 +3820,7 @@ function dayShareText(ps, dv){
 (function initShareApp(){
   const msg=`Conheça o app *SOLA | Bíblia & Teologia*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
   const a=$("#inviteWA"); if(a) a.href=waUrl(msg);
+  document.querySelectorAll("[data-share-sola]").forEach(b=>b.addEventListener("click",shareSola));
   $("#copyAppLink")?.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(APP_URL); toast("Link do app copiado."); }catch(e){ toast(APP_URL); } });
 })();
 
@@ -5142,7 +5175,9 @@ renderReminders(); Reminders.schedule();
       <span class="inst-arrow">⬇ O botão Compartilhar fica na barra do Safari, embaixo</span>`;
     else if(isAndroid) html=`<ol class="inst-steps"><li>Toque nos <strong>três pontinhos ⋮</strong> do Chrome, no alto.</li><li>Toque em <strong>Instalar app</strong> (ou <strong>Adicionar à tela inicial</strong>).</li><li>Confirme em <strong>Instalar</strong>.</li></ol>`;
     else html=`<ol class="inst-steps"><li>No <strong>Chrome</strong> ou <strong>Edge</strong>, clique no ícone de instalar, à direita da barra de endereço.</li><li>Clique em <strong>Instalar</strong>.</li></ol>`;
-    $("#instBody").innerHTML=html+`<p class="hint">O SOLA abre em tela cheia, com o ícone do farol, e suas notas e grifos continuam salvos.</p>`;
+    $("#instBody").innerHTML=html+`<p class="hint">O SOLA abre em tela cheia, com o ícone do farol, e suas notas e grifos continuam salvos.</p>
+      <button type="button" class="btn btn-sm" id="instShare"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Enviar o SOLA para alguém</button>`;
+    $("#instShare").addEventListener("click",shareSola);
     $("#instCopy")?.addEventListener("click",()=>copyText(APP_URL,"Endereço copiado. Cole no Safari."));
     $("#installDialog").showModal();
   }
