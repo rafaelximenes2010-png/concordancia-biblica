@@ -5189,6 +5189,10 @@ renderReminders(); Reminders.schedule();
   $("#instBannerBtn").addEventListener("click",install);
   $("#instBannerX").addEventListener("click",()=>{ $("#instBanner").hidden=true; store.set("instBannerOff",true); });
   $("#instClose").addEventListener("click",()=>$("#installDialog").close());
+  /* Link de instalação: .../?instalar abre o guia logo após a abertura */
+  if(/[?&]instalar\b/.test(location.search) || /instalar/.test(location.hash)){
+    setTimeout(()=>{ if(location.hash.includes("instalar")) history.replaceState(null,"",location.pathname+location.search+"#inicio"); install(); }, 2600);
+  }
 })();
 </script>
 </body>
