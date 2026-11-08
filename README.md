@@ -1,9 +1,22 @@
 # Concordância Bíblica
 
-App de estudo e busca bíblica (PWA): Bíblia completa em várias versões livres, leitura por livro e capítulo com comparação lado a lado, busca por palavra, expressão, raiz e referência, busca por foto, favoritos, histórico, notas e um painel de comentaristas, pensadores e conselheiros reformados.
+Aplicativo (PWA) de estudo bíblico para celular e computador.
 
 **Abrir o app:** https://rafaelximenes2010-png.github.io/concordancia-biblica/
-**iPhone:** abra no Safari → Compartilhar → Adicionar à Tela de Início. **Android:** Chrome → “Instalar app”.
+**iPhone:** abra no Safari → Compartilhar → Adicionar à Tela de Início. **Android:** Chrome → menu ⋮ → Instalar app.
+
+## Abas
+- **Início** — texto do dia, devocional, estudo sugerido, notas, leitura e sequência de dias de estudo.
+- **Busca bíblica** — busca por palavra, expressão, raiz, referência ou foto; filtros, favoritos, histórico, comentários e pesquisa externa (Perplexity, Google, DuckDuckGo).
+- **Texto do dia** — passagem diária (lista em `VOTD`), na tradução indicada.
+- **Devocional** — série original de demonstração (`DEVOS`), com reflexão e aplicação.
+- **Estudos BibleProject** — catálogo com links para a fonte oficial (`BP`). Não afiliado ao BibleProject.
+- **Minhas notas** — anotações de cultos e estudos salvas no aparelho (`NotesStore`, preparado para sincronização via `SyncAdapter`).
+
+## O que depende de integração futura
+- Notificações push com o app fechado: preencher `PUSH_CONFIG` e implementar `subscribePush()` com um servidor.
+- Sincronização de notas entre aparelhos: implementar `SyncAdapter` com conta e banco de dados.
+- Versões bíblicas com direitos autorais (ARA, NVI etc.): exigem licença.
 
 ## Versões incluídas (`/biblias`)
 | Código | Versão | Licença |

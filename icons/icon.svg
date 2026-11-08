@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34477d"/><stop offset="1" stop-color="#1f2b52"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6cf6a"/><stop offset="1" stop-color="#e0a93b"/></linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.42" r="0.45"><stop offset="0" stop-color="#ffe7a8" stop-opacity=".45"/><stop offset="1" stop-color="#ffe7a8" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="215" r="200" fill="url(#glow)"/>
+  <!-- Coroa -->
+  <path d="M196 132 L214 82 L238 112 L256 70 L274 112 L298 82 L316 132 Z" fill="url(#gold)" stroke="#c98d22" stroke-width="5" stroke-linejoin="round"/>
+  <rect x="194" y="128" width="124" height="18" rx="7" fill="url(#gold)" stroke="#c98d22" stroke-width="5"/>
+  <circle cx="214" cy="80" r="8" fill="#fff3cf"/><circle cx="256" cy="68" r="9" fill="#fff3cf"/><circle cx="298" cy="80" r="8" fill="#fff3cf"/>
+  <!-- Cruz -->
+  <rect x="240" y="160" width="32" height="190" rx="10" fill="url(#gold)" stroke="#c98d22" stroke-width="5"/>
+  <rect x="190" y="200" width="132" height="30" rx="10" fill="url(#gold)" stroke="#c98d22" stroke-width="5"/>
+  <!-- Bíblia aberta -->
+  <path d="M256 352 C214 326 156 322 104 336 L104 430 C156 416 214 420 256 446 Z" fill="#fff6e5" stroke="#e8d7b8" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M256 352 C298 326 356 322 408 336 L408 430 C356 416 298 420 256 446 Z" fill="#fff6e5" stroke="#e8d7b8" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M256 352 L256 446" stroke="#d9c39a" stroke-width="5"/>
+  <g stroke="#e07a5f" stroke-width="7" stroke-linecap="round" opacity=".85">
+    <path d="M132 362 C164 356 196 358 226 370"/><path d="M132 386 C164 380 196 382 226 394"/>
+    <path d="M286 370 C316 358 348 356 380 362"/><path d="M286 394 C316 382 348 380 380 386"/>
+  </g>
+  <path d="M256 446 L246 470 L256 462 L266 470 Z" fill="#e07a5f"/>
+</svg>

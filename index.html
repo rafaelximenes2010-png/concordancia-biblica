@@ -5,41 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- PWA: permite instalar na tela inicial do celular -->
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#2f5d58">
+<meta name="theme-color" content="#2b3a67">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Concordância">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
 <title>Concordância Bíblica — Dashboard de estudo</title>
 <style>
 /* =========================================================
    1. TOKENS DE TEMA
    ========================================================= */
 :root{
-  --bg:#f6f3ec; --surface:#fffdf8; --surface-2:#f0ebe1; --border:#ddd5c6;
-  --ink:#2b2722; --ink-2:#5c554b; --ink-3:#857c6f;
-  --accent:#2f5d58; --accent-ink:#ffffff; --accent-soft:#dfeae7;
-  --mark:#f3dc8f; --mark-ink:#2b2722;
-  --ext:#7a4b1e; --ext-soft:#f7ead9; --ext-border:#d9b98f;
-  --danger:#9b2f2f; --danger-soft:#f6e1df;
+  --bg:#fbf7f0; --surface:#ffffff; --surface-2:#f4eee3; --border:#e6dccb;
+  --ink:#24283b; --ink-2:#555b72; --ink-3:#868aa0;
+  --accent:#2b3a67; --accent-ink:#ffffff; --accent-soft:#e3e8f6;
+  --gold:#e0a93b; --gold-soft:#fbefd2; --coral:#d9694c; --sage:#6fa48a; --sage-soft:#e2f0e8;
+  --sky:#4f86c6; --sky-soft:#e3eefa; --plum:#8a5a9e; --hero-a:#2b3a67; --hero-b:#4a5f9e;
+  --mark:#f8de8f; --mark-ink:#24283b;
+  --ext:#9a5a1b; --ext-soft:#fbf0e2; --ext-border:#e5c39b;
+  --danger:#a33a32; --danger-soft:#f9e3e0;
   --ok:#2f6b3a;
-  --shadow:0 1px 2px rgba(40,30,15,.06),0 2px 8px rgba(40,30,15,.05);
-  --radius:10px;
+  --shadow:0 1px 2px rgba(36,40,59,.05),0 4px 14px rgba(36,40,59,.06);
+  --radius:14px;
   --font-ui:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --font-text:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
   color-scheme:light;
 }
 [data-theme="dark"]{
-  --bg:#181715; --surface:#211f1c; --surface-2:#2a2824; --border:#3a3631;
-  --ink:#ece6da; --ink-2:#bfb6a7; --ink-3:#8f8678;
-  --accent:#7fb8ae; --accent-ink:#0f1c1a; --accent-soft:#24332f;
+  --bg:#12172a; --surface:#1b2238; --surface-2:#242c46; --border:#323b5a;
+  --ink:#eef0f7; --ink-2:#c0c5d8; --ink-3:#8c93ad;
+  --accent:#f2c25b; --accent-ink:#1b1606; --accent-soft:#3a3420;
+  --gold:#f2c25b; --gold-soft:#3a3420; --coral:#f08f74; --sage:#86c2a5; --sage-soft:#1f3a30;
+  --sky:#7fb0ea; --sky-soft:#1d2d47; --plum:#c39ad6; --hero-a:#24305a; --hero-b:#3b4c85;
   --mark:#6b5a1f; --mark-ink:#fff6d6;
-  --ext:#e0b07a; --ext-soft:#2e241a; --ext-border:#5e4529;
-  --danger:#e48a82; --danger-soft:#3a2321;
+  --ext:#f0bd84; --ext-soft:#33271a; --ext-border:#6a4e2c;
+  --danger:#f0968c; --danger-soft:#3c2422;
   --ok:#8fcf99;
-  --shadow:0 1px 2px rgba(0,0,0,.3);
+  --shadow:0 1px 2px rgba(0,0,0,.35);
   color-scheme:dark;
 }
 
@@ -310,6 +315,150 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .install-box p{margin:0;flex:1 1 200px}
 @media (display-mode: standalone){ .install{display:none!important} }
 @media (max-width:760px){ .install{padding:0 10px} }
+/* =========================================================
+   9. NOVA IDENTIDADE: abas, Início, Texto do dia, Devocional,
+      Estudos, Minhas notas, lembretes
+   ========================================================= */
+.font-round{font-family:ui-rounded,"SF Pro Rounded","Nunito","Segoe UI",system-ui,sans-serif}
+.brand a{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.brand img{width:34px;height:34px;border-radius:9px;box-shadow:0 2px 6px rgba(31,43,82,.25)}
+.brand span{font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;font-weight:750}
+.top-nav{display:flex;gap:4px;flex:1;justify-content:center;flex-wrap:wrap}
+.nav-btn{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;border-radius:999px;padding:8px 12px;cursor:pointer;color:var(--ink-2);font-weight:600;font-size:14px}
+.nav-btn:hover{background:var(--surface-2);color:var(--ink)}
+.nav-btn[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.bottom-nav{display:none}
+#views{max-width:1500px;margin:0 auto}
+.view{padding:16px 16px 40px;animation:viewIn .25s ease}
+@keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.view-head{display:flex;align-items:center;gap:14px;margin:4px 0 16px}
+.view-head svg.ill{width:72px;height:72px;flex:none}
+.view-head h2{margin:0;font-size:24px;font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif}
+.view-head p{margin:2px 0 0;color:var(--ink-2)}
+.eyebrow{text-transform:uppercase;letter-spacing:.8px;font-size:12px;font-weight:700;color:var(--coral);margin:0}
+.narrow{max-width:820px;margin:0 auto}
+
+/* Início */
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(135deg,var(--hero-a),var(--hero-b));color:#fff;border-radius:22px;padding:20px 22px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.hero h2{margin:4px 0;font-size:26px;font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif}
+.hero p{margin:0;opacity:.9}
+.hero .eyebrow{color:#ffd88a}
+.hero svg{width:130px;height:110px;flex:none}
+.streak{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0;padding:12px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--border)}
+.streak .flame{width:40px;height:40px;flex:none}
+.streak strong{font-size:18px}
+.streak>div:nth-child(2){flex:1;min-width:200px}
+.dots{display:flex;gap:6px;margin-left:auto}
+.dot{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--ink-3)}
+.dot i{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:block}
+.dot.on i{background:var(--gold);border-color:var(--gold)}
+.dot.today i{box-shadow:0 0 0 3px var(--accent-soft)}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.home-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden}
+.home-card h3{margin:0;font-size:17px;display:flex;align-items:center;gap:8px;font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif}
+.home-card .badge-ill{width:44px;height:44px;flex:none}
+.home-card .verse-sm{font-family:var(--font-text);font-size:17px;line-height:1.55;margin:0}
+.home-card .row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.home-card.wide{grid-column:1/-1}
+.hc-texto{border-top:5px solid var(--gold)} .hc-devo{border-top:5px solid var(--coral)}
+.hc-estudo{border-top:5px solid var(--sage)} .hc-notas{border-top:5px solid var(--accent)}
+.hc-busca{border-top:5px solid var(--sky)} .hc-ler{border-top:5px solid var(--plum)}
+.quick-search{display:flex;gap:6px}
+.quick-search input{flex:1;min-width:0;border:1.5px solid var(--border);background:var(--bg);border-radius:10px;padding:9px 10px}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--border)}
+.pill.demo{background:var(--ext-soft);color:var(--ext);border-color:var(--ext-border)}
+.pill.gold{background:var(--gold-soft);color:var(--ink);border-color:var(--gold)}
+
+/* Texto do dia / Devocional */
+.day-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:20px 22px;box-shadow:var(--shadow)}
+.day-ref{font-size:20px;font-weight:750;color:var(--accent);margin:0 0 4px;font-family:ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif}
+.day-text{font-family:var(--font-text);font-size:21px;line-height:1.7;margin:10px 0}
+.day-text sup{font-family:var(--font-ui);font-size:11px;color:var(--accent);font-weight:700;margin-right:3px}
+.day-meta{font-size:12px;color:var(--ink-3)}
+.day-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0}
+.devo-block{margin-top:14px}
+.devo-block h4{margin:0 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--coral)}
+.devo-block p{margin:0;font-size:16px;line-height:1.65}
+.done-btn[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+
+/* Estudos */
+.bp-note{font-size:13px;background:var(--surface-2);border:1px dashed var(--border);border-radius:12px;padding:10px 12px;color:var(--ink-2);margin-bottom:12px}
+.bp-filters{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:8px;margin-bottom:12px}
+.bp-filters input,.bp-filters select,.notes-filters input,.notes-filters select{border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:8px 10px;min-width:0;width:100%}
+.bp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.bp-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.bp-card h3{margin:0;font-size:16px}
+.bp-card .meta{font-size:12px;color:var(--ink-3)}
+.bp-card p{margin:0;font-size:14px;color:var(--ink-2)}
+.bp-card .row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:6px}
+.bp-thumb{height:70px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--sage-soft),var(--gold-soft))}
+.bp-thumb svg{width:56px;height:56px}
+a.btn{text-decoration:none;color:inherit}
+a.btn-ext{color:var(--ext)}
+
+/* Minhas notas */
+.notes-filters{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1.3fr;gap:8px;margin:10px 0 12px}
+.notes-filters label{display:flex;flex-direction:column;gap:3px;font-size:11px;color:var(--ink-3);font-weight:600}
+.note-card{background:var(--surface);border:1px solid var(--border);border-left:5px solid var(--accent);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow)}
+.note-card.culto{border-left-color:var(--coral)}
+.note-card h3{margin:0;font-size:16px}
+.note-card .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-3);margin:4px 0 6px}
+.note-card .body{white-space:pre-wrap;font-size:14.5px;line-height:1.55;margin:0}
+.note-card .row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.notes-list{display:grid;gap:10px}
+.storage-note{font-size:12px;color:var(--ink-3);display:flex;gap:6px;align-items:center}
+dialog.note-dlg{max-width:620px}
+.note-form-grid{display:grid;gap:10px}
+.note-form-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2)}
+.note-form-grid input,.note-form-grid textarea,.note-form-grid select{border:1px solid var(--border);background:var(--bg);border-radius:10px;padding:8px 10px;font-weight:400;color:var(--ink)}
+.note-form-grid textarea{min-height:160px;resize:vertical;font-family:var(--font-ui)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:flex;gap:6px}
+.seg label{flex-direction:row;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:6px 12px;cursor:pointer;font-weight:600}
+.seg input{accent-color:var(--accent)}
+.form-err{color:var(--danger);font-size:13px;margin:0}
+
+/* Lembretes */
+.rem-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rem-row input[type=time]{border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:6px 8px;min-width:110px;color:var(--ink)}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
+.switch input{width:20px;height:20px;accent-color:var(--accent)}
+.rem-status{font-size:13px;color:var(--ink-2);margin:0}
+.rem-banner{display:flex;gap:10px;align-items:center;background:var(--gold-soft);border:1px solid var(--gold);border-radius:14px;padding:10px 14px;margin:12px 0}
+.rem-banner p{margin:0;flex:1}
+
+/* Busca: barra de pesquisa dentro da aba */
+.busca-bar{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:12px;box-shadow:var(--shadow);margin:0 16px}
+.busca-bar .search-form{flex:1 1 auto}
+#view-busca{padding:16px 0 0}
+#view-busca .demo-banner{margin-top:10px}
+
+@media (max-width:899px){
+  .top-nav{display:none}
+  .bottom-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--surface);border-top:1px solid var(--border);
+    padding:4px 2px calc(4px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px rgba(20,25,45,.08)}
+  .bottom-nav .nav-btn{flex:1;flex-direction:column;gap:2px;padding:6px 2px;border-radius:12px;font-size:10.5px;min-width:0}
+  .bottom-nav .nav-btn .icon{width:22px;height:22px}
+  .bottom-nav .nav-btn[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+  body{padding-bottom:calc(70px + env(safe-area-inset-bottom))}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+@media (max-width:760px){
+  .view{padding:12px 10px 30px}
+  .hero{padding:16px}
+  .hero h2{font-size:21px}
+  .hero svg{width:92px;height:80px}
+  .dots{margin-left:0}
+  .bp-filters{grid-template-columns:1fr 1fr}
+  .bp-filters input{grid-column:1/-1}
+  .notes-filters{grid-template-columns:1fr 1fr}
+  .notes-filters label:first-child{grid-column:1/-1}
+  .two{grid-template-columns:1fr}
+  .day-text{font-size:19px}
+  .busca-bar{margin:0 10px}
+  .view-head svg.ill{width:56px;height:56px}
+}
+
 </style>
 </head>
 <body>
@@ -332,14 +481,132 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
   <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+  <!-- Ícones de navegação -->
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="13" r="4"/><path d="M12 3v3M4.2 6.2l2 2M19.8 6.2l-2 2M2 13h3M19 13h3M5 20h14"/></symbol>
+  <symbol id="i-lamp" viewBox="0 0 24 24"><path d="M5 15c3 0 4-2 7-2s5 2 9 0c-1 3-4 5-8 5s-7-1-8-3z"/><path d="M14 13c0-3 2-4 2-6a3 3 0 0 0-3-3"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+  <!-- Ilustrações leves (originais) -->
+  <symbol id="ill-sunrise" viewBox="0 0 130 110">
+    <circle cx="65" cy="70" r="30" style="fill:var(--gold)"/>
+    <g style="stroke:var(--gold)" stroke-width="5" stroke-linecap="round"><path d="M65 20v10M28 36l7 7M102 36l-7 7M15 70h10M105 70h10"/></g>
+    <path d="M0 78c20-10 40-10 65 0s45 10 65 0v32H0z" style="fill:var(--sage)" opacity=".9"/>
+    <path d="M0 92c25-8 45-6 65 2s45 8 65 0v16H0z" style="fill:var(--accent)" opacity=".55"/>
+  </symbol>
+  <symbol id="ill-lamp" viewBox="0 0 100 100">
+    <ellipse cx="50" cy="86" rx="34" ry="6" style="fill:var(--ink)" opacity=".08"/>
+    <path d="M18 66c10 0 14-8 30-8s26 8 38 2c-4 12-16 20-34 20S22 74 18 66z" style="fill:var(--coral)"/>
+    <path d="M62 58c0-12 10-16 8-28" style="stroke:var(--ink-3)" stroke-width="3" fill="none"/>
+    <path d="M70 18c6 6 6 12 0 16-6-4-6-10 0-16z" style="fill:var(--gold)"/>
+    <circle cx="70" cy="26" r="16" style="fill:var(--gold)" opacity=".18"/>
+  </symbol>
+  <symbol id="ill-film" viewBox="0 0 100 100">
+    <rect x="14" y="24" width="72" height="52" rx="10" style="fill:var(--sage)"/>
+    <path d="m44 38 18 12-18 12z" style="fill:#fff"/>
+    <circle cx="26" cy="16" r="6" style="fill:var(--gold)"/><circle cx="44" cy="12" r="4" style="fill:var(--coral)"/>
+    <path d="M24 84h52" style="stroke:var(--accent)" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ill-notebook" viewBox="0 0 100 100">
+    <rect x="22" y="14" width="58" height="74" rx="8" style="fill:var(--surface);stroke:var(--accent)" stroke-width="4"/>
+    <path d="M22 28h-6M22 44h-6M22 60h-6M22 76h-6" style="stroke:var(--accent)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M34 34h34M34 46h34M34 58h22" style="stroke:var(--ink-3)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M66 62l14-14 6 6-14 14h-6z" style="fill:var(--coral)"/>
+  </symbol>
+  <symbol id="ill-flame" viewBox="0 0 40 40">
+    <path d="M20 4c2 7 10 10 10 20a10 10 0 0 1-20 0c0-6 4-8 5-13 2 3 3 5 5 6 1-4 0-9 0-13z" style="fill:var(--coral)"/>
+    <path d="M20 20c1 4 5 5 5 9a5 5 0 0 1-10 0c0-3 3-5 5-9z" style="fill:var(--gold)"/>
+  </symbol>
+  <symbol id="ill-open-book" viewBox="0 0 100 100">
+    <path d="M50 30C38 22 22 22 10 26v52c12-4 28-4 40 4z" style="fill:var(--surface);stroke:var(--plum)" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M50 30c12-8 28-8 40-4v52c-12-4-28-4-40 4z" style="fill:var(--surface);stroke:var(--plum)" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M20 40c8-2 16-1 22 2M20 52c8-2 16-1 22 2M58 42c6-3 14-4 22-2M58 54c6-3 14-4 22-2" style="stroke:var(--gold)" stroke-width="4" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="ill-magnify" viewBox="0 0 100 100">
+    <circle cx="44" cy="44" r="26" style="fill:var(--sky-soft);stroke:var(--sky)" stroke-width="6"/>
+    <path d="m64 64 20 20" style="stroke:var(--sky)" stroke-width="10" stroke-linecap="round"/>
+    <path d="M44 32v24M34 42h20" style="stroke:var(--gold)" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></symbol>
 </svg>
 
 <!-- ===================== CABEÇALHO ===================== -->
 <header class="app-header">
   <div class="header-inner">
-    <h1 class="brand"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Concordância Bíblica</h1>
+    <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/icon.svg" alt="" width="34" height="34"><span>Concordância Bíblica</span></a></h1>
+    <nav class="top-nav" aria-label="Seções do aplicativo">
+      <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
+      <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca bíblica</button>
+      <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto do dia</button>
+      <button type="button" class="nav-btn" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+      <button type="button" class="nav-btn" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Estudos BibleProject</button>
+      <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Minhas notas</button>
+    </nav>
+    <div class="header-tools">
+      <button type="button" class="btn" id="readBtn" aria-label="Ler a Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Ler</button>
+      <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
+        <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
 
+<div id="views">
+<!-- ===================== INÍCIO ===================== -->
+<section class="view" id="view-inicio" aria-labelledby="homeTitle">
+  <div class="hero">
+    <div>
+      <p class="eyebrow" id="greet">Bem-vindo</p>
+      <h2 id="homeTitle">Seu tempo com a Palavra hoje</h2>
+      <p id="heroDate"></p>
+    </div>
+    <svg aria-hidden="true"><use href="#ill-sunrise"/></svg>
+  </div>
+  <div id="remBanner"></div>
+  <div class="streak" id="streakBox" aria-live="polite"></div>
+  <div class="home-grid">
+    <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
+    <article class="home-card hc-devo" id="homeDevo"></article>
+    <article class="home-card hc-estudo" id="homeEstudo"></article>
+    <article class="home-card hc-busca">
+      <h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-magnify"/></svg>Busca bíblica</h3>
+      <p class="muted" style="margin:0">Palavras, expressões, referências ou foto — em 16 versões.</p>
+      <form class="quick-search" id="homeSearch" role="search">
+        <label for="homeQ" class="sr-only">Buscar na Bíblia</label>
+        <input id="homeQ" type="search" placeholder="Ex.: graça, Salmo 23" maxlength="120">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </form>
+    </article>
+    <article class="home-card hc-notas" id="homeNotas"></article>
+    <article class="home-card hc-ler" id="homeLer"></article>
+    <article class="home-card wide" id="remindersCard"></article>
+    <article class="home-card wide" id="installCard">
+      <h3><img src="icons/icon.svg" alt="" width="28" height="28">Instalar como aplicativo</h3>
+      <div class="install" id="installBar" role="region" aria-label="Instalar aplicativo" style="padding:0;margin:0">
+        <div class="install-box">
+          <p id="installText">Instale na tela inicial para abrir em tela cheia e usar sem conexão.</p>
+          <button type="button" class="btn btn-primary btn-sm" id="installBtn" hidden>Instalar app</button>
+          <button type="button" class="btn btn-sm" id="installClose" aria-label="Fechar aviso de instalação">Agora não</button>
+        </div>
+      </div>
+      <ul style="margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)">
+        <li><strong>iPhone/iPad:</strong> abra o endereço do app no <strong>Safari</strong> → botão <strong>Compartilhar</strong> → <strong>Adicionar à Tela de Início</strong>.</li>
+        <li><strong>Android:</strong> abra no <strong>Chrome</strong> → menu <strong>⋮</strong> → <strong>Instalar app</strong> (ou o botão acima, quando aparecer).</li>
+        <li><strong>Computador:</strong> no Chrome ou Edge, clique no ícone de instalar na barra de endereço.</li>
+      </ul>
+      <p class="muted" id="installState" style="margin:0;font-size:13px"></p>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== BUSCA BÍBLICA ===================== -->
+<section class="view" id="view-busca" hidden aria-label="Busca bíblica">
+  <div class="busca-bar">
     <form class="search-form" id="searchForm" role="search" novalidate>
       <div class="search-box">
         <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
@@ -364,28 +631,11 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       </select>
       <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Buscar</button>
     </form>
-
-    <div class="header-tools">
-      <button type="button" class="btn" id="readBtn" aria-label="Ler a Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Ler</button>
-      <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
-        <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
-      </button>
-    </div>
   </div>
-</header>
 
-<div class="install" id="installBar" role="region" aria-label="Instalar aplicativo">
-  <div class="install-box">
-    <p id="installText">Instale este app na tela inicial para abrir em tela cheia e usar offline.</p>
-    <button type="button" class="btn btn-primary btn-sm" id="installBtn" hidden>Instalar app</button>
-    <button type="button" class="btn btn-sm" id="installClose" aria-label="Fechar aviso de instalação">Agora não</button>
-  </div>
-</div>
-
-<div class="demo-banner">
+  <div class="demo-banner">
   <p id="dataBanner"><strong>Bíblia completa em 16 versões livres, em 14 idiomas:</strong> português, inglês, espanhol, francês, alemão, holandês, sueco, polonês, húngaro, russo, grego moderno, chinês, hebraico e grego originais, e latim. Versões como ARA, ARC, NVI e NAA têm direitos autorais e não estão incluídas.</p>
 </div>
-
 <main class="layout">
   <!-- ===================== FILTROS ===================== -->
   <aside class="panel filters collapsible" id="filtersPanel" data-open="false" aria-labelledby="filtersTitle">
@@ -495,23 +745,122 @@ body{padding-bottom:env(safe-area-inset-bottom)}
         </div>
         <div class="tabpanel" role="tabpanel" id="tp-fav" aria-labelledby="tab-fav"></div>
         <div class="tabpanel" role="tabpanel" id="tp-hist" aria-labelledby="tab-hist" hidden></div>
-        <div class="tabpanel" role="tabpanel" id="tp-notes" aria-labelledby="tab-notes" hidden>
-          <form class="note-form" id="noteForm">
-            <label for="noteRef" class="sr-only">Referência da nota</label>
-            <div class="row"><input id="noteRef" type="text" placeholder="Referência (opcional), ex.: João 3:16"></div>
-            <label for="noteText" class="sr-only">Texto da nota</label>
-            <textarea id="noteText" placeholder="Escreva sua anotação de estudo…"></textarea>
-            <div class="row"><button type="submit" class="btn btn-primary btn-sm">Salvar nota</button></div>
-          </form>
-          <div class="section-title">Notas salvas</div>
-          <ul class="mini-list" id="noteList"></ul>
-        </div>
+        <div class="tabpanel" role="tabpanel" id="tp-notes" aria-labelledby="tab-notes" hidden><div id="notesMini"></div></div>
         <div class="tabpanel" role="tabpanel" id="tp-rel" aria-labelledby="tab-rel" hidden></div>
         <div class="tabpanel" role="tabpanel" id="tp-com" aria-labelledby="tab-com" hidden></div>
       </div>
     </div>
   </aside>
 </main>
+</section>
+
+<!-- ===================== TEXTO DO DIA ===================== -->
+<section class="view narrow" id="view-texto" hidden aria-labelledby="votdTitle">
+  <div class="view-head">
+    <svg class="ill" aria-hidden="true"><use href="#ill-sunrise"/></svg>
+    <div><p class="eyebrow">Sugestão diária</p><h2 id="votdTitle">Texto do dia</h2><p id="votdDate"></p></div>
+  </div>
+  <div class="day-card" id="votdBody"><p class="muted">Carregando…</p></div>
+  <div class="day-nav">
+    <button type="button" class="btn" data-votd="-1">‹ Dia anterior</button>
+    <button type="button" class="btn btn-ghost" data-votd="0">Hoje</button>
+    <button type="button" class="btn" data-votd="1">Próximo dia ›</button>
+  </div>
+  <p class="muted" style="font-size:13px">Os textos do dia vêm de uma lista de passagens escolhidas para este app, que se repete ao longo do ano. O texto bíblico é exibido na tradução indicada, a partir da Bíblia completa instalada no app.</p>
+</section>
+
+<!-- ===================== DEVOCIONAL ===================== -->
+<section class="view narrow" id="view-devocional" hidden aria-labelledby="devoTitle">
+  <div class="view-head">
+    <svg class="ill" aria-hidden="true"><use href="#ill-lamp"/></svg>
+    <div><p class="eyebrow">Devocional diário</p><h2 id="devoTitle">Devocional</h2><p id="devoDate"></p></div>
+  </div>
+  <div class="day-card" id="devoBody"><p class="muted">Carregando…</p></div>
+  <div class="day-nav">
+    <button type="button" class="btn" data-devo="-1">‹ Anterior</button>
+    <button type="button" class="btn btn-ghost" data-devo="0">Hoje</button>
+    <button type="button" class="btn" data-devo="1">Próximo ›</button>
+  </div>
+  <div class="home-card" id="remindersCard2" style="margin-top:6px"></div>
+</section>
+
+<!-- ===================== ESTUDOS BIBLEPROJECT ===================== -->
+<section class="view" id="view-estudos" hidden aria-labelledby="bpTitle">
+  <div class="view-head">
+    <svg class="ill" aria-hidden="true"><use href="#ill-film"/></svg>
+    <div><p class="eyebrow">Vídeos e materiais públicos</p><h2 id="bpTitle">Estudos BibleProject</h2>
+    <p>Um guia para encontrar vídeos gratuitos do BibleProject por livro, tema e tipo de material.</p></div>
+  </div>
+  <p class="bp-note"><strong>Este app não é afiliado ao BibleProject.</strong> Os títulos são uma seleção feita para este app, e as descrições são resumos próprios. Os botões abrem o conteúdo na <strong>fonte oficial</strong> (bibleproject.com) ou uma busca pelo vídeo dublado no YouTube. Nada é reproduzido aqui. Para muitos vídeos há versão em português na <a href="https://bibleproject.com/portugues/" target="_blank" rel="noopener noreferrer">página do BibleProject em português ↗</a>.</p>
+  <div class="bp-filters">
+    <label class="sr-only" for="bpQ">Buscar estudos</label><input id="bpQ" type="search" placeholder="Buscar por título, livro ou tema">
+    <label class="sr-only" for="bpBook">Livro</label><select id="bpBook"></select>
+    <label class="sr-only" for="bpTheme">Tema</label><select id="bpTheme"></select>
+    <label class="sr-only" for="bpType">Tipo</label><select id="bpType"></select>
+  </div>
+  <p class="muted" id="bpCount" aria-live="polite"></p>
+  <div class="bp-grid" id="bpList"></div>
+  <p class="bp-note" style="margin-top:14px"><strong>Nota para estudo reformado:</strong> o BibleProject é muito usado pelo panorama literário que oferece. Alguns autores reformados criticam a forma como certos vídeos tratam doutrinas como a expiação, em especial a propiciação. Vale assistir com a Escritura aberta e comparar com os comentários do app.</p>
+</section>
+
+<!-- ===================== MINHAS NOTAS ===================== -->
+<section class="view" id="view-notas" hidden aria-labelledby="notesTitle">
+  <div class="view-head">
+    <svg class="ill" aria-hidden="true"><use href="#ill-notebook"/></svg>
+    <div style="flex:1"><p class="eyebrow">Cultos e estudos bíblicos</p><h2 id="notesTitle">Minhas notas</h2>
+      <p class="storage-note"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span id="storageNote">As notas ficam salvas apenas neste aparelho e navegador.</span></p></div>
+    <button type="button" class="btn btn-primary" id="newNoteBtn"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>Nova nota</button>
+  </div>
+  <div class="notes-filters">
+    <label>Pesquisar<input id="nfQ" type="search" placeholder="Título, assunto, texto, pregador…"></label>
+    <label>Tipo<select id="nfType"><option value="">Todos</option><option value="culto">Culto</option><option value="estudo">Estudo</option></select></label>
+    <label>De<input id="nfFrom" type="date"></label>
+    <label>Até<input id="nfTo" type="date"></label>
+    <label>Referência<input id="nfRef" type="search" placeholder="Ex.: João 3"></label>
+  </div>
+  <p class="muted" id="notesCount" aria-live="polite"></p>
+  <div class="notes-list" id="notesList"></div>
+</section>
+</div><!-- /views -->
+
+<!-- Navegação inferior (celular) -->
+<nav class="bottom-nav" aria-label="Seções do aplicativo">
+  <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
+  <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca</button>
+  <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto</button>
+  <button type="button" class="nav-btn" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+  <button type="button" class="nav-btn" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Estudos</button>
+  <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Notas</button>
+</nav>
+
+<!-- Editor de nota -->
+<dialog id="noteDialog" class="note-dlg" aria-labelledby="noteDlgTitle">
+  <div class="dlg-head">
+    <h2 id="noteDlgTitle">Nova nota</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="noteDlgClose" aria-label="Fechar editor"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <form class="dlg-body note-form-grid" id="noteEditForm" novalidate>
+    <input type="hidden" id="neId">
+    <label>Título ou assunto *<input id="neTitle" maxlength="140" required></label>
+    <div class="two">
+      <label>Data *<input id="neDate" type="date" required></label>
+      <div><span style="font-size:13px;font-weight:600;color:var(--ink-2)">Tipo *</span>
+        <div class="seg" role="radiogroup" aria-label="Tipo de nota" style="margin-top:4px">
+          <label><input type="radio" name="neType" value="culto">Culto</label>
+          <label><input type="radio" name="neType" value="estudo" checked>Estudo</label>
+        </div></div>
+    </div>
+    <label>Referência bíblica<input id="neRef" placeholder="Ex.: Romanos 8:28-30" maxlength="80"></label>
+    <label>Anotação *<textarea id="neText" required></textarea></label>
+    <label>Pregador, professor ou observações<input id="neExtra" maxlength="200" placeholder="Opcional"></label>
+    <p class="form-err" id="neErr" role="alert"></p>
+    <div class="row-actions" style="display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" class="btn" id="neCancel">Cancelar</button>
+      <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Salvar nota</button>
+    </div>
+  </form>
+</dialog>
+
 
 <!-- Modal de contexto do capítulo -->
 <dialog id="ctxDialog" class="reader" aria-labelledby="ctxTitle">
@@ -871,7 +1220,6 @@ const el = {
   sort:$("#sort"), count:$("#count"), notices:$("#notices"), list:$("#resultList"), empty:$("#emptyState"),
   moreWrap:$("#moreWrap"), more:$("#moreBtn"), ext:$("#extArea"),
   favCount:$("#favCount"), tpFav:$("#tp-fav"), tpHist:$("#tp-hist"), tpRel:$("#tp-rel"),
-  noteForm:$("#noteForm"), noteRef:$("#noteRef"), noteText:$("#noteText"), noteList:$("#noteList"),
   dlg:$("#ctxDialog"), dlgTitle:$("#ctxTitle"), dlgBody:$("#ctxBody"), dlgClose:$("#ctxClose"), toast:$("#toast")
 };
 
@@ -1213,30 +1561,6 @@ el.tpHist.addEventListener("click",e=>{
   const b=e.target.closest("[data-hist]");
   if(b){ const h=state.history[+b.dataset.hist]; el.q.value=h.q; setMode(h.mode); el.scope.value=h.scope||"all"; runSearch({fromHistory:true, auto:false}); }
   if(e.target.closest("#clearHist")){ state.history=[]; store.set("history",[]); renderHistory(); toast("Histórico limpo."); }
-});
-
-/* ---------- Notas ---------- */
-function startNote(v){
-  el.noteRef.value = `${refLabel(v.b,v.c,v.v)} (${v.t})`;
-  selectTab("notes"); openStudyOnMobile(); el.noteText.focus();
-}
-el.noteForm.addEventListener("submit",e=>{
-  e.preventDefault();
-  const text=el.noteText.value.trim();
-  if(!text){ toast("Escreva algo antes de salvar a nota."); el.noteText.focus(); return; }
-  state.notes.unshift({ id:Date.now(), ref:el.noteRef.value.trim(), text, at:Date.now() });
-  store.set("notes",state.notes); el.noteText.value=""; el.noteRef.value=""; renderNotes(); toast("Nota salva neste navegador.");
-});
-function renderNotes(){
-  if(!state.notes.length){ el.noteList.innerHTML=`<li class="muted">Nenhuma nota salva. As notas ficam guardadas apenas neste navegador.</li>`; return; }
-  el.noteList.innerHTML = state.notes.map(n=>`
-    <li class="mini"><div class="mini-top"><strong class="ref">${esc(n.ref||"Nota geral")}</strong>
-    <button type="button" class="btn btn-icon btn-ghost btn-sm" data-delnote="${n.id}" aria-label="Excluir nota"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg></button></div>
-    <p style="font-family:var(--font-ui);white-space:pre-wrap">${esc(n.text)}</p><span class="muted">${new Date(n.at).toLocaleString("pt-BR")}</span></li>`).join("");
-}
-el.noteList.addEventListener("click",e=>{
-  const b=e.target.closest("[data-delnote]"); if(!b) return;
-  state.notes=state.notes.filter(n=>n.id!==+b.dataset.delnote); store.set("notes",state.notes); renderNotes(); toast("Nota excluída.");
 });
 
 /* ---------- Referências relacionadas + dados lexicais de exemplo ---------- */
@@ -1756,14 +2080,576 @@ function rerunIfActive(){ if(el.q.value.trim() && state.lastQuery) runSearch({fr
 
 // Atalho "/" para focar a busca
 document.addEventListener("keydown",e=>{
-  if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){ e.preventDefault(); el.q.focus(); }
+  if(e.key==="/" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)){ e.preventDefault(); showView("busca"); el.q.focus(); }
 });
 
 let toastTimer;
 function toast(msg){ el.toast.textContent=msg; el.toast.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.toast.classList.remove("show"),2200); }
 
 /* ---------- Primeira renderização ---------- */
-renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotes(); renderRelated(); renderCommentary();
+/* =====================================================================
+   CONTEÚDO DIÁRIO
+   ---------------------------------------------------------------------
+   Lista de passagens do "Texto do dia" (referências reais; o texto é
+   lido da Bíblia completa instalada). >>> Edite/amplie à vontade. <<<
+   ===================================================================== */
+const VOTD = [
+  "JHN 3 16","PSA 23 1-3","ROM 8 28","PHP 4 13","PRO 3 5-6","ISA 41 10","JOS 1 9","MAT 11 28-30",
+  "LAM 3 22-23","ROM 5 8","EPH 2 8-9","HEB 11 1","2CO 5 17","GAL 2 20","PSA 46 1","PSA 119 105",
+  "MAT 6 33","JHN 14 6","1JN 1 9","ROM 12 2","PHP 4 6-7","ISA 40 31","PSA 27 1","2TI 1 7",
+  "MAT 5 16","JHN 15 5","ROM 10 9","PSA 121 1-2","COL 3 23","1PE 5 7","HEB 12 1-2","JAS 1 5",
+  "MIC 6 8","PSA 37 5","ROM 15 13","2CO 12 9","JHN 1 14","EPH 3 20-21","REV 21 4","ROM 8 38-39"
+].map(s=>{ const [b,c,r]=s.split(" "); const [v1,v2]=r.split("-").map(Number); return { b, c:+c, v1, v2:v2||v1 }; });
+
+/* Devocionais ORIGINAIS escritos para este app (conteúdo de demonstração).
+   Série curta que se repete. >>> Substitua por uma fonte própria/licenciada. <<< */
+const DEVOS = [
+  { title:"O Senhor é o meu pastor", ref:"PSA 23 1-3",
+    reflection:"Davi não diz apenas que o Senhor é um pastor, mas que é o “meu” pastor. A segurança do salmo não vem da ausência de vales, e sim da presença de quem conduz. O pastor conhece o caminho, provê descanso e restaura a alma cansada.",
+    application:"Escreva uma preocupação concreta de hoje e ore entregando-a ao Senhor como seu pastor. Depois, leia o salmo inteiro devagar." },
+  { title:"Amor que toma a iniciativa", ref:"ROM 5 6-8",
+    reflection:"Paulo mostra que o amor de Deus não esperou que nos tornássemos dignos. Cristo morreu por nós quando ainda éramos pecadores. A graça não é recompensa por progresso; é o ponto de partida de toda vida cristã.",
+    application:"Agradeça a Deus por uma área em que você sabe que não merecia o cuidado dele. Demonstre hoje um gesto de bondade a alguém que não pode retribuir." },
+  { title:"Salvos pela graça, criados para boas obras", ref:"EPH 2 8-10",
+    reflection:"A salvação é dom de Deus, recebida pela fé, e não conquista humana. Mas o mesmo texto continua: fomos criados em Cristo para boas obras. A graça que nos salva também nos coloca a caminho, não como moeda de troca, mas como fruto.",
+    application:"Peça a Deus discernimento para enxergar uma boa obra preparada para você hoje: uma visita, uma ligação, um serviço discreto." },
+  { title:"Descanso para os cansados", ref:"MAT 11 28-30",
+    reflection:"Jesus convida os cansados e sobrecarregados. Ele não oferece ausência de jugo, mas um jugo suave, porque é carregado com ele. O descanso nasce de aprender de quem é manso e humilde de coração.",
+    application:"Separe dez minutos sem telas para orar e simplesmente estar com Cristo. Nomeie diante dele o peso que você tem carregado sozinho." },
+  { title:"Misericórdias novas a cada manhã", ref:"LAM 3 22-24",
+    reflection:"Lamentações nasce em meio à ruína de Jerusalém, e ainda assim o profeta lembra que as misericórdias do Senhor não têm fim. A esperança bíblica não ignora a dor; ela se apoia na fidelidade de Deus no meio dela.",
+    application:"Antes de dormir, anote três sinais da fidelidade de Deus vistos hoje, por menores que pareçam." },
+  { title:"Força na fraqueza", ref:"2CO 12 9-10",
+    reflection:"Paulo pediu que o espinho fosse retirado, e a resposta foi: “A minha graça te basta”. Deus nem sempre remove a fraqueza; muitas vezes a usa como lugar onde o poder de Cristo se mostra com mais clareza.",
+    application:"Identifique uma limitação que costuma envergonhar você e entregue-a a Deus em oração, pedindo que ela se torne lugar de dependência." },
+  { title:"Lâmpada para os pés", ref:"PSA 119 105",
+    reflection:"A lâmpada antiga não iluminava a estrada inteira, apenas o próximo passo. A Palavra de Deus nos guia assim: com luz suficiente para obedecer hoje, mesmo quando o caminho todo ainda não está claro.",
+    application:"Escolha um versículo para memorizar nesta semana e leia-o pela manhã e à noite." },
+  { title:"Confiar sem entender tudo", ref:"PRO 3 5-6",
+    reflection:"Confiar de todo o coração é diferente de compreender tudo. Provérbios nos chama a reconhecer o Senhor em todos os caminhos, inclusive naqueles em que nosso entendimento falha.",
+    application:"Em uma decisão pendente, ore pedindo direção e converse com alguém maduro na fé antes de decidir." },
+  { title:"Não temas", ref:"ISA 41 10",
+    reflection:"O motivo para não temer não é a força do povo, mas a presença do Senhor: “eu sou contigo”, “eu sou o teu Deus”. A coragem cristã é resposta a uma promessa, não um esforço de autoconfiança.",
+    application:"Quando o medo aparecer hoje, repita o versículo em voz baixa e transforme o medo em oração específica." },
+  { title:"Permanecer na videira", ref:"JHN 15 4-5",
+    reflection:"Jesus descreve uma vida que dá fruto pela união com ele. O ramo não produz por esforço isolado; ele permanece. Sem Cristo nada podemos fazer, mas nele a vida floresce.",
+    application:"Reserve um momento fixo do dia para oração e leitura e trate esse encontro como compromisso inegociável desta semana." },
+  { title:"Uma mente renovada", ref:"ROM 12 1-2",
+    reflection:"Depois de expor as misericórdias de Deus, Paulo chama à entrega da vida inteira como culto. A transformação acontece pela renovação da mente, aprendendo a pensar segundo a vontade de Deus e não segundo o molde deste século.",
+    application:"Observe um hábito de pensamento que se repete em você e confronte-o com um texto bíblico específico." },
+  { title:"A fé que vê o invisível", ref:"HEB 11 1-3",
+    reflection:"Hebreus define a fé como firmeza quanto ao que se espera e convicção do que não se vê. A fé não é salto no escuro: ela descansa na palavra de Deus que criou o mundo e cumpre o que promete.",
+    application:"Leia Hebreus 11 inteiro e escolha um personagem para observar como a fé dele se mostrou em atitudes." },
+  { title:"Lançar sobre ele a ansiedade", ref:"1PE 5 6-7",
+    reflection:"Pedro liga humildade e entrega: humilhar-se sob a mão de Deus inclui reconhecer que não controlamos tudo. Lançamos sobre ele nossa ansiedade porque ele cuida de nós, não porque o problema é pequeno.",
+    application:"Faça uma lista do que está ansiando você e ore item por item. Se a ansiedade for persistente, converse também com alguém de confiança ou um profissional." },
+  { title:"Nova criação", ref:"2CO 5 17-18",
+    reflection:"Estar em Cristo é participar de uma nova criação. O passado não define mais a identidade de quem foi reconciliado com Deus, e quem foi reconciliado recebe também o ministério da reconciliação.",
+    application:"Procure reconciliar-se ou dar um passo de paz em um relacionamento estremecido nesta semana." }
+].map(d=>{ const [b,c,r]=d.ref.split(" "); const [v1,v2]=r.split("-").map(Number); return { ...d, p:{ b, c:+c, v1, v2:v2||v1 } }; });
+
+/* =====================================================================
+   CATÁLOGO BIBLEPROJECT (links para conteúdo público e oficial)
+   ---------------------------------------------------------------------
+   Seleção feita para este app. Descrições são resumos próprios.
+   url: página oficial em bibleproject.com/explore/video/<slug>/.
+   >>> Para ampliar, acrescente itens no mesmo formato. <<<
+   ===================================================================== */
+const BP_BASE = "https://bibleproject.com/explore/video/";
+const BP = [
+  // Visões gerais de livros
+  ["genesis-1-11","Gênesis 1–11","Visão geral","GEN","Gênesis 1–11",["Criação","Queda"],"A criação boa, a rebelião humana e a promessa de vitória sobre o mal."],
+  ["genesis-12-50","Gênesis 12–50","Visão geral","GEN","Gênesis 12–50",["Aliança","Promessa"],"A família de Abraão e a promessa de bênção para todas as nações."],
+  ["exodus-1-18","Êxodo 1–18","Visão geral","EXO","Êxodo 1–18",["Redenção","Libertação"],"Deus liberta Israel da escravidão e se revela como Redentor."],
+  ["exodus-19-40","Êxodo 19–40","Visão geral","EXO","Êxodo 19–40",["Aliança","Templo e presença"],"A aliança no Sinai e o tabernáculo: Deus habitando com seu povo."],
+  ["leviticus","Levítico","Visão geral","LEV","Levítico",["Santidade","Sacrifício"],"Como um povo imperfeito pode viver perto do Deus santo."],
+  ["numbers","Números","Visão geral","NUM","Números",["Deserto","Fidelidade"],"A jornada no deserto entre a infidelidade do povo e a fidelidade de Deus."],
+  ["deuteronomy","Deuteronômio","Visão geral","DEU","Deuteronômio",["Lei","Aliança"],"Os discursos finais de Moisés chamando Israel a amar e obedecer."],
+  ["joshua","Josué","Visão geral","JOS","Josué",["Promessa","Fidelidade"],"A entrada na terra prometida e o desafio de permanecer fiel."],
+  ["judges","Juízes","Visão geral","JDG","Juízes",["Queda","Reino"],"O ciclo de rebeldia, opressão e livramento que mostra a necessidade de um rei justo."],
+  ["ruth","Rute","Visão geral","RUT","Rute",["Fidelidade","Redenção"],"Lealdade e redenção em uma história que conduz à família de Davi."],
+  ["psalms","Salmos","Visão geral","PSA","Salmos",["Oração","Reino"],"O livro de orações de Israel e sua esperança no Messias."],
+  ["proverbs","Provérbios","Visão geral","PRO","Provérbios",["Sabedoria"],"Sabedoria prática que começa no temor do Senhor."],
+  ["isaiah-1-39","Isaías 1–39","Visão geral","ISA","Isaías 1–39",["Santidade","Messias"],"Juízo sobre o pecado e esperança de um rei vindouro."],
+  ["isaiah-40-66","Isaías 40–66","Visão geral","ISA","Isaías 40–66",["Messias","Redenção"],"Consolo, o Servo sofredor e a promessa de nova criação."],
+  ["jonah","Jonas","Visão geral","JON","Jonas",["Graça","Missão"],"Um profeta relutante diante da misericórdia de Deus pelas nações."],
+  ["matthew-1-13","Mateus 1–13","Visão geral","MAT","Mateus 1–13",["Reino","Messias"],"Jesus como o Messias que anuncia e inaugura o Reino."],
+  ["matthew-14-28","Mateus 14–28","Visão geral","MAT","Mateus 14–28",["Reino","Cruz e ressurreição"],"O caminho de Jesus até a cruz, a ressurreição e a grande comissão."],
+  ["mark","Marcos","Visão geral","MRK","Marcos",["Reino","Cruz e ressurreição"],"O Rei que serve e dá a vida em resgate."],
+  ["luke-1-9","Lucas 1–9","Visão geral","LUK","Lucas 1–9",["Reino","Graça"],"Jesus traz boas-novas aos pobres e marginalizados."],
+  ["luke-10-24","Lucas 10–24","Visão geral","LUK","Lucas 10–24",["Graça","Cruz e ressurreição"],"A viagem a Jerusalém, a cruz e a ressurreição."],
+  ["john-1-12","João 1–12","Visão geral","JHN","João 1–12",["Messias","Vida eterna"],"Os sinais que revelam Jesus como a Palavra feita carne."],
+  ["john-13-21","João 13–21","Visão geral","JHN","João 13–21",["Amor","Cruz e ressurreição"],"O discurso de despedida, a cruz e a ressurreição."],
+  ["acts-1-12","Atos 1–12","Visão geral","ACT","Atos 1–12",["Espírito Santo","Missão"],"O Espírito é derramado e a igreja nasce em Jerusalém."],
+  ["acts-13-28","Atos 13–28","Visão geral","ACT","Atos 13–28",["Missão","Igreja"],"O evangelho alcança as nações pelas viagens de Paulo."],
+  ["romans-1-4","Romanos 1–4","Visão geral","ROM","Romanos 1–4",["Graça","Justiça de Deus"],"Todos pecaram, e a justiça de Deus é revelada pela fé em Cristo."],
+  ["romans-5-16","Romanos 5–16","Visão geral","ROM","Romanos 5–16",["Graça","Igreja"],"Nova vida em Cristo e no Espírito, e a unidade da igreja."],
+  ["galatians","Gálatas","Visão geral","GAL","Gálatas",["Graça","Liberdade"],"Justificados pela fé e livres para amar."],
+  ["ephesians","Efésios","Visão geral","EPH","Efésios",["Graça","Igreja"],"A obra de Deus em Cristo e a nova humanidade na igreja."],
+  ["philippians","Filipenses","Visão geral","PHP","Filipenses",["Alegria","Humildade"],"Alegria e humildade seguindo o exemplo de Cristo."],
+  ["hebrews","Hebreus","Visão geral","HEB","Hebreus",["Sacrifício","Fé"],"Jesus, superior aos anjos, a Moisés e aos sacrifícios antigos."],
+  ["james","Tiago","Visão geral","JAS","Tiago",["Sabedoria","Fé"],"Fé viva que se mostra em obras e em palavras sábias."],
+  ["revelation-1-11","Apocalipse 1–11","Visão geral","REV","Apocalipse 1–11",["Reino","Esperança"],"O Cordeiro vitorioso e o chamado à fidelidade."],
+  ["revelation-12-22","Apocalipse 12–22","Visão geral","REV","Apocalipse 12–22",["Nova criação","Esperança"],"O fim do mal e a nova criação onde Deus habita com seu povo."],
+  // Temas bíblicos
+  ["tree-of-life","Árvore da vida","Tema bíblico","GEN","Gênesis 2–3; Apocalipse 22",["Criação","Vida eterna"],"Da árvore no Éden à árvore da nova criação."],
+  ["holiness","Santidade","Tema bíblico","LEV","Isaías 6; Levítico",["Santidade"],"O paradoxo da santidade de Deus e sua resolução em Jesus."],
+  ["image-of-god","Imagem de Deus","Tema bíblico","GEN","Gênesis 1:26-28",["Criação"],"O chamado humano a representar Deus no mundo."],
+  ["messiah","Messias","Tema bíblico","GEN","Gênesis 3:15",["Messias"],"A promessa do libertador que esmagaria a serpente."],
+  ["sacrifice-and-atonement","Sacrifício e expiação","Tema bíblico","LEV","Levítico 16",["Sacrifício"],"Os sacrifícios do Antigo Testamento e a morte de Jesus."],
+  ["gospel-of-the-kingdom","O evangelho do Reino","Tema bíblico","MRK","Marcos 1:15",["Reino"],"O que significa “evangelho” e como ele une a história bíblica."],
+  ["heaven-and-earth","Céu e terra","Tema bíblico","REV","Apocalipse 21",["Templo e presença","Nova criação"],"Deus deseja unir seu espaço e o espaço humano."],
+  ["covenants","As alianças","Tema bíblico","GEN","Gênesis 12; Jeremias 31",["Aliança"],"As alianças com Noé, Abraão, Israel e Davi, cumpridas em Jesus."],
+  ["the-law","A lei","Tema bíblico","EXO","Êxodo 20",["Lei"],"Por que a lei está na Bíblia e como ela aponta para Cristo."],
+  ["exile","Exílio","Tema bíblico","JER","Jeremias 29",["Exílio","Esperança"],"O exílio como experiência e como imagem da vida do povo de Deus."],
+  ["day-of-the-lord","O Dia do Senhor","Tema bíblico","JOL","Joel 2",["Juízo","Esperança"],"Deus confronta o mal humano e restaura sua criação."],
+  ["holy-spirit","Espírito Santo","Tema bíblico","ACT","Gênesis 1:2; Atos 2",["Espírito Santo"],"A presença pessoal de Deus que dá vida à criação."],
+  ["justice","Justiça","Tema bíblico","MIC","Miqueias 6:8",["Justiça de Deus"],"O que a Bíblia chama de justiça e como ela se realiza em Jesus."],
+  ["temple","Templo","Tema bíblico","EXO","Êxodo 40; João 2",["Templo e presença"],"O lugar onde céu e terra se encontram, cumprido em Jesus."]
+].map(([slug,title,type,book,ref,themes,desc])=>({ slug,title,type,book,ref,themes,desc, url:BP_BASE+slug+"/" }));
+
+/* =====================================================================
+   APLICATIVO: abas, Início, Texto do dia, Devocional, Estudos,
+   Minhas notas, lembretes e sequência de estudo
+   ===================================================================== */
+const todayKey = (d=new Date()) => d.toLocaleDateString("sv-SE");          // AAAA-MM-DD (hora local)
+const dayIndex = (d=new Date()) => Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);
+const addDays = (n) => { const d=new Date(); d.setDate(d.getDate()+n); return d; };
+const fmtDate = (d) => d.toLocaleDateString("pt-BR",{ weekday:"long", day:"numeric", month:"long" });
+const passageLabel = p => refLabel(p.b,p.c,p.v1,p.v2);
+
+/* Versão usada nos conteúdos diários: a escolhida pelo usuário, se for em
+   português e tiver o livro; senão a Bíblia Livre. */
+async function dailyVersion(b){
+  const pref=store.get("version",DEFAULT_VERSION); const v=Repo.version(pref);
+  if(v && v.lang==="pt"){ await Repo.load(pref); if(Repo.chapterCount(pref,b)) return pref; }
+  await Repo.load(DEFAULT_VERSION); return DEFAULT_VERSION;
+}
+async function getPassage(p){
+  const t=await dailyVersion(p.b);
+  const verses=(await Repo.getChapter(t,p.b,p.c)).filter(x=>x.v>=p.v1 && x.v<=p.v2);
+  return { t, verses, text:verses.map(x=>x.text).join(" "), label:passageLabel(p) };
+}
+const passageHtml = ps => ps.verses.map(x=>`${ps.verses.length>1?`<sup>${x.v}</sup>`:""}${esc(x.text)}`).join(" ");
+const versionTag = t => { const v=Repo.version(t); return `<span class="pill" title="${esc(v?.license||"")}">${esc(t)} — ${esc(v?.name||t)}</span>`; };
+
+/* ---------- Compartilhar ---------- */
+async function shareText(title, text){
+  const payload = `${title}\n\n${text}`;
+  if(navigator.share){ try{ await navigator.share({ title, text:payload }); return; }catch(e){ if(e && e.name==="AbortError") return; } }
+  try{ await navigator.clipboard.writeText(payload); toast("Texto copiado — cole onde quiser compartilhar."); }
+  catch(e){ toast("Não foi possível compartilhar neste navegador."); }
+}
+
+/* ---------- Sequência de estudo (incentivo diário) ---------- */
+const Streak = {
+  days(){ return store.get("studyDays",[]); },
+  isDone(k=todayKey()){ return this.days().includes(k); },
+  mark(){ const d=this.days(); const k=todayKey(); if(!d.includes(k)){ d.push(k); store.set("studyDays", d.slice(-400)); } renderStreak(); },
+  count(){
+    const set=new Set(this.days()); let n=0; let d=new Date();
+    if(!set.has(todayKey(d))) d.setDate(d.getDate()-1);          // ainda dá tempo hoje
+    while(set.has(todayKey(d))){ n++; d.setDate(d.getDate()-1); }
+    return n;
+  }
+};
+function renderStreak(){
+  const box=$("#streakBox"); if(!box) return;
+  const n=Streak.count(), done=Streak.isDone(), set=new Set(Streak.days());
+  const dots=Array.from({length:7},(_,i)=>{ const d=addDays(i-6); const k=todayKey(d);
+    return `<span class="dot ${set.has(k)?"on":""} ${i===6?"today":""}" title="${esc(d.toLocaleDateString("pt-BR"))}"><i></i>${esc(d.toLocaleDateString("pt-BR",{weekday:"narrow"}))}</span>`; }).join("");
+  box.innerHTML = `<svg class="flame" aria-hidden="true"><use href="#ill-flame"/></svg>
+    <div><strong>${n} ${n===1?"dia seguido":"dias seguidos"}</strong><br><span class="muted">${done?"Estudo de hoje concluído. Volte amanhã para continuar a sequência!":"Leia o texto do dia ou o devocional e marque como concluído."}</span></div>
+    <div class="dots" aria-label="Últimos 7 dias">${dots}</div>`;
+  document.querySelectorAll(".done-btn").forEach(b=>{ b.setAttribute("aria-pressed",done); b.lastChild.textContent = done?"Concluído hoje":"Marcar como concluído"; });
+}
+const doneBtn = () => `<button type="button" class="btn btn-sm done-btn" data-day="done" aria-pressed="${Streak.isDone()}"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${Streak.isDone()?"Concluído hoje":"Marcar como concluído"}</button>`;
+
+/* ---------- Texto do dia ---------- */
+let votdOffset=0;
+const votdFor = d => VOTD[((dayIndex(d)%VOTD.length)+VOTD.length)%VOTD.length];
+async function renderVotd(){
+  const d=addDays(votdOffset), p=votdFor(d), box=$("#votdBody");
+  $("#votdDate").textContent = (votdOffset===0?"Hoje, ":"")+fmtDate(d);
+  box.innerHTML=`<p class="muted">Carregando…</p>`;
+  try{
+    const ps=await getPassage(p);
+    box.innerHTML = `<p class="day-ref">${esc(ps.label)}</p>${versionTag(ps.t)}
+      <p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p>
+      <p class="day-meta">${esc(Repo.version(ps.t).license)}</p>
+      <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+        ${votdOffset===0?doneBtn():""}
+        <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
+        <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
+        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+        <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
+        <button type="button" class="btn btn-sm" data-day="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
+      </div>`;
+    box.dataset.kind="votd"; box._ps=ps; box._p=p;
+  }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a Bíblia. ${navigator.onLine?"Tente novamente.":"Conecte-se uma vez para baixá-la."}</div>`; }
+}
+
+/* ---------- Devocional ---------- */
+let devoOffset=0;
+const devoFor = d => DEVOS[((dayIndex(d)%DEVOS.length)+DEVOS.length)%DEVOS.length];
+async function renderDevo(){
+  const d=addDays(devoOffset), dv=devoFor(d), box=$("#devoBody");
+  $("#devoDate").textContent = (devoOffset===0?"Hoje, ":"")+fmtDate(d);
+  box.innerHTML=`<p class="muted">Carregando…</p>`;
+  try{
+    const ps=await getPassage(dv.p);
+    box.innerHTML = `<span class="pill demo">Devocional original deste app · série de demonstração com ${DEVOS.length} reflexões que se repetem</span>
+      <h3 style="font-size:22px;margin:10px 0 4px">${esc(dv.title)}</h3>
+      <p class="day-ref" style="font-size:16px">${esc(ps.label)}</p>${versionTag(ps.t)}
+      <p class="day-text" style="font-size:19px">${passageHtml(ps)}</p>
+      <div class="devo-block"><h4>Reflexão</h4><p>${esc(dv.reflection)}</p></div>
+      <div class="devo-block"><h4>Aplicação prática</h4><p>${esc(dv.application)}</p></div>
+      <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px">
+        ${devoOffset===0?doneBtn():""}
+        <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
+        <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar passagem</button>
+        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+        <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
+      </div>`;
+    box.dataset.kind="devo"; box._ps=ps; box._p=dv.p; box._dv=dv;
+  }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a passagem do devocional.</div>`; }
+}
+
+/* Ações comuns dos cartões diários (Texto do dia, Devocional e Início) */
+async function dayAction(act, box){
+  const ps=box._ps, p=box._p, dv=box._dv; if(act!=="done" && !ps) return;
+  const first = ps && { t:ps.t, b:p.b, c:p.c, v:p.v1, text:ps.verses[0]?.text||"" };
+  if(act==="done"){ Streak.mark(); toast("Muito bem! Estudo de hoje registrado."); return; }
+  if(act==="ctx") return openContext(first);
+  if(act==="fav"){ toggleFav(first); return; }
+  if(act==="share") return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`,
+      `“${ps.text}” — ${ps.label} (${Repo.version(ps.t).name})${dv?`\n\nReflexão: ${dv.reflection}\n\nAplicação: ${dv.application}`:""}`);
+  if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`Texto do dia: ${ps.label}`, ref:ps.label,
+      text:`“${ps.text}” (${ps.t})\n\n${dv?`Reflexão: ${dv.reflection}\n\nAplicação: ${dv.application}\n\n`:""}Minhas anotações:\n` });
+  if(act==="com"){ showView("busca"); el.q.value=ps.label; setMode("ref"); await runSearch({auto:false}); selectTab("com"); openStudyOnMobile(); }
+}
+["#votdBody","#devoBody","#homeTexto","#homeDevo"].forEach(sel=>$(sel).addEventListener("click",e=>{
+  const b=e.target.closest("[data-day]"); if(b){ e.preventDefault(); dayAction(b.dataset.day, e.currentTarget); }
+}));
+document.querySelectorAll("[data-votd]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.votd; votdOffset = n===0?0:votdOffset+n; renderVotd(); }));
+document.querySelectorAll("[data-devo]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.devo; devoOffset = n===0?0:devoOffset+n; renderDevo(); }));
+
+/* ---------- Início ---------- */
+async function renderHome(){
+  const h=new Date().getHours();
+  $("#greet").textContent = h<12?"Bom dia":h<18?"Boa tarde":"Boa noite";
+  $("#heroDate").textContent = fmtDate(new Date()).replace(/^./,c=>c.toUpperCase());
+  renderStreak(); renderReminderBanner();
+  const ht=$("#homeTexto"), hd=$("#homeDevo");
+  try{
+    const p=votdFor(new Date()), ps=await getPassage(p); ht._ps=ps; ht._p=p;
+    ht.innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-sunrise"/></svg>Texto do dia</h3>
+      <p class="day-ref" style="font-size:16px;margin:0">${esc(ps.label)}</p>
+      <p class="verse-sm">${esc(ps.text.length>260?ps.text.slice(0,260).replace(/\s+\S*$/,"")+"…":ps.text)}</p>
+      <div>${versionTag(ps.t)}</div>
+      <div class="row-actions">
+        <button type="button" class="btn btn-sm btn-primary" data-go="texto">Ler o texto do dia</button>
+        <button type="button" class="btn btn-sm" data-day="fav" aria-label="Favoritar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+        <button type="button" class="btn btn-sm" data-day="share" aria-label="Compartilhar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
+        <button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar texto do dia nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>
+      </div>`;
+    const dv=devoFor(new Date()), ps2=await getPassage(dv.p); hd._ps=ps2; hd._p=dv.p; hd._dv=dv;
+    hd.innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-lamp"/></svg>Devocional</h3>
+      <p style="margin:0;font-weight:700;font-size:16px">${esc(dv.title)}</p>
+      <p class="muted" style="margin:0">${esc(ps2.label)} · ${esc(ps2.t)}</p>
+      <p style="margin:0;color:var(--ink-2)">${esc(dv.reflection.slice(0,150).replace(/\s+\S*$/,""))}…</p>
+      <div class="row-actions">
+        <button type="button" class="btn btn-sm btn-primary" data-go="devocional">Ler o devocional</button>
+        <button type="button" class="btn btn-sm" data-day="share" aria-label="Compartilhar devocional"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
+        <button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar devocional nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>
+      </div>`;
+  }catch(e){ ht.innerHTML=`<p class="notice error">Não foi possível carregar a Bíblia agora.</p>`; }
+  // Estudo sugerido: ligado ao livro do devocional, quando houver
+  const dv=devoFor(new Date());
+  const pick = BP.find(x=>x.book===dv.p.b) || BP[dayIndex()%BP.length];
+  $("#homeEstudo").innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-film"/></svg>Estudo sugerido</h3>
+    <p style="margin:0;font-weight:700">${esc(pick.title)} <span class="pill">${esc(pick.type)}</span></p>
+    <p style="margin:0;color:var(--ink-2)">${esc(pick.desc)}</p>
+    <div class="row-actions"><a class="btn btn-sm btn-ext" href="${esc(pick.url)}" target="_blank" rel="noopener noreferrer">Abrir no BibleProject ↗</a>
+    <button type="button" class="btn btn-sm" data-go="estudos">Ver todos os estudos</button></div>`;
+  const notes=NotesStore.all();
+  $("#homeNotas").innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-notebook"/></svg>Minhas notas</h3>
+    <p style="margin:0">${notes.length?`${notes.length} ${notes.length===1?"nota salva":"notas salvas"}. Última: <strong>${esc(notes.slice().sort((a,b)=>b.updatedAt-a.updatedAt)[0].title)}</strong>`:"Registre aqui suas anotações de cultos e estudos."}</p>
+    <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-newnote>Nova nota</button><button type="button" class="btn btn-sm" data-go="notas">Abrir notas</button></div>`;
+  const last=store.get("reader",null);
+  $("#homeLer").innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-open-book"/></svg>Ler a Bíblia</h3>
+    <p style="margin:0">${last?`Continue de onde parou: <strong>${esc(BOOK[last.b]?.name||"")} ${last.c}</strong> (${esc(last.t)}).`:"Leia por livro e capítulo e compare versões."}</p>
+    <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-read>${last?"Continuar leitura":"Começar a ler"}</button></div>`;
+}
+$("#view-inicio").addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]"); if(g) return showView(g.dataset.go);
+  if(e.target.closest("[data-newnote]")) return openNoteEditor({});
+  if(e.target.closest("[data-read]")) return openReader({hi:null});
+});
+$("#homeSearch").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#homeQ").value.trim();
+  showView("busca"); if(v){ el.q.value=v; runSearch(); } else el.q.focus(); });
+
+/* ---------- Estudos BibleProject ---------- */
+function initBP(){
+  const books=[...new Set(BP.map(x=>x.book))].sort((a,b)=>BOOK[a].order-BOOK[b].order);
+  $("#bpBook").innerHTML = `<option value="">Todos os livros</option>`+books.map(b=>`<option value="${b}">${esc(BOOK[b].name)}</option>`).join("");
+  const themes=[...new Set(BP.flatMap(x=>x.themes))].sort((a,b)=>a.localeCompare(b,"pt"));
+  $("#bpTheme").innerHTML = `<option value="">Todos os temas</option>`+themes.map(t=>`<option>${esc(t)}</option>`).join("");
+  $("#bpType").innerHTML = `<option value="">Todos os tipos</option>`+[...new Set(BP.map(x=>x.type))].map(t=>`<option>${esc(t)}</option>`).join("");
+  ["#bpQ","#bpBook","#bpTheme","#bpType"].forEach(s=>$(s).addEventListener("input",renderBP));
+}
+function renderBP(){
+  const q=norm($("#bpQ").value.trim()), bk=$("#bpBook").value, th=$("#bpTheme").value, ty=$("#bpType").value;
+  const items=BP.filter(x=>(!bk||x.book===bk)&&(!th||x.themes.includes(th))&&(!ty||x.type===ty)&&
+    (!q||norm([x.title,x.ref,x.desc,BOOK[x.book].name,...x.themes].join(" ")).includes(q)));
+  $("#bpCount").textContent = `${items.length} ${items.length===1?"estudo":"estudos"}`;
+  $("#bpList").innerHTML = items.length ? items.map((x,i)=>`<article class="bp-card">
+      <div class="bp-thumb" aria-hidden="true"><svg><use href="#${x.type==="Tema bíblico"?"ill-lamp":"ill-film"}"/></svg></div>
+      <h3>${esc(x.title)}</h3>
+      <p class="meta">${esc(x.type)} · ${esc(x.ref)}</p>
+      <p>${esc(x.desc)}</p>
+      <div>${x.themes.map(t=>`<span class="pill">${esc(t)}</span>`).join(" ")}</div>
+      <div class="row-actions">
+        <a class="btn btn-sm btn-ext primary" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">Abrir na fonte oficial ↗</a>
+        <a class="btn btn-sm btn-ext" href="https://www.youtube.com/results?search_query=${encodeURIComponent("BibleProject Português "+x.title)}" target="_blank" rel="noopener noreferrer">Vídeo em português ↗</a>
+        <button type="button" class="btn btn-sm" data-bpnote="${esc(x.slug)}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar em nota</button>
+      </div></article>`).join("")
+    : `<div class="empty"><h3>Nenhum estudo com esses filtros</h3><p class="muted">Limpe a busca ou escolha outro livro, tema ou tipo.</p></div>`;
+}
+$("#bpList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-bpnote]"); if(!b) return; const x=BP.find(i=>i.slug===b.dataset.bpnote);
+  openNoteEditor({ type:"estudo", title:`BibleProject: ${x.title}`, ref:x.ref, text:`Vídeo: ${x.title} (${x.type})\nFonte oficial: ${x.url}\n\nAnotações:\n` });
+});
+
+/* =====================================================================
+   MINHAS NOTAS — armazenamento local, preparado para sincronização
+   ---------------------------------------------------------------------
+   Nota: { id, title, date (AAAA-MM-DD), type ("culto"|"estudo"), ref,
+           text, extra, createdAt, updatedAt, sync ("local") }
+   >>> Para sincronizar com uma conta, implemente SyncAdapter (enviar
+       fila de alterações a um servidor) — hoje ele está desligado. <<<
+   ===================================================================== */
+const SyncAdapter = {
+  enabled:false,               // nenhuma conta ou servidor conectado nesta versão
+  queue(note){ /* futuro: enviar note ao servidor */ },
+  queueDelete(id){ /* futuro: enviar exclusão ao servidor */ }
+};
+const storageOK = (()=>{ try{ localStorage.setItem("cb:t","1"); localStorage.removeItem("cb:t"); return true; }catch(e){ return false; } })();
+const NotesStore = {
+  KEY:"notesV2",
+  all(){
+    let n=store.get(this.KEY,null);
+    if(!n){ n=(store.get("notes",[])||[]).map(o=>({ id:"n"+o.id, title:(o.ref||"Nota").replace(/\s*\([A-Z0-9]+\)$/,""), date:todayKey(new Date(o.at||Date.now())),
+      type:"estudo", ref:(o.ref||"").replace(/\s*\([A-Z0-9]+\)$/,""), text:o.text||"", extra:"", createdAt:o.at||Date.now(), updatedAt:o.at||Date.now(), sync:"local" }));
+      store.set(this.KEY,n); }   // migra as notas da versão anterior
+    return n;
+  },
+  get(id){ return this.all().find(n=>n.id===id); },
+  save(note){
+    const all=this.all(), now=Date.now();
+    if(!note.id){ note.id="n"+now.toString(36)+Math.random().toString(36).slice(2,6); note.createdAt=now; }
+    note.updatedAt=now; note.sync="local";
+    const i=all.findIndex(x=>x.id===note.id); if(i>=0) all[i]={...all[i],...note}; else all.unshift(note);
+    store.set(this.KEY,all); SyncAdapter.queue(note); return note;
+  },
+  remove(id){ store.set(this.KEY,this.all().filter(n=>n.id!==id)); SyncAdapter.queueDelete(id); }
+};
+if(!storageOK) $("#storageNote").textContent="Atenção: este navegador está bloqueando o armazenamento local (modo privado?). As notas não serão guardadas.";
+
+const nd = { dlg:$("#noteDialog"), form:$("#noteEditForm"), id:$("#neId"), title:$("#neTitle"), date:$("#neDate"), ref:$("#neRef"), text:$("#neText"), extra:$("#neExtra"), err:$("#neErr") };
+function openNoteEditor(pre={}){
+  const n = pre.id ? NotesStore.get(pre.id) : null;
+  $("#noteDlgTitle").textContent = n?"Editar nota":"Nova nota";
+  nd.id.value=n?.id||""; nd.title.value=n?.title||pre.title||""; nd.date.value=n?.date||pre.date||todayKey();
+  nd.ref.value=n?.ref||pre.ref||""; nd.text.value=n?.text||pre.text||""; nd.extra.value=n?.extra||pre.extra||"";
+  const type=n?.type||pre.type||"estudo"; document.querySelector(`input[name="neType"][value="${type}"]`).checked=true;
+  nd.err.textContent="";
+  if(el.dlg.open) el.dlg.close();
+  openDialog(nd.dlg); (nd.title.value?nd.text:nd.title).focus();
+}
+const closeNoteEditor = () => nd.dlg.close();
+$("#noteDlgClose").addEventListener("click",closeNoteEditor);
+$("#neCancel").addEventListener("click",closeNoteEditor);
+nd.form.addEventListener("submit",e=>{
+  e.preventDefault();
+  const title=nd.title.value.trim(), text=nd.text.value.trim(), date=nd.date.value, ref=nd.ref.value.trim();
+  if(!title) { nd.err.textContent="Informe o título ou assunto."; nd.title.focus(); return; }
+  if(!date)  { nd.err.textContent="Informe a data."; nd.date.focus(); return; }
+  if(!text)  { nd.err.textContent="Escreva a anotação."; nd.text.focus(); return; }
+  if(ref){ const first=ref.split(/[;,]/)[0].replace(/[-–]\d+$/,"").trim(); const r=parseReference(first);
+    if(!r || r.error){ nd.err.textContent="Não reconheci a referência (ex.: João 3:16). A nota será salva assim mesmo — toque em Salvar de novo para confirmar.";
+      if(nd.form.dataset.refWarned!==ref){ nd.form.dataset.refWarned=ref; return; } } }
+  const type=document.querySelector('input[name="neType"]:checked').value;
+  NotesStore.save({ id:nd.id.value||undefined, title, date, type, ref, text, extra:nd.extra.value.trim() });
+  delete nd.form.dataset.refWarned; closeNoteEditor();
+  toast(storageOK?"Nota salva neste aparelho.":"Não foi possível salvar: armazenamento bloqueado.");
+  renderNotesView(); renderNotesMini(); if(currentView==="inicio") renderHome();
+});
+
+function renderNotesView(){
+  const q=norm($("#nfQ").value.trim()), ty=$("#nfType").value, from=$("#nfFrom").value, to=$("#nfTo").value, rf=norm($("#nfRef").value.trim()).replace(/\s+/g,"");
+  const all=NotesStore.all();
+  const items=all.filter(n=>(!ty||n.type===ty)&&(!from||n.date>=from)&&(!to||n.date<=to)&&
+      (!rf||norm(n.ref).replace(/\s+/g,"").includes(rf))&&(!q||norm([n.title,n.text,n.ref,n.extra].join(" ")).includes(q)))
+    .sort((a,b)=>b.date.localeCompare(a.date)||b.updatedAt-a.updatedAt);
+  $("#notesCount").textContent = all.length ? `${items.length} de ${all.length} ${all.length===1?"nota":"notas"}` : "";
+  $("#notesList").innerHTML = items.length ? items.map(n=>`<article class="note-card ${n.type}" data-id="${esc(n.id)}">
+      <h3>${esc(n.title)}</h3>
+      <div class="meta"><span class="pill ${n.type==="culto"?"demo":""}">${n.type==="culto"?"Culto":"Estudo"}</span>
+        <span>${esc(new Date(n.date+"T12:00").toLocaleDateString("pt-BR"))}</span>
+        ${n.ref?`<span>· ${esc(n.ref)}</span>`:""}${n.extra?`<span>· ${esc(n.extra)}</span>`:""}</div>
+      <p class="body">${esc(n.text.length>400?n.text.slice(0,400)+"…":n.text)}</p>
+      <div class="row-actions">
+        ${n.text.length>400?`<button type="button" class="btn btn-sm btn-ghost" data-n="more">Ver tudo</button>`:""}
+        <button type="button" class="btn btn-sm" data-n="edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Editar</button>
+        ${n.ref && parseReference(n.ref.split(/[;,]/)[0].trim()) && !parseReference(n.ref.split(/[;,]/)[0].trim()).error ? `<button type="button" class="btn btn-sm" data-n="open"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir passagem</button>`:""}
+        <button type="button" class="btn btn-sm" data-n="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+        <button type="button" class="btn btn-sm" data-n="del"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Excluir</button>
+      </div></article>`).join("")
+    : `<div class="empty"><svg class="icon" aria-hidden="true" style="width:60px;height:60px"><use href="#ill-notebook"/></svg>
+        <h3>${all.length?"Nenhuma nota com esses filtros":"Nenhuma nota ainda"}</h3>
+        <p class="muted">${all.length?"Ajuste a pesquisa ou os filtros.":"Toque em “Nova nota” para registrar um culto ou estudo."}</p></div>`;
+}
+["#nfQ","#nfType","#nfFrom","#nfTo","#nfRef"].forEach(s=>$(s).addEventListener("input",renderNotesView));
+$("#newNoteBtn").addEventListener("click",()=>openNoteEditor({}));
+$("#notesList").addEventListener("click",e=>{
+  const b=e.target.closest("[data-n]"); if(!b) return; const card=b.closest(".note-card"); const n=NotesStore.get(card.dataset.id); if(!n) return;
+  const a=b.dataset.n;
+  if(a==="edit") openNoteEditor({id:n.id});
+  if(a==="more"){ card.querySelector(".body").textContent=n.text; b.remove(); }
+  if(a==="share") shareText(n.title, `${n.ref?n.ref+"\n":""}${n.text}`);
+  if(a==="open"){ showView("busca"); el.q.value=n.ref.split(/[;,]/)[0].trim(); setMode("ref"); runSearch({auto:false}); }
+  if(a==="del"){
+    if(b.dataset.confirm){ NotesStore.remove(n.id); toast("Nota excluída."); renderNotesView(); renderNotesMini(); }
+    else { b.dataset.confirm="1"; b.lastChild.textContent="Confirmar exclusão"; b.classList.add("btn-primary"); setTimeout(()=>{ if(b.isConnected){ delete b.dataset.confirm; b.lastChild.textContent="Excluir"; b.classList.remove("btn-primary"); } },4000); }
+  }
+});
+/* Resumo no painel de estudo da Busca */
+function renderNotesMini(){
+  const box=$("#notesMini"); if(!box) return; const all=NotesStore.all().slice().sort((a,b)=>b.updatedAt-a.updatedAt).slice(0,5);
+  box.innerHTML = `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+      <button type="button" class="btn btn-sm btn-primary" data-mini="new">Nova nota${state.focusVerse?" deste versículo":""}</button>
+      <button type="button" class="btn btn-sm" data-mini="open">Abrir Minhas notas</button></div>
+    ${all.length?`<ul class="mini-list">${all.map(n=>`<li class="mini"><div class="mini-top"><strong>${esc(n.title)}</strong><span class="muted">${esc(new Date(n.date+"T12:00").toLocaleDateString("pt-BR"))}</span></div><p style="font-family:var(--font-ui)">${esc(n.text.slice(0,120))}${n.text.length>120?"…":""}</p></li>`).join("")}</ul>`
+      :`<p class="muted">Nenhuma nota ainda. As notas ficam salvas apenas neste aparelho.</p>`}`;
+}
+$("#notesMini")?.addEventListener("click",e=>{
+  const b=e.target.closest("[data-mini]"); if(!b) return;
+  if(b.dataset.mini==="open") showView("notas");
+  else state.focusVerse ? startNote(state.focusVerse) : openNoteEditor({});
+});
+function startNote(v){
+  const ref=refLabel(v.b,v.c,v.v);
+  openNoteEditor({ type:"estudo", title:`Estudo de ${ref}`, ref, text:`“${v.text}” (${v.t})\n\n` });
+}
+
+/* =====================================================================
+   LEMBRETES
+   ---------------------------------------------------------------------
+   Funciona agora: (1) aviso local no horário escolhido enquanto o app
+   está aberto ou em segundo plano, com permissão do usuário; (2) evento
+   diário no calendário (.ics), que avisa mesmo com o app fechado.
+   Avisos push com o app fechado exigem um servidor — NÃO configurado.
+   >>> Para ativar push: preencha PUSH_CONFIG e implemente subscribePush(). <<<
+   ===================================================================== */
+const PUSH_CONFIG = { serverUrl:null, vapidPublicKey:null };   // ainda não existe servidor
+async function subscribePush(){ if(!PUSH_CONFIG.serverUrl || !PUSH_CONFIG.vapidPublicKey) return { ok:false, reason:"Servidor de notificações push não configurado." }; }
+const Reminders = {
+  get(){ return store.get("reminder",{ on:false, time:"07:30", lastFired:"" }); },
+  set(r){ store.set("reminder",r); },
+  timer:null,
+  supported(){ return "Notification" in window; },
+  schedule(){
+    clearTimeout(this.timer); const r=this.get(); if(!r.on || !this.supported() || Notification.permission!=="granted") return;
+    const [hh,mm]=r.time.split(":").map(Number); const now=new Date(); const at=new Date(); at.setHours(hh,mm,0,0);
+    if(at<=now) at.setDate(at.getDate()+1);
+    this.timer=setTimeout(()=>{ this.fire(); this.schedule(); }, Math.min(at-now, 2147483000));
+  },
+  async fire(){
+    const r=this.get(); if(r.lastFired===todayKey()) return; r.lastFired=todayKey(); this.set(r);
+    if(Streak.isDone()) return;
+    const body=`Texto do dia: ${passageLabel(votdFor(new Date()))} · Devocional: ${devoFor(new Date()).title}`;
+    try{ const reg=await navigator.serviceWorker?.getRegistration(); if(reg) return reg.showNotification("Hora do seu tempo com a Palavra",{ body, icon:"icons/icon-192.png", badge:"icons/icon-192.png", tag:"diario" }); }catch(e){}
+    try{ new Notification("Hora do seu tempo com a Palavra",{ body, icon:"icons/icon-192.png" }); }catch(e){}
+  }
+};
+function reminderCardHtml(){
+  const r=Reminders.get(), perm=Reminders.supported()?Notification.permission:"unsupported";
+  const status = !Reminders.supported() ? "Este navegador não oferece notificações. Use o lembrete pelo calendário."
+    : perm==="denied" ? "As notificações foram bloqueadas nas configurações do navegador/celular. Libere-as lá ou use o calendário."
+    : r.on && perm==="granted" ? `Ativo: aviso às ${r.time} enquanto o app estiver aberto ou em segundo plano.`
+    : "Desligado. A permissão só é pedida quando você ativar.";
+  return `<h3><svg class="icon" aria-hidden="true" style="width:26px;height:26px;color:var(--gold)"><use href="#i-bell"/></svg>Lembrete diário (opcional)</h3>
+    <div class="rem-row">
+      <label class="switch"><input type="checkbox" data-rem="toggle" ${r.on&&perm==="granted"?"checked":""}> Lembrar do texto e do devocional</label>
+      <label class="switch" style="font-weight:400">às <input type="time" data-rem="time" value="${esc(r.time)}"></label>
+      ${r.on&&perm==="granted"?`<button type="button" class="btn btn-sm" data-rem="test">Testar aviso</button>`:""}
+      <button type="button" class="btn btn-sm" data-rem="ics"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Adicionar ao calendário</button>
+    </div>
+    <p class="rem-status">${esc(status)}</p>
+    <p class="rem-status muted" style="font-size:12px">Avisos com o app <strong>fechado</strong> (notificações push) dependem de um servidor que ainda não existe neste app. Enquanto isso, o evento diário no calendário do celular é a forma mais confiável de lembrar. No iPhone, notificações de apps web só funcionam com o app instalado na tela inicial (iOS 16.4 ou superior).</p>`;
+}
+function renderReminders(){ ["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b) b.innerHTML=reminderCardHtml(); }); }
+async function reminderAction(e){
+  const t=e.target.closest("[data-rem]"); if(!t) return; const a=t.dataset.rem; const r=Reminders.get();
+  if(a==="toggle" && e.type==="change"){
+    if(t.checked){
+      if(!Reminders.supported()){ toast("Notificações não são suportadas aqui. Use o calendário."); t.checked=false; return; }
+      const perm = Notification.permission==="granted" ? "granted" : await Notification.requestPermission();
+      r.on = perm==="granted"; Reminders.set(r); toast(r.on?`Lembrete ativado para ${r.time}.`:"Permissão não concedida — lembrete desligado.");
+    } else { r.on=false; Reminders.set(r); toast("Lembrete desligado."); }
+    Reminders.schedule(); renderReminders();
+  }
+  if(a==="time" && e.type==="change"){ r.time=t.value||"07:30"; Reminders.set(r); Reminders.schedule(); renderReminders(); toast(`Horário: ${r.time}.`); }
+  if(a==="test" && e.type==="click"){ const x=Reminders.get(); x.lastFired=""; Reminders.set(x);
+    try{ const reg=await navigator.serviceWorker?.getRegistration(); const opt={ body:"Assim será o seu lembrete diário.", icon:"icons/icon-192.png" };
+      if(reg) await reg.showNotification("Concordância Bíblica",opt); else new Notification("Concordância Bíblica",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
+  if(a==="ics" && e.type==="click") downloadIcs(r.time);
+}
+["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); } });
+function downloadIcs(time){
+  const [hh,mm]=time.split(":"); const d=new Date(); const pad=n=>String(n).padStart(2,"0");
+  const ymd=`${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}`;
+  const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Concordancia Biblica//PT-BR","BEGIN:VEVENT",
+    `UID:diario-${Date.now()}@concordancia-biblica`,`DTSTAMP:${stamp}`,`DTSTART:${ymd}T${hh}${mm}00`,"DURATION:PT15M","RRULE:FREQ=DAILY",
+    "SUMMARY:Texto do dia e devocional","DESCRIPTION:Abra o app Concordância Bíblica para o texto do dia e o devocional.",
+    "BEGIN:VALARM","TRIGGER:PT0M","ACTION:DISPLAY","DESCRIPTION:Hora do seu tempo com a Palavra","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
+  const url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
+  const a=document.createElement("a"); a.href=url; a.download="lembrete-devocional.ics"; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+  toast("Abra o arquivo baixado para adicionar o lembrete diário ao calendário.");
+}
+function renderReminderBanner(){
+  const box=$("#remBanner"); const r=Reminders.get(); if(!box) return;
+  const [hh,mm]=r.time.split(":").map(Number); const now=new Date(); const passed=now.getHours()*60+now.getMinutes() >= hh*60+mm;
+  box.innerHTML = r.on && passed && !Streak.isDone() ? `<div class="rem-banner"><svg class="icon" aria-hidden="true" style="width:26px;height:26px"><use href="#i-bell"/></svg>
+    <p><strong>Seu horário de estudo chegou.</strong> Que tal o devocional de hoje?</p><button type="button" class="btn btn-sm btn-primary" data-go="devocional">Abrir</button></div>` : "";
+}
+
+/* =====================================================================
+   NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
+   ===================================================================== */
+const VIEWS=["inicio","busca","texto","devocional","estudos","notas"];
+let currentView="inicio", bpReady=false;
+function showView(name, {push=true}={}){
+  if(!VIEWS.includes(name)) name="inicio";
+  currentView=name;
+  VIEWS.forEach(v=>{ $("#view-"+v).hidden = v!==name; });
+  document.querySelectorAll(".nav-btn[data-view]").forEach(b=>{ if(b.dataset.view===name) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
+  if(push && location.hash.slice(1)!==name){ try{ history.replaceState(null,"","#"+name); }catch(e){ location.hash=name; } }
+  window.scrollTo({top:0});
+  if(name==="inicio") renderHome();
+  if(name==="texto") renderVotd();
+  if(name==="devocional"){ renderDevo(); renderReminders(); }
+  if(name==="estudos"){ if(!bpReady){ initBP(); bpReady=true; } renderBP(); }
+  if(name==="notas") renderNotesView();
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b){ e.preventDefault(); showView(b.dataset.view); } });
+window.addEventListener("hashchange",()=>showView(location.hash.slice(1),{push:false}));
+
+renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotesMini(); renderRelated(); renderCommentary();
+renderReminders(); Reminders.schedule();
 (async function boot(){
   try{
     await Repo.init();
@@ -1772,8 +2658,10 @@ renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNot
     [...trQuick.options].forEach(o=>o.textContent=o.value); // rótulo curto no topo
     updateTranslationHint(); fillBookSelect();
     Repo.load(el.tr.value).then(fillBookSelect).catch(()=>{}); // baixa a versão em segundo plano
+    showView(location.hash.slice(1)||"inicio",{push:false});
   }catch(e){
     console.error(e); addNotice("Não foi possível carregar a lista de Bíblias. Verifique a conexão e recarregue a página.","error");
+    showView(location.hash.slice(1)||"inicio",{push:false});
   }
 })();
 
@@ -1787,6 +2675,7 @@ renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNot
   const bar=$("#installBar"), btn=$("#installBtn"), txt=$("#installText");
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
+  const st=$("#installState"); if(st) st.textContent = standalone ? "✓ Você já está usando o app instalado." : "";
   if(standalone || framed || store.get("installDismissed", false)) return; // dentro de um frame não há como instalar
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
   let deferred=null;

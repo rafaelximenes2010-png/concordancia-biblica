@@ -1,9 +1,9 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "concordancia-v7";
+const CACHE = "concordancia-v8";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json",
-  "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png"];
+  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
@@ -34,4 +34,13 @@ self.addEventListener("fetch", e => {
     if (res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
     return res;
   }).catch(() => caches.match(e.request).then(r => r || caches.match("./index.html"))));
+});
+
+// Ao tocar no lembrete, abre (ou foca) o app no devocional
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(list => {
+    for (const c of list) { if ("focus" in c) { c.navigate && c.navigate("./index.html#devocional"); return c.focus(); } }
+    return self.clients.openWindow("./index.html#devocional");
+  }));
 });
