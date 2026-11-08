@@ -21,7 +21,11 @@ Aplicativo (PWA) de estudo bíblico para celular e computador.
 ## Versões incluídas (`/biblias`)
 | Código | Versão | Licença |
 |---|---|---|
-| BLIVRE | Bíblia Livre — Copyright © Diego Santos, Mario Sérgio e Marco Teles | Bíblia Livre (BLIVRE), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil. Baseada na tradução de João Ferreira de Almeida (1819). Reprodução permitida desde que mencionados fonte e autores. |
+| BLIVRE | Bíblia Livre | Bíblia Livre (BLIVRE), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil. Baseada na tradução de João Ferreira de Almeida (1819). Reprodução permitida desde que mencionados fonte e autores. |
+| BLIVRETR | Bíblia Livre — Textus Receptus | Bíblia Livre (BLIVRE-TR), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil. |
+| BPM | Bíblia Portuguesa Mundial | Domínio público. Tradução para o português baseada na World English Bible (eBible.org). |
+| BLT | Bíblia Livre Para Todos (NT) | Copyright © 2022 Free Bible Ministry, Inc. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA). Fonte: eBible.org. |
+| TFT | Tradução para Tradutores (NT, explicativa) | Tradução de Ellis W. Deibler Jr. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA). Fonte: eBible.org. Traz explicações entre colchetes e alternativas entre chaves. |
 | KJV | King James Version (1769) | Domínio público. |
 | ASV | American Standard Version (1901) | Domínio público. |
 | WLC | Westminster Leningrad Codex (hebraico, AT) | Domínio público. |
@@ -37,6 +41,8 @@ Aplicativo (PWA) de estudo bíblico para celular e computador.
 | KAROLI | Károli revisada 1908 (húngaro) | Domínio público. |
 | GDANSKA | Biblia Gdańska 1881 (polonês) | Domínio público. |
 | SWE1917 | Bíblia sueca de 1917 | Domínio público. Livros apócrifos não incluídos neste app. |
+
+Versões com direitos autorais (ARA, ARC, NAA, NVI, NVT, NTLH, NBV, O Livro) não são incluídas: o app abre o mesmo capítulo no YouVersion ou na Bíblia Online (`EXT_PT` em index.html).
 
 Textos obtidos de [scrollmapper/bible_databases](https://github.com/scrollmapper/bible_databases) (MIT), que os reúne a partir de eBible.org/CrossWire.
 Versões como ARA, ARC, NVI, NAA e NTLH têm direitos autorais e só podem ser incluídas com licença das detentoras (SBB, Biblica etc.).

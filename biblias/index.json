@@ -10,6 +10,46 @@
   "bytes": 3946685
  },
  {
+  "code": "BLIVRETR",
+  "name": "Bíblia Livre — Textus Receptus",
+  "lang": "pt",
+  "dir": "ltr",
+  "license": "Bíblia Livre (BLIVRE-TR), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 3955738
+ },
+ {
+  "code": "BPM",
+  "name": "Bíblia Portuguesa Mundial",
+  "lang": "pt",
+  "dir": "ltr",
+  "license": "Domínio público. Tradução para o português baseada na World English Bible (eBible.org).",
+  "books": 66,
+  "verses": 30959,
+  "bytes": 4091596
+ },
+ {
+  "code": "BLT",
+  "name": "Bíblia Livre Para Todos (NT)",
+  "lang": "pt",
+  "dir": "ltr",
+  "license": "Copyright © 2022 Free Bible Ministry, Inc. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA). Fonte: eBible.org.",
+  "books": 27,
+  "verses": 7940,
+  "bytes": 1096483
+ },
+ {
+  "code": "TFT",
+  "name": "Tradução para Tradutores (NT, explicativa)",
+  "lang": "pt",
+  "dir": "ltr",
+  "license": "Tradução de Ellis W. Deibler Jr. Licença Creative Commons Atribuição-CompartilhaIgual 4.0 (CC BY-SA). Fonte: eBible.org. Traz explicações entre colchetes e alternativas entre chaves.",
+  "books": 27,
+  "verses": 7896,
+  "bytes": 1739795
+ },
+ {
   "code": "KJV",
   "name": "King James Version (1769)",
   "lang": "en",

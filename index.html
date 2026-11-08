@@ -620,6 +620,13 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 .reader .dlg-head h2{flex:1}
 @media (min-width:900px){ .back-bar{top:61px} }
 @media (max-width:760px){ .back-bar{padding:6px 10px} }
+
+.rd-ext{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:6px 12px;border-bottom:1px solid var(--border);font-size:12.5px;background:var(--surface)}
+.rd-ext a{font-weight:700;color:var(--ext);text-decoration:none;border:1px solid var(--ext-border);border-radius:6px;padding:1px 6px}
+.rd-ext a:hover{background:var(--ext-soft)}
+
+/* Elementos ocultos ficam realmente ocultos */
+[hidden]{display:none!important}
 </style>
 </head>
 <body>
@@ -858,7 +865,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
   </section>
 
   <div class="demo-banner">
-  <p id="dataBanner"><strong>Bíblia completa em 16 versões livres, em 14 idiomas:</strong> português, inglês, espanhol, francês, alemão, holandês, sueco, polonês, húngaro, russo, grego moderno, chinês, hebraico e grego originais, e latim. Versões como ARA, ARC, NVI e NAA têm direitos autorais e não estão incluídas.</p>
+  <p id="dataBanner"><strong>21 versões da Bíblia no app, 5 delas em português</strong> (Bíblia Livre, Bíblia Livre TR, Bíblia Portuguesa Mundial, Bíblia Livre Para Todos e Tradução para Tradutores), em 14 idiomas. ARA, ARC, NAA, NVI, NVT, NTLH, NBV e O Livro têm direitos autorais: na aba Bíblia elas abrem o mesmo capítulo no YouVersion ou na Bíblia Online.</p>
 </div>
 <main class="layout">
   <!-- ===================== FILTROS ===================== -->
@@ -1144,6 +1151,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
       <button type="button" class="btn btn-sm" id="rdBigger" aria-label="Aumentar letra">A+</button>
     </span>
   </div>
+  <div class="rd-ext" id="rdExt"></div>
   <div class="dlg-body" id="ctxBody"></div>
   <div class="reader-nav">
     <button type="button" class="btn" id="rdPrev" aria-label="Capítulo anterior">‹ Anterior</button>
@@ -1494,11 +1502,27 @@ const el = {
 /* ---------- Inicialização dos seletores ---------- */
 const DEFAULT_VERSION = "BLIVRE";
 const langName = {pt:"Português", en:"Inglês", es:"Espanhol", fr:"Francês", de:"Alemão", nl:"Holandês", sv:"Sueco", pl:"Polonês", hu:"Húngaro", ru:"Russo", el:"Grego moderno", zh:"Chinês", he:"Hebraico (original)", grc:"Grego (original)", la:"Latim"};
-function fillVersionSelect(sel, value, withNone){
+/* Versões em português com direitos autorais: não ficam dentro do app; a
+   opção abre o mesmo capítulo no site oficial de leitura (YouVersion ou
+   Bíblia Online). Os códigos do YouVersion foram conferidos em bible.com. */
+const BO_ABBR = "gn ex lv nm dt js jz rt 1sm 2sm 1rs 2rs 1cr 2cr ed ne et jó sl pv ec ct is jr lm ez dn os jl am ob jn mq na hc sf ag zc ml mt mc lc jo at rm 1co 2co gl ef fp cl 1ts 2ts 1tm 2tm tt fm hb tg 1pe 2pe 1jo 2jo 3jo jd ap".split(" ");
+const EXT_PT = [
+  { code:"ARA",  name:"Almeida Revista e Atualizada", holder:"Sociedade Bíblica do Brasil", site:"Bíblia Online", url:(b,c)=>`https://www.bibliaonline.com.br/ara/${encodeURIComponent(BO_ABBR[BOOK[b].order-1])}/${c}` },
+  { code:"ARC",  name:"Almeida Revista e Corrigida", holder:"Sociedade Bíblica do Brasil", yv:212, ab:"ARC" },
+  { code:"NAA",  name:"Nova Almeida Atualizada", holder:"Sociedade Bíblica do Brasil", yv:1840, ab:"NAA" },
+  { code:"NVI",  name:"Nova Versão Internacional", holder:"Biblica", yv:129, ab:"NVI" },
+  { code:"NVT",  name:"Nova Versão Transformadora", holder:"Mundo Cristão", yv:1930, ab:"NVT" },
+  { code:"NTLH", name:"Nova Tradução na Linguagem de Hoje", holder:"Sociedade Bíblica do Brasil", yv:211, ab:"NTLH" },
+  { code:"NBV",  name:"Nova Bíblia Viva", holder:"Biblica", yv:1966, ab:"NBV-P" },
+  { code:"OL",   name:"O Livro", holder:"Biblica", yv:1967, ab:"OL" }
+];
+const extUrl = (x,b,c) => x.url ? x.url(b,c) : `https://www.bible.com/bible/${x.yv}/${b}.${c}.${x.ab}`;
+function fillVersionSelect(sel, value, withNone, withExt){
   const groups={};
   Repo.versions().forEach(v=>(groups[v.lang]=groups[v.lang]||[]).push(v));
   sel.innerHTML = (withNone?`<option value="">Nenhuma</option>`:"") + Object.entries(groups).map(([lg,vs])=>
-    `<optgroup label="${esc(langName[lg]||lg)}">${vs.map(v=>`<option value="${v.code}">${esc(v.code)} — ${esc(v.name)}</option>`).join("")}</optgroup>`).join("");
+    `<optgroup label="${esc(lg==="pt"?"Português — no app":(langName[lg]||lg))}">${vs.map(v=>`<option value="${v.code}">${esc(v.code)} — ${esc(v.name)}</option>`).join("")}</optgroup>`+
+    (lg==="pt" && withExt ? `<optgroup label="Português — abre fora do app (direitos autorais)">${EXT_PT.map(x=>`<option value="ext:${x.code}">${x.code} — ${esc(x.name)} ↗</option>`).join("")}</optgroup>` : "")).join("");
   sel.value = value;
 }
 function fillBookSelect(){
@@ -1738,7 +1762,8 @@ async function renderReader(){
     el.dlgBody.innerHTML = `<div class="notice error">Não foi possível carregar esta versão. ${navigator.onLine?"Tente novamente.":"Conecte-se à internet para baixá-la na primeira vez."}</div>`; return;
   }
   store.set("reader", { t:rd.t, b:rd.b, c:rd.c, cmp:rd.cmp });
-  fillVersionSelect(rdEl.v, rd.t); fillVersionSelect(rdEl.cmp, rd.cmp, true);
+  fillVersionSelect(rdEl.v, rd.t, false, true); fillVersionSelect(rdEl.cmp, rd.cmp, true);
+  $("#rdExt").innerHTML = `<span class="muted">Ler este capítulo em:</span> ` + EXT_PT.map(x=>`<a href="${esc(extUrl(x,rd.b,rd.c))}" target="_blank" rel="noopener noreferrer" title="${esc(x.name)} — ${esc(x.holder)} (abre ${x.url?x.site:"no YouVersion"})">${x.code}</a>`).join("");
   rdEl.b.innerHTML = Repo.booksIn(rd.t).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join(""); rdEl.b.value=rd.b;
   const n=Repo.chapterCount(rd.t, rd.b);
   rdEl.c.innerHTML = Array.from({length:n},(_,i)=>`<option value="${i+1}">Cap. ${i+1}</option>`).join(""); rdEl.c.value=rd.c;
@@ -1765,7 +1790,14 @@ function neighbor(step){
 function goChapter(step){ const n=neighbor(step); if(n){ rd.b=n.b; rd.c=n.c; rd.hi=null; renderReader(); } }
 rdEl.prev.addEventListener("click",()=>goChapter(-1));
 rdEl.next.addEventListener("click",()=>goChapter(1));
-rdEl.v.addEventListener("change",()=>{ rd.t=rdEl.v.value; rd.hi=null; renderReader(); });
+rdEl.v.addEventListener("change",()=>{
+  if(rdEl.v.value.startsWith("ext:")){
+    const x=EXT_PT.find(e=>"ext:"+e.code===rdEl.v.value); rdEl.v.value=rd.t;
+    const url=extUrl(x,rd.b,rd.c); const w=window.open(url,"_blank","noopener");
+    if(!w) toast(`Toque em “${x.code}” na linha “Ler este capítulo em” para abrir.`); else toast(`${x.name}: aberta em ${x.url?x.site:"YouVersion"}.`);
+    return;
+  }
+  rd.t=rdEl.v.value; rd.hi=null; renderReader(); });
 rdEl.cmp.addEventListener("change",()=>{ rd.cmp=rdEl.cmp.value; renderReader(); });
 rdEl.b.addEventListener("change",()=>{ rd.b=rdEl.b.value; rd.c=1; rd.hi=null; renderReader(); });
 rdEl.c.addEventListener("change",()=>{ rd.c=+rdEl.c.value; rd.hi=null; renderReader(); });
