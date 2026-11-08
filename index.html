@@ -4656,17 +4656,38 @@ async function openComDrawer(v, pick){
 }
 const SHORT = { "Hernandes Dias Lopes":"Hernandes D. Lopes", "Augustus Nicodemus Lopes":"A. Nicodemus", "Bíblia de Estudo de Genebra":"Genebra", "Russell P. Shedd":"R. Shedd",
   "William Hendriksen":"Hendriksen", "João Calvino (em português)":"Calvino (PT)", "Série Cultura Bíblica":"Cultura Bíblica", "Heber Carlos de Campos":"Heber C. Campos",
-  "Jamieson, Fausset & Brown":"Jamieson-Fausset-Brown", "Tyndale Open Study Notes":"Tyndale", "Matthew Henry":"Matthew Henry", "Keil & Delitzsch":"Keil & Delitzsch" };
+  "Jamieson, Fausset & Brown":"Jamieson-Fausset-Brown", "Tyndale Open Study Notes":"Tyndale", "Matthew Henry":"Matthew Henry", "Keil & Delitzsch":"Keil & Delitzsch",
+  "D. Martyn Lloyd-Jones":"Lloyd-Jones", "Nicholas Wolterstorff":"Wolterstorff", "Herman Dooyeweerd":"Dooyeweerd" };
 const shortName = n => SHORT[n] || n;
 function renderDrawerChips(){
   const def=Drawer.def, bdef=brDefault();
   const chip=(key,label,isDef)=>`<button type="button" class="cd-chip${Drawer.pick===key?" on":""}" data-pick="${esc(key)}" aria-pressed="${Drawer.pick===key}">${esc(shortName(label))}${isDef?' <span class="cd-star" title="Seu padrão">★</span>':""}</button>`;
   $("#cdChips").innerHTML = (Drawer.list.length?`<div class="cd-row"><span class="cd-lbl">Texto completo (traduzido)</span><div class="cd-scroll">${Drawer.list.map(c=>chip("c:"+c.id,c.label,c.id===def)).join("")}</div></div>`:"")
-    + `<div class="cd-row"><span class="cd-lbl">Brasileiros (links)</span><div class="cd-scroll">${brOrdered().map(c=>chip("b:"+c.name,c.name,c.name===bdef)).join("")}</div></div>`;
+    + `<div class="cd-row"><span class="cd-lbl">Brasileiros (links)</span><div class="cd-scroll">${brOrdered().map(c=>chip("b:"+c.name,c.name,c.name===bdef)).join("")}</div></div>`
+    + `<div class="cd-row"><span class="cd-lbl">Pensadores, filósofos e psicologia (links)</span><div class="cd-scroll">${PENSADORES.filter(p=>!/\(política\)/.test(p.name)).map(p=>chip("p:"+p.name,p.name,false)).join("")}</div></div>`;
   $("#cdChips .cd-chip.on")?.scrollIntoView({ inline:"center", block:"nearest" });
 }
 async function renderDrawerBody(){
   const v=Drawer.v, ref=refLabel(v.b,v.c,v.v), body=$("#cdBody"), key=Drawer.pick;
+  if(key.startsWith("p:")){
+    const p=PENSADORES.find(x=>x.name===key.slice(2)); if(!p){ body.innerHTML=""; return; }
+    const theme=themeOf(v.text||""); const cat=PEN_CATS[p.cat][0];
+    const q=`Como ${p.name} ajudaria a entender e aplicar ${ref} (tema: ${theme})? Use as ideias e obras dele, na perspectiva da fé reformada. Responda em português, com fontes.`;
+    body.innerHTML=`<div class="cd-author"><p class="cd-eyebrow">${esc(cat)} · ${esc(ref)}</p><h3>${authorBtn(p.name,p.area)}</h3>
+      <p class="meta">${esc([p.years,p.where,p.area].filter(Boolean).join(" · "))}</p></div>
+      <p class="pen-idea">${esc(p.idea)}</p>${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
+      <p class="hint">Pergunte como ${esc(p.name)} ajuda a entender <strong>${esc(ref)}</strong>:</p>
+      <div class="br-links">
+        <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
+        <a class="btn btn-sm btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">ChatGPT ↗</a>
+        <a class="btn btn-sm" href="${esc("https://www.google.com/search?q="+encodeURIComponent(p.name+" "+ref))}" target="_blank" rel="noopener noreferrer">Artigos ↗</a>
+        <a class="btn btn-sm" href="${esc("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(p.name))}" target="_blank" rel="noopener noreferrer">Livros ↗</a>
+        <a class="btn btn-sm" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(p.name+" "+theme))}" target="_blank" rel="noopener noreferrer">Vídeos ↗</a>
+      </div>
+      <button type="button" class="btn btn-sm cd-def" id="cdAllPen">Ver todos os pensadores</button>`;
+    $("#cdAllPen").onclick=()=>{ closeComDrawer(); if(el.dlg.open && !el.dlg.classList.contains("as-view")) closeReader(); showView("pensadores"); };
+    return;
+  }
   if(key.startsWith("b:")){
     const c=REFORMED.brazil.find(x=>x.name===key.slice(2)); if(!c){ body.innerHTML=""; return; }
     const bio=BIOS[c.name];
@@ -4792,6 +4813,104 @@ $("#cdFoot").addEventListener("click",e=>{ const b=e.target.closest('[data-cd="m
   if(el.dlg.open && rd.b===v.b && rd.c===v.c) startMulti(v.v);
   else { openContext({ t:v.t||store.get("version",DEFAULT_VERSION), b:v.b, c:v.c, v:v.v }); setTimeout(()=>startMulti(v.v),700); } });
 
+/* =====================================================================
+   PENSADORES — filosofia, psicologia e política segundo a fé reformada
+   ===================================================================== */
+const PENSADORES = [
+  { cat:"fil", name:"Jonathan Edwards", years:"1703–1758", where:"EUA", area:"Teologia e filosofia",
+    idea:"Uniu rigor filosófico e piedade: a verdadeira religião está nas afeições santas, despertadas pela beleza de Deus.", works:"Afeições Religiosas; A Liberdade da Vontade" },
+  { cat:"fil", name:"Abraham Kuyper", years:"1837–1920", where:"Holanda", area:"Teologia, filosofia e política",
+    idea:"“Não há um centímetro quadrado da existência humana sobre o qual Cristo não diga: é meu.” Desenvolveu a soberania das esferas.", works:"Calvinismo (Lectures on Calvinism)" },
+  { cat:"fil", name:"Herman Bavinck", years:"1854–1921", where:"Holanda", area:"Teologia e cosmovisão",
+    idea:"A graça não destrói a natureza, mas a restaura; toda a realidade é revelação de Deus.", works:"Dogmática Reformada" },
+  { cat:"fil", name:"Herman Dooyeweerd", years:"1894–1977", where:"Holanda", area:"Filosofia",
+    idea:"Nenhum pensamento é neutro: toda filosofia parte de um motivo religioso de base. Criou a Filosofia da Ideia Cosmonômica.", works:"No Crepúsculo do Pensamento Ocidental" },
+  { cat:"fil", name:"Cornelius Van Til", years:"1895–1987", where:"Holanda / EUA", area:"Apologética e filosofia",
+    idea:"Apologética pressuposicional: só a revelação de Deus dá sentido à razão, à lógica e à ciência.", works:"A Defesa da Fé" },
+  { cat:"fil", name:"Francis Schaeffer", years:"1912–1984", where:"EUA / Suíça", area:"Apologética e cultura",
+    idea:"Levou a fé reformada ao diálogo com a arte, a filosofia e a cultura moderna, a partir da comunidade L’Abri.", works:"O Deus que Intervém; O Deus que se Revela" },
+  { cat:"fil", name:"Alvin Plantinga", years:"1932–", where:"EUA", area:"Filosofia (epistemologia)",
+    idea:"Epistemologia reformada: crer em Deus pode ser racional e justificado mesmo sem provas prévias.", works:"Warranted Christian Belief" },
+  { cat:"fil", name:"Nicholas Wolterstorff", years:"1932–", where:"EUA", area:"Filosofia, estética e justiça",
+    idea:"Fé e razão, arte e justiça pensadas a partir da tradição reformada.", works:"Reason within the Bounds of Religion" },
+  { cat:"fil", name:"John Frame", years:"1939–", where:"EUA", area:"Teologia e filosofia",
+    idea:"Teologia do senhorio e perspectivismo: conhecer a Deus envolve a norma, a situação e a pessoa.", works:"A Doutrina do Conhecimento de Deus" },
+  { cat:"fil", name:"James K. A. Smith", years:"1970–", where:"Canadá / EUA", area:"Filosofia e cultura",
+    idea:"Somos formados pelo que amamos: hábitos e “liturgias culturais” moldam o coração.", works:"Você é Aquilo que Ama" },
+  { cat:"fil", name:"Timothy Keller", years:"1950–2023", where:"EUA", area:"Apologética e cultura urbana",
+    idea:"Apresentou o evangelho de forma inteligente ao cético moderno, com sensibilidade cultural e pastoral.", works:"A Fé na Era do Ceticismo; Deuses Falsos" },
+  { cat:"fil", name:"R. C. Sproul", years:"1939–2017", where:"EUA", area:"Teologia, filosofia e apologética",
+    idea:"Fundador do Ligonier; tornou a teologia reformada e a santidade de Deus acessíveis a leigos.", works:"A Santidade de Deus; Razão para Crer" },
+  { cat:"fil", name:"Gordon H. Clark", years:"1902–1985", where:"EUA", area:"Filosofia",
+    idea:"Filósofo presbiteriano que defendeu a coerência lógica da revelação bíblica.", works:"Uma Visão Cristã dos Homens e do Mundo" },
+  { cat:"fil", name:"Hans Rookmaaker", years:"1922–1977", where:"Holanda", area:"Arte e cultura",
+    idea:"Historiador da arte que leu a arte moderna à luz da fé reformada, ligado ao L’Abri.", works:"A Arte Moderna e a Morte de uma Cultura" },
+  { cat:"fil", name:"Nancy Pearcey", years:"1952–", where:"EUA", area:"Cosmovisão",
+    idea:"Discípula de Schaeffer; mostra que o cristianismo é verdade total, não só fé privada.", works:"Verdade Absoluta" },
+  { cat:"fil", name:"Jonas Madureira", years:"", where:"Brasil", area:"Filosofia",
+    idea:"Pastor e filósofo brasileiro; escreve sobre fé, razão e humildade intelectual.", works:"Inteligência Humilhada" },
+  { cat:"fil", name:"Guilherme de Carvalho", years:"", where:"Brasil", area:"Teologia e cosmovisão",
+    idea:"Pastor e teólogo brasileiro ligado ao L’Abri no Brasil; escreve sobre cosmovisão cristã e cultura.", works:"" },
+
+  { cat:"psi", name:"D. Martyn Lloyd-Jones", years:"1899–1981", where:"País de Gales / Londres", area:"Medicina e cuidado pastoral",
+    idea:"Médico que se tornou pastor; tratou o abatimento da alma unindo diagnóstico cuidadoso e verdade bíblica.", works:"Depressão Espiritual" },
+  { cat:"psi", name:"Jay E. Adams", years:"1929–2020", where:"EUA", area:"Aconselhamento bíblico",
+    idea:"Fundou o aconselhamento noutético: as Escrituras são suficientes para tratar os problemas da vida.", works:"Conselheiro Capaz" },
+  { cat:"psi", name:"David Powlison", years:"1949–2019", where:"EUA (CCEF)", area:"Aconselhamento bíblico",
+    idea:"Aprofundou o aconselhamento bíblico olhando os “ídolos do coração” e a graça que transforma.", works:"Uma Nova Visão" },
+  { cat:"psi", name:"Edward T. Welch", years:"", where:"EUA (CCEF)", area:"Psicologia e aconselhamento",
+    idea:"Psicólogo (PhD) e conselheiro: medo, vergonha, vícios e depressão à luz do evangelho.", works:"Quando as Pessoas São Grandes e Deus é Pequeno" },
+  { cat:"psi", name:"Paul David Tripp", years:"1950–", where:"EUA", area:"Aconselhamento e vida cristã",
+    idea:"Mostra como cada cristão pode ser instrumento de Deus na mudança de outras pessoas.", works:"Instrumentos nas Mãos do Redentor" },
+  { cat:"psi", name:"Michael R. Emlet", years:"", where:"EUA (CCEF)", area:"Medicina e aconselhamento",
+    idea:"Médico e conselheiro: como pensar biblicamente sobre diagnósticos e medicação psiquiátrica.", works:"Descriptions and Prescriptions" },
+  { cat:"psi", name:"Wayne Mack", years:"1935–2023", where:"EUA", area:"Aconselhamento bíblico",
+    idea:"Pioneiro do aconselhamento bíblico ao lado de Jay Adams; formou gerações de conselheiros.", works:"Introdução ao Aconselhamento Bíblico" },
+  { cat:"psi", name:"Heath Lambert", years:"", where:"EUA", area:"Aconselhamento bíblico",
+    idea:"Pastor e conselheiro; escreve sobre teologia do aconselhamento e pureza sexual.", works:"Teologia do Aconselhamento Bíblico" },
+
+  { cat:"pol", name:"João Calvino", years:"1509–1564", where:"França / Genebra", area:"Teologia e governo civil",
+    idea:"Ensinou que o magistrado é servo de Deus e que a autoridade civil tem limites, base para o pensamento político reformado.", works:"Institutas, livro IV, cap. 20" },
+  { cat:"pol", name:"Johannes Althusius", years:"1557–1638", where:"Alemanha", area:"Teoria política",
+    idea:"Pensou a sociedade como associações e alianças (federalismo), com poder vindo de baixo para cima.", works:"Politica" },
+  { cat:"pol", name:"Samuel Rutherford", years:"1600–1661", where:"Escócia", area:"Teoria política",
+    idea:"Defendeu que a lei está acima do rei: o governante também se submete à lei.", works:"Lex, Rex" },
+  { cat:"pol", name:"Guillaume Groen van Prinsterer", years:"1801–1876", where:"Holanda", area:"História e política",
+    idea:"Criticou a Revolução Francesa como incredulidade aplicada à política e inspirou o movimento político cristão holandês.", works:"Incredulidade e Revolução" },
+  { cat:"pol", name:"Abraham Kuyper (política)", years:"1837–1920", where:"Holanda", area:"Política e sociedade",
+    idea:"Primeiro-ministro da Holanda (1901–1905); família, igreja, escola e Estado têm cada um sua esfera de autoridade.", works:"Calvinismo; Soberania das Esferas" },
+  { cat:"pol", name:"Bob Goudzwaard", years:"1934–", where:"Holanda", area:"Economia e sociedade",
+    idea:"Economista que analisou capitalismo e ideologias modernas a partir da filosofia reformacional.", works:"Capitalism and Progress" },
+  { cat:"pol", name:"Franklin Ferreira", years:"", where:"Brasil", area:"Teologia e política",
+    idea:"Teólogo batista reformado brasileiro; analisa os limites do poder do Estado à luz das Escrituras.", works:"Contra a Idolatria do Estado" }
+];
+const PEN_CATS = { fil:["Filosofia e teologia","#3f6c99"], psi:["Psicologia e aconselhamento","#4f7a63"], pol:["Política e sociedade","#8c2f39"] };
+let penCat="";
+function renderPensadores(){
+  const q=norm($("#penQ").value.trim());
+  $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
+  const list=PENSADORES.filter(p=>(!penCat||p.cat===penCat) && (!q || norm(p.name+" "+p.area+" "+p.idea+" "+p.works+" "+p.where).includes(q)));
+  const byCat=Object.keys(PEN_CATS).map(k=>[k,list.filter(p=>p.cat===k)]).filter(([,a])=>a.length);
+  $("#penList").innerHTML = byCat.length ? byCat.map(([k,arr])=>`<div class="pen-group" style="--pc:${PEN_CATS[k][1]}"><h3>${PEN_CATS[k][0]}</h3><div class="pen-grid">${arr.map(penCard).join("")}</div></div>`).join("")
+    : `<p class="muted">Nenhum pensador encontrado.</p>`;
+}
+function penCard(p){
+  const nm=p.name.replace(/ \(política\)$/,"");
+  const q=`Quem foi ${nm} e quais são suas principais ideias${p.cat==="pol"?" sobre política e sociedade":p.cat==="psi"?" sobre psicologia, aconselhamento e saúde da alma":" filosóficas e teológicas"}, na perspectiva da fé reformada? Responda em português, com fontes.`;
+  return `<article class="pen-card">
+    <header><h4>${authorBtn(nm, p.area)}</h4><span class="pen-meta">${esc([p.years,p.where].filter(Boolean).join(" · "))}</span></header>
+    <p class="pen-area">${esc(p.area)}</p>
+    <p class="pen-idea">${esc(p.idea)}</p>
+    ${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
+    <div class="br-links">
+      <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
+      <a class="btn btn-sm btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">ChatGPT ↗</a>
+      <a class="btn btn-sm" href="${esc("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(nm))}" target="_blank" rel="noopener noreferrer">Livros ↗</a>
+      <a class="btn btn-sm" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(nm+" palestra"))}" target="_blank" rel="noopener noreferrer">Vídeos ↗</a>
+    </div></article>`;
+}
+$("#penQ").addEventListener("input",renderPensadores);
+$("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
 /* =====================================================================
    ESCOLHER LIVRO E CAPÍTULO (grade grande, simples, com busca)
    ===================================================================== */
