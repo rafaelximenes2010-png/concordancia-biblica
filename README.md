@@ -1,4 +1,4 @@
-# Concordância Bíblica
+# Comentários e Concordância Bíblica
 
 Aplicativo (PWA) de estudo bíblico para celular e computador.
 

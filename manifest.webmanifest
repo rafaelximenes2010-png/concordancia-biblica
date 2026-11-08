@@ -1,7 +1,7 @@
 {
-  "name": "Concordância Bíblica",
-  "short_name": "Concordância",
-  "description": "Bíblia em várias versões, busca, texto do dia, devocional, estudos e notas de cultos.",
+  "name": "Comentários e Concordância Bíblica",
+  "short_name": "Comentários",
+  "description": "Comentários bíblicos, concordância, Bíblia em várias versões, devocional, credos e catecismos e notas de cultos.",
   "lang": "pt-BR",
   "id": "./",
   "start_url": "./index.html#inicio",
@@ -10,16 +10,64 @@
   "orientation": "any",
   "background_color": "#fbf7f0",
   "theme_color": "#1c2747",
-  "categories": ["books", "education", "lifestyle"],
+  "categories": [
+    "books",
+    "education",
+    "lifestyle"
+  ],
   "icons": [
-    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
-    { "name": "Texto do dia", "url": "./index.html#texto", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Devocional", "url": "./index.html#devocional", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Minhas notas", "url": "./index.html#notas", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Texto do dia",
+      "url": "./index.html#texto",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Devocional",
+      "url": "./index.html#devocional",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Minhas notas",
+      "url": "./index.html#notas",
+      "icons": [
+        {
+          "src": "icons/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }

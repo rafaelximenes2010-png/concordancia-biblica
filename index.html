@@ -9,11 +9,11 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Concordância">
+<meta name="apple-mobile-web-app-title" content="Comentários">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
-<title>Concordância Bíblica — Dashboard de estudo</title>
+<title>Comentários e Concordância Bíblica</title>
 <style>
 /* =========================================================
    1. TOKENS DE TEMA
@@ -596,6 +596,20 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 .doc-ch{font-family:var(--font-text);font-size:19px;margin:18px 0 8px;color:var(--accent)}
 .doc-tools .radio{display:inline-flex;gap:6px;align-items:center;padding:0;margin:0;white-space:nowrap}
 .doc-tools .radio input{margin:0}
+
+/* Escolha do tipo de pesquisa */
+.mode-q{margin:0 0 6px;font-weight:600;color:var(--ink-2);font-size:14px}
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;max-width:620px}
+.mode-btn{justify-content:flex-start;text-align:left;padding:10px 12px;border:1px solid transparent}
+.mode-btn span{display:flex;flex-direction:column;line-height:1.2}
+.mode-btn small{font-weight:400;font-size:11.5px;color:var(--ink-3)}
+.mode-btn[aria-selected="true"]{border-color:var(--gold)}
+.mode-btn .icon{width:22px;height:22px;flex:none}
+.home-mode{display:flex;gap:6px;flex-wrap:wrap}
+.home-mode label{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:13.5px;cursor:pointer}
+.home-mode input{accent-color:var(--accent)}
+.brand span{font-size:17px}
+@media (max-width:760px){ .brand span{font-size:15px;line-height:1.15} .mode-btn{padding:8px 9px} .mode-btn small{font-size:10.5px} }
 </style>
 </head>
 <body>
@@ -680,7 +694,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 <!-- ===================== CABEÇALHO ===================== -->
 <header class="app-header">
   <div class="header-inner">
-    <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/icon.svg" alt="" width="34" height="34"><span>Concordância Bíblica</span></a></h1>
+    <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/icon.svg" alt="" width="34" height="34"><span>Comentários e Concordância Bíblica</span></a></h1>
     <nav class="top-nav" aria-label="Seções do aplicativo">
       <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
       <button type="button" class="nav-btn" data-view="biblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Bíblia</button>
@@ -716,8 +730,11 @@ dialog.reader.as-view .rd-com{max-height:24vh}
     <article class="home-card hc-devo" id="homeDevo"></article>
     <article class="home-card hc-estudo" id="homeEstudo"></article>
     <article class="home-card hc-busca">
-      <h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-magnify"/></svg>Busca bíblica</h3>
-      <p class="muted" style="margin:0">Palavras, expressões, referências ou foto — em 16 versões.</p>
+      <h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-magnify"/></svg>Pesquisar</h3>
+      <div class="home-mode" role="radiogroup" aria-label="Tipo de pesquisa">
+        <label><input type="radio" name="homeMode" value="busca" checked> Comentário bíblico</label>
+        <label><input type="radio" name="homeMode" value="conc"> Concordância</label>
+      </div>
       <form class="quick-search" id="homeSearch" role="search">
         <label for="homeQ" class="sr-only">Buscar na Bíblia</label>
         <input id="homeQ" type="search" placeholder="Ex.: graça, Salmo 23" maxlength="120">
@@ -739,7 +756,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
     </article>
     <article class="home-card" id="homeShare">
       <h3>Compartilhar o app</h3>
-      <p style="margin:0;color:var(--ink-2)">Envie o Concordância Bíblica para amigos, família ou o grupo da igreja.</p>
+      <p style="margin:0;color:var(--ink-2)">Envie o app Comentários e Concordância Bíblica para amigos, família ou o grupo da igreja.</p>
       <div class="row-actions">
         <a class="btn btn-sm btn-wa" id="inviteWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
         <button type="button" class="btn btn-sm" id="copyAppLink"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
@@ -771,15 +788,16 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 <!-- ===================== BUSCA BÍBLICA ===================== -->
 <section class="view" id="view-busca" hidden aria-label="Busca bíblica">
   <div class="busca-bar">
-    <div class="mode-switch" role="tablist" aria-label="Modo">
-      <button type="button" role="tab" class="mode-btn" data-mode="busca" aria-selected="true"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca</button>
-      <button type="button" role="tab" class="mode-btn" data-mode="conc" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Concordância</button>
+    <p class="mode-q">O que você quer pesquisar?</p>
+    <div class="mode-switch" role="tablist" aria-label="Tipo de pesquisa">
+      <button type="button" role="tab" class="mode-btn" data-mode="busca" aria-selected="true"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Comentário bíblico<small>versículo + comentários</small></span></button>
+      <button type="button" role="tab" class="mode-btn" data-mode="conc" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg><span>Concordância<small>todas as ocorrências da palavra</small></span></button>
     </div>
     <form class="search-form" id="searchForm" role="search" novalidate>
       <div class="search-box">
         <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
         <label for="q" class="sr-only">Buscar palavra, expressão ou referência</label>
-        <input id="q" type="search" autocomplete="off" placeholder="Busque “fé”, “graça”, João 3:16 — ou use a câmera" maxlength="120">
+        <input id="q" type="search" autocomplete="off" placeholder="Referência ou palavra: João 3:16, graça…" maxlength="120">
         <button type="button" class="btn btn-ghost btn-icon mic-btn" id="micBtn" aria-label="Pesquisar por voz" title="Pesquisar por voz" aria-pressed="false">
           <svg class="icon" aria-hidden="true"><use href="#i-mic"/></svg>
         </button>
@@ -1555,6 +1573,7 @@ async function runSearch({ fromHistory=false, auto=true } = {}){
     sortResults(); renderResults(true);
     if(!fromHistory) pushHistory(q, mode, scope);
     if(state.results[0]) setFocus(state.results[0]); else renderRelated();
+    if(state.results[0] && viewBusca.dataset.mode==="busca" && !matchMedia("(max-width:1180px)").matches) selectTab("com");
   }catch(err){
     console.error(err);
     showError(navigator.onLine ? "Ocorreu um erro ao carregar a Bíblia. Tente novamente." : "Sem conexão: esta versão ainda não foi baixada para uso offline. Conecte-se à internet e tente de novo.");
@@ -1629,7 +1648,7 @@ function cardFor(v){
        comfull:()=>{ setFocus(v); selectTab("com"); openStudyOnMobile(); },
        comtr:()=>translateCardCom(li) })[b.dataset.act]();
   });
-  if(Comm.inline){ comObserver ? comObserver.observe(li) : fillCardCommentary(li); }
+  if(Comm.inline || viewBusca.dataset.mode==="busca"){ comObserver ? comObserver.observe(li) : fillCardCommentary(li); }
   return li;
 }
 
@@ -2059,14 +2078,15 @@ const comObserver = ("IntersectionObserver" in window) ? new IntersectionObserve
   entries.forEach(en=>{ if(en.isIntersecting){ comObserver.unobserve(en.target); fillCardCommentary(en.target); } });
 },{ rootMargin:"200px" }) : null;
 async function fillCardCommentary(li){
-  const box=li.querySelector(".card-com"); if(!box || !Comm.inline) return;
+  const box=li.querySelector(".card-com"); if(!box || !(Comm.inline || viewBusca.dataset.mode==="busca")) return;
   const [t,ref]=li.dataset.key.split("|"); const [b,c,v]=ref.split(".");
   box.hidden=false; box.innerHTML=`<span class="muted">Carregando comentário…</span>`;
   try{
     const id=await Comm.defaultId(); const info=(await Comm.available()).find(x=>x.id===id);
     const r=await Comm.forVerse(id,b,+c,+v);
     if(!r){ box.hidden=true; return; }
-    const snip=r.text.length>320 ? r.text.slice(0,320).replace(/\s+\S*$/,"")+"…" : r.text;
+    const lim = viewBusca.dataset.mode==="busca" ? 900 : 320;
+    const snip=r.text.length>lim ? r.text.slice(0,lim).replace(/\s+\S*$/,"")+"…" : r.text;
     box.innerHTML=`<strong>${esc(info.label)}${r.section?` (v. ${r.from}…)`:""}:</strong> ${esc(snip)}
       <span class="card-com-actions"><button type="button" class="link-btn" data-act="comfull">Ler comentários completos</button> <button type="button" class="link-btn" data-act="comtr">Traduzir</button></span>`;
     box._snip=snip; box._label=`${info.label}${r.section?` (v. ${r.from}…)`:""}`;
@@ -2733,7 +2753,10 @@ $("#view-inicio").addEventListener("click",e=>{
   if(e.target.closest("[data-read]")) return showView("biblia");
 });
 $("#homeSearch").addEventListener("submit",e=>{ e.preventDefault(); const v=$("#homeQ").value.trim();
-  showView("busca"); if(v){ el.q.value=v; runSearch(); } else el.q.focus(); });
+  const m=document.querySelector('input[name="homeMode"]:checked').value;
+  showView("busca"); setBuscaMode(m);
+  if(m==="conc"){ $("#cWord").value=v.split(/\s+/)[0]||""; if(v){ renderConcIndex(); runConc(); } else $("#cWord").focus(); return; }
+  if(v){ el.q.value=v; runSearch(); } else el.q.focus(); });
 
 /* ---------- Estudos BibleProject ---------- */
 function initBP(){
@@ -2849,7 +2872,7 @@ function renderNotesView(){
         ${n.text.length>400?`<button type="button" class="btn btn-sm btn-ghost" data-n="more">Ver tudo</button>`:""}
         <button type="button" class="btn btn-sm" data-n="edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Editar</button>
         ${n.ref && parseReference(n.ref.split(/[;,]/)[0].trim()) && !parseReference(n.ref.split(/[;,]/)[0].trim()).error ? `<button type="button" class="btn btn-sm" data-n="open"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir passagem</button>`:""}
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${n.title}*\n${n.ref?n.ref+"\n":""}\n${n.text}\n\n— anotado no app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${n.title}*\n${n.ref?n.ref+"\n":""}\n${n.text}\n\n— anotado no app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-n="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-n="del"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Excluir</button>
       </div></article>`).join("")
@@ -2950,7 +2973,7 @@ async function reminderAction(e){
   if(a==="time" && e.type==="change"){ r.time=t.value||"07:30"; Reminders.set(r); Reminders.schedule(); renderReminders(); toast(`Horário: ${r.time}.`); }
   if(a==="test" && e.type==="click"){ const x=Reminders.get(); x.lastFired=""; Reminders.set(x);
     try{ const reg=await navigator.serviceWorker?.getRegistration(); const opt={ body:"Assim será o seu lembrete diário.", icon:"icons/icon-192.png" };
-      if(reg) await reg.showNotification("Concordância Bíblica",opt); else new Notification("Concordância Bíblica",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
+      if(reg) await reg.showNotification("Comentários e Concordância Bíblica",opt); else new Notification("Comentários e Concordância Bíblica",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
   if(a==="ics" && e.type==="click") downloadIcs(r.time);
 }
 ["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); } });
@@ -2962,7 +2985,7 @@ function downloadIcs(time){
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Concordancia Biblica//PT-BR","BEGIN:VEVENT",
     `UID:diario-${Date.now()}@concordancia-biblica`,`DTSTAMP:${stamp}`,`DTSTART:${ymd}T${hh}${mm}00`,"DURATION:PT15M","RRULE:FREQ=DAILY",
-    "SUMMARY:Texto do dia e devocional","DESCRIPTION:Abra o app Concordância Bíblica para o texto do dia e o devocional.",
+    "SUMMARY:Texto do dia e devocional","DESCRIPTION:Abra o app Comentários e Concordância Bíblica para o texto do dia e o devocional.",
     "BEGIN:VALARM","TRIGGER:PT0M","ACTION:DISPLAY","DESCRIPTION:Hora do seu tempo com a Palavra","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
   const url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
   const a=document.createElement("a"); a.href=url; a.download="lembrete-devocional.ics"; document.body.appendChild(a); a.click(); a.remove();
@@ -2991,15 +3014,15 @@ const APP_URL = (()=>{ try{ const h=location.hostname;
 const waUrl = text => "https://wa.me/?text=" + encodeURIComponent(text);
 function verseShareText(v){
   const ver=Repo.version(v.t);
-  return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app Concordância Bíblica: ${APP_URL}`;
+  return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`;
 }
 function dayShareText(ps, dv){
   const ver=Repo.version(ps.t);
   return (dv?`*${dv.title}*\n\n`:`*Texto do dia*\n\n`) + `“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})` +
-    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app Concordância Bíblica: ${APP_URL}`;
+    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`;
 }
 (function initShareApp(){
-  const msg=`Conheça o app *Concordância Bíblica*: Bíblia em várias versões, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
+  const msg=`Conheça o app *Comentários e Concordância Bíblica*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
   const a=$("#inviteWA"); if(a) a.href=waUrl(msg);
   $("#copyAppLink")?.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(APP_URL); toast("Link do app copiado."); }catch(e){ toast(APP_URL); } });
 })();
@@ -3026,12 +3049,19 @@ const Conc = {
 };
 const viewBusca=$("#view-busca");
 function setBuscaMode(m){
-  viewBusca.dataset.mode=m;
+  const prev=viewBusca.dataset.mode;
+  viewBusca.dataset.mode=m; store.set("buscaMode",m);
+  // leva o que já foi digitado de um modo para o outro
+  if(prev && prev!==m){
+    if(m==="conc" && el.q.value.trim() && !looksLikeReference(el.q.value)) $("#cWord").value=el.q.value.trim().split(/\s+/)[0];
+    if(m==="busca" && $("#cWord").value.trim() && !el.q.value.trim()) el.q.value=$("#cWord").value.trim();
+  }
   document.querySelectorAll(".mode-btn").forEach(b=>b.setAttribute("aria-selected", b.dataset.mode===m));
   $("#concPanel").hidden = m!=="conc";
   if(m==="conc") initConc();
 }
-document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setBuscaMode(b.dataset.mode)));
+document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>{ setBuscaMode(b.dataset.mode); (b.dataset.mode==="conc"?$("#cWord"):el.q).focus(); }));
+viewBusca.dataset.mode="busca"; // o modo salvo é aplicado quando a lista de Bíblias carregar
 $("#view-inicio").addEventListener("click",e=>{ if(e.target.closest("[data-conc]")){ showView("busca"); setBuscaMode("conc"); $("#cWord").focus(); } });
 
 let concReady=false;
@@ -3105,7 +3135,7 @@ function renderConcResult(){
   out.innerHTML = `<div class="conc-sum"><strong>“${esc(L.word)}”: ${L.total} ocorrências em ${L.hits.length} versículos</strong><span class="pill">${esc(L.code)} — ${esc(ver?.name||"")}</span></div>
     ${L.note?`<p class="hint">${esc(L.note)}</p>`:""}
     <div class="conc-actions">
-      <a class="btn btn-sm btn-wa" href="${esc(waUrl(concText(15)+`\n\nVia app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(concText(15)+`\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
       <button type="button" class="btn btn-sm" data-cact="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar lista</button>
       <button type="button" class="btn btn-sm" data-cact="csv"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Baixar planilha (CSV)</button>
       <button type="button" class="btn btn-sm" data-cact="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
@@ -3257,7 +3287,7 @@ function renderDoc(){
   const body = d.kind==="credo"
     ? `<article class="doc-item"><p class="txt">${esc(d.items[0].t)}</p>
         <div class="row-actions">
-          <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}*\n\n${d.items[0].t}\n\nVia app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+          <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}*\n\n${d.items[0].t}\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
           <button type="button" class="btn btn-sm" data-dact="copy" data-i="0"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
           <button type="button" class="btn btn-sm" data-dact="note" data-i="0"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
           <button type="button" class="btn btn-sm btn-ghost" data-dact="orig">Ver texto em inglês</button></div>
@@ -3269,7 +3299,7 @@ function renderDoc(){
         return ch+`<article class="doc-item" data-i="${i}">${head}<div class="tr-box"><p class="txt">${esc(d.kind==="catecismo"?it.a:it.t)}</p></div>${refBtns(it.r)}
           <div class="row-actions">
             <button type="button" class="btn btn-sm btn-primary" data-dact="tr" data-i="${i}">Traduzir para o português</button>
-            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${docItemText(d,it)}\n\nVia app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${docItemText(d,it)}\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
             <button type="button" class="btn btn-sm" data-dact="note" data-i="${i}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
           </div></article>`; }).join("");
   box.innerHTML = `<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
@@ -3348,6 +3378,7 @@ renderReminders(); Reminders.schedule();
     [...trQuick.options].forEach(o=>o.textContent=o.value); // rótulo curto no topo
     updateTranslationHint(); fillBookSelect();
     Repo.load(el.tr.value).then(fillBookSelect).catch(()=>{}); // baixa a versão em segundo plano
+    setBuscaMode(store.get("buscaMode","busca"));
     showView(location.hash.slice(1)||"inicio",{push:false});
   }catch(e){
     console.error(e); addNotice("Não foi possível carregar a lista de Bíblias. Verifique a conexão e recarregue a página.","error");
