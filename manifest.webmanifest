@@ -1,14 +1,14 @@
 {
-  "name": "Comentários e Concordância Bíblica",
-  "short_name": "Comentários",
-  "description": "Comentários bíblicos, concordância, Bíblia em várias versões, devocional, credos e catecismos e notas de cultos.",
+  "name": "SOLA | Bíblia & Teologia",
+  "short_name": "SOLA",
+  "description": "SOLA | Bíblia & Teologia: Bíblia em várias versões, comentários bíblicos reformados, concordância, devocional, credos e catecismos, pensadores e caderno de estudos.",
   "lang": "pt-BR",
   "id": "./",
   "start_url": "./index.html#inicio",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#fbf7f0",
+  "background_color": "#0f1b33",
   "theme_color": "#1c2747",
   "categories": [
     "books",

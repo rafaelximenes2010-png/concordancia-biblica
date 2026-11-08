@@ -9,11 +9,12 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Comentários">
-<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-title" content="SOLA">
+<meta name="application-name" content="SOLA">
+<link rel="apple-touch-icon" href="icons/apple-touch-180.png">
 <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
 <link rel="icon" type="image/png" href="icons/favicon-64.png">
-<title>Comentários e Concordância Bíblica</title>
+<title>SOLA | Bíblia &amp; Teologia</title>
 <style>
 /* =========================================================
    1. TOKENS DE TEMA
@@ -851,9 +852,140 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
   dialog.drawer.ctx .cd-panel{height:58dvh}
   dialog.drawer.ctx .cd-panel.full{height:92dvh}
 }
+/* ===== SOLA: abertura com o farol ===== */
+#splash{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 80% at 50% 25%,#22396a 0%,#132447 55%,#0b1630 100%);color:#fff;transition:opacity .5s ease, visibility .5s}
+#splash.sp-out{opacity:0;visibility:hidden}
+.sp-inner{display:flex;flex-direction:column;align-items:center;text-align:center;padding:24px;animation:spRise .9s cubic-bezier(.2,.8,.2,1) both}
+.sp-art{width:min(80vw,400px);height:auto;margin-bottom:-6px}
+.sp-beams{transform-origin:256px 150px;animation:spBeam 2.4s ease-in-out .25s both}
+.sp-glow{transform-origin:256px 150px;animation:spGlow 1.6s ease-in-out .2s infinite alternate}
+.sp-name{font:700 clamp(54px,15vw,88px)/1 "DejaVu Sans",ui-rounded,"SF Pro Rounded",system-ui,sans-serif;letter-spacing:.14em;margin:6px 0 4px;padding-left:.14em;
+  text-shadow:0 0 22px rgba(255,214,120,.35);animation:spFade .8s ease .45s both}
+.sp-sub{display:flex;align-items:center;gap:12px;color:#e1b553;font:700 14px/1 system-ui,sans-serif;letter-spacing:.28em;text-transform:uppercase;animation:spFade .8s ease .65s both}
+.sp-sub i{display:block;width:34px;height:2px;background:#e1b553}
+.sp-verse{max-width:330px;margin:22px 0 0;font:italic 16px/1.5 Georgia,"Times New Roman",serif;color:#d9e3f5;animation:spFade .8s ease .9s both}
+.sp-verse span{display:block;font-style:normal;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#e1b553;margin-top:6px}
+@keyframes spRise{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes spFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes spBeam{0%{opacity:0;transform:scaleX(.2)}35%{opacity:1;transform:scaleX(1.08)}60%{transform:scaleX(.96)}100%{opacity:1;transform:scaleX(1)}}
+@keyframes spGlow{from{opacity:.65;transform:scale(.9)}to{opacity:1;transform:scale(1.12)}}
+@media (prefers-reduced-motion: reduce){ .sp-inner,.sp-beams,.sp-glow,.sp-name,.sp-sub,.sp-verse{animation:none} }
+/* Marca SOLA no topo */
+.brand img{border-radius:10px}
+.brand-txt{display:flex;flex-direction:column;line-height:1.05}
+.brand .brand-name{font:800 21px/1 ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;letter-spacing:.16em;color:var(--accent)}
+.brand .brand-sub{font:700 10.5px/1.2 system-ui,sans-serif!important;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:3px}
+[data-theme="dark"] .brand .brand-name{color:#f4f1ea}
+/* Versículo central */
+.sola-verse{margin:0 0 14px;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#132447,#22396a);color:#f4f1ea;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(19,36,71,.22)}
+.sola-verse::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,214,120,.35),transparent 65%)}
+.sola-verse blockquote{margin:0;font:italic 19px/1.5 var(--font-text);position:relative;z-index:1}
+.sola-verse figcaption{margin-top:6px;font:700 12px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e1b553;position:relative;z-index:1}
+
+/* ===== Vários versículos ===== */
+.reader-multi{border-top:1px solid var(--border);background:var(--surface);padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+.reader-multi[hidden]{display:none!important}
+.rm-top{display:flex;align-items:center;gap:8px}
+.rm-top strong{flex:1;font-family:var(--font-text);font-size:16px;color:var(--accent)}
+.rm-actions{display:flex;gap:6px;flex-wrap:wrap}
+.rm-actions .btn{flex:1;justify-content:center;min-width:0}
+.rm-actions .btn[disabled],.rm-actions a.disabled{opacity:.45;pointer-events:none}
+.multi-mode .rd-verse{position:relative;padding-left:34px!important}
+.multi-mode .rd-verse::before{content:"";position:absolute;left:4px;top:.55em;width:20px;height:20px;border-radius:50%;border:2px solid var(--border);background:var(--surface)}
+.multi-mode .rd-verse.msel{background:var(--gold-soft);border-radius:8px}
+.multi-mode .rd-verse.msel::before{background:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 3px var(--surface)}
+
+/* ===== Pensadores ===== */
+.pen-tools{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.pen-group{margin:6px 0 18px}
+.pen-group h3{display:flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.8px;text-transform:uppercase;color:var(--ink-2);margin:4px 2px 10px}
+.pen-group h3::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--pc)}
+.pen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:12px}
+.pen-card{background:var(--surface);border:1px solid var(--border);border-top:4px solid var(--pc);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.pen-card header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.pen-card h4{margin:0;font-size:18px;font-family:var(--font-text)}
+.pen-meta{font-size:12.5px;color:var(--ink-2)}
+.pen-area{margin:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pc)}
+.pen-idea{margin:0;font-family:var(--font-text);font-size:16px;line-height:1.55}
+.pen-works{margin:0;font-size:13.5px;color:var(--ink-2);font-style:italic}
+.pen-works span{font-style:normal;font-weight:700}
+
+/* ===== Comentários com apresentação editorial ===== */
+.cd-eyebrow{margin:0 0 4px;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.cd-author h3{font-size:24px!important;font-weight:600;letter-spacing:.01em;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:6px!important}
+.cd-text,.com-text .tr-box,.saved-text{font-family:var(--font-text);font-size:17.5px;line-height:1.78;hyphens:auto;-webkit-hyphens:auto;text-align:left;max-width:68ch}
+.cd-text p:first-of-type::first-letter,.com-text .tr-box p:first-of-type::first-letter{float:left;font-size:3.1em;line-height:.9;padding:.06em .1em 0 0;color:var(--accent);font-weight:600}
+.cd-text p + p{text-indent:1.2em}
+.ref-cite{font:inherit;font-variant:small-caps;letter-spacing:.02em;color:var(--accent);background:none;border:0;padding:0;border-bottom:1px dotted var(--accent);cursor:pointer}
+.ref-cite.plain{cursor:default}
+[data-theme="dark"] .ref-cite{color:#9cc2ff;border-color:#9cc2ff}
+.orig-lang{font-style:italic;color:#7a4b12;font-family:"SBL Greek","Gentium Plus","Times New Roman",serif}
+[data-theme="dark"] .orig-lang{color:#f0c27a}
+.tr-tag{font:600 11px/1.3 system-ui,sans-serif!important;letter-spacing:.1em;text-transform:uppercase}
+.cd-cite{margin:14px 0 6px;padding:10px 12px;border-left:3px solid var(--gold);background:var(--gold-soft);border-radius:0 8px 8px 0}
+.cd-cite-t{display:block;font:700 10.5px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px}
+.cd-cite p{margin:0 0 6px;font:italic 14px/1.5 var(--font-text)}
+.com-text > summary .sum-name,.br-acc > summary .sum-name{font-family:var(--font-text);font-size:17px}
+
+/* ===== Desktop: aproveitar a largura sem distorcer ===== */
+@media (min-width:1500px){ #views,#backBar{max-width:1400px;margin-left:auto;margin-right:auto} }
+@media (min-width:1200px){
+  dialog.reader.cd-side{margin-left:24px!important;margin-right:auto!important;width:calc(100vw - min(560px,40vw) - 48px)!important;max-width:980px!important;transition:margin .25s,width .25s}
+  dialog.drawer.side::backdrop{background:transparent}
+  dialog.drawer.side{pointer-events:none;z-index:200} dialog.drawer.side .cd-panel{pointer-events:auto}
+  .cd-panel{width:min(560px,40vw)}
+}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true">
+  <div class="sp-inner">
+    <svg class="sp-art" viewBox="0 40 512 320" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sp-fade" cx="50%" cy="45%" r="55%"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="sp-mask"><rect x="0" y="0" width="512" height="512" fill="url(#sp-fade)"/></mask></defs><g mask="url(#sp-mask)"><defs>
+  <radialGradient id="sp-bg" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#22396a"/><stop offset=".6" stop-color="#132447"/><stop offset="1" stop-color="#0b1630"/></radialGradient>
+  <radialGradient id="sp-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".35" stop-color="#f3c75c" stop-opacity=".45"/><stop offset="1" stop-color="#f3c75c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="sp-beamL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></linearGradient>
+  <linearGradient id="sp-beamR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></linearGradient>
+  <linearGradient id="sp-lamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#f2b93b"/></linearGradient>
+</defs>  <!-- luz -->
+  <g class="sp-beams">
+    <path d="M256 150 L40 95 L40 205 Z" fill="url(#sp-beamL)"/>
+    <path d="M256 150 L472 95 L472 205 Z" fill="url(#sp-beamR)"/>
+  </g>
+  <circle class="sp-glow" cx="256" cy="150" r="120" fill="url(#sp-glow)"/>
+  <!-- farol -->
+  <path d="M230 118 Q256 88 282 118 Z" fill="#14254a"/>
+  <rect x="252" y="84" width="8" height="12" rx="2" fill="#14254a"/>
+  <rect x="234" y="118" width="44" height="34" rx="3" fill="#ffd56b"/>
+  <rect x="234" y="118" width="44" height="34" rx="3" fill="url(#sp-lamp)"/>
+  <rect x="246" y="118" width="4" height="34" fill="#14254a" opacity=".55"/><rect x="262" y="118" width="4" height="34" fill="#14254a" opacity=".55"/>
+  <rect x="224" y="152" width="64" height="9" rx="2" fill="#f4f1ea"/>
+  <path d="M238 161 L274 161 L292 318 L220 318 Z" fill="#f4f1ea"/>
+  <path d="M241 192 L271 192 L274 214 L238 214 Z" fill="#1e3a6e"/>
+  <path d="M233 252 L279 252 L282 274 L230 274 Z" fill="#1e3a6e"/>
+  <rect x="250" y="226" width="12" height="16" rx="6" fill="#1e3a6e"/>
+  <path d="M248 318 L248 296 Q256 288 264 296 L264 318 Z" fill="#1e3a6e"/>
+  <!-- rochas e mar -->
+  <path d="M170 330 Q214 296 256 312 Q300 296 342 330 Z" fill="#26406f"/>
+  <path d="M0 336 Q64 312 128 334 T256 334 T384 334 T512 330 L512 512 L0 512 Z" fill="#2f5d9b"/>
+  <path d="M0 360 Q64 340 128 360 T256 360 T384 360 T512 356 L512 512 L0 512 Z" fill="#244d86"/>
+  <path d="M40 342 Q90 326 140 342" stroke="#cfe3ff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/>
+  <path d="M300 346 Q350 330 410 344" stroke="#cfe3ff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>
+</g></svg>
+    <div class="sp-name">SOLA</div>
+    <div class="sp-sub"><i></i>Bíblia &amp; Teologia<i></i></div>
+    <p class="sp-verse">“A minha graça te basta, porque o poder se aperfeiçoa na fraqueza.” <span>2 Coríntios 12:9</span></p>
+  </div>
+</div>
+<script>
+/* Abertura: mostra o farol e entra no app (mais rápido se já abriu nesta sessão) */
+(function(){ var sp=document.getElementById("splash"); var quick=false; try{ quick=sessionStorage.getItem("cb:splash")==="1"; sessionStorage.setItem("cb:splash","1"); }catch(e){}
+  var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches; var ms=rm?500:(quick?900:2300);
+  function out(){ if(!sp.parentNode) return; sp.classList.add("sp-out"); setTimeout(function(){ if(sp.parentNode) sp.remove(); },520); }
+  setTimeout(out, ms); sp.addEventListener("click", out);
+})();
+</script>
+
 <a class="skip" href="#results">Ir para os resultados</a>
 
 <!-- Ícones SVG reutilizáveis -->
@@ -941,7 +1073,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 <!-- ===================== CABEÇALHO ===================== -->
 <header class="app-header">
   <div class="header-inner">
-    <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/icon.svg" alt="" width="34" height="34"><span>Comentários e Concordância Bíblica</span></a></h1>
+    <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/mark.svg" alt="" width="38" height="38"><span class="brand-txt"><span class="brand-name">SOLA</span><span class="brand-sub">Bíblia &amp; Teologia</span></span></a></h1>
     <nav class="top-nav" aria-label="Seções do aplicativo">
       <button type="button" class="nav-btn" data-view="inicio"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>Início</button>
       <button type="button" class="nav-btn" data-view="biblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Bíblia</button>
@@ -974,8 +1106,12 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
       <h2 id="homeTitle">Seu tempo com a Palavra hoje</h2>
       <p id="heroDate"></p>
     </div>
-    <img class="hero-mark" src="icons/icon.svg" alt="" width="96" height="96">
+    <img class="hero-mark" src="icons/mark.svg" alt="" width="96" height="96">
   </div>
+  <figure class="sola-verse" aria-label="Versículo central do app">
+    <blockquote>“A minha graça te basta, porque o poder se aperfeiçoa na fraqueza.”</blockquote>
+    <figcaption>2 Coríntios 12:9</figcaption>
+  </figure>
   <div id="newsBanner"></div>
   <div id="remBanner"></div>
   <div class="streak" id="streakBox" aria-live="polite"></div>
@@ -1010,7 +1146,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
     </article>
     <article class="home-card" id="homeShare">
       <h3>Compartilhar o app</h3>
-      <p style="margin:0;color:var(--ink-2)">Envie o app Comentários e Concordância Bíblica para amigos, família ou o grupo da igreja.</p>
+      <p style="margin:0;color:var(--ink-2)">Envie o app SOLA | Bíblia & Teologia para amigos, família ou o grupo da igreja.</p>
       <div class="row-actions">
         <a class="btn btn-sm btn-wa" id="inviteWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
         <button type="button" class="btn btn-sm" id="copyAppLink"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
@@ -1239,6 +1375,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-lamp"/></svg>
@@ -1259,6 +1396,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-film"/></svg>
@@ -1278,11 +1416,28 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 </section>
 
 <!-- ===================== ARTIGOS ===================== -->
+<section class="view" id="view-pensadores" hidden aria-labelledby="penTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+  </nav>
+  <div class="view-head"><div><p class="eyebrow">Estudos · cosmovisão reformada</p><h2 id="penTitle">Pensadores</h2>
+    <p>Filósofos, estudiosos da psicologia e da alma e pensadores da política e da sociedade, segundo a fé reformada. Toque no nome para saber quem é.</p></div></div>
+  <div class="pen-tools">
+    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Procurar pensador</span><input id="penQ" type="search" placeholder="Procurar por nome, tema ou obra…" autocomplete="off"></label>
+    <div class="hl-filter" id="penChips" role="group" aria-label="Área"></div>
+  </div>
+  <div id="penList"></div>
+  <p class="bp-note">Resumos preparados para este app como ponto de partida; os botões abrem pesquisas externas (Perplexity, ChatGPT, Google Livros, YouTube). Respostas de IA devem ser conferidas nas fontes.</p>
+</section>
 <section class="view" id="view-artigos" hidden aria-labelledby="artTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · leitura</p><h2 id="artTitle">Artigos</h2>
     <p>Artigos de sites cristãos reformados, em português e em inglês, organizados por tema.</p></div></div>
@@ -1435,7 +1590,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 
     <section class="cfg-card" aria-labelledby="cfgSobreT">
       <h3 id="cfgSobreT">Sobre e licenças</h3>
-      <p class="muted">Comentários e Concordância Bíblica é um app gratuito de estudo bíblico de orientação reformada. Os textos bíblicos embutidos são de domínio público ou licença livre (a licença de cada versão aparece junto ao texto). Versões com direitos autorais (ARA, NVI, NVT, NTLH…) abrem nos sites oficiais. Os comentários clássicos vêm da Free Use Bible API (bible.helloao.org); os comentários brasileiros têm direitos autorais e por isso são indicados por links, sem reproduzir o texto. Não há vínculo com YouVersion, BibleProject, Spotify ou editoras citadas. Se as estatísticas de uso forem ativadas, o app conta apenas visitas e instalações de forma anônima, sem cookies e sem dados pessoais; perfil, notas e grifos nunca saem do aparelho.</p>
+      <p class="muted">SOLA | Bíblia &amp; Teologia é um app gratuito de estudo bíblico de orientação reformada. Os textos bíblicos embutidos são de domínio público ou licença livre (a licença de cada versão aparece junto ao texto). Versões com direitos autorais (ARA, NVI, NVT, NTLH…) abrem nos sites oficiais. Os comentários clássicos vêm da Free Use Bible API (bible.helloao.org); os comentários brasileiros têm direitos autorais e por isso são indicados por links, sem reproduzir o texto. Não há vínculo com YouVersion, BibleProject, Spotify ou editoras citadas. Se as estatísticas de uso forem ativadas, o app conta apenas visitas e instalações de forma anônima, sem cookies e sem dados pessoais; perfil, notas e grifos nunca saem do aparelho.</p>
     </section>
   </div>
 </section>
@@ -1468,6 +1623,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
       <button type="button" class="btn btn-sm" data-cd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
       <button type="button" class="btn btn-sm" data-cd="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
       <button type="button" class="btn btn-sm" data-cd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+      <button type="button" class="btn btn-sm" data-cd="multi">Vários</button>
       <button type="button" class="btn btn-sm" data-cd="all">Mais</button>
     </div>
   </div>
@@ -1558,6 +1714,17 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
     <button type="button" class="btn btn-sm" data-rd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
     <button type="button" class="btn btn-sm" data-rd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
     <a class="btn btn-sm btn-wa" id="rdWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+    <button type="button" class="btn btn-sm btn-primary" data-rd="multi"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Selecionar vários</button>
+  </div>
+  <div class="reader-multi" id="rdMultiBar" hidden>
+    <div class="rm-top"><strong id="rmCount"></strong><button type="button" class="btn btn-sm" data-rm="all">Todos</button><button type="button" class="btn btn-sm btn-primary" data-rm="done">Concluir</button></div>
+    <div class="rm-actions">
+      <button type="button" class="btn btn-sm" data-rm="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
+      <a class="btn btn-sm btn-wa" id="rmWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+      <button type="button" class="btn btn-sm" data-rm="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
+      <button type="button" class="btn btn-sm" data-rm="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+      <button type="button" class="btn btn-sm" data-rm="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentário</button>
+    </div>
   </div>
 </dialog>
 
@@ -2174,7 +2341,7 @@ async function renderReader(){
       cmpCh ? `<span class="rd-cmp-text" dir="${cv.dir}" lang="${cv.lang}">${cmpCh[x.v-1]?esc(cmpCh[x.v-1]):"<em>— sem este versículo nesta versão —</em>"}</span>` : ""}</p>`).join("")
     + `<p class="rd-license">${esc(ver.name)}: ${esc(ver.license)}${cv?`<br>${esc(cv.name)}: ${esc(cv.license)}`:""}</p>`;
   if(rd.cmp && !cmpCh.length) el.dlgBody.insertAdjacentHTML("afterbegin",`<div class="notice">${esc(BOOK[rd.b].name)} não existe na versão ${esc(rd.cmp)}.</div>`);
-  rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true;
+  rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true; if(typeof Multi!=="undefined" && Multi.on) endMulti();
   if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && (TR_PROXY || ("Translator" in self))) translateReaderChapter("pt", true); }
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
@@ -3372,7 +3539,7 @@ function renderNotesView(){
         ${n.text.length>400?`<button type="button" class="btn btn-sm btn-ghost" data-n="more">Ver tudo</button>`:""}
         <button type="button" class="btn btn-sm" data-n="edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Editar</button>
         ${n.ref && parseReference(n.ref.split(/[;,]/)[0].trim()) && !parseReference(n.ref.split(/[;,]/)[0].trim()).error ? `<button type="button" class="btn btn-sm" data-n="open"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir passagem</button>`:""}
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${n.title}*\n${n.ref?n.ref+"\n":""}\n${n.text}\n\n— anotado no app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${n.title}*\n${n.ref?n.ref+"\n":""}\n${n.text}\n\n— anotado no app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-n="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-n="del"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Excluir</button>
       </div></article>`).join("")
@@ -3473,7 +3640,7 @@ async function reminderAction(e){
   if(a==="time" && e.type==="change"){ r.time=t.value||"07:30"; Reminders.set(r); Reminders.schedule(); renderReminders(); toast(`Horário: ${r.time}.`); }
   if(a==="test" && e.type==="click"){ const x=Reminders.get(); x.lastFired=""; Reminders.set(x);
     try{ const reg=await navigator.serviceWorker?.getRegistration(); const opt={ body:"Assim será o seu lembrete diário.", icon:"icons/icon-192.png" };
-      if(reg) await reg.showNotification("Comentários e Concordância Bíblica",opt); else new Notification("Comentários e Concordância Bíblica",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
+      if(reg) await reg.showNotification("SOLA | Bíblia & Teologia",opt); else new Notification("SOLA | Bíblia & Teologia",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
   if(a==="ics" && e.type==="click") downloadIcs(r.time);
 }
 ["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); } });
@@ -3485,7 +3652,7 @@ function downloadIcs(time){
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
   const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Concordancia Biblica//PT-BR","BEGIN:VEVENT",
     `UID:diario-${Date.now()}@concordancia-biblica`,`DTSTAMP:${stamp}`,`DTSTART:${ymd}T${hh}${mm}00`,"DURATION:PT15M","RRULE:FREQ=DAILY",
-    "SUMMARY:Texto do dia e devocional","DESCRIPTION:Abra o app Comentários e Concordância Bíblica para o texto do dia e o devocional.",
+    "SUMMARY:Texto do dia e devocional","DESCRIPTION:Abra o app SOLA | Bíblia & Teologia para o texto do dia e o devocional.",
     "BEGIN:VALARM","TRIGGER:PT0M","ACTION:DISPLAY","DESCRIPTION:Hora do seu tempo com a Palavra","END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
   const url=URL.createObjectURL(new Blob([ics],{type:"text/calendar"}));
   const a=document.createElement("a"); a.href=url; a.download="lembrete-devocional.ics"; document.body.appendChild(a); a.click(); a.remove();
@@ -3514,15 +3681,15 @@ const APP_URL = (()=>{ try{ const h=location.hostname;
 const waUrl = text => "https://wa.me/?text=" + encodeURIComponent(text);
 function verseShareText(v){
   const ver=Repo.version(v.t);
-  return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`;
+  return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`;
 }
 function dayShareText(ps, dv){
   const ver=Repo.version(ps.t);
   return (dv?`*${dv.title}*\n\n`:`*Texto do dia*\n\n`) + `“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})` +
-    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`;
+    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`;
 }
 (function initShareApp(){
-  const msg=`Conheça o app *Comentários e Concordância Bíblica*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
+  const msg=`Conheça o app *SOLA | Bíblia & Teologia*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
   const a=$("#inviteWA"); if(a) a.href=waUrl(msg);
   $("#copyAppLink")?.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(APP_URL); toast("Link do app copiado."); }catch(e){ toast(APP_URL); } });
 })();
@@ -3635,7 +3802,7 @@ function renderConcResult(){
   out.innerHTML = `<div class="conc-sum"><strong>“${esc(L.word)}”: ${L.total} ocorrências em ${L.hits.length} versículos</strong><span class="pill">${esc(L.code)} — ${esc(ver?.name||"")}</span></div>
     ${L.note?`<p class="hint">${esc(L.note)}</p>`:""}
     <div class="conc-actions">
-      <a class="btn btn-sm btn-wa" href="${esc(waUrl(concText(15)+`\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(concText(15)+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
       <button type="button" class="btn btn-sm" data-cact="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar lista</button>
       <button type="button" class="btn btn-sm" data-cact="csv"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Baixar planilha (CSV)</button>
       <button type="button" class="btn btn-sm" data-cact="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
@@ -3787,7 +3954,7 @@ function renderDoc(){
   const body = d.kind==="credo"
     ? `<article class="doc-item"><p class="txt">${esc(d.items[0].t)}</p>
         <div class="row-actions">
-          <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}*\n\n${d.items[0].t}\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+          <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}*\n\n${d.items[0].t}\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
           <button type="button" class="btn btn-sm" data-dact="copy" data-i="0"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
           <button type="button" class="btn btn-sm" data-dact="note" data-i="0"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
           <button type="button" class="btn btn-sm btn-ghost" data-dact="orig">Ver texto em inglês</button></div>
@@ -3799,7 +3966,7 @@ function renderDoc(){
         return ch+`<article class="doc-item" data-i="${i}">${head}<div class="tr-box"><p class="txt">${esc(d.kind==="catecismo"?it.a:it.t)}</p></div>${refBtns(it.r)}
           <div class="row-actions">
             <button type="button" class="btn btn-sm btn-primary" data-dact="tr" data-i="${i}">Traduzir para o português</button>
-            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${docItemText(d,it)}\n\nVia app Comentários e Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${docItemText(d,it)}\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
             <button type="button" class="btn btn-sm" data-dact="note" data-i="${i}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
           </div></article>`; }).join("");
   box.innerHTML = `<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
@@ -3842,8 +4009,17 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "3.0.0";
 const CHANGELOG = [
+  { v:"3.0.0", d:"novembro de 2026", items:[
+    "Novo nome: SOLA | Bíblia & Teologia, com o ícone do farol e abertura animada com a luz do farol.",
+    "Versículo central do app: 2 Coríntios 12:9.",
+    "Comentários com apresentação editorial: capitular, referências bíblicas clicáveis, termos em grego e hebraico destacados e “Como citar”.",
+    "Comentário em painel que mantém o versículo visível (celular) e lado a lado com a Bíblia (computador).",
+    "Selecionar vários versículos para copiar, enviar pelo WhatsApp, grifar ou anotar de uma vez.",
+    "Nova seção Estudos › Pensadores: filosofia, psicologia e política segundo a fé reformada.",
+    "Escolha de livro e capítulo em grade grande, barra inferior maior e tamanho de texto ajustável.",
+    "Comentaristas padrão (brasileiro e clássico), Perplexity e ChatGPT em cada comentário." ]},
   { v:"2.0.0", d:"novembro de 2026", items:[
     "Comentários clássicos aparecem em português por padrão, com botão para ver o original em inglês.",
     "Comentaristas brasileiros (Hernandes Dias Lopes, Augustus Nicodemus, Genebra, Shedd e outros) em primeiro lugar, com links para comentário impresso, pregações e artigos de cada versículo.",
@@ -3927,8 +4103,29 @@ function markText(root, str, cls){
   }
   return true;
 }
+/* ---------- Apresentação editorial dos comentários ---------- */
+const REF_RE = /(?:\b[1-3]\s?)?(?:[A-ZÁÉÍÓÚÂÊÔ][a-záéíóúâêôãõç]{1,13}\.?)\s\d{1,3}[:.]\d{1,3}(?:\s?[-–]\s?\d{1,3})?/g;
+const ORIG_RE = /[Ͱ-Ͽἀ-῿֐-׿]+(?:\s+[Ͱ-Ͽἀ-῿֐-׿]+)*/g;
+function editorialize(box){
+  if(!box) return;
+  const w=document.createTreeWalker(box, NodeFilter.SHOW_TEXT); const nodes=[];
+  while(w.nextNode()){ const n=w.currentNode; if(n.parentElement.closest(".ref-cite,.orig-lang,.tr-tag,button,a,.hint,.notice,mark")) continue; nodes.push(n); }
+  nodes.forEach(n=>{
+    const t=n.data; if(!REF_RE.test(t) && !ORIG_RE.test(t)) return; REF_RE.lastIndex=0; ORIG_RE.lastIndex=0;
+    const html=esc(t).replace(REF_RE, m=>{ const r=parseReference(m.replace(/\./g," ").replace(/(\d)\.(\d)/,"$1:$2")); const ok=r && !r.error && r.v1;
+        return ok ? `<button type="button" class="ref-cite" data-ref="${r.b}.${r.c}.${r.v1}">${m}</button>` : `<span class="ref-cite plain">${m}</span>`; })
+      .replace(ORIG_RE, m=>`<span class="orig-lang" lang="${/[֐-׿]/.test(m)?"he":"grc"}">${m}</span>`);
+    const span=document.createElement("span"); span.innerHTML=html; n.replaceWith(...span.childNodes);
+  });
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("button.ref-cite[data-ref]"); if(!b) return; const [bk,c,v]=b.dataset.ref.split(".");
+  openComDrawer({ t:store.get("version",DEFAULT_VERSION), b:bk, c:+c, v:+v }); });
+function comCitation(info, v){
+  const yrs=(info.trad||"").match(/\(([^)]*\d{4}[^)]*)\)/)?.[1]||"";
+  return `${info.label}. Comentário sobre ${refLabel(v.b,v.c,v.v)}${yrs?` (${yrs})`:""}. Domínio público. Texto obtido via Free Use Bible API (bible.helloao.org); tradução automática para o português no app SOLA | Bíblia & Teologia.`;
+}
 function applyTextMarks(box){
-  if(!box) return; const ref=box.dataset.ref; if(!ref) return;
+  if(!box) return; try{ editorialize(box); }catch(e){} const ref=box.dataset.ref; if(!ref) return;
   TextMarks.all().filter(m=>m.ref===ref).forEach(m=>markText(box, m.text, "hl-"+m.color));
 }
 const selBar=$("#selBar"); let selInfo=null, selTimer=null;
@@ -4093,6 +4290,7 @@ const HELP = {
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
+  pensadores:["Pensadores",[["Áreas","Filtre por Filosofia e teologia, Psicologia e aconselhamento ou Política e sociedade."],["Nome do pensador","Toque para ver quem é, formação e links."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre as ideias daquele pensador na perspectiva reformada."]]],
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
   catecismos:["Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
   notas:["Minhas notas",[["Notas","Anotações de cultos e estudos, com filtros por tipo, data e referência."],["Grifos","Todos os versículos e trechos de comentários que você grifou, por cor."],["Comentários salvos","Comentários que você guardou, para reler, copiar ou enviar pelo WhatsApp."]]],
@@ -4290,7 +4488,7 @@ const Suggest = {
   all(){ return store.get("suggestions",[]); },
   add(x){ const a=this.all(); a.unshift({ id:"g"+Date.now().toString(36), at:Date.now(), ...x }); store.set("suggestions",a.slice(0,100)); }
 };
-function suggestBody(x){ return `Sugestão para o app Comentários e Concordância Bíblica (v${APP_VERSION})\nTipo: ${x.kind}\n\n${x.text}`; }
+function suggestBody(x){ return `Sugestão para o app SOLA | Bíblia & Teologia (v${APP_VERSION})\nTipo: ${x.kind}\n\n${x.text}`; }
 function suggestUrl(x){
   if(FEEDBACK.email) return `mailto:${FEEDBACK.email}?subject=${encodeURIComponent("Sugestão: "+x.kind)}&body=${encodeURIComponent(suggestBody(x))}`;
   if(FEEDBACK.whatsapp) return `https://wa.me/${FEEDBACK.whatsapp}?text=${encodeURIComponent(suggestBody(x))}`;
@@ -4322,17 +4520,17 @@ const ANALYTICS = { goatcounter:"" };
 })();
 /* Aviso de novidades no Início após uma atualização */
 function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VERSION) return "";
-  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novidades da versão ${APP_VERSION}:</strong> comentários em português, autores brasileiros em destaque, marca-texto e perfil.</span><button type="button" class="btn btn-sm" data-view="config">Ver</button></div>`; }
+  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Bem-vindo ao SOLA ${APP_VERSION}:</strong> novo nome, comentários editoriais, vários versículos de uma vez e a seção Pensadores.</span><button type="button" class="btn btn-sm" data-view="config">Ver</button></div>`; }
 
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","catecismos","notas","config"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","catecismos","notas","config"];
+const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 const VIEW_TITLE={ inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
-  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Perfil e configurações" };
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Perfil e configurações" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
@@ -4354,6 +4552,7 @@ function showView(name, {push=true}={}){
   if(name==="artigos") renderArticles();
   if(name==="catecismos") renderCatHome();
   if(name==="config") renderConfig();
+  if(name==="pensadores") renderPensadores();
   if(name==="biblia") openReader({ hi:null, asView:true });
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }
@@ -4392,7 +4591,11 @@ async function openComDrawer(v, pick){
   $("#cdRef").textContent=ref;
   $("#cdVerse").innerHTML=`<span class="vt ${Hl.cls(v.b+"."+v.c+"."+v.v)}" data-hk="${v.b}.${v.c}.${v.v}">${esc(v.text||"")}</span>${v.t?` <span class="muted cd-ver">${esc(v.t)}</span>`:""}`;
   const small=matchMedia("(max-width:760px)").matches;
-  if(!drw.open){ drw.querySelector(".cd-panel").classList.remove("full"); drw.showModal(); }
+  const wide=matchMedia("(min-width:1200px)").matches;
+  const side = wide && el.dlg.open && el.dlg.classList.contains("as-view");
+  if(drw.open && drw.classList.contains("side")!==side){ drw.close(); }
+  drw.classList.toggle("side", side); el.dlg.classList.toggle("cd-side", side);
+  if(!drw.open){ drw.querySelector(".cd-panel").classList.remove("full"); side ? drw.show() : drw.showModal(); }
   drw.classList.remove("closing");
   drw.classList.remove("ctx");
   if(small) setTimeout(()=>keepVerseVisible(v),60);
@@ -4415,7 +4618,7 @@ async function renderDrawerBody(){
   if(key.startsWith("b:")){
     const c=REFORMED.brazil.find(x=>x.name===key.slice(2)); if(!c){ body.innerHTML=""; return; }
     const bio=BIOS[c.name];
-    body.innerHTML=`<div class="cd-author"><h3>${esc(c.name)}</h3><p class="meta">${esc(c.meta)}</p></div>
+    body.innerHTML=`<div class="cd-author"><p class="cd-eyebrow">Comentarista brasileiro · ${esc(ref)}</p><h3>${esc(c.name)}</h3><p class="meta">${esc(c.meta)}</p></div>
       ${brItem(c,v).replace(/<details[^>]*>/,'<div class="cd-links">').replace(/<summary>[\s\S]*?<\/summary>/,"").replace(/<\/details>$/,"</div>")}
       <p class="hint">Obra com direitos autorais: o app não copia o texto; os botões levam ao que ${esc(c.name.split(" ")[0])} diz sobre <strong>${esc(ref)}</strong>.</p>
       ${bio?`<details class="com-group cd-who"><summary>Quem é ${esc(c.name.split(" ")[0])}?</summary><p class="cd-bio">${esc(bio)}</p></details>`:""}
@@ -4423,7 +4626,7 @@ async function renderDrawerBody(){
     return;
   }
   const id=key.slice(2), info=Drawer.list.find(x=>x.id===id);
-  body.innerHTML=`<div class="cd-author"><h3>${esc(info?.label||"")}</h3><p class="meta">${esc(info?.trad||"")} · ${authorBtn(info?.label||"",info?.trad||"","Quem é?")}</p></div><p class="muted">Carregando comentário…</p>`;
+  body.innerHTML=`<div class="cd-author"><p class="cd-eyebrow">Comentário clássico · ${esc(refLabel(v.b,v.c,v.v))}</p><h3>${esc(info?.label||"")}</h3><p class="meta">${esc(info?.trad||"")} · ${authorBtn(info?.label||"",info?.trad||"","Quem é?")}</p></div><p class="muted">Carregando comentário…</p>`;
   let r=null; try{ r=await Comm.forVerse(id,v.b,v.c,v.v); }catch(e){ body.querySelector(".muted").textContent=comErr(); return; }
   if(Drawer.pick!==key) return;   // trocou de comentarista enquanto carregava
   if(!r){ body.querySelector("p.muted").outerHTML=`<p class="muted">${esc(info.label)} não comenta ${esc(BOOK[v.b].name)} ${v.c}. Escolha outro comentarista acima.</p>`; return; }
@@ -4434,11 +4637,13 @@ async function renderDrawerBody(){
       ${pplxBtn(info.label, ref)}
     </div>
     <div class="tr-box cd-text" id="cdText" data-ref="${v.b}.${v.c}.${v.v}" data-author="${esc(info.label)}">${comNote(r,v)+comParas(r.text)}</div>
-    <p class="hint">Dica: selecione um trecho com o dedo para grifá-lo.</p>
+    <footer class="cd-cite"><span class="cd-cite-t">Como citar</span><p>${esc(comCitation(info,v))}</p><button type="button" class="link-btn" id="cdCiteCopy">Copiar referência</button></footer>
+    <p class="hint">Dica: selecione um trecho com o dedo para grifá-lo. Referências bíblicas em azul abrem o versículo.</p>
     ${id===Drawer.def?"":`<button type="button" class="btn btn-sm cd-def" data-setcom="${esc(id)}">★ Tornar meu comentário padrão</button>`}`;
   const box=$("#cdText"), btn=$("#cdTr");
   btn.addEventListener("click",()=>translateBlock(box, r.text, btn));
   $("#cdSave").addEventListener("click",()=>Saved.add({ b:v.b,c:v.c,v:v.v, author:info.label, text: box.dataset.state==="pt"?box._pt:r.text, lang: box.dataset.state==="pt"?"pt":"en" }));
+  $("#cdCiteCopy").addEventListener("click",()=>copyText(comCitation(info,v),"Referência copiada."));
   applyTextMarks(box);
   if(Tr.auto) translateBlock(box, r.text, btn);
 }
@@ -4458,7 +4663,7 @@ function keepVerseVisible(v){
     const y=target.getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({ top:Math.max(0,y), behavior:"smooth" }); }
 }
 function closeComDrawer(){
-  document.querySelectorAll(".card.is-reading").forEach(x=>x.classList.remove("is-reading")); el.dlg.classList.remove("cd-reading"); if(!drw.open) return; drw.classList.add("closing"); setTimeout(()=>{ drw.close(); drw.classList.remove("closing"); },180); }
+  document.querySelectorAll(".card.is-reading").forEach(x=>x.classList.remove("is-reading")); el.dlg.classList.remove("cd-reading","cd-side"); drw.classList.remove("side"); if(!drw.open) return; drw.classList.add("closing"); setTimeout(()=>{ drw.close(); drw.classList.remove("closing"); },180); }
 $("#cdChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pick]"); if(!b) return; Drawer.pick=b.dataset.pick; renderDrawerChips(); renderDrawerBody(); $("#cdBody").scrollTop=0; });
 $("#cdClose").addEventListener("click",closeComDrawer);
 $("#cdExpand").addEventListener("click",()=>drw.querySelector(".cd-panel").classList.toggle("full"));
@@ -4485,6 +4690,141 @@ document.addEventListener("click",e=>{
   const s=e.target.closest(".day-text .vt[data-hk], .hl-item .vt[data-hk]"); if(!s || String(getSelection()).length>2) return;
   const [b,c,v]=s.dataset.hk.split("."); const box=s.closest("[id]"); openComDrawer({ t:box?._ps?.t, b, c:+c, v:+v, text:s.textContent });
 });
+/* =====================================================================
+   SELECIONAR VÁRIOS VERSÍCULOS (copiar, compartilhar, grifar, anotar)
+   ===================================================================== */
+const Multi = { on:false, set:new Set() };
+function rangeLabel(nums){ const a=[...nums].sort((x,y)=>x-y), out=[]; let s=a[0], p=a[0];
+  for(let i=1;i<=a.length;i++){ const n=a[i]; if(n===p+1){ p=n; continue; } out.push(s===p?`${s}`:`${s}-${p}`); s=p=n; } return out.join(","); }
+function multiRef(){ return `${BOOK[rd.b].name} ${rd.c}:${rangeLabel(Multi.set)}`; }
+function multiVerses(){ const ch=Bible.data[rd.t].books[rd.b][rd.c-1]; return [...Multi.set].sort((a,b)=>a-b).map(n=>({ v:n, text:ch[n-1] })); }
+function multiText(withNums=true){ const vs=multiVerses(); const ver=Repo.version(rd.t);
+  const body = vs.map(x=>withNums && vs.length>1 ? `${x.v} ${x.text}` : x.text).join(" ");
+  return `“${body}”\n— ${multiRef()} (${ver?ver.name:rd.t})`; }
+function startMulti(firstV){
+  Multi.on=true; Multi.set.clear(); if(firstV) Multi.set.add(+firstV);
+  el.dlg.classList.add("multi-mode"); paintMulti();
+  toast("Toque nos versículos para escolher. Depois use Copiar ou WhatsApp.", 3200);
+}
+function endMulti(){ Multi.on=false; Multi.set.clear(); el.dlg.classList.remove("multi-mode");
+  el.dlgBody.querySelectorAll(".rd-verse.msel").forEach(p=>p.classList.remove("msel")); $("#rdMultiBar").hidden=true; }
+function paintMulti(){
+  el.dlgBody.querySelectorAll(".rd-verse").forEach(p=>p.classList.toggle("msel", Multi.set.has(+p.dataset.v)));
+  rdEl.actions.hidden=true; const bar=$("#rdMultiBar"); bar.hidden=false;
+  const n=Multi.set.size;
+  $("#rmCount").textContent = n ? `${multiRef()} · ${n} ${n===1?"versículo":"versículos"}` : "Toque nos versículos";
+  bar.querySelectorAll("[data-rm]:not([data-rm=all]):not([data-rm=done])").forEach(b=>b.disabled=!n);
+  $("#rmWA").classList.toggle("disabled",!n);
+  $("#rmWA").href = n ? waUrl(multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`) : "#";
+}
+async function copyText(txt, okMsg){ try{ await navigator.clipboard.writeText(txt); toast(okMsg); }
+  catch(e){ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast(okMsg); }catch(_){ toast("Não foi possível copiar automaticamente."); } ta.remove(); } }
+$("#rdMultiBar").addEventListener("click",e=>{
+  const b=e.target.closest("[data-rm]"); if(!b) return;
+  const a=b.dataset.rm;
+  if(a==="done") return endMulti();
+  if(a==="all"){ const n=Bible.data[rd.t].books[rd.b][rd.c-1].length; const full=Multi.set.size===n; Multi.set.clear(); if(!full) for(let i=1;i<=n;i++) Multi.set.add(i); return paintMulti(); }
+  if(!Multi.set.size) return;
+  if(a==="copy") copyText(multiText(), `${Multi.set.size} ${Multi.set.size===1?"versículo copiado":"versículos copiados"}: ${multiRef()}.`);
+  if(a==="hl") openHlPop(b, [...Multi.set].map(n=>`${rd.b}.${rd.c}.${n}`));
+  if(a==="note") openNoteEditor({ type:"estudo", title:`Estudo de ${multiRef()}`, ref:multiRef(), text:multiText()+"\n\n" });
+  if(a==="com") openComDrawer({ t:rd.t, b:rd.b, c:rd.c, v:Math.min(...Multi.set), text:multiVerses()[0].text });
+});
+/* No modo de seleção, tocar no versículo marca/desmarca em vez de abrir o comentário */
+el.dlgBody.addEventListener("click",e=>{ if(!Multi.on) return; const p=e.target.closest(".rd-verse"); if(!p) return;
+  e.stopImmediatePropagation(); const n=+p.dataset.v; Multi.set.has(n)?Multi.set.delete(n):Multi.set.add(n); paintMulti(); }, true);
+/* Atalhos para entrar no modo */
+rdEl.actions.addEventListener("click",e=>{ const b=e.target.closest('[data-rd="multi"]'); if(b && rd.sel) startMulti(rd.sel.v); });
+$("#cdFoot").addEventListener("click",e=>{ const b=e.target.closest('[data-cd="multi"]'); if(!b) return; const v=Drawer.v; closeComDrawer();
+  if(el.dlg.open && rd.b===v.b && rd.c===v.c) startMulti(v.v);
+  else { openContext({ t:v.t||store.get("version",DEFAULT_VERSION), b:v.b, c:v.c, v:v.v }); setTimeout(()=>startMulti(v.v),700); } });
+/* =====================================================================
+   PENSADORES — filosofia, psicologia e política segundo a fé reformada
+   ===================================================================== */
+const PENSADORES = [
+  { cat:"fil", name:"Jonathan Edwards", years:"1703–1758", where:"EUA", area:"Teologia e filosofia",
+    idea:"Uniu rigor filosófico e piedade: a verdadeira religião está nas afeições santas, despertadas pela beleza de Deus.", works:"Afeições Religiosas; A Liberdade da Vontade" },
+  { cat:"fil", name:"Abraham Kuyper", years:"1837–1920", where:"Holanda", area:"Teologia, filosofia e política",
+    idea:"“Não há um centímetro quadrado da existência humana sobre o qual Cristo não diga: é meu.” Desenvolveu a soberania das esferas.", works:"Calvinismo (Lectures on Calvinism)" },
+  { cat:"fil", name:"Herman Bavinck", years:"1854–1921", where:"Holanda", area:"Teologia e cosmovisão",
+    idea:"A graça não destrói a natureza, mas a restaura; toda a realidade é revelação de Deus.", works:"Dogmática Reformada" },
+  { cat:"fil", name:"Herman Dooyeweerd", years:"1894–1977", where:"Holanda", area:"Filosofia",
+    idea:"Nenhum pensamento é neutro: toda filosofia parte de um motivo religioso de base. Criou a Filosofia da Ideia Cosmonômica.", works:"No Crepúsculo do Pensamento Ocidental" },
+  { cat:"fil", name:"Cornelius Van Til", years:"1895–1987", where:"Holanda / EUA", area:"Apologética e filosofia",
+    idea:"Apologética pressuposicional: só a revelação de Deus dá sentido à razão, à lógica e à ciência.", works:"A Defesa da Fé" },
+  { cat:"fil", name:"Francis Schaeffer", years:"1912–1984", where:"EUA / Suíça", area:"Apologética e cultura",
+    idea:"Levou a fé reformada ao diálogo com a arte, a filosofia e a cultura moderna, a partir da comunidade L’Abri.", works:"O Deus que Intervém; O Deus que se Revela" },
+  { cat:"fil", name:"Alvin Plantinga", years:"1932–", where:"EUA", area:"Filosofia (epistemologia)",
+    idea:"Epistemologia reformada: crer em Deus pode ser racional e justificado mesmo sem provas prévias.", works:"Warranted Christian Belief" },
+  { cat:"fil", name:"Nicholas Wolterstorff", years:"1932–", where:"EUA", area:"Filosofia, estética e justiça",
+    idea:"Fé e razão, arte e justiça pensadas a partir da tradição reformada.", works:"Reason within the Bounds of Religion" },
+  { cat:"fil", name:"John Frame", years:"1939–", where:"EUA", area:"Teologia e filosofia",
+    idea:"Teologia do senhorio e perspectivismo: conhecer a Deus envolve a norma, a situação e a pessoa.", works:"A Doutrina do Conhecimento de Deus" },
+  { cat:"fil", name:"James K. A. Smith", years:"1970–", where:"Canadá / EUA", area:"Filosofia e cultura",
+    idea:"Somos formados pelo que amamos: hábitos e “liturgias culturais” moldam o coração.", works:"Você é Aquilo que Ama" },
+  { cat:"fil", name:"Timothy Keller", years:"1950–2023", where:"EUA", area:"Apologética e cultura urbana",
+    idea:"Apresentou o evangelho de forma inteligente ao cético moderno, com sensibilidade cultural e pastoral.", works:"A Fé na Era do Ceticismo; Deuses Falsos" },
+  { cat:"fil", name:"Jonas Madureira", years:"", where:"Brasil", area:"Filosofia",
+    idea:"Pastor e filósofo brasileiro; escreve sobre fé, razão e humildade intelectual.", works:"Inteligência Humilhada" },
+  { cat:"fil", name:"Guilherme de Carvalho", years:"", where:"Brasil", area:"Teologia e cosmovisão",
+    idea:"Pastor e teólogo brasileiro ligado ao L’Abri no Brasil; escreve sobre cosmovisão cristã e cultura.", works:"" },
+
+  { cat:"psi", name:"D. Martyn Lloyd-Jones", years:"1899–1981", where:"País de Gales / Londres", area:"Medicina e cuidado pastoral",
+    idea:"Médico que se tornou pastor; tratou o abatimento da alma unindo diagnóstico cuidadoso e verdade bíblica.", works:"Depressão Espiritual" },
+  { cat:"psi", name:"Jay E. Adams", years:"1929–2020", where:"EUA", area:"Aconselhamento bíblico",
+    idea:"Fundou o aconselhamento noutético: as Escrituras são suficientes para tratar os problemas da vida.", works:"Conselheiro Capaz" },
+  { cat:"psi", name:"David Powlison", years:"1949–2019", where:"EUA (CCEF)", area:"Aconselhamento bíblico",
+    idea:"Aprofundou o aconselhamento bíblico olhando os “ídolos do coração” e a graça que transforma.", works:"Uma Nova Visão" },
+  { cat:"psi", name:"Edward T. Welch", years:"", where:"EUA (CCEF)", area:"Psicologia e aconselhamento",
+    idea:"Psicólogo (PhD) e conselheiro: medo, vergonha, vícios e depressão à luz do evangelho.", works:"Quando as Pessoas São Grandes e Deus é Pequeno" },
+  { cat:"psi", name:"Paul David Tripp", years:"1950–", where:"EUA", area:"Aconselhamento e vida cristã",
+    idea:"Mostra como cada cristão pode ser instrumento de Deus na mudança de outras pessoas.", works:"Instrumentos nas Mãos do Redentor" },
+  { cat:"psi", name:"Michael R. Emlet", years:"", where:"EUA (CCEF)", area:"Medicina e aconselhamento",
+    idea:"Médico e conselheiro: como pensar biblicamente sobre diagnósticos e medicação psiquiátrica.", works:"Descriptions and Prescriptions" },
+  { cat:"psi", name:"Heath Lambert", years:"", where:"EUA", area:"Aconselhamento bíblico",
+    idea:"Pastor e conselheiro; escreve sobre teologia do aconselhamento e pureza sexual.", works:"Teologia do Aconselhamento Bíblico" },
+
+  { cat:"pol", name:"João Calvino", years:"1509–1564", where:"França / Genebra", area:"Teologia e governo civil",
+    idea:"Ensinou que o magistrado é servo de Deus e que a autoridade civil tem limites, base para o pensamento político reformado.", works:"Institutas, livro IV, cap. 20" },
+  { cat:"pol", name:"Johannes Althusius", years:"1557–1638", where:"Alemanha", area:"Teoria política",
+    idea:"Pensou a sociedade como associações e alianças (federalismo), com poder vindo de baixo para cima.", works:"Politica" },
+  { cat:"pol", name:"Samuel Rutherford", years:"1600–1661", where:"Escócia", area:"Teoria política",
+    idea:"Defendeu que a lei está acima do rei: o governante também se submete à lei.", works:"Lex, Rex" },
+  { cat:"pol", name:"Guillaume Groen van Prinsterer", years:"1801–1876", where:"Holanda", area:"História e política",
+    idea:"Criticou a Revolução Francesa como incredulidade aplicada à política e inspirou o movimento político cristão holandês.", works:"Incredulidade e Revolução" },
+  { cat:"pol", name:"Abraham Kuyper (política)", years:"1837–1920", where:"Holanda", area:"Política e sociedade",
+    idea:"Primeiro-ministro da Holanda (1901–1905); família, igreja, escola e Estado têm cada um sua esfera de autoridade.", works:"Calvinismo; Soberania das Esferas" },
+  { cat:"pol", name:"Franklin Ferreira", years:"", where:"Brasil", area:"Teologia e política",
+    idea:"Teólogo batista reformado brasileiro; analisa os limites do poder do Estado à luz das Escrituras.", works:"Contra a Idolatria do Estado" }
+];
+const PEN_CATS = { fil:["Filosofia e teologia","#3f6c99"], psi:["Psicologia e aconselhamento","#4f7a63"], pol:["Política e sociedade","#8c2f39"] };
+let penCat="";
+function renderPensadores(){
+  const q=norm($("#penQ").value.trim());
+  $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
+  const list=PENSADORES.filter(p=>(!penCat||p.cat===penCat) && (!q || norm(p.name+" "+p.area+" "+p.idea+" "+p.works+" "+p.where).includes(q)));
+  const byCat=Object.keys(PEN_CATS).map(k=>[k,list.filter(p=>p.cat===k)]).filter(([,a])=>a.length);
+  $("#penList").innerHTML = byCat.length ? byCat.map(([k,arr])=>`<div class="pen-group" style="--pc:${PEN_CATS[k][1]}"><h3>${PEN_CATS[k][0]}</h3><div class="pen-grid">${arr.map(penCard).join("")}</div></div>`).join("")
+    : `<p class="muted">Nenhum pensador encontrado.</p>`;
+}
+function penCard(p){
+  const nm=p.name.replace(/ \(política\)$/,"");
+  const q=`Quem foi ${nm} e quais são suas principais ideias${p.cat==="pol"?" sobre política e sociedade":p.cat==="psi"?" sobre psicologia, aconselhamento e saúde da alma":" filosóficas e teológicas"}, na perspectiva da fé reformada? Responda em português, com fontes.`;
+  return `<article class="pen-card">
+    <header><h4>${authorBtn(nm, p.area)}</h4><span class="pen-meta">${esc([p.years,p.where].filter(Boolean).join(" · "))}</span></header>
+    <p class="pen-area">${esc(p.area)}</p>
+    <p class="pen-idea">${esc(p.idea)}</p>
+    ${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
+    <div class="br-links">
+      <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
+      <a class="btn btn-sm btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">ChatGPT ↗</a>
+      <a class="btn btn-sm" href="${esc("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(nm))}" target="_blank" rel="noopener noreferrer">Livros ↗</a>
+      <a class="btn btn-sm" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(nm+" palestra"))}" target="_blank" rel="noopener noreferrer">Vídeos ↗</a>
+    </div></article>`;
+}
+$("#penQ").addEventListener("input",renderPensadores);
+$("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
 /* =====================================================================
    ESCOLHER LIVRO E CAPÍTULO (grade grande, simples, com busca)
    ===================================================================== */
@@ -4565,7 +4905,7 @@ $("#helpBtn").addEventListener("click",()=>{ _openHelp();
   $("#helpBody").insertAdjacentHTML("beforeend",`<div class="help-zoom"><span>Tamanho do texto:</span><button type="button" class="btn btn-sm" data-zoom="-1" aria-label="Diminuir">A−</button><strong class="hz-val">${AppZoom.get()}%</strong><button type="button" class="btn btn-sm" data-zoom="1" aria-label="Aumentar">A+</button></div>`); });
 
 /* Transição lateral entre seções e posição de rolagem guardada em cada seção (como as abas do iOS) */
-const TAB_ORDER=["inicio","biblia","busca","texto","devocional","estudos","artigos","catecismos","notas","config"];
+const TAB_ORDER=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","catecismos","notas","config"];
 const scrollMem={};
 const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const _showView=showView;

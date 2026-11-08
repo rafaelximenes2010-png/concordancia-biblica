@@ -1,4 +1,4 @@
-# Comentários e Concordância Bíblica
+# Comentários e SOLA | Bíblia & Teologia
 
 Aplicativo (PWA) de estudo bíblico para celular e computador.
 

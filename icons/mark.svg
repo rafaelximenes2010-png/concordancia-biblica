@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<defs>
+  <radialGradient id="bg" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#22396a"/><stop offset=".6" stop-color="#132447"/><stop offset="1" stop-color="#0b1630"/></radialGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffe9a8" stop-opacity=".95"/><stop offset=".35" stop-color="#f3c75c" stop-opacity=".45"/><stop offset="1" stop-color="#f3c75c" stop-opacity="0"/></radialGradient>
+  <linearGradient id="beamL" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></linearGradient>
+  <linearGradient id="beamR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffe3a0" stop-opacity=".75"/><stop offset="1" stop-color="#ffe3a0" stop-opacity="0"/></linearGradient>
+  <linearGradient id="lamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6d6"/><stop offset="1" stop-color="#f2b93b"/></linearGradient>
+</defs>
+<clipPath id="rr"><rect width="512" height="512" rx="110"/></clipPath><g clip-path="url(#rr)">
+<rect width="512" height="512" fill="url(#bg)"/>
+<g transform="translate(-54,30) scale(1.21)">  <!-- luz -->
+  <g id="beams">
+    <path d="M256 150 L40 95 L40 205 Z" fill="url(#beamL)"/>
+    <path d="M256 150 L472 95 L472 205 Z" fill="url(#beamR)"/>
+  </g>
+  <circle cx="256" cy="150" r="120" fill="url(#glow)"/>
+  <!-- farol -->
+  <path d="M230 118 Q256 88 282 118 Z" fill="#14254a"/>
+  <rect x="252" y="84" width="8" height="12" rx="2" fill="#14254a"/>
+  <rect x="234" y="118" width="44" height="34" rx="3" fill="#ffd56b"/>
+  <rect x="234" y="118" width="44" height="34" rx="3" fill="url(#lamp)"/>
+  <rect x="246" y="118" width="4" height="34" fill="#14254a" opacity=".55"/><rect x="262" y="118" width="4" height="34" fill="#14254a" opacity=".55"/>
+  <rect x="224" y="152" width="64" height="9" rx="2" fill="#f4f1ea"/>
+  <path d="M238 161 L274 161 L292 318 L220 318 Z" fill="#f4f1ea"/>
+  <path d="M241 192 L271 192 L274 214 L238 214 Z" fill="#1e3a6e"/>
+  <path d="M233 252 L279 252 L282 274 L230 274 Z" fill="#1e3a6e"/>
+  <rect x="250" y="226" width="12" height="16" rx="6" fill="#1e3a6e"/>
+  <path d="M248 318 L248 296 Q256 288 264 296 L264 318 Z" fill="#1e3a6e"/>
+  <!-- rochas e mar -->
+  <path d="M170 330 Q214 296 256 312 Q300 296 342 330 Z" fill="#26406f"/>
+  <path d="M0 336 Q64 312 128 334 T256 334 T384 334 T512 330 L512 512 L0 512 Z" fill="#2f5d9b"/>
+  <path d="M0 360 Q64 340 128 360 T256 360 T384 360 T512 356 L512 512 L0 512 Z" fill="#244d86"/>
+  <path d="M40 342 Q90 326 140 342" stroke="#cfe3ff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/>
+  <path d="M300 346 Q350 330 410 344" stroke="#cfe3ff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7"/>
+</g></g></svg>
