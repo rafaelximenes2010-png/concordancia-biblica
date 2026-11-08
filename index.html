@@ -610,6 +610,16 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 .home-mode input{accent-color:var(--accent)}
 .brand span{font-size:17px}
 @media (max-width:760px){ .brand span{font-size:15px;line-height:1.15} .mode-btn{padding:8px 9px} .mode-btn small{font-size:10.5px} }
+
+/* Botão Voltar */
+.back-bar{position:sticky;top:0;z-index:15;display:flex;align-items:center;gap:10px;max-width:1500px;margin:0 auto;padding:8px 16px;background:var(--bg);border-bottom:1px solid var(--border)}
+.back-btn{font-weight:600;gap:4px}
+.back-btn span{font-size:20px;line-height:1;margin-top:-2px}
+.back-title{font-size:13px;color:var(--ink-3);font-weight:600;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reader .dlg-head{gap:8px}
+.reader .dlg-head h2{flex:1}
+@media (min-width:900px){ .back-bar{top:61px} }
+@media (max-width:760px){ .back-bar{padding:6px 10px} }
 </style>
 </head>
 <body>
@@ -712,6 +722,10 @@ dialog.reader.as-view .rd-com{max-height:24vh}
   </div>
 </header>
 
+<div class="back-bar" id="backBar" hidden>
+  <button type="button" class="btn btn-sm back-btn" id="backBtn" aria-label="Voltar à página anterior"><span aria-hidden="true">‹</span> Voltar</button>
+  <span class="back-title" id="backTitle"></span>
+</div>
 <div id="views">
 <!-- ===================== INÍCIO ===================== -->
 <section class="view" id="view-inicio" aria-labelledby="homeTitle">
@@ -1116,6 +1130,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 <!-- Modal de contexto do capítulo -->
 <dialog id="ctxDialog" class="reader" aria-labelledby="ctxTitle">
   <div class="dlg-head">
+    <button type="button" class="btn btn-sm back-btn" id="rdBack" aria-label="Voltar à página anterior"><span aria-hidden="true">‹</span> Voltar</button>
     <h2 id="ctxTitle">Bíblia</h2>
     <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
@@ -1778,7 +1793,7 @@ rdEl.actions.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{ if(!el.dlg.open || ["SELECT","INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
   if(e.key==="ArrowLeft") goChapter(-1); if(e.key==="ArrowRight") goChapter(1); });
-el.dlgClose.addEventListener("click",()=>{ const wasView=el.dlg.classList.contains("as-view"); closeReader(); if(wasView) showView(lastView||"inicio"); });
+el.dlgClose.addEventListener("click",()=>{ if(el.dlg.classList.contains("as-view")) goBack(); else closeReader(); });
 
 
 /* ---------- Favoritos ---------- */
@@ -3346,14 +3361,20 @@ const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos",
 const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
+const VIEW_TITLE={ inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", catecismos:"Credos e Catecismos", notas:"Minhas notas" };
+const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
+  if(push && name!==currentView){ navStack.push(currentView); if(navStack.length>50) navStack.shift(); }
   currentView=name;
+  $("#backBar").hidden = name==="inicio";
+  $("#backTitle").textContent = VIEW_TITLE[name]||"";
   VIEWS.forEach(v=>{ $("#view-"+v).hidden = v!==name; });
   document.querySelectorAll(".nav-btn[data-view], .sub-tab[data-view]").forEach(b=>{
     const on = b.dataset.view===name || (b.dataset.group && b.dataset.group===VIEW_GROUP[name]);
     if(on) b.setAttribute("aria-current","page"); else b.removeAttribute("aria-current"); });
-  if(push && location.hash.slice(1)!==name){ try{ history.replaceState(null,"","#"+name); }catch(e){ location.hash=name; } }
+  if(push && location.hash.slice(1)!==name){ try{ history.pushState({ v:name },"","#"+name); }catch(e){ location.hash=name; } }
   window.scrollTo({top:0});
   if(name==="inicio") renderHome();
   if(name==="texto") renderVotd();
@@ -3366,7 +3387,23 @@ function showView(name, {push=true}={}){
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b){ e.preventDefault(); showView(b.dataset.view); } });
-window.addEventListener("hashchange",()=>showView(location.hash.slice(1),{push:false}));
+/* Voltar: primeiro fecha o que estiver aberto dentro da página (documento, editor);
+   depois volta à página anterior; sem histórico, vai para o Início. */
+function goBack(){
+  if($("#noteDialog").open){ $("#noteDialog").close(); return; }
+  if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
+  if(currentView==="catecismos" && !$("#catDoc").hidden){ renderCatHome(); window.scrollTo({top:0}); return; }
+  if(navStack.length){ try{ history.back(); return; }catch(e){} const prev=navStack.pop(); showView(prev,{push:false}); try{ history.replaceState(null,"","#"+prev); }catch(e){} return; }
+  showView("inicio");
+}
+$("#backBtn").addEventListener("click",goBack);
+$("#rdBack").addEventListener("click",()=>{ if(el.dlg.classList.contains("as-view")) goBack(); else closeReader(); });
+/* Voltar/avançar do celular ou do navegador */
+window.addEventListener("hashchange",()=>{
+  const name=location.hash.slice(1)||"inicio"; if(name===currentView) return;
+  if(navStack[navStack.length-1]===name) navStack.pop(); else navStack.push(currentView);
+  showView(name,{push:false});
+});
 
 renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotesMini(); renderRelated(); renderCommentary();
 renderReminders(); Reminders.schedule();
