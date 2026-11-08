@@ -2884,7 +2884,12 @@ function renderReminderBanner(){
    Usa o link oficial de compartilhamento (wa.me). Nada é enviado sem
    o usuário escolher o contato e tocar em enviar no WhatsApp.
    ===================================================================== */
-const APP_URL = "https://rafaelximenes2010-png.github.io/concordancia-biblica/";
+/* Endereço público do app: usa o endereço atual quando o app está publicado
+   (GitHub Pages ou domínio próprio); senão, o endereço oficial abaixo. */
+const APP_HOME = "https://concordanciabiblica.github.io/";
+const APP_URL = (()=>{ try{ const h=location.hostname;
+  if(location.protocol==="https:" && h && !/(^|\.)claude\.ai$|claudeusercontent|localhost/.test(h)) return location.origin + location.pathname.replace(/[^/]*$/,"");
+}catch(e){} return APP_HOME; })();
 const waUrl = text => "https://wa.me/?text=" + encodeURIComponent(text);
 function verseShareText(v){
   const ver=Repo.version(v.t);
