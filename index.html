@@ -661,7 +661,10 @@ p.meta .author-btn{font-size:13px}
 .btn-pplx{border-color:#20808d88!important;color:#1d6f7a!important}
 [data-theme="dark"] .btn-pplx{color:#6fd3de!important}
 a.link-btn.btn-pplx{border:0;text-decoration:underline}
-.pplx-all{margin:4px 0 12px}
+.pplx-all{margin:4px 0 12px;display:flex;flex-wrap:wrap;gap:6px}
+.btn-gpt{border-color:#10a37f88!important;color:#0d8a6b!important}
+[data-theme="dark"] .btn-gpt{color:#5fd4b3!important}
+a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .pplx-all .btn,.br-links .btn{white-space:normal;max-width:100%;text-align:left}
 .cfg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
 .cfg-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--gold);border-radius:12px;padding:14px 16px}
@@ -697,6 +700,21 @@ a.link-btn.btn-pplx{border:0;text-decoration:underline}
 .saved-text{max-height:220px;overflow:auto;font-size:15px}
 .sg-item{font-size:14px;padding:6px 0;border-top:1px solid var(--border)}
 .news-banner span{flex:1}
+
+/* ===== Tamanho do texto do app e navegação estilo iOS ===== */
+#views,#backBar,#helpDialog .dlg-body,#noteDialog .dlg-body{zoom:var(--app-zoom,1)}
+.zoom-ctl{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--ink-2)}
+.zoom-btns{display:flex;align-items:center;gap:8px}
+.zoom-btns input{flex:1}
+.zoom-btns .btn{min-width:44px;justify-content:center}
+.help-zoom{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);font-size:14px}
+@keyframes vInR{from{opacity:.4;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes vInL{from{opacity:.4;transform:translateX(-28px)}to{opacity:1;transform:none}}
+.view.v-in-r{animation:vInR .22s cubic-bezier(.2,.8,.2,1)}
+.view.v-in-l{animation:vInL .22s cubic-bezier(.2,.8,.2,1)}
+.edge-hint{position:fixed;left:0;top:0;bottom:0;width:6px;background:linear-gradient(90deg,rgba(184,137,47,.5),transparent);z-index:60;opacity:0;transition:opacity .15s;pointer-events:none}
+.edge-hint.on{opacity:1}
+@media (prefers-reduced-motion: reduce){ .view.v-in-r,.view.v-in-l{animation:none} }
 </style>
 </head>
 <body>
@@ -1211,6 +1229,11 @@ a.link-btn.btn-pplx{border:0;text-decoration:underline}
       <h3 id="cfgLeituraT"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Leitura e aparência</h3>
       <div class="cfg-form">
         <label>Tema<select id="cfgTheme"><option value="light">Claro</option><option value="dark">Escuro</option></select></label>
+        <div class="zoom-ctl"><span>Tamanho do texto do app <strong id="cfgZoomV"></strong></span>
+          <div class="zoom-btns"><button type="button" class="btn btn-sm" data-zoom="-1" aria-label="Diminuir o texto do app">A−</button>
+          <input type="range" id="cfgZoom" min="85" max="145" step="5" aria-label="Tamanho do texto do app">
+          <button type="button" class="btn btn-sm" data-zoom="1" aria-label="Aumentar o texto do app">A+</button></div>
+          <span class="hint">Vale para todas as seções. A Bíblia tem um ajuste próprio logo abaixo.</span></div>
         <label>Tamanho da letra da Bíblia <span class="muted" id="cfgSizeV"></span><input type="range" id="cfgSize" min="14" max="30" step="1"></label>
         <label>Versão bíblica padrão<select id="cfgVersion"></select></label>
       </div>
@@ -2206,7 +2229,10 @@ const searchLinks = q => [
 ];
 /* Perplexity: pergunta pronta, em português, sobre o comentário de um autor */
 const pplxUrl = (author, ref) => "https://www.perplexity.ai/search?q="+encodeURIComponent(`O que ${author} comenta sobre ${ref}? Explique em português, citando a obra e as fontes, e indique a perspectiva teológica do autor.`);
-const pplxBtn = (author, ref, cls="btn btn-sm btn-pplx") => `<a class="${cls}" href="${esc(pplxUrl(author,ref))}" target="_blank" rel="noopener noreferrer" title="Pesquisar no Perplexity o que ${esc(author)} diz sobre ${esc(ref)}">Perplexity ↗</a>`;
+const gptUrl = q => "https://chatgpt.com/?q="+encodeURIComponent(q);
+const pplxQ = (author, ref) => `O que ${author} comenta sobre ${ref}? Explique em português, citando a obra e as fontes, e indique a perspectiva teológica do autor.`;
+/* Perplexity + ChatGPT (versão gratuita) com a mesma pergunta pronta */
+const pplxBtn = (author, ref, cls="btn btn-sm") => `<a class="${cls} btn-pplx" href="${esc(pplxUrl(author,ref))}" target="_blank" rel="noopener noreferrer" title="Pesquisar no Perplexity o que ${esc(author)} diz sobre ${esc(ref)}">Perplexity ↗</a>${cls==="link-btn"?" ":""}<a class="${cls} btn-gpt" href="${esc(gptUrl(pplxQ(author,ref)))}" target="_blank" rel="noopener noreferrer" title="Perguntar ao ChatGPT o que ${esc(author)} diz sobre ${esc(ref)}">ChatGPT ↗</a>`;
 const extA = (label,url) => `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} ↗<span class="sr-only"> (abre em nova aba)</span></a>`;
 
 
@@ -2430,7 +2456,9 @@ function renderCommentary(){
      <div class="com-links">${searchLinks(q).map(([n,u])=>extA(n,u)).join("")}</div></div>`;
   const hub = BIBLEHUB[v.b] ? extA("BibleHub — comentários clássicos deste versículo", `https://biblehub.com/commentaries/${BIBLEHUB[v.b]}/${v.c}-${v.v}.htm`) : "";
   box.innerHTML = `
-    <div class="pplx-all"><a class="btn btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(`Comentário bíblico de ${ref} segundo autores reformados (Calvino, Matthew Henry, Hernandes Dias Lopes, Augustus Nicodemus e outros). Explique em português, com fontes.`))}" target="_blank" rel="noopener noreferrer">Perguntar ao Perplexity: o que os reformados dizem sobre ${esc(ref)} ↗</a></div>
+    <div class="pplx-all">${(()=>{ const q=`Comentário bíblico de ${ref} segundo autores reformados (Calvino, Matthew Henry, Hernandes Dias Lopes, Augustus Nicodemus e outros). Explique em português, com fontes.`;
+      return `<a class="btn btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perguntar ao Perplexity: o que os reformados dizem sobre ${esc(ref)} ↗</a>
+      <a class="btn btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">Perguntar ao ChatGPT (gratuito) ↗</a>`; })()}</div>
     <div class="section-title">${esc(ref)} — comentaristas brasileiros</div>
     <p class="com-intro">Autores reformados em português. As obras deles têm direitos autorais, por isso o app não copia o texto: cada botão leva direto ao comentário impresso, às pregações e aos artigos do autor sobre <strong>${esc(ref)}</strong>.</p>
     <div class="br-list">${REFORMED.brazil.map(c=>brItem(c, v)).join("")}</div>
@@ -2684,7 +2712,8 @@ el.form.addEventListener("submit",e=>{ e.preventDefault(); runSearch(); });
 el.clear.addEventListener("click",()=>{
   el.q.value=""; state.results=[]; state.lastQuery=""; state.focusVerse=null; state.focusKey=null;
   el.list.innerHTML=""; el.notices.innerHTML=""; el.moreWrap.hidden=true;
-  el.count.textContent="Digite uma busca para começar."; renderWelcome(); renderExternal(); renderRelated(); renderCommentary(); el.q.focus();
+  el.count.textContent="Digite uma busca para começar."; 
+renderWelcome(); renderExternal(); renderRelated(); renderCommentary(); el.q.focus();
 });
 el.q.addEventListener("input",renderExternal);
 el.more.addEventListener("click",()=>renderResults(false));
@@ -3852,8 +3881,8 @@ function spotifyBox(theme, ps, inner){
 
 /* ---------- Ajuda por seção e explicação dos botões ---------- */
 const HELP = {
-  inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Engrenagem ou sua foto","Perfil, configurações, cópia de segurança e atualizações."]]],
-  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Seleciona o versículo e abre o comentário dele em português, logo abaixo."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity","Abre uma pesquisa pronta no Perplexity sobre o que aquele comentarista diz do versículo, com fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
+  inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Círculo azul com aro dourado","Seu perfil e cadastro, configurações (inclusive o tamanho do texto), cópia de segurança e atualizações."],["Navegar rápido","Toque nas abas de baixo para trocar de seção: cada uma guarda onde você parou. Tocar de novo na aba aberta volta ao topo. No app instalado, deslize da borda esquerda para voltar."]]],
+  biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar num versículo","Seleciona o versículo e abre o comentário dele em português, logo abaixo."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
   busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Mostra o comentário logo abaixo do resultado; tocar de novo abre os comentários completos."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
@@ -3861,7 +3890,7 @@ const HELP = {
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
   catecismos:["Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
   notas:["Minhas notas",[["Notas","Anotações de cultos e estudos, com filtros por tipo, data e referência."],["Grifos","Todos os versículos e trechos de comentários que você grifou, por cor."],["Comentários salvos","Comentários que você guardou, para reler, copiar ou enviar pelo WhatsApp."]]],
-  config:["Configurações",[["Perfil","Nome, foto, igreja e e-mail. Fica só no aparelho até existir a conta online."],["Cópia de segurança","Exporta um arquivo com notas, grifos, favoritos e configurações; use Importar em outro aparelho."],["Verificar atualizações","Procura uma versão nova do app e a instala."]]]
+  config:["Configurações",[["Perfil","Nome, foto, igreja e e-mail. Fica só no aparelho até existir a conta online."],["Cópia de segurança","Exporta um arquivo com notas, grifos, favoritos e configurações; use Importar em outro aparelho."],["Verificar atualizações","Procura uma versão nova do app e a instala."],["Tamanho do texto do app","Aumenta ou diminui as letras de todas as seções. Também fica no botão ? do topo."]]]
 };
 function openHelp(){
   const [title,items]=HELP[currentView]||HELP.inicio;
@@ -4139,6 +4168,54 @@ window.addEventListener("hashchange",()=>{
   showView(name,{push:false});
 });
 
+/* =====================================================================
+   TAMANHO DO TEXTO DO APP + NAVEGAÇÃO MAIS ÁGIL (estilo iOS)
+   ===================================================================== */
+const AppZoom = {
+  get(){ return store.get("appZoom",100); },
+  set(z){ z=Math.max(85,Math.min(145,Math.round(z/5)*5)); store.set("appZoom",z); this.apply(); return z; },
+  apply(){ const z=this.get(); document.documentElement.style.setProperty("--app-zoom", z/100);
+    const v=$("#cfgZoomV"); if(v) v.textContent=z+"%"; const r=$("#cfgZoom"); if(r) r.value=z;
+    document.querySelectorAll(".hz-val").forEach(e=>e.textContent=z+"%"); }
+};
+AppZoom.apply();
+$("#cfgZoom").addEventListener("input",e=>AppZoom.set(+e.target.value));
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-zoom]"); if(!b) return; AppZoom.set(AppZoom.get()+5*(+b.dataset.zoom)); });
+/* Atalho de tamanho também na Ajuda (botão ? do topo) */
+const _openHelp=openHelp;
+$("#helpBtn").removeEventListener("click",openHelp);
+$("#helpBtn").addEventListener("click",()=>{ _openHelp();
+  $("#helpBody").insertAdjacentHTML("beforeend",`<div class="help-zoom"><span>Tamanho do texto:</span><button type="button" class="btn btn-sm" data-zoom="-1" aria-label="Diminuir">A−</button><strong class="hz-val">${AppZoom.get()}%</strong><button type="button" class="btn btn-sm" data-zoom="1" aria-label="Aumentar">A+</button></div>`); });
+
+/* Transição lateral entre seções e posição de rolagem guardada em cada seção (como as abas do iOS) */
+const TAB_ORDER=["inicio","biblia","busca","texto","devocional","estudos","artigos","catecismos","notas","config"];
+const scrollMem={};
+const reduceMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const _showView=showView;
+showView=function(name, opts={}){
+  const from=currentView; scrollMem[from]=window.scrollY;
+  _showView(name, opts);
+  const to=currentView; if(to===from) return;
+  const v=$("#view-"+to);
+  if(v && !reduceMotion){ v.classList.remove("v-in-l","v-in-r"); void v.offsetWidth; v.classList.add(TAB_ORDER.indexOf(to)>TAB_ORDER.indexOf(from)?"v-in-r":"v-in-l"); }
+  const y=scrollMem[to]; if(y) setTimeout(()=>window.scrollTo(0,Math.min(y, document.documentElement.scrollHeight)),60);
+};
+/* Toque na aba já aberta: volta ao topo */
+document.querySelector(".bottom-nav")?.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b && b.getAttribute("aria-current")==="page") scrollMem[currentView]=0; }, true);
+
+/* Deslizar da borda esquerda para voltar (no app instalado, onde o iOS não oferece esse gesto) */
+(function edgeSwipe(){
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if(!standalone) return;   // no Safari o próprio navegador já faz esse gesto
+  const hint=document.createElement("div"); hint.className="edge-hint"; document.body.appendChild(hint);
+  let sx=null, sy=0;
+  addEventListener("touchstart",e=>{ const t=e.touches[0];
+    const atHome = currentView==="inicio" && !(el.dlg.open && !el.dlg.classList.contains("as-view")) && !$("#noteDialog").open;
+    if(t.clientX<22 && !atHome){ sx=t.clientX; sy=t.clientY; hint.classList.add("on"); } else sx=null; },{passive:true});
+  addEventListener("touchend",e=>{ hint.classList.remove("on"); if(sx===null) return; const t=e.changedTouches[0];
+    if(t.clientX-sx>70 && Math.abs(t.clientY-sy)<70) goBack(); sx=null; },{passive:true});
+  addEventListener("touchcancel",()=>{ hint.classList.remove("on"); sx=null; },{passive:true});
+})();
 renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotesMini(); renderRelated(); renderCommentary();
 renderReminders(); Reminders.schedule();
 (async function boot(){
