@@ -500,6 +500,53 @@ dialog.reader.as-view .rd-com{max-height:24vh}
   .hero h2{font-size:22px}
   .rd-mid #rdPos{display:none}
 }
+
+/* =========================================================
+   11. CONCORDÂNCIA E WHATSAPP
+   ========================================================= */
+.btn-wa{color:#1f7a4d;border-color:#9fd3b6;text-decoration:none}
+.btn-wa:hover{background:#e7f6ee;border-color:#1f7a4d}
+[data-theme="dark"] .btn-wa{color:#7fd6a6;border-color:#2f5e45}
+.mode-switch{display:inline-flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:10px}
+.mode-btn{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:600;color:var(--ink-2)}
+.mode-btn[aria-selected="true"]{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+#view-busca[data-mode="conc"] .search-form, #view-busca[data-mode="conc"] main.layout{display:none}
+.conc{margin:12px 16px 0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+.conc-head h2{margin:0;font-family:var(--font-text);font-weight:600}
+.conc-head p{margin:4px 0 12px}
+.conc-form{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:end}
+.conc-form input,.conc-form select{width:100%}
+.conc-opts{min-width:0}
+.conc-form>label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.conc-form input,.conc-form select{border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:8px 10px;font-weight:400;color:var(--ink);min-width:0}
+.conc-opts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px 16px;border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+.conc-opts legend{font-size:12px;font-weight:700;color:var(--ink-2);padding:0 4px}
+.conc-opts label{display:flex;gap:6px;align-items:center;font-size:14px}
+.conc-opts small{color:var(--ink-3)}
+.conc-form>button{grid-column:1/-1;justify-self:start}
+.conc-index{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.conc-index button{border:1px solid var(--border);background:var(--bg);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:13px}
+.conc-index button:hover{border-color:var(--accent);color:var(--accent)}
+.conc-index b{font-weight:600;color:var(--ink-3);margin-left:4px;font-size:11px}
+.conc-sum{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0 12px;font-size:15px}
+.conc-actions{display:flex;flex-wrap:wrap;gap:6px}
+.dist{display:grid;gap:3px;margin:8px 0 14px}
+.dist button{display:grid;grid-template-columns:130px 1fr 44px;gap:8px;align-items:center;border:0;background:transparent;padding:2px 4px;border-radius:6px;cursor:pointer;text-align:left;font-size:13px;color:var(--ink)}
+.dist button:hover,.dist button[aria-pressed="true"]{background:var(--surface-2)}
+.dist i{display:block;height:10px;border-radius:3px;background:var(--gold)}
+.dist span:last-child{text-align:right;color:var(--ink-3)}
+.kwic{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.kwic li{display:grid;grid-template-columns:120px 1fr;gap:10px;padding:6px 6px;border-bottom:1px solid var(--border);font-size:14.5px;line-height:1.5}
+.kwic .ref{font-weight:600;color:var(--accent);cursor:pointer;background:none;border:0;padding:0;text-align:left;font-size:13.5px}
+.kwic .txt{font-family:var(--font-text)}
+.kwic-book{margin:14px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--coral)}
+@media (max-width:760px){
+  .conc{margin:10px 10px 0;padding:12px}
+  .conc-form{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .conc-form>label:first-child{grid-column:1/-1}
+  .kwic li{grid-template-columns:1fr;gap:2px}
+  .dist button{grid-template-columns:100px 1fr 36px}
+}
 </style>
 </head>
 <body>
@@ -573,6 +620,8 @@ dialog.reader.as-view .rd-com{max-height:24vh}
     <path d="m64 64 20 20" style="stroke:var(--sky)" stroke-width="10" stroke-linecap="round"/>
     <path d="M44 32v24M34 42h20" style="stroke:var(--gold)" stroke-width="5" stroke-linecap="round"/>
   </symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 19l1.3-3.6A8 8 0 1 1 8.6 19z"/><path d="M9 10.5c.4 1.6 2 3.2 3.6 3.6l1.2-1 1.7.8"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></symbol>
 </svg>
 
@@ -625,6 +674,19 @@ dialog.reader.as-view .rd-com{max-height:24vh}
     </article>
     <article class="home-card hc-notas" id="homeNotas"></article>
     <article class="home-card hc-ler" id="homeLer"></article>
+    <article class="home-card" id="homeConc">
+      <h3>Concordância</h3>
+      <p style="margin:0;color:var(--ink-2)">Índice de palavras da Bíblia em português, com todas as ocorrências e a distribuição por livro.</p>
+      <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-conc>Abrir a concordância</button></div>
+    </article>
+    <article class="home-card" id="homeShare">
+      <h3>Compartilhar o app</h3>
+      <p style="margin:0;color:var(--ink-2)">Envie o Concordância Bíblica para amigos, família ou o grupo da igreja.</p>
+      <div class="row-actions">
+        <a class="btn btn-sm btn-wa" id="inviteWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+        <button type="button" class="btn btn-sm" id="copyAppLink"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
+      </div>
+    </article>
     <article class="home-card wide" id="remindersCard"></article>
     <article class="home-card wide" id="installCard">
       <h3><img src="icons/icon.svg" alt="" width="28" height="28">Instalar como aplicativo</h3>
@@ -651,6 +713,10 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 <!-- ===================== BUSCA BÍBLICA ===================== -->
 <section class="view" id="view-busca" hidden aria-label="Busca bíblica">
   <div class="busca-bar">
+    <div class="mode-switch" role="tablist" aria-label="Modo">
+      <button type="button" role="tab" class="mode-btn" data-mode="busca" aria-selected="true"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca</button>
+      <button type="button" role="tab" class="mode-btn" data-mode="conc" aria-selected="false"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Concordância</button>
+    </div>
     <form class="search-form" id="searchForm" role="search" novalidate>
       <div class="search-box">
         <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
@@ -676,6 +742,27 @@ dialog.reader.as-view .rd-com{max-height:24vh}
       <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Buscar</button>
     </form>
   </div>
+
+  <section class="conc" id="concPanel" hidden aria-labelledby="concTitle">
+    <div class="conc-head">
+      <h2 id="concTitle">Concordância bíblica</h2>
+      <p class="muted">Índice de palavras da Bíblia, como numa concordância impressa: veja quantas vezes cada palavra aparece e a lista completa dos versículos. Em português, usa a <strong>Bíblia Livre</strong> (texto completo); também funciona nas outras versões.</p>
+    </div>
+    <form class="conc-form" id="concForm" novalidate>
+      <label>Palavra<input id="cWord" type="search" placeholder="Ex.: graça, aliança, misericórdia" maxlength="40" autocomplete="off"></label>
+      <label>Versão<select id="cVer"></select></label>
+      <label>Abrangência<select id="cScope"><option value="all">Bíblia inteira</option><option value="AT">Antigo Testamento</option><option value="NT">Novo Testamento</option></select></label>
+      <label>Livro<select id="cBook"><option value="">Todos</option></select></label>
+      <fieldset class="conc-opts"><legend>Incluir</legend>
+        <label><input type="radio" name="cMatch" value="exact" checked> Só a palavra exata</label>
+        <label><input type="radio" name="cMatch" value="prefix"> Palavras que começam com ela <small>(graça → graças, gracioso)</small></label>
+        <label><input type="radio" name="cMatch" value="family"> Formas relacionadas cadastradas <small>(amor → amou, caridade…)</small></label>
+      </fieldset>
+      <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Gerar concordância</button>
+    </form>
+    <div class="conc-index" id="cIndex" aria-live="polite"></div>
+    <div id="cResult" aria-live="polite"></div>
+  </section>
 
   <div class="demo-banner">
   <p id="dataBanner"><strong>Bíblia completa em 16 versões livres, em 14 idiomas:</strong> português, inglês, espanhol, francês, alemão, holandês, sueco, polonês, húngaro, russo, grego moderno, chinês, hebraico e grego originais, e latim. Versões como ARA, ARC, NVI e NAA têm direitos autorais e não estão incluídas.</p>
@@ -937,6 +1024,7 @@ dialog.reader.as-view .rd-com{max-height:24vh}
     <button type="button" class="btn btn-sm" data-rd="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
     <button type="button" class="btn btn-sm" data-rd="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
     <button type="button" class="btn btn-sm" data-rd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+    <a class="btn btn-sm btn-wa" id="rdWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
   </div>
 </dialog>
 
@@ -1430,6 +1518,7 @@ function cardFor(v){
       <button type="button" class="btn btn-sm fav" data-act="fav" aria-pressed="${fav}" aria-label="${fav?"Remover dos favoritos":"Favoritar"} ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>${fav?"Favorito":"Favoritar"}</button>
       <button type="button" class="btn btn-sm" data-act="note" aria-label="Criar nota sobre ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
       <button type="button" class="btn btn-sm" data-act="com" aria-label="Ver comentários e autores reformados sobre ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(verseShareText(v)))}" target="_blank" rel="noopener noreferrer" aria-label="Compartilhar ${esc(label)} no WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
       <button type="button" class="btn btn-sm btn-ghost" data-act="rel" aria-label="Ver referências relacionadas a ${esc(label)}">Relacionadas</button>
     </div>`;
   li.addEventListener("click",e=>{
@@ -1554,6 +1643,7 @@ function selectVerse(p){
   const vn=+p.dataset.v; p.classList.add("sel");
   rd.sel = { t:rd.t, b:rd.b, c:rd.c, v:vn, text:(Bible.data[rd.t].books[rd.b][rd.c-1][vn-1]) };
   rdEl.selRef.textContent = refLabel(rd.b,rd.c,vn); rdEl.actions.hidden=false;
+  $("#rdWA").href = waUrl(verseShareText(rd.sel));
   renderReaderCommentary(rd.sel);
 }
 el.dlgBody.addEventListener("click",e=>{ const p=e.target.closest(".rd-verse"); if(p) selectVerse(p); });
@@ -2335,6 +2425,7 @@ async function renderVotd(){
         ${votdOffset===0?doneBtn():""}
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
@@ -2362,6 +2453,7 @@ async function renderDevo(){
         ${devoOffset===0?doneBtn():""}
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar passagem</button>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps,dv)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
       </div>`;
@@ -2404,6 +2496,7 @@ async function renderHome(){
       <div class="row-actions">
         <button type="button" class="btn btn-sm btn-primary" data-go="texto">Ler o texto do dia</button>
         <button type="button" class="btn btn-sm" data-day="fav" aria-label="Favoritar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer" aria-label="Enviar texto do dia pelo WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></a>
         <button type="button" class="btn btn-sm" data-day="share" aria-label="Compartilhar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
         <button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar texto do dia nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>
       </div>`;
@@ -2414,6 +2507,7 @@ async function renderHome(){
       <p style="margin:0;color:var(--ink-2)">${esc(dv.reflection.slice(0,150).replace(/\s+\S*$/,""))}…</p>
       <div class="row-actions">
         <button type="button" class="btn btn-sm btn-primary" data-go="devocional">Ler o devocional</button>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps2,dv)))}" target="_blank" rel="noopener noreferrer" aria-label="Enviar devocional pelo WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></a>
         <button type="button" class="btn btn-sm" data-day="share" aria-label="Compartilhar devocional"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
         <button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar devocional nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>
       </div>`;
@@ -2557,6 +2651,7 @@ function renderNotesView(){
         ${n.text.length>400?`<button type="button" class="btn btn-sm btn-ghost" data-n="more">Ver tudo</button>`:""}
         <button type="button" class="btn btn-sm" data-n="edit"><svg class="icon" aria-hidden="true"><use href="#i-edit"/></svg>Editar</button>
         ${n.ref && parseReference(n.ref.split(/[;,]/)[0].trim()) && !parseReference(n.ref.split(/[;,]/)[0].trim()).error ? `<button type="button" class="btn btn-sm" data-n="open"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir passagem</button>`:""}
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${n.title}*\n${n.ref?n.ref+"\n":""}\n${n.text}\n\n— anotado no app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-n="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-n="del"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>Excluir</button>
       </div></article>`).join("")
@@ -2682,6 +2777,161 @@ function renderReminderBanner(){
   box.innerHTML = r.on && passed && !Streak.isDone() ? `<div class="rem-banner"><svg class="icon" aria-hidden="true" style="width:26px;height:26px"><use href="#i-bell"/></svg>
     <p><strong>Seu horário de estudo chegou.</strong> Que tal o devocional de hoje?</p><button type="button" class="btn btn-sm btn-primary" data-go="devocional">Abrir</button></div>` : "";
 }
+
+
+/* =====================================================================
+   COMPARTILHAR NO WHATSAPP
+   Usa o link oficial de compartilhamento (wa.me). Nada é enviado sem
+   o usuário escolher o contato e tocar em enviar no WhatsApp.
+   ===================================================================== */
+const APP_URL = "https://rafaelximenes2010-png.github.io/concordancia-biblica/";
+const waUrl = text => "https://wa.me/?text=" + encodeURIComponent(text);
+function verseShareText(v){
+  const ver=Repo.version(v.t);
+  return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app Concordância Bíblica: ${APP_URL}`;
+}
+function dayShareText(ps, dv){
+  const ver=Repo.version(ps.t);
+  return (dv?`*${dv.title}*\n\n`:`*Texto do dia*\n\n`) + `“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})` +
+    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app Concordância Bíblica: ${APP_URL}`;
+}
+(function initShareApp(){
+  const msg=`Conheça o app *Concordância Bíblica*: Bíblia em várias versões, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
+  const a=$("#inviteWA"); if(a) a.href=waUrl(msg);
+  $("#copyAppLink")?.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(APP_URL); toast("Link do app copiado."); }catch(e){ toast(APP_URL); } });
+})();
+
+/* =====================================================================
+   CONCORDÂNCIA
+   ---------------------------------------------------------------------
+   Índice de palavras gerado a partir do texto completo da versão
+   escolhida (padrão: Bíblia Livre, em português). Nada é inventado: as
+   contagens e listas saem do próprio texto bíblico do app.
+   >>> Para incluir concordâncias licenciadas (ex.: com números de Strong
+       em português), acrescente um provedor em Conc.providers. <<<
+   ===================================================================== */
+const Conc = {
+  idx:{},  // code -> Map(normalizado -> {w: forma mais comum, n: ocorrências})
+  async index(code){
+    if(this.idx[code]) return this.idx[code];
+    const all=await Repo.flat(code); const map=new Map();
+    for(const v of all){ const words=v.text.match(/\p{L}+(?:[-’']\p{L}+)*/gu)||[];
+      for(const w of words){ const k=norm(w); if(k.length<2) continue; const e=map.get(k); if(e){ e.n++; } else map.set(k,{ w:w.toLowerCase(), n:1 }); } }
+    return (this.idx[code]=map);
+  },
+  page:0, last:null
+};
+const viewBusca=$("#view-busca");
+function setBuscaMode(m){
+  viewBusca.dataset.mode=m;
+  document.querySelectorAll(".mode-btn").forEach(b=>b.setAttribute("aria-selected", b.dataset.mode===m));
+  $("#concPanel").hidden = m!=="conc";
+  if(m==="conc") initConc();
+}
+document.querySelectorAll(".mode-btn").forEach(b=>b.addEventListener("click",()=>setBuscaMode(b.dataset.mode)));
+$("#view-inicio").addEventListener("click",e=>{ if(e.target.closest("[data-conc]")){ showView("busca"); setBuscaMode("conc"); $("#cWord").focus(); } });
+
+let concReady=false;
+function initConc(){
+  if(concReady) return; concReady=true;
+  fillVersionSelect($("#cVer"), Repo.version(el.tr.value)?.lang==="pt" ? el.tr.value : DEFAULT_VERSION);
+  const fillBooks=()=>{ const bs=Repo.booksIn($("#cVer").value); $("#cBook").innerHTML=`<option value="">Todos</option>`+(bs.length?bs:CANON).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join(""); };
+  fillBooks();
+  $("#cVer").addEventListener("change",async()=>{ await Repo.load($("#cVer").value).catch(()=>{}); fillBooks(); renderConcIndex(); });
+  $("#cWord").addEventListener("input",renderConcIndex);
+  Repo.load($("#cVer").value).then(fillBooks).catch(()=>{});
+  renderConcIndex();
+}
+async function renderConcIndex(){
+  const box=$("#cIndex"); const pre=norm($("#cWord").value.trim());
+  if(pre.length<2){ box.innerHTML=`<span class="muted">Digite ao menos 2 letras para ver o índice de palavras.</span>`; return; }
+  box.innerHTML=`<span class="muted">Montando o índice…</span>`;
+  try{
+    const map=await Conc.index($("#cVer").value);
+    const items=[...map.entries()].filter(([k])=>k.startsWith(pre)).sort((a,b)=>a[0].localeCompare(b[0],"pt")).slice(0,80);
+    if(norm($("#cWord").value.trim())!==pre) return;   // usuário continuou digitando
+    box.innerHTML = items.length ? `<span class="muted" style="width:100%">Índice — toque numa palavra (número = ocorrências):</span>`+
+      items.map(([k,e])=>`<button type="button" data-cw="${esc(e.w)}">${esc(e.w)}<b>${e.n}</b></button>`).join("")
+      : `<span class="muted">Nenhuma palavra começa com “${esc($("#cWord").value.trim())}” nesta versão.</span>`;
+  }catch(e){ box.innerHTML=`<span class="muted">Não foi possível carregar a Bíblia para o índice.</span>`; }
+}
+$("#cIndex").addEventListener("click",e=>{ const b=e.target.closest("[data-cw]"); if(!b) return; $("#cWord").value=b.dataset.cw; runConc(); });
+$("#concForm").addEventListener("submit",e=>{ e.preventDefault(); runConc(); });
+["#cScope","#cBook"].forEach(s=>$(s).addEventListener("change",()=>{ if(Conc.last) runConc(); }));
+document.querySelectorAll('input[name="cMatch"]').forEach(r=>r.addEventListener("change",()=>{ if(Conc.last) runConc(); }));
+
+async function runConc(bookFilter=null){
+  const word=$("#cWord").value.trim(), out=$("#cResult");
+  if(!word){ out.innerHTML=`<div class="notice error">Digite uma palavra para gerar a concordância.</div>`; return; }
+  if(/\s/.test(word)){ out.innerHTML=`<div class="notice">A concordância trabalha com uma palavra por vez. Para expressões, use o modo Busca.</div>`; return; }
+  const code=$("#cVer").value, match=document.querySelector('input[name="cMatch"]:checked').value;
+  const lang=Repo.version(code)?.lang, k=norm(word);
+  const B = lang==="zh" ? "" : WB_, E = lang==="zh" ? "" : WE_;
+  let forms=[k], note="";
+  if(match==="family"){ const fk=Repo.familyKey(k); if(fk){ const f=DEMO.wordFamilies[fk]; forms=[...new Set([...f.pt,...f.en])]; note=`Formas incluídas: ${forms.join(", ")}.`; }
+    else note=`Não há formas relacionadas cadastradas para “${word}”; mostrando a palavra exata.`; }
+  const re = match==="prefix" ? new RegExp(`${B}${reEsc(k)}[\\p{L}\\p{N}]*`,"gu") : new RegExp(`${B}(?:${forms.map(reEsc).join("|")})${E}`,"gu");
+  out.innerHTML=`<p class="muted">Gerando a concordância…</p>`;
+  let all; try{ all=await Repo.flat(code); }catch(e){ out.innerHTML=`<div class="notice error">Não foi possível carregar esta versão.</div>`; return; }
+  const scope=$("#cScope").value, book=$("#cBook").value;
+  const hits=[]; let total=0;
+  for(const v of all){
+    if(scope!=="all" && BOOK[v.b].testament!==scope) continue;
+    if(book && v.b!==book) continue;
+    re.lastIndex=0; const m=v.n.match(re); if(m){ total+=m.length; hits.push({ t:v.t, b:v.b, c:v.c, v:v.v, text:v.text, groups:[re] }); }
+  }
+  Conc.last={ word, code, match, hits, total, note, bookFilter };
+  Conc.page=1; renderConcResult();
+}
+function concText(limit=Infinity){
+  const L=Conc.last, ver=Repo.version(L.code);
+  return `Concordância de “${L.word}” — ${ver?ver.name:L.code}\n${L.total} ocorrências em ${L.hits.length} versículos\n\n` +
+    L.hits.slice(0,limit).map(h=>`${refLabel(h.b,h.c,h.v)} — ${h.text}`).join("\n") +
+    (L.hits.length>limit?`\n… e mais ${L.hits.length-limit} versículos.`:"");
+}
+function renderConcResult(){
+  const L=Conc.last, out=$("#cResult"); const ver=Repo.version(L.code);
+  if(!L.hits.length){ out.innerHTML=`<div class="empty"><h3>“${esc(L.word)}” não aparece ${$("#cBook").value?"neste livro":"nesta abrangência"}</h3>
+    <p class="muted">Tente “palavras que começam com ela”, outra grafia ou outra versão. ${esc(L.note)}</p></div>`; return; }
+  const byBook=new Map(); L.hits.forEach(h=>byBook.set(h.b,(byBook.get(h.b)||0)+1));
+  const max=Math.max(...byBook.values());
+  const shown = L.bookFilter ? L.hits.filter(h=>h.b===L.bookFilter) : L.hits;
+  const pageItems = shown.slice(0, Conc.page*150);
+  let curBook=""; const lis=pageItems.map(h=>{ const head = h.b!==curBook ? `</ul><h4 class="kwic-book">${esc(BOOK[h.b].name)}</h4><ul class="kwic">` : ""; curBook=h.b;
+    return head+`<li><button type="button" class="ref" data-ck="${h.b}.${h.c}.${h.v}">${esc(refLabel(h.b,h.c,h.v))}</button><span class="txt" dir="${ver?.dir||"ltr"}">${highlight(h.text, rangesFor(h))}</span></li>`; }).join("");
+  out.innerHTML = `<div class="conc-sum"><strong>“${esc(L.word)}”: ${L.total} ocorrências em ${L.hits.length} versículos</strong><span class="pill">${esc(L.code)} — ${esc(ver?.name||"")}</span></div>
+    ${L.note?`<p class="hint">${esc(L.note)}</p>`:""}
+    <div class="conc-actions">
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(concText(15)+`\n\nVia app Concordância Bíblica: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+      <button type="button" class="btn btn-sm" data-cact="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar lista</button>
+      <button type="button" class="btn btn-sm" data-cact="csv"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Baixar planilha (CSV)</button>
+      <button type="button" class="btn btn-sm" data-cact="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
+      <button type="button" class="btn btn-sm" data-cact="search">Ver na Busca</button>
+    </div>
+    <h4 class="kwic-book" style="margin-top:16px">Distribuição por livro ${L.bookFilter?`· <button type="button" class="link-btn" data-cact="allbooks">mostrar todos</button>`:"(toque para filtrar)"}</h4>
+    <div class="dist">${[...byBook.entries()].map(([b,n])=>`<button type="button" data-cb="${b}" aria-pressed="${L.bookFilter===b}"><span>${esc(BOOK[b].name)}</span><i style="width:${Math.max(3,n/max*100)}%"></i><span>${n}</span></button>`).join("")}</div>
+    <ul class="kwic">${lis}</ul>
+    ${shown.length>pageItems.length?`<div class="more-wrap"><button type="button" class="btn" data-cact="more">Mostrar mais (${shown.length-pageItems.length} restantes)</button></div>`:""}`;
+}
+$("#cResult").addEventListener("click",async e=>{
+  const L=Conc.last; if(!L) return;
+  const r=e.target.closest("[data-ck]"); if(r){ const [b,c,v]=r.dataset.ck.split("."); const h=L.hits.find(x=>x.b===b&&x.c==c&&x.v==v); return openContext(h); }
+  const cb=e.target.closest("[data-cb]"); if(cb){ L.bookFilter = L.bookFilter===cb.dataset.cb ? null : cb.dataset.cb; Conc.page=1; return renderConcResult(); }
+  const a=e.target.closest("[data-cact]")?.dataset.cact; if(!a) return;
+  if(a==="more"){ Conc.page++; renderConcResult(); }
+  if(a==="allbooks"){ L.bookFilter=null; renderConcResult(); }
+  if(a==="copy"){ try{ await navigator.clipboard.writeText(concText()); toast("Lista copiada."); }catch(err){ toast("Não foi possível copiar."); } }
+  if(a==="note") openNoteEditor({ type:"estudo", title:`Concordância: ${L.word}`, ref:"", text:concText(40)+"\n\nMinhas anotações:\n" });
+  if(a==="search"){ setBuscaMode("busca"); el.q.value=L.word; setMode(L.match==="exact"?"all":"root"); if(Repo.version(L.code)) { el.tr.value=L.code; trQuick.value=L.code; } runSearch({auto:false}); }
+  if(a==="csv"){
+    let framed=false; try{ framed=window.self!==window.top; }catch(err){ framed=true; }
+    if(framed){ toast("Nesta pré-visualização os downloads são bloqueados. No app instalado, este botão baixa a planilha."); return; }
+    const q=s=>`"${String(s).replace(/"/g,'""')}"`;
+    const csv="﻿Livro;Capítulo;Versículo;Referência;Texto\n"+L.hits.map(h=>[BOOK[h.b].name,h.c,h.v,refLabel(h.b,h.c,h.v),h.text].map(q).join(";")).join("\n");
+    const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+    const d=document.createElement("a"); d.href=url; d.download=`concordancia-${norm(L.word)}-${L.code}.csv`; document.body.appendChild(d); d.click(); d.remove(); setTimeout(()=>URL.revokeObjectURL(url),4000);
+  }
+});
 
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)

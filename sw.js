@@ -1,6 +1,6 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "concordancia-v9";
+const CACHE = "concordancia-v10";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json",
   "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png"];
