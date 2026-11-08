@@ -3074,9 +3074,11 @@ function voiceToQuery(t){
   let q=t.trim().replace(/[.!?]+$/,"");
   q=q.replace(/\b(primeira|primeiro|1ª|1º)\s+(?=[A-Za-zÀ-ú])/i,"1 ").replace(/\b(segunda|segundo|2ª|2º)\s+(?=[A-Za-zÀ-ú])/i,"2 ").replace(/\b(terceira|terceiro|3ª|3º)\s+(?=[A-Za-zÀ-ú])/i,"3 ");
   q=q.replace(/\b(vinte|trinta|quarenta|cinquenta)\s+e\s+(um|uma|dois|duas|três|tres|quatro|cinco|seis|sete|oito|nove)\b/gi,(m,a,b)=>String(NUM_WORDS[a.toLowerCase()]+NUM_WORDS[b.toLowerCase()]));
-  q=q.replace(/\b[a-zà-ú]+\b/gi,w=>NUM_WORDS[w.toLowerCase()]!==undefined && /cap[ií]tulo|vers[ií]culo|\d/i.test(q) ? String(NUM_WORDS[w.toLowerCase()]) : w);
+  const lead=(q.match(/^\s*(?:[1-3]\s*)?\p{L}+/u)||[""])[0];
+  const isRef = /cap[ií]tulo|vers[ií]culo|\d/i.test(q.replace(/^\s*[1-3]\s/,"")) || !!ALIAS[norm(lead).replace(/\s+/g,"")];
+  q=q.replace(/\p{L}+/gu,w=>isRef && NUM_WORDS[w.toLowerCase()]!==undefined ? String(NUM_WORDS[w.toLowerCase()]) : w);
   q=q.replace(/\bcap[ií]tulo\s*/gi,"").replace(/\s*,?\s*vers[ií]culos?\s*/gi,":").replace(/\s+(?:a|até|ao)\s+(\d+)\s*$/i,"-$1");
-  q=q.replace(/^(.+?\D)\s(\d{1,3})\s(\d{1,3})$/,"$1 $2:$3").replace(/\s*:\s*/g,":").replace(/\s{2,}/g," ").trim();
+  q=q.replace(/^(.+?\D)\s(\d{1,3})\s(\d{1,3})(-\d{1,3})?$/,"$1 $2:$3$4").replace(/\s*:\s*/g,":").replace(/\s{2,}/g," ").trim();
   return q;
 }
 function attachVoice(btn, input, onDone){
