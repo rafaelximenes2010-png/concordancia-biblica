@@ -212,6 +212,35 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:3p
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
 .ocr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 
+/* Leitor da Bíblia */
+dialog.reader{max-width:860px;height:min(92vh,1000px);display:none;flex-direction:column}
+dialog.reader[open]{display:flex}
+.reader .dlg-body{flex:1;max-height:none;padding:16px 22px}
+.reader-bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.reader-bar select{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:6px 8px;max-width:100%}
+.rd-cmp{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--ink-2)}
+.rd-font{margin-left:auto;display:flex;gap:4px}
+.reader-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--border)}
+.reader-actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;border-top:1px solid var(--border);background:var(--accent-soft)}
+.reader-actions .ref{margin-right:auto;font-size:14px}
+.rd-verse{font-family:var(--font-text);font-size:var(--rd-size,19px);line-height:1.75;margin:0 0 6px;padding:2px 6px;border-radius:6px;cursor:pointer}
+.rd-verse:hover{background:var(--surface-2)}
+.rd-verse sup{font-family:var(--font-ui);font-size:11px;color:var(--accent);font-weight:700;margin-right:5px}
+.rd-verse.sel{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.rd-verse.current{background:var(--mark);color:var(--mark-ink)}
+.rd-cmp-text{display:block;font-size:.85em;color:var(--ink-2);margin-top:2px;padding-left:10px;border-left:2px solid var(--border)}
+.rd-license{font-size:11px;color:var(--ink-3);margin-top:18px;border-top:1px solid var(--border);padding-top:8px}
+@media (max-width:760px){
+  dialog.reader{width:100%;max-width:100%;height:100%;max-height:100%;border-radius:0;margin:0}
+  .reader .dlg-body{padding:12px 14px}
+  .reader-bar{gap:4px;padding:6px 8px}
+  .reader-bar select{font-size:14px;padding:5px 6px}
+  #rdVersion{flex:1 1 100%}
+  #rdBook{flex:2 1 0;min-width:0} #rdChap{flex:1 1 0;min-width:0}
+  .rd-cmp{flex:1 1 0;min-width:0} .rd-cmp select{width:100%;min-width:0}
+  .rd-font{margin-left:0}
+}
+
 /* Modal de contexto */
 dialog{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;max-width:680px;width:calc(100% - 24px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
 dialog::backdrop{background:rgba(20,15,10,.45)}
@@ -248,7 +277,7 @@ dialog::backdrop{background:rgba(20,15,10,.45)}
   .header-tools{order:2}
   .search-form{order:3}
   .search-form{flex-basis:100%}
-  .scope{flex:1}
+  .scope{flex:1;min-width:0}
   .verse{font-size:17px}
   .filters{order:1}.results-col{order:2}.study{order:3}
   .demo-banner{padding:0 10px}
@@ -307,6 +336,8 @@ body{padding-bottom:env(safe-area-inset-bottom)}
           <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
         </button>
       </div>
+      <label for="trQuick" class="sr-only">Versão da Bíblia</label>
+      <select id="trQuick" class="scope" title="Versão da Bíblia"></select>
       <label for="scope" class="sr-only">Escopo da busca</label>
       <select id="scope" class="scope">
         <option value="all">Bíblia inteira</option>
@@ -318,6 +349,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
     </form>
 
     <div class="header-tools">
+      <button type="button" class="btn" id="readBtn" aria-label="Ler a Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Ler</button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -334,7 +366,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 </div>
 
 <div class="demo-banner">
-  <p id="dataBanner"><strong>Dados de demonstração.</strong> Esta página contém apenas uma pequena amostra de versículos, transcrita para teste. Não é uma Bíblia completa — confira sempre o texto em uma edição oficial antes de citar.</p>
+  <p id="dataBanner"><strong>Bíblia completa em versões livres:</strong> Bíblia Livre (português), KJV e ASV (inglês), hebraico (WLC), grego (Textus Receptus) e Vulgata (latim). Versões como ARA, ARC, NVI e NAA têm direitos autorais e não estão incluídas.</p>
 </div>
 
 <main class="layout">
@@ -374,7 +406,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       <div class="field">
         <label for="fBook">Livro</label>
         <select id="fBook"></select>
-        <p class="hint">Lista apenas livros com versículos na amostra.</p>
+        <p class="hint">Livros disponíveis na versão escolhida.</p>
       </div>
 
       <div class="field">
@@ -465,12 +497,34 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 </main>
 
 <!-- Modal de contexto do capítulo -->
-<dialog id="ctxDialog" aria-labelledby="ctxTitle">
+<dialog id="ctxDialog" class="reader" aria-labelledby="ctxTitle">
   <div class="dlg-head">
-    <h2 id="ctxTitle">Contexto</h2>
-    <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar contexto"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <h2 id="ctxTitle">Bíblia</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="reader-bar">
+    <label class="sr-only" for="rdVersion">Versão</label><select id="rdVersion"></select>
+    <label class="sr-only" for="rdBook">Livro</label><select id="rdBook"></select>
+    <label class="sr-only" for="rdChap">Capítulo</label><select id="rdChap"></select>
+    <label class="rd-cmp"><span>Comparar</span><select id="rdCmp" aria-label="Comparar com outra versão"></select></label>
+    <span class="rd-font">
+      <button type="button" class="btn btn-sm" id="rdSmaller" aria-label="Diminuir letra">A−</button>
+      <button type="button" class="btn btn-sm" id="rdBigger" aria-label="Aumentar letra">A+</button>
+    </span>
   </div>
   <div class="dlg-body" id="ctxBody"></div>
+  <div class="reader-nav">
+    <button type="button" class="btn" id="rdPrev" aria-label="Capítulo anterior">‹ Anterior</button>
+    <span id="rdPos" class="muted"></span>
+    <button type="button" class="btn" id="rdNext" aria-label="Próximo capítulo">Próximo ›</button>
+  </div>
+  <div class="reader-actions" id="rdActions" hidden>
+    <span id="rdSelRef" class="ref"></span>
+    <button type="button" class="btn btn-sm" data-rd="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
+    <button type="button" class="btn btn-sm" data-rd="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
+    <button type="button" class="btn btn-sm" data-rd="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
+    <button type="button" class="btn btn-sm" data-rd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+  </div>
 </dialog>
 
 <!-- Busca por foto (OCR) -->
@@ -487,73 +541,15 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 <script>
 "use strict";
 /* =====================================================================
-   DADOS DE DEMONSTRAÇÃO
+   DADOS DE ESTUDO (exemplos editáveis)
    ---------------------------------------------------------------------
-   >>> SUBSTITUA ESTE BLOCO por uma fonte real (API, JSON ou banco). <<<
-   Formato de cada versículo: { t: código da tradução, b: id do livro
-   (códigos USFM: GEN, PSA, JHN…), c: capítulo, v: versículo, text }.
-   Os textos abaixo são uma AMOSTRA transcrita apenas para teste.
+   Os TEXTOS BÍBLICOS ficam na pasta /biblias (um JSON por versão, listados
+   em biblias/index.json). Aqui ficam só os dados auxiliares de exemplo.
+   >>> Para adicionar uma versão: gere biblias/CODIGO.json no mesmo formato
+       { code, name, lang, dir, license, books:{ GEN:[[v1,v2…],…] } }
+       e acrescente-a em biblias/index.json. <<<
    ===================================================================== */
 const DEMO = {
-  translations: {
-    ARC: { name: "Almeida Revista e Corrigida", lang: "pt",
-           note: "ARC — amostra transcrita para demonstração. Direitos da tradução pertencem à Sociedade Bíblica do Brasil. Confira em edição oficial." },
-    KJV: { name: "King James Version (1769)", lang: "en",
-           note: "KJV — texto em inglês, domínio público na maioria dos países. Amostra parcial." }
-    // Futuro: adicione aqui outras traduções (ex.: NVI, ARA) quando houver licença/fonte conectada.
-  },
-
-  verses: [
-    // ---------- ARC (amostra) ----------
-    { t:"ARC", b:"GEN", c:1,  v:1,  text:"No princípio, criou Deus os céus e a terra." },
-    { t:"ARC", b:"GEN", c:6,  v:8,  text:"Noé, porém, achou graça aos olhos do SENHOR." },
-    { t:"ARC", b:"DEU", c:6,  v:5,  text:"Amarás, pois, o SENHOR, teu Deus, de todo o teu coração, e de toda a tua alma, e de todo o teu poder." },
-    { t:"ARC", b:"PSA", c:23, v:1,  text:"O SENHOR é o meu pastor; nada me faltará." },
-    { t:"ARC", b:"PSA", c:23, v:2,  text:"Deitar-me faz em verdes pastos, guia-me mansamente a águas tranquilas." },
-    { t:"ARC", b:"PSA", c:23, v:3,  text:"Refrigera a minha alma; guia-me pelas veredas da justiça, por amor do seu nome." },
-    { t:"ARC", b:"PSA", c:23, v:4,  text:"Ainda que eu andasse pelo vale da sombra da morte, não temeria mal algum, porque tu estás comigo; a tua vara e o teu cajado me consolam." },
-    { t:"ARC", b:"PSA", c:23, v:5,  text:"Preparas uma mesa perante mim na presença dos meus inimigos, unges a minha cabeça com óleo, o meu cálice transborda." },
-    { t:"ARC", b:"PSA", c:23, v:6,  text:"Certamente que a bondade e a misericórdia me seguirão todos os dias da minha vida; e habitarei na casa do SENHOR por longos dias." },
-    { t:"ARC", b:"PRO", c:3,  v:5,  text:"Confia no SENHOR de todo o teu coração e não te estribes no teu próprio entendimento." },
-    { t:"ARC", b:"ISA", c:40, v:31, text:"Mas os que esperam no SENHOR renovarão as suas forças e subirão com asas como águias; correrão e não se cansarão; caminharão e não se fatigarão." },
-    { t:"ARC", b:"HAB", c:2,  v:4,  text:"Eis que a sua alma se incha, não é reta nele; mas o justo pela sua fé viverá." },
-    { t:"ARC", b:"MRK", c:11, v:22, text:"E Jesus, respondendo, disse-lhes: Tende fé em Deus," },
-    { t:"ARC", b:"JHN", c:1,  v:14, text:"E o Verbo se fez carne e habitou entre nós, e vimos a sua glória, como a glória do Unigênito do Pai, cheio de graça e de verdade." },
-    { t:"ARC", b:"JHN", c:1,  v:17, text:"Porque a lei foi dada por Moisés; a graça e a verdade vieram por Jesus Cristo." },
-    { t:"ARC", b:"JHN", c:3,  v:15, text:"para que todo aquele que nele crê não pereça, mas tenha a vida eterna." },
-    { t:"ARC", b:"JHN", c:3,  v:16, text:"Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna." },
-    { t:"ARC", b:"JHN", c:3,  v:17, text:"Porque Deus enviou o seu Filho ao mundo não para que condenasse o mundo, mas para que o mundo fosse salvo por ele." },
-    { t:"ARC", b:"JHN", c:10, v:11, text:"Eu sou o bom Pastor; o bom Pastor dá a sua vida pelas ovelhas." },
-    { t:"ARC", b:"JHN", c:13, v:34, text:"Um novo mandamento vos dou: Que vos ameis uns aos outros; como eu vos amei a vós, que também vós uns aos outros vos ameis." },
-    { t:"ARC", b:"JHN", c:15, v:13, text:"Ninguém tem maior amor do que este: de dar alguém a sua vida pelos seus amigos." },
-    { t:"ARC", b:"ROM", c:1,  v:17, text:"Porque nele se descobre a justiça de Deus de fé em fé, como está escrito: Mas o justo viverá da fé." },
-    { t:"ARC", b:"ROM", c:5,  v:1,  text:"Sendo, pois, justificados pela fé, temos paz com Deus, por nosso Senhor Jesus Cristo;" },
-    { t:"ARC", b:"ROM", c:5,  v:8,  text:"Mas Deus prova o seu amor para conosco em que Cristo morreu por nós, sendo nós ainda pecadores." },
-    { t:"ARC", b:"ROM", c:10, v:17, text:"De sorte que a fé é pelo ouvir, e o ouvir pela palavra de Deus." },
-    { t:"ARC", b:"1CO", c:13, v:4,  text:"A caridade é sofredora, é benigna; a caridade não é invejosa; a caridade não trata com leviandade, não se ensoberbece," },
-    { t:"ARC", b:"1CO", c:13, v:13, text:"Agora, pois, permanecem a fé, a esperança e a caridade, estas três; mas a maior destas é a caridade." },
-    { t:"ARC", b:"2CO", c:5,  v:7,  text:"Porque andamos por fé e não por vista." },
-    { t:"ARC", b:"2CO", c:12, v:9,  text:"E disse-me: A minha graça te basta, porque o meu poder se aperfeiçoa na fraqueza. De boa vontade, pois, me gloriarei nas minhas fraquezas, para que em mim habite o poder de Cristo." },
-    { t:"ARC", b:"EPH", c:2,  v:8,  text:"Porque pela graça sois salvos, por meio da fé; e isso não vem de vós; é dom de Deus." },
-    { t:"ARC", b:"EPH", c:2,  v:9,  text:"Não vem das obras, para que ninguém se glorie." },
-    { t:"ARC", b:"HEB", c:11, v:1,  text:"Ora, a fé é o firme fundamento das coisas que se esperam e a prova das coisas que se não veem." },
-    { t:"ARC", b:"HEB", c:11, v:6,  text:"Ora, sem fé é impossível agradar-lhe, porque é necessário que aquele que se aproxima de Deus creia que ele existe e que é galardoador dos que o buscam." },
-    { t:"ARC", b:"JAS", c:2,  v:17, text:"Assim também a fé, se não tiver as obras, é morta em si mesma." },
-    { t:"ARC", b:"1JN", c:4,  v:19, text:"Nós o amamos a ele porque ele nos amou primeiro." },
-
-    // ---------- KJV (amostra) ----------
-    { t:"KJV", b:"GEN", c:6,  v:8,  text:"But Noah found grace in the eyes of the LORD." },
-    { t:"KJV", b:"PSA", c:23, v:1,  text:"The LORD is my shepherd; I shall not want." },
-    { t:"KJV", b:"HAB", c:2,  v:4,  text:"Behold, his soul which is lifted up is not upright in him: but the just shall live by his faith." },
-    { t:"KJV", b:"JHN", c:1,  v:14, text:"And the Word was made flesh, and dwelt among us, (and we beheld his glory, the glory as of the only begotten of the Father,) full of grace and truth." },
-    { t:"KJV", b:"JHN", c:3,  v:16, text:"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." },
-    { t:"KJV", b:"ROM", c:1,  v:17, text:"For therein is the righteousness of God revealed from faith to faith: as it is written, The just shall live by faith." },
-    { t:"KJV", b:"ROM", c:5,  v:8,  text:"But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us." },
-    { t:"KJV", b:"1CO", c:13, v:13, text:"And now abideth faith, hope, charity, these three; but the greatest of these is charity." },
-    { t:"KJV", b:"EPH", c:2,  v:8,  text:"For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:" },
-    { t:"KJV", b:"HEB", c:11, v:1,  text:"Now faith is the substance of things hoped for, the evidence of things not seen." }
-  ],
-
   /* Referências cruzadas/temáticas de EXEMPLO.
      >>> Substitua por uma base de referências cruzadas real (ex.: TSK). <<< */
   crossRefs: {
@@ -641,7 +637,7 @@ const CANON = [
    ===================================================================== */
 const $ = (s, el=document) => el.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const norm = s => String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+const norm = s => String(s).normalize("NFD").replace(/[\u0300-\u036f\u0591-\u05C7]/g,"").toLowerCase();
 const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const BOOK = Object.fromEntries(CANON.map(b=>[b.id,b]));
 const ALIAS = {};
@@ -663,18 +659,40 @@ const store = {
 /* =====================================================================
    CAMADA DE DADOS (repositório)
    ---------------------------------------------------------------------
-   Toda a interface conversa apenas com este objeto. Para usar uma API
-   real, reimplemente estes métodos com fetch() mantendo as assinaturas:
-     search(params)            -> Promise<{ items, notice }>
+   Toda a interface conversa apenas com este objeto. As Bíblias são
+   carregadas sob demanda de /biblias/*.json e ficam guardadas offline
+   pelo service worker. Para usar uma API (ex.: versões licenciadas),
+   reimplemente estes métodos mantendo as assinaturas:
+     versions()                -> lista de versões
+     load(code)                -> Promise (baixa a versão)
+     search(params)            -> Promise<{ items, notices }>
      getChapter(t, b, c)       -> Promise<Verse[]>
      getVerse(t, key)          -> Verse | undefined
-     getRelated(key)           -> string[]
-     getLexicon(term)          -> entradas lexicais (ou [])
+     chapterCount(t, b)        -> número de capítulos
    ===================================================================== */
+const Bible = { list:[], data:{}, flat:{}, pending:{} };
 const Repo = {
-  translations(){ return DEMO.translations; },
-  booksWithData(){ const ids=new Set(DEMO.verses.map(v=>v.b)); return CANON.filter(b=>ids.has(b.id)); },
-  getVerse(t,key){ return DEMO.verses.find(v=>v.t===t && refKey(v)===key) || DEMO.verses.find(v=>refKey(v)===key); },
+  async init(){
+    const r = await fetch("biblias/index.json"); if(!r.ok) throw new Error("index");
+    Bible.list = await r.json();
+  },
+  versions(){ return Bible.list; },
+  version(code){ return Bible.list.find(v=>v.code===code); },
+  isLoaded(code){ return !!Bible.data[code]; },
+  load(code){
+    if(Bible.data[code]) return Promise.resolve(Bible.data[code]);
+    if(!Bible.pending[code]) Bible.pending[code] = fetch(`biblias/${code}.json`)
+      .then(r=>{ if(!r.ok) throw new Error("load"); return r.json(); })
+      .then(d=>{ Bible.data[code]=d; return d; })
+      .finally(()=>{ delete Bible.pending[code]; });
+    return Bible.pending[code];
+  },
+  booksIn(code){ const d=Bible.data[code]; return d ? CANON.filter(b=>d.books[b.id]) : []; },
+  chapterCount(code,b){ const d=Bible.data[code]; return d && d.books[b] ? d.books[b].length : 0; },
+  getVerse(t,key){
+    const [b,c,v]=key.split("."); const d=Bible.data[t]; const txt=d && d.books[b] && d.books[b][c-1] && d.books[b][c-1][v-1];
+    return txt ? { t, b, c:+c, v:+v, text:txt } : undefined;
+  },
   getRelated(key){ return DEMO.crossRefs[key] || []; },
   getLexicon(term){ return DEMO.lexicon[this.familyKey(term)] || []; },
   familyKey(term){
@@ -683,13 +701,18 @@ const Repo = {
     return null;
   },
   async getChapter(t,b,c){
-    await delay(120); // >>> substituir por: fetch(`/api/${t}/${b}/${c}`)
-    return DEMO.verses.filter(v=>v.t===t && v.b===b && v.c===c).sort((a,b)=>a.v-b.v);
+    const d=await this.load(t); const ch=(d.books[b]||[])[c-1]||[];
+    return ch.map((text,i)=>({ t, b, c, v:i+1, text })).filter(x=>x.text);
   },
-  async search(p){
-    await delay(260); // simula latência de rede — remova ao conectar uma API
-    return searchLocal(p);
-  }
+  /* Índice plano com texto normalizado, montado uma vez por versão */
+  async flat(code){
+    if(Bible.flat[code]) return Bible.flat[code];
+    const d=await this.load(code); const out=[];
+    for(const bk of CANON){ const chs=d.books[bk.id]; if(!chs) continue;
+      chs.forEach((vs,ci)=>vs.forEach((text,vi)=>{ if(text) out.push({ t:code, b:bk.id, c:ci+1, v:vi+1, text, n:norm(text) }); })); }
+    return (Bible.flat[code]=out);
+  },
+  async search(p){ return searchLocal(p, await this.flat(p.translation)); }
 };
 const delay = ms => new Promise(r=>setTimeout(r,ms));
 
@@ -712,11 +735,12 @@ function looksLikeReference(q){ return /\d/.test(q) && !!parseReference(q) && !p
 const STOP = new Set(["a","o","e","de","da","do","das","dos","em","no","na","um","uma","que","os","as","para","por","se","the","of","and","to","in"]);
 function tokens(q){ return norm(q).replace(/[^\p{L}\p{N}\s-]/gu," ").split(/\s+/).filter(Boolean); }
 
+const WB="(?<![\\p{L}\\p{N}])", WE="(?![\\p{L}\\p{N}])";
 function buildMatchers(q, mode){
   const notes=[]; let toks=tokens(q);
   if(mode==="exact"){
     if(!toks.length) return { error:"Digite ao menos uma palavra." };
-    return { groups:[ new RegExp(`\\b${toks.map(reEsc).join("[\\s,;:.!?()-]+")}\\b`,"g") ], require:"all", notes };
+    return { groups:[ new RegExp(`${WB}${toks.map(reEsc).join("[^\\p{L}\\p{N}]+")}${WE}`,"gu") ], require:"all", notes };
   }
   const before=toks.length; toks = toks.filter(t=>!STOP.has(t));
   if(before && !toks.length) return { error:"A busca contém apenas palavras muito comuns (como “de”, “o”, “a”). Use “expressão exata” ou acrescente um termo." };
@@ -726,32 +750,32 @@ function buildMatchers(q, mode){
     const groups = toks.map(t=>{
       const k=Repo.familyKey(t);
       if(k){ const f=DEMO.wordFamilies[k]; notes.push(`“${t}” → formas: ${[...f.pt,...f.en].join(", ")}.${f.note?" "+f.note:""}`);
-             return new RegExp(`\\b(?:${[...f.pt,...f.en].map(reEsc).join("|")})\\b`,"g"); }
+             return new RegExp(`${WB}(?:${[...f.pt,...f.en].map(reEsc).join("|")})${WE}`,"gu"); }
       notes.push(`Sem família de palavras cadastrada para “${t}”; usando busca por prefixo (“${t}…”).`);
-      return new RegExp(`\\b${reEsc(t)}\\w*`,"g");
+      return new RegExp(`${WB}${reEsc(t)}[\\p{L}\\p{N}]*`,"gu");
     });
     return { groups, require:"all", notes };
   }
-  const groups = toks.map(t=>new RegExp(`\\b${reEsc(t)}\\b`,"g"));
+  const groups = toks.map(t=>new RegExp(`${WB}${reEsc(t)}${WE}`,"gu"));
   return { groups, require: mode==="any" ? "any" : "all", notes };
 }
 
-/* ---------- Busca local nos dados de demonstração ---------- */
-function searchLocal(p){
-  let pool = DEMO.verses.filter(v => p.translation==="all" || v.t===p.translation);
+/* ---------- Busca local na versão carregada ---------- */
+const MAX_RESULTS = 3000;
+function searchLocal(p, all){
   const notices=[];
-
   if(p.mode==="ref"){
     const r = p.ref;
-    let items = pool.filter(v=>v.b===r.b && v.c===r.c && (r.v1===null || (v.v>=r.v1 && v.v<=r.v2)));
-    items = items.map(v=>({ ...v, score:1, ranges:[] }));
+    const items = all.filter(v=>v.b===r.b && v.c===r.c && (r.v1===null || (v.v>=r.v1 && v.v<=r.v2))).map(v=>({ ...v, score:1, ranges:[] }));
+    if(!items.length){
+      const vName=Repo.version(p.translation)?.name||p.translation;
+      if(!Repo.chapterCount(p.translation,r.b)) notices.push(`${BOOK[r.b].name} não faz parte da versão ${vName}.`);
+      else notices.push(`Essa referência não existe em ${BOOK[r.b].name} (${Repo.chapterCount(p.translation,r.b)} capítulos nesta versão).`);
+    }
     return { items, notices };
   }
-
-  // Filtros de escopo
-  pool = pool.filter(v=>{
-    const bk=BOOK[v.b];
-    if(p.testament!=="all" && bk.testament!==p.testament) return false;
+  const pool = all.filter(v=>{
+    if(p.testament!=="all" && BOOK[v.b].testament!==p.testament) return false;
     if(p.book && v.b!==p.book) return false;
     if(p.chapFrom && v.c<p.chapFrom) return false;
     if(p.chapTo && v.c>p.chapTo) return false;
@@ -759,23 +783,24 @@ function searchLocal(p){
     if(p.verseTo && v.v>p.verseTo) return false;
     return true;
   });
-
   const m = p.matchers; notices.push(...m.notes);
   const items=[];
   for(const v of pool){
-    const nt = normMap(v.text);
-    let hits=0, groupsHit=0; const ranges=[];
-    for(const re of m.groups){
-      re.lastIndex=0; let found=false, mm;
-      while((mm=re.exec(nt.out))){ found=true; hits++;
-        ranges.push([nt.map[mm.index], nt.map[mm.index+mm[0].length-1]+1]);
-        if(mm[0].length===0) re.lastIndex++; }
-      if(found) groupsHit++;
-    }
+    let hits=0, groupsHit=0;
+    for(const re of m.groups){ re.lastIndex=0; const found=v.n.match(re); if(found){ groupsHit++; hits+=found.length; } }
     const ok = m.require==="all" ? groupsHit===m.groups.length : groupsHit>0;
-    if(ok) items.push({ ...v, ranges, score: groupsHit*20 + hits*8 + Math.max(0, 40 - v.text.length/6) });
+    if(ok) items.push({ t:v.t, b:v.b, c:v.c, v:v.v, text:v.text, groups:m.groups, score: groupsHit*20 + hits*8 + Math.max(0, 40 - v.text.length/6) });
   }
+  if(items.length>MAX_RESULTS){ notices.push(`Mais de ${MAX_RESULTS} versículos encontrados; mostrando os ${MAX_RESULTS} primeiros. Refine a busca com filtros ou mais palavras.`); items.length=MAX_RESULTS; }
   return { items, notices };
+}
+/* Calcula os trechos a destacar só para os versículos exibidos */
+function rangesFor(v){
+  if(v.ranges) return v.ranges;
+  const nt=normMap(v.text), ranges=[];
+  for(const re of (v.groups||[])){ re.lastIndex=0; let mm;
+    while((mm=re.exec(nt.out))){ ranges.push([nt.map[mm.index], nt.map[mm.index+mm[0].length-1]+1]); if(mm[0].length===0) re.lastIndex++; } }
+  return (v.ranges=ranges);
 }
 /* Normaliza mantendo o mapa de posições — permite destacar termos com/sem acento */
 function normMap(str){
@@ -816,20 +841,26 @@ const el = {
 };
 
 /* ---------- Inicialização dos seletores ---------- */
-(function initSelects(){
-  const tr=Repo.translations();
-  el.tr.innerHTML = `<option value="all">Todas as traduções da amostra</option>` +
-    Object.entries(tr).map(([k,t])=>`<option value="${k}" ${k==="ARC"?"selected":""}>${k} — ${esc(t.name)}</option>`).join("");
-  const books=Repo.booksWithData();
-  const grp = t => books.filter(b=>b.testament===t).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join("");
-  el.book.innerHTML = `<option value="">Todos os livros</option><optgroup label="Antigo Testamento">${grp("AT")}</optgroup><optgroup label="Novo Testamento">${grp("NT")}</optgroup>`;
-  updateTranslationHint();
-})();
-function updateTranslationHint(){
-  const t=el.tr.value; const tr=Repo.translations();
-  el.trHint.textContent = t==="all" ? "Mostra resultados de todas as traduções disponíveis na amostra." : tr[t].note;
+const DEFAULT_VERSION = "BLIVRE";
+const langName = {pt:"Português", en:"Inglês", he:"Hebraico", grc:"Grego", la:"Latim"};
+function fillVersionSelect(sel, value, withNone){
+  const groups={};
+  Repo.versions().forEach(v=>(groups[v.lang]=groups[v.lang]||[]).push(v));
+  sel.innerHTML = (withNone?`<option value="">Nenhuma</option>`:"") + Object.entries(groups).map(([lg,vs])=>
+    `<optgroup label="${esc(langName[lg]||lg)}">${vs.map(v=>`<option value="${v.code}">${esc(v.code)} — ${esc(v.name)}</option>`).join("")}</optgroup>`).join("");
+  sel.value = value;
 }
-
+function fillBookSelect(){
+  const cur=el.book.value, code=el.tr.value;
+  const books = Repo.booksIn(code).length ? Repo.booksIn(code) : CANON;
+  const grp = t => books.filter(b=>b.testament===t).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join("");
+  el.book.innerHTML = `<option value="">Todos os livros</option>` + (grp("AT")?`<optgroup label="Antigo Testamento">${grp("AT")}</optgroup>`:"") + (grp("NT")?`<optgroup label="Novo Testamento">${grp("NT")}</optgroup>`:"");
+  el.book.value = books.some(b=>b.id===cur) ? cur : "";
+}
+function updateTranslationHint(){
+  const v=Repo.version(el.tr.value);
+  el.trHint.textContent = v ? `${v.license} ${v.books} livros · ${v.verses.toLocaleString("pt-BR")} versículos.` : "";
+}
 /* ---------- Tema ---------- */
 function applyTheme(t){
   document.documentElement.dataset.theme=t;
@@ -896,6 +927,7 @@ async function runSearch({ fromHistory=false, auto=true } = {}){
 
   const reqId = ++state.reqId;   // evita que buscas sobrepostas misturem resultados
   setLoading(true);
+  if(!Repo.isLoaded(p.translation)){ const vv=Repo.version(p.translation); el.count.textContent=`Baixando ${vv?vv.name:"a Bíblia"} (só na primeira vez)…`; }
   try{
     const res = await Repo.search(p);
     if(reqId!==state.reqId) return;
@@ -907,7 +939,7 @@ async function runSearch({ fromHistory=false, auto=true } = {}){
     if(state.results[0]) setFocus(state.results[0]); else renderRelated();
   }catch(err){
     console.error(err);
-    showError("Ocorreu um erro ao consultar os dados. Tente novamente.");
+    showError(navigator.onLine ? "Ocorreu um erro ao carregar a Bíblia. Tente novamente." : "Sem conexão: esta versão ainda não foi baixada para uso offline. Conecte-se à internet e tente de novo.");
   }finally{ if(reqId===state.reqId){ setLoading(false); renderExternal(); } }
 }
 
@@ -959,9 +991,9 @@ function cardFor(v){
   li.innerHTML = `
     <div class="card-head">
       <span class="ref">${esc(label)}</span>
-      <span class="tags"><span class="tag" title="${esc(DEMO.translations[v.t].name)}">${v.t}</span><span class="tag">${BOOK[v.b].testament}</span><span class="tag">Amostra</span></span>
+      <span class="tags"><span class="tag" title="${esc(Repo.version(v.t)?.name||v.t)}">${v.t}</span><span class="tag">${BOOK[v.b].testament}</span></span>
     </div>
-    <p class="verse">${highlight(v.text, v.ranges||[])}</p>
+    <p class="verse" dir="${Repo.version(v.t)?.dir||"ltr"}" lang="${Repo.version(v.t)?.lang||"pt"}">${highlight(v.text, rangesFor(v))}</p>
     <div class="card-actions">
       <button type="button" class="btn btn-sm" data-act="copy" aria-label="Copiar ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
       <button type="button" class="btn btn-sm" data-act="ctx" aria-label="Abrir contexto do capítulo de ${esc(label)}"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Contexto</button>
@@ -984,16 +1016,16 @@ function renderNoResults(){
   if(state.lastMode!=="ref"){
     if(state.lastMode!=="any") tips.push("Use “Qualquer uma das palavras” para ampliar a busca.");
     if(state.lastMode!=="root") tips.push("Experimente “Raiz ou forma relacionada” (ex.: amor → amou, ameis, caridade).");
-    if(t==="KJV") tips.push("A KJV está em inglês: tente “faith”, “grace” ou “love”.");
-    if(t==="ARC" && /^[a-z\s]+$/i.test(q) && /(faith|grace|love|lord|god)/i.test(q)) tips.push("A ARC está em português: tente “fé”, “graça” ou “amor”.");
+    const lg=Repo.version(t)?.lang;
+    if(lg && lg!=="pt") tips.push(`A versão escolhida está em ${langName[lg]}: busque palavras nesse idioma, ou troque para a Bíblia Livre (português).`);
   } else {
-    tips.push("Esta referência pode não estar na amostra de demonstração. Exemplos disponíveis: João 3:16, Salmos 23, Hebreus 11:1, 1 Coríntios 13:13.");
-    if(t!=="all") tips.push("Mude a tradução para “Todas” — algumas referências só existem em uma tradução da amostra.");
+    tips.push("Confira o número do capítulo e do versículo.");
+    tips.push("O hebraico (WLC) tem só o Antigo Testamento e o grego (TR) só o Novo.");
   }
   tips.push("Remova filtros de livro, testamento ou intervalo.");
   tips.push("Use a pesquisa complementar na web, abaixo (conteúdo externo).");
   el.empty.innerHTML = `<div class="empty" role="status"><svg class="icon" aria-hidden="true"><use href="#i-empty"/></svg>
-    <h3>Nenhum versículo encontrado para “${esc(q)}”</h3><p class="muted">A busca considera apenas os versículos da amostra de demonstração.</p>
+    <h3>Nenhum versículo encontrado para “${esc(q)}”</h3><p class="muted">Busca feita na versão ${esc(Repo.version(t)?.name||t)}.</p>
     <ul>${tips.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`;
 }
 
@@ -1016,25 +1048,86 @@ async function copyVerse(v){
   }
 }
 
-async function openContext(v){
-  setFocus(v);
-  el.dlgTitle.textContent = `${BOOK[v.b].name} ${v.c} (${v.t})`;
-  el.dlgBody.innerHTML = `<div class="skeleton" style="height:80px"></div>`;
-  if(typeof el.dlg.showModal==="function") el.dlg.showModal(); else el.dlg.setAttribute("open","");
-  const verses = await Repo.getChapter(v.t, v.b, v.c);
-  let html=`<p class="notice">Mostrando apenas os versículos deste capítulo incluídos na amostra de demonstração. Para o capítulo completo, consulte uma edição oficial.</p>`;
-  let prev=0;
-  verses.forEach(x=>{
-    if(x.v-prev>1) html+=`<p class="ctx-gap">… versículos ${prev+1}${x.v-1>prev+1?"–"+(x.v-1):""} não incluídos na amostra …</p>`;
-    html+=`<p class="ctx-verse ${x.v===v.v?"current":""}" ${x.v===v.v?'aria-current="true"':""}><sup>${x.v}</sup>${esc(x.text)}</p>`;
-    prev=x.v;
-  });
-  html+=`<p class="ctx-gap">Fim dos versículos disponíveis.</p>`;
-  el.dlgBody.innerHTML=html;
-  el.dlgBody.querySelector(".current")?.scrollIntoView({block:"center"});
+/* =====================================================================
+   LEITOR DA BÍBLIA (livro → capítulo, versões paralelas)
+   ===================================================================== */
+const rd = { t:DEFAULT_VERSION, b:"JHN", c:1, cmp:"", hi:null, sel:null, size: store.get("fontSize",19) };
+const rdEl = { v:$("#rdVersion"), b:$("#rdBook"), c:$("#rdChap"), cmp:$("#rdCmp"), prev:$("#rdPrev"), next:$("#rdNext"),
+  pos:$("#rdPos"), actions:$("#rdActions"), selRef:$("#rdSelRef") };
+
+function openDialog(d){ if(typeof d.showModal==="function"){ if(!d.open) d.showModal(); } else d.setAttribute("open",""); }
+async function openReader(opts={}){
+  const last=store.get("reader",{});
+  Object.assign(rd, { t:last.t||el.tr.value||DEFAULT_VERSION, b:last.b||"JHN", c:last.c||1, cmp:last.cmp||"" }, opts);
+  rd.sel=null; openDialog(el.dlg); await renderReader();
 }
+function openContext(v){ setFocus(v); openReader({ t:v.t, b:v.b, c:v.c, hi:v.v }); }
+
+async function renderReader(){
+  document.documentElement.style.setProperty("--rd-size", rd.size+"px");
+  el.dlgBody.innerHTML = `<div class="skeleton" style="height:120px"></div>`;
+  try{
+    await Repo.load(rd.t);
+    if(!Repo.chapterCount(rd.t, rd.b)){ rd.b = Repo.booksIn(rd.t)[0].id; rd.c=1; }
+    rd.c = Math.min(Math.max(1,rd.c), Repo.chapterCount(rd.t, rd.b));
+    if(rd.cmp) await Repo.load(rd.cmp).catch(()=>{ rd.cmp=""; });
+  }catch(e){
+    el.dlgBody.innerHTML = `<div class="notice error">Não foi possível carregar esta versão. ${navigator.onLine?"Tente novamente.":"Conecte-se à internet para baixá-la na primeira vez."}</div>`; return;
+  }
+  store.set("reader", { t:rd.t, b:rd.b, c:rd.c, cmp:rd.cmp });
+  fillVersionSelect(rdEl.v, rd.t); fillVersionSelect(rdEl.cmp, rd.cmp, true);
+  rdEl.b.innerHTML = Repo.booksIn(rd.t).map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join(""); rdEl.b.value=rd.b;
+  const n=Repo.chapterCount(rd.t, rd.b);
+  rdEl.c.innerHTML = Array.from({length:n},(_,i)=>`<option value="${i+1}">Cap. ${i+1}</option>`).join(""); rdEl.c.value=rd.c;
+  el.dlgTitle.textContent = `${BOOK[rd.b].name} ${rd.c}`;
+  rdEl.pos.textContent = `${rd.t}${rd.cmp?" + "+rd.cmp:""}`;
+
+  const ver=Repo.version(rd.t), cv=rd.cmp?Repo.version(rd.cmp):null;
+  const verses=await Repo.getChapter(rd.t, rd.b, rd.c);
+  const cmpCh = rd.cmp ? ((Bible.data[rd.cmp].books[rd.b]||[])[rd.c-1]||[]) : null;
+  el.dlgBody.innerHTML = verses.map(x=>`<p class="rd-verse ${x.v===rd.hi?"current":""}" data-v="${x.v}" tabindex="0" dir="${ver.dir}" lang="${ver.lang}"><sup>${x.v}</sup>${esc(x.text)}${
+      cmpCh ? `<span class="rd-cmp-text" dir="${cv.dir}" lang="${cv.lang}">${cmpCh[x.v-1]?esc(cmpCh[x.v-1]):"<em>— sem este versículo nesta versão —</em>"}</span>` : ""}</p>`).join("")
+    + `<p class="rd-license">${esc(ver.name)}: ${esc(ver.license)}${cv?`<br>${esc(cv.name)}: ${esc(cv.license)}`:""}</p>`;
+  if(rd.cmp && !cmpCh.length) el.dlgBody.insertAdjacentHTML("afterbegin",`<div class="notice">${esc(BOOK[rd.b].name)} não existe na versão ${esc(rd.cmp)}.</div>`);
+  rdEl.actions.hidden=true; rd.sel=null;
+  const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
+  rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
+}
+function neighbor(step){
+  const books=Repo.booksIn(rd.t); const i=books.findIndex(b=>b.id===rd.b);
+  if(step<0) return rd.c>1 ? {b:rd.b,c:rd.c-1} : (i>0 ? {b:books[i-1].id, c:Repo.chapterCount(rd.t,books[i-1].id)} : null);
+  return rd.c<Repo.chapterCount(rd.t,rd.b) ? {b:rd.b,c:rd.c+1} : (i<books.length-1 ? {b:books[i+1].id, c:1} : null);
+}
+function goChapter(step){ const n=neighbor(step); if(n){ rd.b=n.b; rd.c=n.c; rd.hi=null; renderReader(); } }
+rdEl.prev.addEventListener("click",()=>goChapter(-1));
+rdEl.next.addEventListener("click",()=>goChapter(1));
+rdEl.v.addEventListener("change",()=>{ rd.t=rdEl.v.value; rd.hi=null; renderReader(); });
+rdEl.cmp.addEventListener("change",()=>{ rd.cmp=rdEl.cmp.value; renderReader(); });
+rdEl.b.addEventListener("change",()=>{ rd.b=rdEl.b.value; rd.c=1; rd.hi=null; renderReader(); });
+rdEl.c.addEventListener("change",()=>{ rd.c=+rdEl.c.value; rd.hi=null; renderReader(); });
+$("#rdSmaller").addEventListener("click",()=>{ rd.size=Math.max(14,rd.size-1); store.set("fontSize",rd.size); document.documentElement.style.setProperty("--rd-size",rd.size+"px"); });
+$("#rdBigger").addEventListener("click",()=>{ rd.size=Math.min(30,rd.size+1); store.set("fontSize",rd.size); document.documentElement.style.setProperty("--rd-size",rd.size+"px"); });
+$("#readBtn").addEventListener("click",()=>openReader({hi:null}));
+
+function selectVerse(p){
+  el.dlgBody.querySelectorAll(".rd-verse.sel").forEach(x=>x.classList.remove("sel"));
+  const vn=+p.dataset.v; p.classList.add("sel");
+  rd.sel = { t:rd.t, b:rd.b, c:rd.c, v:vn, text:(Bible.data[rd.t].books[rd.b][rd.c-1][vn-1]) };
+  rdEl.selRef.textContent = refLabel(rd.b,rd.c,vn); rdEl.actions.hidden=false;
+}
+el.dlgBody.addEventListener("click",e=>{ const p=e.target.closest(".rd-verse"); if(p) selectVerse(p); });
+el.dlgBody.addEventListener("keydown",e=>{ const p=e.target.closest(".rd-verse"); if(p && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); selectVerse(p); } });
+rdEl.actions.addEventListener("click",e=>{
+  const b=e.target.closest("[data-rd]"); if(!b || !rd.sel) return; const v=rd.sel;
+  if(b.dataset.rd==="copy") copyVerse(v);
+  if(b.dataset.rd==="fav") toggleFav(v);
+  if(b.dataset.rd==="com"){ el.dlg.close(); setFocus(v); selectTab("com"); openStudyOnMobile(); }
+  if(b.dataset.rd==="note"){ el.dlg.close(); startNote(v); }
+});
+document.addEventListener("keydown",e=>{ if(!el.dlg.open || ["SELECT","INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+  if(e.key==="ArrowLeft") goChapter(-1); if(e.key==="ArrowRight") goChapter(1); });
 el.dlgClose.addEventListener("click",()=>el.dlg.close?el.dlg.close():el.dlg.removeAttribute("open"));
-el.dlg.addEventListener("click",e=>{ if(e.target===el.dlg) el.dlg.close(); });
+
 
 /* ---------- Favoritos ---------- */
 const isFav = v => state.favorites.some(f=>f.key===favKey(v));
@@ -1137,7 +1230,7 @@ el.tpRel.addEventListener("click",e=>{ const g=e.target.closest("[data-goto]"); 
 
 function goToRef(label, tr){
   el.q.value=label; setMode("ref");
-  if(tr && el.tr.value!=="all" && el.tr.value!==tr) el.tr.value=tr, updateTranslationHint();
+  if(tr && Repo.version(tr) && el.tr.value!==tr){ el.tr.value=tr; trQuick.value=tr; updateTranslationHint(); fillBookSelect(); }
   runSearch(); window.scrollTo({top:0,behavior:"smooth"});
 }
 
@@ -1456,11 +1549,14 @@ el.book.addEventListener("change",()=>{
   if(el.book.value){ el.scope.value="book"; el.testament.value=BOOK[el.book.value].testament; } else if(el.scope.value==="book") el.scope.value="all";
   rerunIfActive();
 });
-el.tr.addEventListener("change",()=>{ updateTranslationHint(); rerunIfActive(); });
+const trQuick=$("#trQuick");
+trQuick.addEventListener("change",()=>{ el.tr.value=trQuick.value; el.tr.dispatchEvent(new Event("change")); });
+el.tr.addEventListener("change",async ()=>{ trQuick.value=el.tr.value; updateTranslationHint(); store.set("version",el.tr.value);
+  try{ await Repo.load(el.tr.value); }catch(e){} fillBookSelect(); rerunIfActive(); });
 [el.chapFrom,el.chapTo,el.verseFrom,el.verseTo].forEach(i=>i.addEventListener("change",rerunIfActive));
 document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener("change",rerunIfActive));
 el.reset.addEventListener("click",()=>{
-  el.testament.value="all"; el.book.value=""; el.scope.value="all"; el.tr.value="ARC"; updateTranslationHint();
+  el.testament.value="all"; el.book.value=""; el.scope.value="all"; el.tr.value=DEFAULT_VERSION; trQuick.value=DEFAULT_VERSION; updateTranslationHint(); fillBookSelect();
   [el.chapFrom,el.chapTo,el.verseFrom,el.verseTo].forEach(i=>i.value=""); setMode("all"); rerunIfActive(); toast("Filtros redefinidos.");
 });
 function rerunIfActive(){ if(el.q.value.trim() && state.lastQuery) runSearch({fromHistory:true, auto:false}); }
@@ -1475,6 +1571,18 @@ function toast(msg){ el.toast.textContent=msg; el.toast.classList.add("show"); c
 
 /* ---------- Primeira renderização ---------- */
 renderWelcome(); renderExternal(); renderFavorites(); renderHistory(); renderNotes(); renderRelated(); renderCommentary();
+(async function boot(){
+  try{
+    await Repo.init();
+    fillVersionSelect(el.tr, Repo.version(store.get("version",DEFAULT_VERSION)) ? store.get("version",DEFAULT_VERSION) : DEFAULT_VERSION);
+    fillVersionSelect(trQuick, el.tr.value);
+    [...trQuick.options].forEach(o=>o.textContent=o.value); // rótulo curto no topo
+    updateTranslationHint(); fillBookSelect();
+    Repo.load(el.tr.value).then(fillBookSelect).catch(()=>{}); // baixa a versão em segundo plano
+  }catch(e){
+    console.error(e); addNotice("Não foi possível carregar a lista de Bíblias. Verifique a conexão e recarregue a página.","error");
+  }
+})();
 
 /* =====================================================================
    PWA — registro do service worker e convite para instalar

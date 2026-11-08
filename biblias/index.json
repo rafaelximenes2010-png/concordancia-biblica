@@ -1,0 +1,62 @@
+[
+ {
+  "code": "BLIVRE",
+  "name": "Bíblia Livre",
+  "lang": "pt",
+  "dir": "ltr",
+  "license": "Bíblia Livre (BLIVRE), Copyright © Diego Santos, Mario Sérgio e Marco Teles. Licença Creative Commons Atribuição (CC BY) Brasil. Baseada na tradução de João Ferreira de Almeida (1819). Reprodução permitida desde que mencionados fonte e autores.",
+  "books": 66,
+  "verses": 31104,
+  "bytes": 3946685
+ },
+ {
+  "code": "KJV",
+  "name": "King James Version (1769)",
+  "lang": "en",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 4216081
+ },
+ {
+  "code": "ASV",
+  "name": "American Standard Version (1901)",
+  "lang": "en",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 66,
+  "verses": 31102,
+  "bytes": 4217224
+ },
+ {
+  "code": "WLC",
+  "name": "Westminster Leningrad Codex (hebraico, AT)",
+  "lang": "he",
+  "dir": "rtl",
+  "license": "Domínio público.",
+  "books": 39,
+  "verses": 23213,
+  "bytes": 5443235
+ },
+ {
+  "code": "TR",
+  "name": "Textus Receptus (grego, NT, 1550/1894)",
+  "lang": "grc",
+  "dir": "ltr",
+  "license": "Domínio público.",
+  "books": 27,
+  "verses": 7957,
+  "bytes": 1547868
+ },
+ {
+  "code": "VULG",
+  "name": "Vulgata Clementina (latim)",
+  "lang": "la",
+  "dir": "ltr",
+  "license": "Domínio público. Livros deuterocanônicos não incluídos neste app.",
+  "books": 66,
+  "verses": 31442,
+  "bytes": 3633350
+ }
+]
