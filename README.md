@@ -1,4 +1,4 @@
-# Comentários e SOLA | Bíblia & Teologia
+# SOLA | Bíblia & Teologia
 
 Aplicativo (PWA) de estudo bíblico para celular e computador.
 
