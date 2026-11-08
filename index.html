@@ -11,6 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="SOLA">
 <meta name="application-name" content="SOLA">
+<meta name="msapplication-TileColor" content="#132447">
+<meta name="msapplication-TileImage" content="icons/icon-mac-192.png?v=3">
 <link rel="apple-touch-icon" href="icons/apple-touch-180.png?v=3">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-180.png?v=3">
 <link rel="apple-touch-icon" sizes="167x167" href="icons/apple-touch-167.png?v=3">
@@ -29,7 +31,8 @@
 <meta property="og:image:alt" content="Farol do SOLA | Bíblia &amp; Teologia">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://rafaelximenes2010-png.github.io/concordancia-biblica/icons/og-sola.png?v=3">
-<link rel="icon" type="image/svg+xml" href="icons/icon.svg?v=3">
+<link rel="icon" type="image/svg+xml" href="icons/mark.svg?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=3">
 <link rel="icon" type="image/png" href="icons/favicon-64.png?v=3">
 <title>SOLA | Bíblia &amp; Teologia</title>
 <style>
@@ -1022,6 +1025,13 @@ dialog.reader.has-sel .reader-nav{display:none}
 .inst-steps li{display:block!important;position:relative;padding-left:44px;min-height:34px}
 .inst-steps li::before{position:absolute;left:0;top:2px}
 .inst-ico{vertical-align:middle;margin:0 2px;width:30px!important;height:30px!important}
+
+.ttl-ico{display:flex;align-items:center;gap:10px}
+.ttl-ico img{border-radius:8px;flex:none}
+#helpTitle::before{content:"";width:28px;height:28px;flex:none;border-radius:7px;background:url(icons/mark.svg?v=3) center/cover}
+.empty-state::before{content:"";display:block;width:56px;height:56px;margin:0 auto 10px;border-radius:14px;background:url(icons/mark.svg?v=3) center/cover;opacity:.9}
+.toast{display:flex;align-items:center;gap:8px}
+.toast::before{content:"";width:22px;height:22px;flex:none;border-radius:6px;background:url(icons/mark.svg?v=3) center/cover}
 </style>
 </head>
 <body>
@@ -1591,7 +1601,7 @@ dialog.reader.has-sel .reader-nav{display:none}
 </section>
 <section class="view" id="view-config" hidden aria-labelledby="cfgTitle">
   <div class="view-head">
-    <div style="flex:1"><p class="eyebrow">Seu aplicativo</p><h2 id="cfgTitle">Perfil, configurações e atualizações</h2></div>
+    <div style="flex:1"><p class="eyebrow">Seu aplicativo</p><h2 id="cfgTitle" class="ttl-ico"><img src="icons/mark.svg?v=3" alt="" width="30" height="30">Perfil, configurações e atualizações</h2></div>
   </div>
   <div class="cfg-grid">
     <section class="cfg-card" id="cfgPerfil" aria-labelledby="cfgPerfilT">
@@ -1687,7 +1697,7 @@ dialog.reader.has-sel .reader-nav{display:none}
     </section>
 
     <section class="cfg-card" aria-labelledby="cfgSobreT">
-      <h3 id="cfgSobreT">Sobre e licenças</h3>
+      <h3 id="cfgSobreT"><img src="icons/mark.svg?v=3" alt="" width="26" height="26" style="border-radius:7px">Sobre o SOLA e licenças</h3>
       <p class="muted">SOLA | Bíblia &amp; Teologia é um app gratuito de estudo bíblico de orientação reformada. Os textos bíblicos embutidos são de domínio público ou licença livre (a licença de cada versão aparece junto ao texto). Versões com direitos autorais (ARA, NVI, NVT, NTLH…) abrem nos sites oficiais. Os comentários clássicos vêm da Free Use Bible API (bible.helloao.org); os comentários brasileiros têm direitos autorais e por isso são indicados por links, sem reproduzir o texto. Não há vínculo com YouVersion, BibleProject, Spotify ou editoras citadas. Se as estatísticas de uso forem ativadas, o app conta apenas visitas e instalações de forma anônima, sem cookies e sem dados pessoais; perfil, notas e grifos nunca saem do aparelho.</p>
     </section>
   </div>
@@ -1735,7 +1745,7 @@ dialog.reader.has-sel .reader-nav{display:none}
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
-    <h2 id="helpTitle">Ajuda</h2>
+    <h2 id="helpTitle" class="ttl-ico">Ajuda</h2>
     <button type="button" class="btn btn-icon btn-ghost" id="helpClose" aria-label="Fechar ajuda"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="dlg-body" id="helpBody"></div>
@@ -3735,8 +3745,8 @@ const Reminders = {
     const r=this.get(); if(r.lastFired===todayKey()) return; r.lastFired=todayKey(); this.set(r);
     if(Streak.isDone()) return;
     const body=`Texto do dia: ${passageLabel(votdFor(new Date()))} · Devocional: ${devoFor(new Date()).title}`;
-    try{ const reg=await navigator.serviceWorker?.getRegistration(); if(reg) return reg.showNotification("Hora do seu tempo com a Palavra",{ body, icon:"icons/icon-192.png", badge:"icons/icon-192.png", tag:"diario" }); }catch(e){}
-    try{ new Notification("Hora do seu tempo com a Palavra",{ body, icon:"icons/icon-192.png" }); }catch(e){}
+    try{ const reg=await navigator.serviceWorker?.getRegistration(); if(reg) return reg.showNotification("Hora do seu tempo com a Palavra",{ body, icon:"icons/apple-touch-180.png?v=3", badge:"icons/badge-96.png?v=3", tag:"diario" }); }catch(e){}
+    try{ new Notification("Hora do seu tempo com a Palavra",{ body, icon:"icons/apple-touch-180.png?v=3" }); }catch(e){}
   }
 };
 function reminderCardHtml(){
@@ -4493,7 +4503,7 @@ function backupKeys(){ const ks=[]; try{ for(let i=0;i<localStorage.length;i++){
 $("#cfgExport").addEventListener("click",()=>{
   const data={}; backupKeys().forEach(k=>data[k]=localStorage.getItem(k));
   const blob=new Blob([JSON.stringify({ app:"comentarios-concordancia-biblica", version:APP_VERSION, exportedAt:new Date().toISOString(), data },null,1)],{type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`backup-comentarios-biblicos-${todayKey()}.json`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000);
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`backup-SOLA-${todayKey()}.json`; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1000);
   toast("Cópia de segurança gerada.");
 });
 $("#cfgImport").addEventListener("change",async e=>{ const f=e.target.files[0]; e.target.value=""; if(!f) return;
