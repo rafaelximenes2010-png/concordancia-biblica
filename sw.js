@@ -1,6 +1,6 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "concordancia-v6";
+const CACHE = "concordancia-v7";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json",
   "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png"];
@@ -12,7 +12,15 @@ self.addEventListener("activate", e => {
 });
 self.addEventListener("fetch", e => {
   const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== location.origin) return; // links externos passam direto
+  if (e.request.method !== "GET") return;
+  // Comentários (bible.helloao.org): guarda os já abertos para leitura offline
+  if (url.hostname === "bible.helloao.org") {
+    e.respondWith(caches.open(BIBLES).then(c => c.match(e.request).then(r => r || fetch(e.request).then(res => {
+      if (res.ok) c.put(e.request, res.clone()); return res;
+    }))));
+    return;
+  }
+  if (url.origin !== location.origin) return; // outros links externos passam direto
   const isBible = /\/biblias\/(?!index\.json)[^/]+\.json$/.test(url.pathname);
   if (isBible) {
     // Bíblias: usa a cópia guardada; se não houver, baixa e guarda
