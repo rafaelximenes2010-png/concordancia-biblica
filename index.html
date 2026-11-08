@@ -204,6 +204,14 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:3p
 .com-links a:hover{background:var(--ext-soft)}
 .com-sites{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
 
+/* Busca por foto */
+.ocr-preview{max-width:100%;max-height:220px;display:block;margin:0 auto 10px;border-radius:8px;border:1px solid var(--border)}
+.progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin:8px 0}
+.progress>span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+.ocr-text{width:100%;min-height:110px;border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:8px;font-family:var(--font-text);font-size:15px;resize:vertical}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
+.ocr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
 /* Modal de contexto */
 dialog{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--ink);padding:0;max-width:680px;width:calc(100% - 24px);box-shadow:0 10px 40px rgba(0,0,0,.25)}
 dialog::backdrop{background:rgba(20,15,10,.45)}
@@ -277,6 +285,7 @@ body{padding-bottom:env(safe-area-inset-bottom)}
   <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></symbol>
 </svg>
 
@@ -289,7 +298,11 @@ body{padding-bottom:env(safe-area-inset-bottom)}
       <div class="search-box">
         <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
         <label for="q" class="sr-only">Buscar palavra, expressão ou referência</label>
-        <input id="q" type="search" autocomplete="off" placeholder="Busque “fé”, “graça”, “amor” ou João 3:16  (atalho: /)" maxlength="120">
+        <input id="q" type="search" autocomplete="off" placeholder="Busque “fé”, “graça”, João 3:16 — ou use a câmera" maxlength="120">
+        <button type="button" class="btn btn-ghost btn-icon" id="photoBtn" aria-label="Buscar por foto (câmera ou galeria)" title="Buscar por foto">
+          <svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>
+        </button>
+        <input type="file" id="photoInput" accept="image/*" hidden>
         <button type="button" class="btn btn-ghost btn-icon" id="clearBtn" aria-label="Limpar busca" title="Limpar busca">
           <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg>
         </button>
@@ -458,6 +471,15 @@ body{padding-bottom:env(safe-area-inset-bottom)}
     <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar contexto"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="dlg-body" id="ctxBody"></div>
+</dialog>
+
+<!-- Busca por foto (OCR) -->
+<dialog id="ocrDialog" aria-labelledby="ocrTitle">
+  <div class="dlg-head">
+    <h2 id="ocrTitle">Busca por foto</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="ocrClose" aria-label="Fechar busca por foto"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="dlg-body" id="ocrBody"></div>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1218,6 +1240,144 @@ function renderCommentary(){
     <details class="com-group"><summary>Sites reformados (busca filtrada)<span class="count-pill">(${data.sites.length})</span></summary>
       <div class="com-item"><div class="com-links">${data.sites.map(s=>extA(s.name, "https://www.google.com/search?q="+encodeURIComponent(`site:${s.domain} "${BOOK[v.b].name} ${v.c}:${v.v}" OR "${ref}"`))).join("")}</div></div></details>`;
 }
+
+
+/* =====================================================================
+   BUSCA POR FOTO (OCR)
+   ---------------------------------------------------------------------
+   Usa Tesseract.js (carregado sob demanda do CDN jsDelivr — única
+   dependência externa, indispensável para ler texto de imagens).
+   A imagem é lida NO PRÓPRIO APARELHO; só a biblioteca e o pacote do
+   idioma (alguns MB, na primeira vez) são baixados.
+   ===================================================================== */
+const OCR_CFG = {
+  script:    "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js",
+  workerPath:"https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
+  corePath:  "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1",
+  langPath:  "https://cdn.jsdelivr.net/npm/@tesseract.js-data/por@1.0.0/4.0.0_best_int",
+  lang: "por"
+};
+const ocrEl = { btn:$("#photoBtn"), input:$("#photoInput"), dlg:$("#ocrDialog"), body:$("#ocrBody"), close:$("#ocrClose") };
+let ocrWorker = null, ocrPreviewUrl = null;
+
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    if(window.Tesseract) return res();
+    const sc=document.createElement("script"); sc.src=src; sc.async=true;
+    sc.onload=()=>res(); sc.onerror=()=>rej(new Error("script")); document.head.appendChild(sc);
+  });
+}
+function openOcrDialog(){ if(typeof ocrEl.dlg.showModal==="function") ocrEl.dlg.showModal(); else ocrEl.dlg.setAttribute("open",""); }
+function closeOcrDialog(){ ocrEl.dlg.close ? ocrEl.dlg.close() : ocrEl.dlg.removeAttribute("open"); }
+ocrEl.close.addEventListener("click", closeOcrDialog);
+
+ocrEl.btn.addEventListener("click", ()=>{ ocrEl.input.value=""; ocrEl.input.click(); });
+ocrEl.input.addEventListener("change", ()=>{ const f=ocrEl.input.files && ocrEl.input.files[0]; if(f) readPhoto(f); });
+
+/* Reduz a imagem (fotos de celular são grandes) e melhora o contraste para o OCR */
+async function prepareImage(file){
+  const url=URL.createObjectURL(file);
+  try{
+    const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    const max=1800, k=Math.min(1, max/Math.max(img.naturalWidth,img.naturalHeight));
+    const c=document.createElement("canvas"); c.width=Math.round(img.naturalWidth*k); c.height=Math.round(img.naturalHeight*k);
+    const ctx=c.getContext("2d"); ctx.filter="grayscale(1) contrast(1.25)"; ctx.drawImage(img,0,0,c.width,c.height);
+    return c;
+  } finally { /* a URL é reaproveitada para a pré-visualização */ ocrPreviewUrl && URL.revokeObjectURL(ocrPreviewUrl); ocrPreviewUrl=url; }
+}
+
+async function readPhoto(file){
+  if(!/^image\//.test(file.type)){ toast("Escolha um arquivo de imagem."); return; }
+  openOcrDialog();
+  ocrEl.body.innerHTML = `<p class="muted" id="ocrStatus">Preparando a imagem…</p><div class="progress" aria-hidden="true"><span id="ocrBar"></span></div>`;
+  const status=$("#ocrStatus"), bar=$("#ocrBar");
+  const setP=(txt,pct)=>{ status.textContent=txt; if(pct!=null) bar.style.width=Math.round(pct*100)+"%"; };
+  try{
+    const canvas = await prepareImage(file);
+    ocrEl.body.insertAdjacentHTML("afterbegin", `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida para leitura">`);
+    if(!navigator.onLine && !ocrWorker) throw new Error("offline");
+    setP("Carregando o leitor de texto (na primeira vez pode levar alguns segundos)…", .05);
+    await loadScript(OCR_CFG.script);
+    if(!ocrWorker){
+      ocrWorker = await Tesseract.createWorker(OCR_CFG.lang, 1, {
+        workerPath:OCR_CFG.workerPath, corePath:OCR_CFG.corePath, langPath:OCR_CFG.langPath,
+        logger: m => {
+          const map={ "loading tesseract core":"Carregando o leitor…", "loading language traineddata":"Baixando o idioma português…",
+                      "initializing api":"Iniciando…", "recognizing text":"Lendo o texto da foto…" };
+          if(map[m.status]) setP(map[m.status], m.status==="recognizing text" ? .3 + m.progress*.7 : .05 + (m.progress||0)*.25);
+        }
+      });
+    }
+    setP("Lendo o texto da foto…", .3);
+    const { data } = await ocrWorker.recognize(canvas);
+    showOcrResult((data.text||"").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim());
+  }catch(err){
+    console.error(err);
+    const msg = err && err.message==="offline"
+      ? "Sem conexão. Na primeira vez, a leitura de fotos precisa de internet para baixar o leitor de texto."
+      : err && err.message==="script"
+      ? "Não foi possível carregar o leitor de texto. Verifique a internet e tente de novo."
+      : "Não foi possível ler esta imagem. Tente outra foto, com boa luz e o texto reto e nítido.";
+    ocrEl.body.innerHTML = (ocrPreviewUrl?`<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida">`:"") +
+      `<div class="notice error">${esc(msg)}</div><div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`;
+  }
+}
+
+/* Procura referências bíblicas no texto lido (ex.: "João 3:16", "Sl 23.1", "1 Co 13:4-7") */
+function findReferences(text){
+  const re=/(?:\b[1-3]\s?)?[A-Za-zÀ-ÿ]{2,}\.?\s?\d{1,3}\s?[:.,]\s?\d{1,3}(?:\s?[-–]\s?\d{1,3})?/g;
+  const out=[], seen=new Set(); let m;
+  while((m=re.exec(text))){
+    const cand=m[0].replace(/(\d)\s*[.,]\s*(\d)/,"$1:$2");
+    const r=parseReference(cand);
+    if(r && !r.error){ const lbl=refLabel(r.b,r.c,r.v1,r.v2); if(!seen.has(lbl)){ seen.add(lbl); out.push(lbl); } }
+  }
+  return out.slice(0,12);
+}
+/* Palavras-chave: as mais longas e menos comuns do texto */
+function keywords(text, n=5){
+  const words=tokens(text).filter(w=>w.length>=4 && !STOP.has(w) && !/\d/.test(w));
+  const freq={}; words.forEach(w=>freq[w]=(freq[w]||0)+1);
+  return Object.keys(freq).sort((a,b)=>freq[b]-freq[a] || b.length-a.length).slice(0,n);
+}
+
+function showOcrResult(text){
+  if(!text){
+    ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida"><div class="notice error">Nenhum texto foi encontrado na foto. Tente fotografar mais perto, com boa luz e sem inclinar.</div>
+      <div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`;
+    return;
+  }
+  const refs=findReferences(text);
+  ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto lida">
+    ${refs.length?`<div class="section-title">Referências encontradas</div><div class="chips">${refs.map(r=>`<button type="button" class="btn btn-sm btn-primary" data-ocr-ref="${esc(r)}">${esc(r)}</button>`).join("")}</div>`
+                 :`<p class="muted">Nenhuma referência bíblica (como “João 3:16”) foi reconhecida.</p>`}
+    <label class="section-title" for="ocrText">Texto lido (pode corrigir antes de buscar)</label>
+    <textarea class="ocr-text" id="ocrText">${esc(text)}</textarea>
+    <p class="hint">A leitura automática pode errar letras e acentos. Selecione um trecho para buscar só ele.</p>
+    <div class="ocr-actions">
+      <button type="button" class="btn btn-primary" data-ocr="keywords"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Buscar palavras-chave</button>
+      <button type="button" class="btn" data-ocr="phrase">Buscar trecho exato</button>
+      <button type="button" class="btn btn-ghost" data-ocr="again"><svg class="icon" aria-hidden="true"><use href="#i-camera"/></svg>Outra foto</button>
+    </div>`;
+}
+
+ocrEl.body.addEventListener("click", e=>{
+  const refBtn=e.target.closest("[data-ocr-ref]"); const act=e.target.closest("[data-ocr]");
+  if(refBtn){ closeOcrDialog(); goToRef(refBtn.dataset.ocrRef, ""); return; }
+  if(!act) return;
+  const ta=$("#ocrText");
+  const chosen = ta ? (ta.value.substring(ta.selectionStart, ta.selectionEnd).trim() || ta.value.trim()) : "";
+  if(act.dataset.ocr==="again"){ ocrEl.input.value=""; ocrEl.input.click(); return; }
+  if(!chosen){ toast("Não há texto para buscar."); return; }
+  if(act.dataset.ocr==="keywords"){
+    const kw=keywords(chosen);
+    if(!kw.length){ toast("Não encontrei palavras-chave úteis. Edite o texto e tente de novo."); return; }
+    el.q.value=kw.join(" "); setMode("any"); el.sort.value="relevance";
+  } else {
+    el.q.value=chosen.replace(/\s+/g," ").slice(0,120); setMode("exact");
+  }
+  closeOcrDialog(); runSearch({auto:false}); window.scrollTo({top:0,behavior:"smooth"});
+});
 
 /* =====================================================================
    PESQUISA COMPLEMENTAR NA WEB (externa)
