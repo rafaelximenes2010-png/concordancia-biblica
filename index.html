@@ -211,6 +211,8 @@ mark{background:var(--mark);color:var(--mark-ink);padding:0 2px;border-radius:3p
 .ocr-text{width:100%;min-height:110px;border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:8px;font-family:var(--font-text);font-size:15px;resize:vertical}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}
 .ocr-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ocr-lang{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0 0 10px;font-size:13px;color:var(--ink-2)}
+.ocr-lang select{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:5px 6px}
 
 /* Leitor da Bíblia */
 dialog.reader{max-width:860px;height:min(92vh,1000px);display:none;flex-direction:column}
@@ -645,7 +647,22 @@ CANON.forEach(b=>{
   ALIAS[norm(b.name).replace(/\s+/g,"")] = b.id;
   b.aliases.forEach(a=>{ if(!a.endsWith("_")) ALIAS[a]=b.id; });
 });
-ALIAS["jó"]="JOB"; // "Jó" com acento é preservado antes da normalização (ver parseReference)
+ALIAS["jó"]="JOB";
+/* Nomes dos livros em outros idiomas (ordem canônica) — para referências como "Juan 3:16" ou "Johannes 3,16" */
+const BOOK_NAMES_I18N = {
+  en:"Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|1 Samuel|2 Samuel|1 Kings|2 Kings|1 Chronicles|2 Chronicles|Ezra|Nehemiah|Esther|Job|Psalms|Proverbs|Ecclesiastes|Song of Solomon|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|1 Corinthians|2 Corinthians|Galatians|Ephesians|Philippians|Colossians|1 Thessalonians|2 Thessalonians|1 Timothy|2 Timothy|Titus|Philemon|Hebrews|James|1 Peter|2 Peter|1 John|2 John|3 John|Jude|Revelation",
+  es:"Génesis|Éxodo|Levítico|Números|Deuteronomio|Josué|Jueces|Rut|1 Samuel|2 Samuel|1 Reyes|2 Reyes|1 Crónicas|2 Crónicas|Esdras|Nehemías|Ester|Job|Salmos|Proverbios|Eclesiastés|Cantares|Isaías|Jeremías|Lamentaciones|Ezequiel|Daniel|Oseas|Joel|Amós|Abdías|Jonás|Miqueas|Nahúm|Habacuc|Sofonías|Hageo|Zacarías|Malaquías|Mateo|Marcos|Lucas|Juan|Hechos|Romanos|1 Corintios|2 Corintios|Gálatas|Efesios|Filipenses|Colosenses|1 Tesalonicenses|2 Tesalonicenses|1 Timoteo|2 Timoteo|Tito|Filemón|Hebreos|Santiago|1 Pedro|2 Pedro|1 Juan|2 Juan|3 Juan|Judas|Apocalipsis",
+  fr:"Genèse|Exode|Lévitique|Nombres|Deutéronome|Josué|Juges|Ruth|1 Samuel|2 Samuel|1 Rois|2 Rois|1 Chroniques|2 Chroniques|Esdras|Néhémie|Esther|Job|Psaumes|Proverbes|Ecclésiaste|Cantique|Ésaïe|Jérémie|Lamentations|Ézéchiel|Daniel|Osée|Joël|Amos|Abdias|Jonas|Michée|Nahum|Habacuc|Sophonie|Aggée|Zacharie|Malachie|Matthieu|Marc|Luc|Jean|Actes|Romains|1 Corinthiens|2 Corinthiens|Galates|Éphésiens|Philippiens|Colossiens|1 Thessaloniciens|2 Thessaloniciens|1 Timothée|2 Timothée|Tite|Philémon|Hébreux|Jacques|1 Pierre|2 Pierre|1 Jean|2 Jean|3 Jean|Jude|Apocalypse",
+  de:"1 Mose|2 Mose|3 Mose|4 Mose|5 Mose|Josua|Richter|Rut|1 Samuel|2 Samuel|1 Könige|2 Könige|1 Chronik|2 Chronik|Esra|Nehemia|Ester|Hiob|Psalm|Sprüche|Prediger|Hohelied|Jesaja|Jeremia|Klagelieder|Hesekiel|Daniel|Hosea|Joel|Amos|Obadja|Jona|Micha|Nahum|Habakuk|Zefanja|Haggai|Sacharja|Maleachi|Matthäus|Markus|Lukas|Johannes|Apostelgeschichte|Römer|1 Korinther|2 Korinther|Galater|Epheser|Philipper|Kolosser|1 Thessalonicher|2 Thessalonicher|1 Timotheus|2 Timotheus|Titus|Philemon|Hebräer|Jakobus|1 Petrus|2 Petrus|1 Johannes|2 Johannes|3 Johannes|Judas|Offenbarung"
+};
+Object.values(BOOK_NAMES_I18N).forEach(list=>list.split("|").forEach((n,i)=>{
+  const k=norm(n).replace(/\s+/g,""); if(!ALIAS[k]) ALIAS[k]=CANON[i].id;
+}));
+["psalmen","psalter","genesis","exodus","levitikus","numeri","deuteronomium","ps","jn","mt","mk","lk","rom","gen","apg","offb","joh","mat","matt"].forEach((k,i)=>{
+  const map={psalmen:"PSA",psalter:"PSA",genesis:"GEN",exodus:"EXO",levitikus:"LEV",numeri:"NUM",deuteronomium:"DEU",ps:"PSA",jn:"JHN",mt:"MAT",mk:"MRK",lk:"LUK",rom:"ROM",gen:"GEN",apg:"ACT",offb:"REV",joh:"JHN",mat:"MAT",matt:"MAT"};
+  if(k==="jn") return; // "Jn" já é Jonas em português
+  if(!ALIAS[k]) ALIAS[k]=map[k];
+}); // "Jó" com acento é preservado antes da normalização (ver parseReference)
 const refKey = v => `${v.b}.${v.c}.${v.v}`;
 const favKey = v => `${v.t}|${v.b}.${v.c}.${v.v}`;
 const refLabel = (b,c,v,v2) => `${BOOK[b]?.name||b} ${c}${v?":"+v:""}${v2&&v2!==v?"–"+v2:""}`;
@@ -719,7 +736,7 @@ const delay = ms => new Promise(r=>setTimeout(r,ms));
 /* ---------- Leitura de referências (ex.: "João 3:16", "Sl 23", "1 Co 13:4-13") ---------- */
 function parseReference(raw){
   let s = raw.trim().toLowerCase().replace(/\./g," ").replace(/\s+/g," ");
-  const m = s.match(/^([1-3]?\s?[a-zà-ú]+(?:\s[a-zà-ú]+)?)\s?(\d{1,3})(?:\s?[:,]\s?(\d{1,3})(?:\s?[-–]\s?(\d{1,3}))?)?$/i);
+  const m = s.match(/^([1-5]?\s?\p{L}+(?:\s\p{L}+){0,2})\s?(\d{1,3})(?:\s?[:,]\s?(\d{1,3})(?:\s?[-–]\s?(\d{1,3}))?)?$/iu);
   if(!m) return null;
   const bookRaw = m[1].replace(/\s/g,"");
   const id = ALIAS[bookRaw] || ALIAS[norm(bookRaw)];
@@ -1349,11 +1366,22 @@ const OCR_CFG = {
   script:    "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js",
   workerPath:"https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/worker.min.js",
   corePath:  "https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1",
-  langPath:  "https://cdn.jsdelivr.net/npm/@tesseract.js-data/por@1.0.0/4.0.0_best_int",
-  lang: "por"
+  // Pacotes de idioma: https://cdn.jsdelivr.net/npm/@tesseract.js-data/<código>/… (padrão do Tesseract.js)
 };
+/* Idiomas de leitura de foto ↔ idioma das Bíblias cadastradas */
+const OCR_LANGS = [
+  { code:"por", label:"Português", bible:"pt" }, { code:"eng", label:"Inglês", bible:"en" },
+  { code:"spa", label:"Espanhol", bible:"es" }, { code:"fra", label:"Francês", bible:"fr" },
+  { code:"deu", label:"Alemão", bible:"de" }, { code:"nld", label:"Holandês", bible:"nl" },
+  { code:"swe", label:"Sueco", bible:"sv" }, { code:"pol", label:"Polonês", bible:"pl" },
+  { code:"hun", label:"Húngaro", bible:"hu" }, { code:"rus", label:"Russo", bible:"ru" },
+  { code:"ell", label:"Grego moderno", bible:"el" }, { code:"grc", label:"Grego antigo", bible:"grc" },
+  { code:"chi_tra", label:"Chinês tradicional", bible:"zh" }, { code:"heb", label:"Hebraico", bible:"he" },
+  { code:"lat", label:"Latim", bible:"la" }
+];
+const ocrLangForBible = lg => (OCR_LANGS.find(o=>o.bible===lg)||OCR_LANGS[0]).code;
 const ocrEl = { btn:$("#photoBtn"), input:$("#photoInput"), dlg:$("#ocrDialog"), body:$("#ocrBody"), close:$("#ocrClose") };
-let ocrWorker = null, ocrPreviewUrl = null;
+let ocrWorker = null, ocrWorkerLang = null, ocrPreviewUrl = null, ocrCanvas = null, ocrLang = null;
 
 function loadScript(src){
   return new Promise((res,rej)=>{
@@ -1381,46 +1409,61 @@ async function prepareImage(file){
   } finally { /* a URL é reaproveitada para a pré-visualização */ ocrPreviewUrl && URL.revokeObjectURL(ocrPreviewUrl); ocrPreviewUrl=url; }
 }
 
+function langPicker(){
+  return `<div class="ocr-lang"><label for="ocrLang">Idioma da foto</label>
+    <select id="ocrLang">${OCR_LANGS.map(o=>`<option value="${o.code}" ${o.code===ocrLang?"selected":""}>${esc(o.label)}</option>`).join("")}</select>
+    <button type="button" class="btn btn-sm" data-ocr="reread">Ler de novo</button></div>`;
+}
 async function readPhoto(file){
   if(!/^image\//.test(file.type)){ toast("Escolha um arquivo de imagem."); return; }
   openOcrDialog();
-  ocrEl.body.innerHTML = `<p class="muted" id="ocrStatus">Preparando a imagem…</p><div class="progress" aria-hidden="true"><span id="ocrBar"></span></div>`;
+  ocrEl.body.innerHTML = `<p class="muted">Preparando a imagem…</p>`;
+  try{ ocrCanvas = await prepareImage(file); }
+  catch(e){ ocrEl.body.innerHTML=`<div class="notice error">Não foi possível abrir esta imagem.</div><div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`; return; }
+  // idioma inicial = idioma da versão da Bíblia escolhida
+  ocrLang = ocrLang || ocrLangForBible(Repo.version(el.tr.value)?.lang || "pt");
+  runOcr();
+}
+async function runOcr(){
+  const lang=ocrLang, label=OCR_LANGS.find(o=>o.code===lang)?.label||lang;
+  ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida para leitura">
+    <p class="muted" id="ocrStatus">Preparando…</p><div class="progress" aria-hidden="true"><span id="ocrBar"></span></div>`;
   const status=$("#ocrStatus"), bar=$("#ocrBar");
   const setP=(txt,pct)=>{ status.textContent=txt; if(pct!=null) bar.style.width=Math.round(pct*100)+"%"; };
   try{
-    const canvas = await prepareImage(file);
-    ocrEl.body.insertAdjacentHTML("afterbegin", `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida para leitura">`);
-    if(!navigator.onLine && !ocrWorker) throw new Error("offline");
+    if(!navigator.onLine && ocrWorkerLang!==lang) throw new Error("offline");
     setP("Carregando o leitor de texto (na primeira vez pode levar alguns segundos)…", .05);
     await loadScript(OCR_CFG.script);
-    if(!ocrWorker){
-      ocrWorker = await Tesseract.createWorker(OCR_CFG.lang, 1, {
-        workerPath:OCR_CFG.workerPath, corePath:OCR_CFG.corePath, langPath:OCR_CFG.langPath,
+    if(ocrWorkerLang!==lang){
+      if(ocrWorker){ await ocrWorker.terminate().catch(()=>{}); ocrWorker=null; }
+      ocrWorker = await Tesseract.createWorker(lang, 1, {
+        workerPath:OCR_CFG.workerPath, corePath:OCR_CFG.corePath,
         logger: m => {
-          const map={ "loading tesseract core":"Carregando o leitor…", "loading language traineddata":"Baixando o idioma português…",
-                      "initializing api":"Iniciando…", "recognizing text":"Lendo o texto da foto…" };
+          const map={ "loading tesseract core":"Carregando o leitor…", "loading language traineddata":`Baixando o idioma ${label}…`,
+                      "initializing api":"Iniciando…", "recognizing text":`Lendo o texto da foto (${label})…` };
           if(map[m.status]) setP(map[m.status], m.status==="recognizing text" ? .3 + m.progress*.7 : .05 + (m.progress||0)*.25);
         }
       });
+      ocrWorkerLang=lang;
     }
-    setP("Lendo o texto da foto…", .3);
-    const { data } = await ocrWorker.recognize(canvas);
+    setP(`Lendo o texto da foto (${label})…`, .3);
+    const { data } = await ocrWorker.recognize(ocrCanvas);
     showOcrResult((data.text||"").replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim());
   }catch(err){
-    console.error(err);
+    console.error(err); ocrWorkerLang=null;
     const msg = err && err.message==="offline"
-      ? "Sem conexão. Na primeira vez, a leitura de fotos precisa de internet para baixar o leitor de texto."
+      ? "Sem conexão. Na primeira vez, cada idioma precisa de internet para baixar o pacote de leitura."
       : err && err.message==="script"
       ? "Não foi possível carregar o leitor de texto. Verifique a internet e tente de novo."
       : "Não foi possível ler esta imagem. Tente outra foto, com boa luz e o texto reto e nítido.";
-    ocrEl.body.innerHTML = (ocrPreviewUrl?`<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida">`:"") +
-      `<div class="notice error">${esc(msg)}</div><div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`;
+    ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida">
+      <div class="notice error">${esc(msg)}</div>${langPicker()}<div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`;
   }
 }
 
 /* Procura referências bíblicas no texto lido (ex.: "João 3:16", "Sl 23.1", "1 Co 13:4-7") */
 function findReferences(text){
-  const re=/(?:\b[1-3]\s?)?[A-Za-zÀ-ÿ]{2,}\.?\s?\d{1,3}\s?[:.,]\s?\d{1,3}(?:\s?[-–]\s?\d{1,3})?/g;
+  const re=/(?:(?<![\p{L}\d])[1-5]\.?\s?)?\p{L}{2,}\.?\s?\d{1,3}\s?[:.,]\s?\d{1,3}(?:\s?[-–]\s?\d{1,3})?/gu;
   const out=[], seen=new Set(); let m;
   while((m=re.exec(text))){
     const cand=m[0].replace(/(\d)\s*[.,]\s*(\d)/,"$1:$2");
@@ -1431,19 +1474,20 @@ function findReferences(text){
 }
 /* Palavras-chave: as mais longas e menos comuns do texto */
 function keywords(text, n=5){
-  const words=tokens(text).filter(w=>w.length>=4 && !STOP.has(w) && !/\d/.test(w));
+  const words=tokens(text).filter(w=>w.length>=4 && !STOP.has(w) && !/\d/.test(w) && !ALIAS[w]); // ignora nomes de livros
   const freq={}; words.forEach(w=>freq[w]=(freq[w]||0)+1);
   return Object.keys(freq).sort((a,b)=>freq[b]-freq[a] || b.length-a.length).slice(0,n);
 }
 
 function showOcrResult(text){
   if(!text){
-    ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida"><div class="notice error">Nenhum texto foi encontrado na foto. Tente fotografar mais perto, com boa luz e sem inclinar.</div>
+    ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto escolhida"><div class="notice error">Nenhum texto foi encontrado na foto. Confira o idioma, ou fotografe mais perto, com boa luz e sem inclinar.</div>${langPicker()}
       <div class="ocr-actions"><button type="button" class="btn" data-ocr="again">Tentar outra foto</button></div>`;
     return;
   }
   const refs=findReferences(text);
   ocrEl.body.innerHTML = `<img class="ocr-preview" src="${ocrPreviewUrl}" alt="Foto lida">
+    ${langPicker()}
     ${refs.length?`<div class="section-title">Referências encontradas</div><div class="chips">${refs.map(r=>`<button type="button" class="btn btn-sm btn-primary" data-ocr-ref="${esc(r)}">${esc(r)}</button>`).join("")}</div>`
                  :`<p class="muted">Nenhuma referência bíblica (como “João 3:16”) foi reconhecida.</p>`}
     <label class="section-title" for="ocrText">Texto lido (pode corrigir antes de buscar)</label>
@@ -1463,7 +1507,14 @@ ocrEl.body.addEventListener("click", e=>{
   const ta=$("#ocrText");
   const chosen = ta ? (ta.value.substring(ta.selectionStart, ta.selectionEnd).trim() || ta.value.trim()) : "";
   if(act.dataset.ocr==="again"){ ocrEl.input.value=""; ocrEl.input.click(); return; }
+  if(act.dataset.ocr==="reread"){ ocrLang=$("#ocrLang").value; if(ocrCanvas) runOcr(); return; }
   if(!chosen){ toast("Não há texto para buscar."); return; }
+  // Busca na versão da Bíblia do mesmo idioma da foto
+  const bibleLang=OCR_LANGS.find(o=>o.code===ocrLang)?.bible;
+  if(bibleLang && Repo.version(el.tr.value)?.lang!==bibleLang){
+    const v=Repo.versions().find(x=>x.lang===bibleLang);
+    if(v){ el.tr.value=v.code; trQuick.value=v.code; updateTranslationHint(); store.set("version",v.code); toast(`Buscando na versão ${v.code} (${langName[bibleLang]}).`); }
+  }
   if(act.dataset.ocr==="keywords"){
     const kw=keywords(chosen);
     if(!kw.length){ toast("Não encontrei palavras-chave úteis. Edite o texto e tente de novo."); return; }
