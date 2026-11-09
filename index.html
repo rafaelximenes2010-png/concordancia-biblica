@@ -4849,7 +4849,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
       if(!r || r.trim()===t.trim() || looksEnglish(r)) throw new Error("tr");   // nunca ler inglês com voz brasileira
       return r; };
-    return speechClean(await this.rawText(d,i,tp)); },
+    return speechClean(await this.rawText(d,i,tp)).replace(/\n{2,}/g,"\n"); },   // transições curtas entre partes (sem pausas longas)
   async rawText(d,i,tp){ const it=d.items[i];
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
@@ -4865,7 +4865,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
       return URL.createObjectURL(blob); })();
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
   player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
-    a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
+    a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),120); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
     a.addEventListener("play",()=>{ this.playing=true; daPaint(); try{ navigator.mediaSession.playbackState="playing"; }catch(e){} this.pos(); });
     a.addEventListener("pause",()=>{ try{ navigator.mediaSession.playbackState="paused"; }catch(e){} this.pos(); });
     a.addEventListener("loadedmetadata",()=>{ a.preservesPitch=true; a.webkitPreservesPitch=true;
@@ -4930,8 +4930,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.7";
+const APP_VERSION = "3.6.8";
 const CHANGELOG = [
+  { v:"3.6.8", d:"novembro de 2026", items:["Leitura em voz mais fluida: transições curtas entre títulos, parágrafos e perguntas, sem pausas longas."] },
   { v:"3.6.7", d:"novembro de 2026", items:["Artigos voltam a ser lidos na velocidade natural, do começo ao fim."] },
   { v:"3.6.6", d:"novembro de 2026", items:["Tocador na tela bloqueada e na Central de Controle, como nos apps de música: SOLA, título do artigo, capa, barra de progresso e -15/+15."] },
   { v:"3.6.5", d:"novembro de 2026", items:["Artigos tocam em um único áudio, do começo ao fim, com botões de -15 e +15 segundos; o app lembra onde você parou.","Voltar dentro de Artigos, Credos e Configurações leva de volta à lista, no ponto em que você estava."] },
