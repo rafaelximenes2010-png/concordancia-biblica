@@ -1788,7 +1788,7 @@ dialog.car-mode[open]{display:flex}
       <div class="cfg-form">
         <label class="radio"><input type="checkbox" id="cfgNatVoice"><span>Usar voz natural de locutor (masculina, português do Brasil), que toca no CarPlay e com a tela bloqueada</span></label>
         <label>Locutor da voz natural<select id="cfgNatName">
-          <option value="pt-BR-AntonioNeural">Antônio (masculina, calorosa)</option><option value="pt-BR-FabioNeural">Fábio (masculina)</option>
+          <option value="pt-BR-MacerioMultilingualNeural">Macério (masculina, mais expressiva) · recomendada</option><option value="pt-BR-AntonioNeural">Antônio (masculina, calorosa)</option><option value="pt-BR-FabioNeural">Fábio (masculina)</option>
           <option value="pt-BR-HumbertoNeural">Humberto (masculina)</option><option value="pt-BR-JulioNeural">Júlio (masculina)</option>
           <option value="pt-BR-NicolauNeural">Nicolau (masculina)</option><option value="pt-BR-ValerioNeural">Valério (masculina)</option><option value="pt-BR-DonatoNeural">Donato (masculina)</option></select></label>
         <p class="hint" id="natHint"></p>
@@ -4878,7 +4878,7 @@ function renderConfig(){
   $("#cfgAutoTr").checked=Tr.auto; $("#cfgInline").checked=!!Comm.inline; $("#cfgTrEmail").checked=store.get("trEmail",false);
   $("#cfgTips").checked=store.get("tips",true);
   fillVoices();
-  $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-AntonioNeural");
+  $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
   $("#natHint").textContent = TR_PROXY ? "A voz natural é gerada uma vez por devocional e fica guardada no aparelho." : "A voz natural será ativada quando a ponte do Cloudflare (a mesma do tradutor) for configurada com o serviço de voz da Microsoft. Até lá, o app usa a voz do aparelho.";
   $("#cfgVer").textContent=APP_VERSION; $("#ciVer").textContent="v"+APP_VERSION; $("#ciName").textContent=(p.name||"").trim().split(/\s+/)[0]||"Toque para preencher";
   $("#cfgChangelog").innerHTML=CHANGELOG.map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
@@ -5692,24 +5692,30 @@ function narrText(kind){
   const parts=[]; if(dv) parts.push(dv.title+".");
   parts.push(ps.label.replace(/(\d+):(\d+)/g,"$1, versículos $2").replace(/–|-/g," a ")+".");
   parts.push(ps.text);
-  if(dv){ parts.push("Em poucas palavras. "+dv.reflection); (dv.story||[]).forEach(t=>parts.push(t)); if(dv.close) parts.push("Para pensar. "+dv.close); parts.push("Aplicação prática. "+dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
+  if(dv){ parts.push("Em poucas palavras.", dv.reflection); if(dv.story?.length){ parts.push("A história por trás do texto."); dv.story.forEach(t=>parts.push(t)); }
+    if(dv.close) parts.push("Para pensar.", dv.close); parts.push("Aplicação prática.", dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
   return parts.join("\n\n");
 }
+/* No iPhone, marca o áudio como mídia (igual a música/podcast): toca no
+   Bluetooth/CarPlay, com a tela bloqueada e mesmo com a chave de silêncio. */
+function mediaAudioSession(){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} }
 async function narrPlay(kind){
+  mediaAudioSession();
   const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
   if(Narr.audio && Narr.kind===kind){ if(Narr.audio.paused) Narr.audio.play(); else Narr.audio.pause(); return paintListen(); }
   narrStop(); Narr.kind=kind; Narr.loading=true; paintListen();
-  const text=narrText(kind); const ck="narr:"+Tr.key(text)+":"+store.get("ttsVoiceNat","pt-BR-AntonioNeural");
+  const text=narrText(kind); const ck="narr:"+Tr.key(text)+":"+store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
   try{
     let blob=null; const cache=await caches.open("sola-audio-v1").catch(()=>null);
     const hit=cache && await cache.match("/__narr/"+encodeURIComponent(ck)); if(hit) blob=await hit.blob();
     if(!blob){
-      const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice:store.get("ttsVoiceNat","pt-BR-AntonioNeural") }) });
+      const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice:store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural") }) });
       if(!r.ok) throw new Error("tts "+r.status); blob=await r.blob();
       try{ cache && await cache.put("/__narr/"+encodeURIComponent(ck), new Response(blob,{ headers:{ "Content-Type":"audio/mpeg" } })); }catch(e){}
     }
     if(Narr.kind!==kind) return;
-    Narr.url=URL.createObjectURL(blob); const a=new Audio(Narr.url); a.preload="auto"; a.setAttribute("playsinline",""); Narr.audio=a;
+    Narr.url=URL.createObjectURL(blob); const a=new Audio(Narr.url); a.preload="auto"; a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow");
+    a.style.display="none"; document.body.appendChild(a); Narr.audio=a;
     a.addEventListener("timeupdate",paintListen); a.addEventListener("play",paintListen); a.addEventListener("pause",paintListen);
     a.addEventListener("ended",()=>{ narrStop(); });
     if("mediaSession" in navigator){
@@ -5729,7 +5735,7 @@ async function narrPlay(kind){
   }
   paintListen();
 }
-function narrStop(){ if(Narr.audio){ Narr.audio.pause(); Narr.audio=null; } if(Narr.url){ URL.revokeObjectURL(Narr.url); Narr.url=null; } Narr.kind=null; Narr.loading=false; paintListen(); }
+function narrStop(){ if(Narr.audio){ Narr.audio.pause(); Narr.audio.remove?.(); Narr.audio=null; } if(Narr.url){ URL.revokeObjectURL(Narr.url); Narr.url=null; } Narr.kind=null; Narr.loading=false; paintListen(); }
 const fmtT = t => isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,"0")}` : "–";
 function stopSpeak(){ Speak.on=false; Speak.paused=false; try{ speechSynthesis.cancel(); }catch(e){} paintListen(); }
 function paintListen(){
