@@ -9,6 +9,10 @@
      AZURE_KEY     (Secret)  chave do recurso Translator no Azure
      AZURE_REGION  (Text)    região do recurso, ex.: brazilsouth ou eastus
      ALLOWED       (Text, opcional) origens permitidas, separadas por vírgula
+     TG_TOKEN      (Secret)  token do robô do Telegram (do @BotFather)
+     TG_CHANNEL    (Text)    canal do Telegram, ex.: @solabiblia
+   Gatilho Cron (Settings › Triggers › Cron Triggers): 0 8 * * *
+     = todo dia às 5h de Brasília: posta o devocional do dia no Telegram.
    Ligação (Bindings) KV opcional, mas recomendada:
      TR_CACHE      namespace KV para guardar as traduções
    ===================================================================== */
@@ -119,8 +123,42 @@ async function tts(request, env, h){
   return new Response(audio, { headers: { ...h, "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } });
 }
 
+/* ---------- Devocional diário no Canal do Telegram ---------- */
+const SITE = "https://solabiblia.net.br/";
+function brToday(){ return new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10); }   // Brasília (UTC-3)
+async function tg(env, method, payload){
+  const r = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/${method}`, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+  const j = await r.json(); if (!j.ok) throw new Error(`${method}: ${j.description}`); return j;
+}
+async function postDevocional(env, force){
+  if (!env.TG_TOKEN || !env.TG_CHANNEL) return "Configure TG_TOKEN e TG_CHANNEL.";
+  const day = brToday(), flag = "tg-posted:" + day;
+  if (!force && env.TR_CACHE && await env.TR_CACHE.get(flag)) return "Já postado hoje.";
+  const r = await fetch(`${SITE}devocionais/canal/${day.slice(0, 7)}.json`, { cf: { cacheTtl: 300 } });
+  if (!r.ok) return "Mês ainda sem devocionais publicados.";
+  const item = (await r.json())[day]; if (!item) return "Sem devocional para hoje.";
+  const photo = SITE + item.img + "?v=" + day;
+  const plain = item.caption.replace(/<[^>]+>/g, "");
+  if (plain.length <= 1024) {
+    await tg(env, "sendPhoto", { chat_id: env.TG_CHANNEL, photo, caption: item.caption, parse_mode: "HTML" });
+  } else {
+    await tg(env, "sendPhoto", { chat_id: env.TG_CHANNEL, photo });
+    await tg(env, "sendMessage", { chat_id: env.TG_CHANNEL, text: item.caption, parse_mode: "HTML", link_preview_options: { is_disabled: true } });
+  }
+  if (env.TR_CACHE) await env.TR_CACHE.put(flag, "1", { expirationTtl: 3 * 86400 });
+  return "Postado: " + item.title;
+}
+
 export default {
+  async scheduled(event, env, ctx) { ctx.waitUntil(postDevocional(env, false).catch(e => console.log("telegram", e.message))); },
   async fetch(request, env) {
+    const u0 = new URL(request.url);
+    if (u0.pathname === "/telegram/teste") {             // teste manual: /telegram/teste?k=<últimos 6 caracteres do TG_TOKEN>
+      if (!env.TG_TOKEN || u0.searchParams.get("k") !== env.TG_TOKEN.slice(-6)) return new Response("Não autorizado.", { status: 403 });
+      try { return new Response(await postDevocional(env, u0.searchParams.get("forcar") === "1"), { headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+      catch (e) { return new Response("Erro: " + e.message, { status: 502, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+    }
     const origin = request.headers.get("Origin") || "";
     const h = cors(origin, env);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: h });
