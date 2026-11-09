@@ -1076,6 +1076,9 @@ dialog.car-mode[open]{display:flex}
 .car-play .icon{width:56px;height:56px;color:#132447;stroke:#132447}
 .car-prog{font-size:16px;opacity:.8;margin:0}
 .car-hint{font-size:13px;opacity:.65;max-width:420px;margin:0}
+
+.devo-art{margin:-4px -4px 6px;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.12);line-height:0}
+.devo-art-svg{width:100%;height:auto;display:block}
 </style>
 </head>
 <body>
@@ -3654,7 +3657,7 @@ async function renderVotd(){
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
         <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
-        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar com imagem</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
         <button type="button" class="btn btn-sm" data-day="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
@@ -3673,7 +3676,7 @@ async function renderDevo(){
   box.innerHTML=`<p class="muted">Carregando…</p>`;
   try{
     const ps=await getPassage(dv.p);
-    box.innerHTML = `<span class="pill demo">Devocional original deste app · série de demonstração com ${DEVOS.length} reflexões que se repetem</span>
+    box.innerHTML = `<figure class="devo-art">${devoArt(dv.title)}</figure>
       <h3 style="font-size:22px;margin:10px 0 4px">${esc(dv.title)}</h3>
       <p class="day-ref" style="font-size:16px">${esc(ps.label)}</p>${versionTag(ps.t)}
       ${listenBar("devo")}
@@ -3704,8 +3707,12 @@ async function dayAction(act, box){
   if(act==="done"){ Streak.mark(); toast("Muito bem! Estudo de hoje registrado."); return; }
   if(act==="ctx") return openContext(first);
   if(act==="fav"){ toggleFav(first); return; }
-  if(act==="share") return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`,
-      `“${ps.text}” — ${ps.label} (${Repo.version(ps.t).name})${dv?`\n\nReflexão: ${dv.reflection}\n\nAplicação: ${dv.application}`:""}`);
+  if(act==="share"){
+    const txt=dayShareText(ps,dv);
+    if(dv && navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.png",{type:"image/png"});
+        if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], text:txt, title:dv.title }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
+    return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`, txt);
+  }
   if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`Texto do dia: ${ps.label}`, ref:ps.label,
       text:`“${ps.text}” (${ps.t})\n\n${dv?`Reflexão: ${dv.reflection}\n\nAplicação: ${dv.application}\n\n`:""}Minhas anotações:\n` });
   if(act==="com"){ showView("busca"); el.q.value=ps.label; setMode("ref"); await runSearch({auto:false}); selectTab("com"); openStudyOnMobile(); }
@@ -4036,8 +4043,19 @@ function verseShareText(v){
 }
 function dayShareText(ps, dv){
   const ver=Repo.version(ps.t);
-  return (dv?`*${dv.title}*\n\n`:`*Texto do dia*\n\n`) + `“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})` +
-    (dv?`\n\n*Reflexão:* ${dv.reflection}\n\n*Aplicação:* ${dv.application}`:"") + `\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`;
+  if(!dv) return `*Texto do dia*\n\n“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`;
+  /* Devocional completo, do título às sugestões de louvor */
+  const theme=dv.theme||themeOf(ps.text+" "+dv.title);
+  return [
+    `📖 *${dv.title}*`,
+    `“${ps.text}”\n— ${ps.label} (${ver?ver.name:ps.t})`,
+    `*Em poucas palavras*\n${dv.reflection}`,
+    (dv.story||[]).length ? `*A história por trás do texto*\n${dv.story.map((t,i)=>`${i+1}. ${t}`).join("\n\n")}` : "",
+    dv.close ? `*Para pensar*\n_${dv.close}_` : "",
+    `*Aplicação prática*\n${dv.application}`,
+    `🎵 *Para terminar em adoração* — louvores sobre ${theme}:\nhttps://open.spotify.com/search/${encodeURIComponent("louvor "+theme)}`,
+    `Devocional do app *SOLA | Bíblia & Teologia* — “A minha graça te basta.”\nInstale grátis: ${APP_URL}?instalar`
+  ].filter(Boolean).join("\n\n");
 }
 (function initShareApp(){
   const msg=`Conheça o app *SOLA | Bíblia & Teologia*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
@@ -5232,6 +5250,104 @@ function penCard(p){
 $("#penQ").addEventListener("input",renderPensadores);
 $("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
 
+/* =====================================================================
+   ARTE DOS DEVOCIONAIS — ilustrações simples ligadas ao tema de cada texto
+   ===================================================================== */
+const ART_C = { night:"#132447", dusk:"#22396a", gold:"#e1b553", cream:"#f4ead2", blue:"#3f6c99", green:"#4f7a63", dgreen:"#2f5240", wine:"#8c2f39", sand:"#d9c49a" };
+function artSky(a,b,id){ return `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>
+  <radialGradient id="${id}g"><stop offset="0" stop-color="#ffe7a3" stop-opacity=".95"/><stop offset="1" stop-color="#ffe7a3" stop-opacity="0"/></radialGradient></defs><rect width="640" height="300" fill="url(#${id})"/>`; }
+const sun=(id,x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r*2.6}" fill="url(#${id}g)"/><circle cx="${x}" cy="${y}" r="${r}" fill="#ffd77a"/>`;
+const stars=(n,seed)=>Array.from({length:n},(_,i)=>{ const x=(i*97+seed*31)%640, y=(i*53+seed*17)%150, r=(i%3)*0.6+0.8; return `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="${.5+((i*7)%5)/10}"/>`; }).join("");
+const sheep=(x,y,s=1)=>`<g transform="translate(${x},${y}) scale(${s})"><ellipse cx="0" cy="0" rx="26" ry="17" fill="#fbf7ee"/><circle cx="-14" cy="-8" r="9" fill="#fbf7ee"/><circle cx="12" cy="-9" r="10" fill="#fbf7ee"/><ellipse cx="27" cy="-4" rx="9" ry="7" fill="#3b3a36"/><rect x="-14" y="12" width="4" height="12" fill="#3b3a36"/><rect x="10" y="12" width="4" height="12" fill="#3b3a36"/></g>`;
+const DEVO_ART = {
+"O Senhor é o meu pastor": id=>artSky("#f7d9a6","#fbeed3",id)+sun(id,520,80,28)+
+  `<path d="M0 190 Q160 130 320 180 T640 160 V300 H0Z" fill="#9cbf8a"/><path d="M0 230 Q200 180 420 225 T640 215 V300 H0Z" fill="#6f9a66"/>
+   <path d="M0 262 Q160 248 320 262 T640 258 V300 H0Z" fill="#8fc1d9" opacity=".9"/>${sheep(200,215)}${sheep(270,228,.85)}${sheep(345,214,.9)}
+   <path d="M470 270 V150 Q470 120 495 120 Q520 120 520 145" fill="none" stroke="#6b4a2b" stroke-width="7" stroke-linecap="round"/>`,
+"Amor que toma a iniciativa": id=>artSky("#3a2a52","#e7a07a",id)+sun(id,320,175,40)+
+  `<path d="M0 230 Q320 170 640 230 V300 H0Z" fill="#2a2140"/><rect x="314" y="110" width="12" height="100" fill="#1b1530"/><rect x="290" y="135" width="60" height="11" fill="#1b1530"/>
+   ${Array.from({length:9},(_,i)=>{const a=-Math.PI+(i+1)*Math.PI/10;return `<line x1="${320+Math.cos(a)*60}" y1="${175+Math.sin(a)*60}" x2="${320+Math.cos(a)*150}" y2="${175+Math.sin(a)*150}" stroke="#ffd9a0" stroke-width="2" opacity=".35"/>`;}).join("")}`,
+"Salvos pela graça, criados para boas obras": id=>artSky("#cfe6f2","#f7f1df",id)+sun(id,110,70,26)+
+  `<rect y="200" width="640" height="100" fill="#8a6a45"/>${[0,1,2].map(r=>`<path d="M0 ${215+r*28} H640" stroke="#6e5234" stroke-width="10" stroke-linecap="round"/>`).join("")}
+   ${[140,240,340,440,540].map((x,i)=>`<g transform="translate(${x},${206+(i%2)*28})"><path d="M0 0 V-24" stroke="${ART_C.green}" stroke-width="4"/><ellipse cx="-9" cy="-24" rx="10" ry="5" fill="#6fb36a" transform="rotate(-25 -9 -24)"/><ellipse cx="9" cy="-28" rx="10" ry="5" fill="#6fb36a" transform="rotate(25 9 -28)"/></g>`).join("")}
+   <g transform="translate(470,150)"><path d="M0 20 h46 l-6 32 h-34z" fill="${ART_C.blue}"/><path d="M46 26 q26 -6 34 -22" stroke="${ART_C.blue}" stroke-width="6" fill="none"/><path d="M80 4 l8 -4 v10z" fill="${ART_C.blue}"/>${[0,1,2].map(k=>`<line x1="${88+k*3}" y1="${8+k*5}" x2="${96+k*5}" y2="${30+k*7}" stroke="#8fc1d9" stroke-width="2"/>`).join("")}</g>`,
+"Descanso para os cansados": id=>artSky("#1d2f57","#5b6f9c",id)+`<circle cx="500" cy="70" r="26" fill="#f4ead2"/><circle cx="512" cy="62" r="24" fill="#2a3e6b"/>`+stars(25,4)+
+  `<path d="M0 200 Q320 180 640 200 V300 H0Z" fill="#2c4a6e"/><path d="M0 200 H640" stroke="#a9c2e6" stroke-width="1" opacity=".5"/>
+   <g fill="#1b2e22"><rect x="150" y="120" width="10" height="85"/><circle cx="155" cy="105" r="45"/><circle cx="125" cy="125" r="30"/><circle cx="185" cy="125" r="30"/></g>
+   <path d="M260 196 q60 -30 120 0" stroke="#c49a5a" stroke-width="9" fill="none" stroke-linecap="round"/><rect x="276" y="190" width="6" height="18" fill="#c49a5a"/><rect x="358" y="190" width="6" height="18" fill="#c49a5a"/>
+   ${[0,1,2].map(k=>`<path d="M${60+k*200} ${235+k*12} q40 -6 80 0" stroke="#a9c2e6" stroke-width="2" fill="none" opacity=".5"/>`).join("")}`,
+"Misericórdias novas a cada manhã": id=>artSky("#f6b48a","#fde9c8",id)+sun(id,320,215,50)+
+  `${Array.from({length:11},(_,i)=>{const a=-Math.PI+(i+1)*Math.PI/12;return `<line x1="${320+Math.cos(a)*70}" y1="${215+Math.sin(a)*70}" x2="${320+Math.cos(a)*330}" y2="${215+Math.sin(a)*330}" stroke="#fff3cf" stroke-width="5" opacity=".35"/>`;}).join("")}
+   <path d="M0 230 Q320 205 640 230 V300 H0Z" fill="#8fae7a"/><path d="M0 255 Q320 235 640 255 V300 H0Z" fill="#6f9a66"/>
+   ${[[180,90],[210,80],[440,100]].map(([x,y])=>`<path d="M${x} ${y} q8 -8 16 0 q8 -8 16 0" stroke="#5a3a33" stroke-width="3" fill="none"/>`).join("")}
+   ${Array.from({length:14},(_,i)=>`<circle cx="${60+i*40}" cy="${270+(i%3)*6}" r="2.5" fill="#f4ead2"/>`).join("")}`,
+"Força na fraqueza": id=>artSky("#f3d2a6","#fbf0dc",id)+sun(id,470,80,26)+
+  `${Array.from({length:6},(_,i)=>{const a=Math.PI*0.55+i*0.12;return `<line x1="470" y1="80" x2="${470+Math.cos(a)*420}" y2="${80+Math.sin(a)*420}" stroke="#fff3cf" stroke-width="7" opacity=".28"/>`;}).join("")}
+   <path d="M0 230 Q320 205 640 230 V300 H0Z" fill="#8fae7a"/>
+   <path d="M150 300 L190 170 Q260 140 330 165 L360 160 Q440 150 480 190 L520 300Z" fill="#9a958c"/><path d="M190 170 Q260 140 330 165 L360 160 Q440 150 480 190" fill="none" stroke="#7d786f" stroke-width="3"/>
+   <path d="M342 300 L336 250 L348 222 L338 196 L344 168" stroke="#6b665e" stroke-width="5" fill="none"/>
+   <g transform="translate(344,170)"><path d="M0 0 V-46" stroke="#3f7a3a" stroke-width="4"/><ellipse cx="-12" cy="-22" rx="12" ry="5" fill="#6fb36a" transform="rotate(-30 -12 -22)"/>
+   ${[0,1,2,3,4].map(k=>`<ellipse cx="${Math.cos(k*1.256)*10}" cy="${-56+Math.sin(k*1.256)*10}" rx="8" ry="5" fill="#f7f1e6" transform="rotate(${k*72} ${Math.cos(k*1.256)*10} ${-56+Math.sin(k*1.256)*10})"/>`).join("")}<circle cx="0" cy="-56" r="5" fill="#e1b553"/></g>`,
+"Lâmpada para os pés": id=>artSky("#3b4f80","#c9a6a0",id)+stars(14,7)+
+  `<path d="M0 230 Q160 200 320 225 T640 215 V300 H0Z" fill="#4f6b4a"/>
+   ${[[60,170,40],[120,190,30],[540,175,42],[600,195,30]].map(([x,y,r])=>`<g fill="#2f4a36"><rect x="${x-4}" y="${y}" width="8" height="60"/><circle cx="${x}" cy="${y}" r="${r}"/></g>`).join("")}<path d="M260 300 L300 190 H340 L380 300Z" fill="#e1b553" opacity=".18"/>${[[290,285],[330,262],[300,240],[328,220],[312,202]].map(([x,y],i)=>`<ellipse cx="${x}" cy="${y}" rx="${22-i*3}" ry="${7-i}" fill="#7a6a55" opacity="${.9-i*.12}"/>`).join("")}
+   <circle cx="320" cy="150" r="70" fill="url(#${id}g)"/><path d="M270 160 q50 34 100 0 q-10 22 -50 24 q-40 -2 -50 -24z" fill="#b8734a"/><path d="M370 160 q18 -4 22 -14" stroke="#b8734a" stroke-width="7" fill="none" stroke-linecap="round"/>
+   <path d="M318 154 q-14 -22 2 -42 q16 20 2 42z" fill="#ffd36b"/><path d="M319 152 q-6 -12 1 -24 q7 12 -1 24z" fill="#fff6d0"/>`,
+"Confiar sem entender tudo": id=>artSky("#a9c7de","#f2ead6",id)+sun(id,560,90,18)+
+  `<path d="M0 170 Q150 130 300 170 T640 150 V300 H0Z" fill="#9db58a"/><path d="M0 215 Q220 175 420 215 T640 205 V300 H0Z" fill="#7a9a6c"/>
+   <path d="M330 300 C 300 260 420 245 380 220 S 470 180 520 160 S 560 140 560 120" stroke="#e8d7ae" stroke-width="26" fill="none" stroke-linecap="round"/>
+   <path d="M330 300 C 300 260 420 245 380 220 S 470 180 520 160 S 560 140 560 120" stroke="#d2bd8c" stroke-width="2" fill="none" stroke-dasharray="6 10"/>
+   <g transform="translate(320,236)"><circle cx="0" cy="-34" r="7" fill="${ART_C.night}"/><path d="M-7 -26 h14 l3 26 h-20z" fill="${ART_C.night}"/><path d="M-4 0 l-3 16 M4 0 l3 16" stroke="${ART_C.night}" stroke-width="4"/></g>`,
+"Não temas": id=>artSky("#f2c9a0","#f8ecd8",id)+sun(id,180,150,30)+
+  `<g transform="translate(480,96)"><path d="M-10 0 h20 l8 120 h-36z" fill="#f4f1ea"/><rect x="-16" y="-14" width="32" height="16" fill="#ffd56b"/><path d="M-18 -14 q18 -18 36 0z" fill="#14254a"/><rect x="-7" y="40" width="14" height="12" fill="#1e3a6e"/><rect x="-9" y="80" width="18" height="12" fill="#1e3a6e"/></g>
+   <path d="M420 216 q60 -26 130 0z" fill="#6b6a62"/>
+   <path d="M0 214 H640 V300 H0Z" fill="#8fb4d6"/><path d="M0 214 H640" stroke="#fff3dc" stroke-width="2" opacity=".7"/>
+   <path d="M150 214 L210 214 L230 300 L130 300Z" fill="#ffe3a0" opacity=".35"/>
+   ${[[60,240],[260,250],[380,236],[540,262],[120,276]].map(([x,y])=>`<path d="M${x} ${y} q20 -6 40 0" stroke="#e9f2fb" stroke-width="2" fill="none" opacity=".8"/>`).join("")}
+   ${[[300,70],[330,58]].map(([x,y])=>`<path d="M${x} ${y} q8 -8 16 0 q8 -8 16 0" stroke="#7a5a4a" stroke-width="3" fill="none"/>`).join("")}`,
+"Permanecer na videira": id=>artSky("#e8f0dc","#f7f2e3",id)+
+  `<path d="M-10 70 C 120 40 200 140 330 110 S 520 60 660 100" stroke="#6b4a2b" stroke-width="12" fill="none" stroke-linecap="round"/>
+   ${[[90,62],[230,118],[400,98],[560,80]].map(([x,y])=>`<g transform="translate(${x},${y})"><path d="M0 0 q-30 -40 -60 -10 q20 10 10 30 q30 0 50 -20z" fill="#5f9a54"/><path d="M0 0 q30 -40 60 -10 q-20 10 -10 30 q-30 0 -50 -20z" fill="#4f8a46"/></g>`).join("")}
+   ${[[170,95],[330,120],[480,92]].map(([x,y])=>`<g transform="translate(${x},${y})"><path d="M0 0 v14" stroke="#6b4a2b" stroke-width="3"/>${[[0,22],[-10,32],[10,32],[-16,44],[0,44],[16,44],[-8,56],[8,56],[0,68]].map(([a,b])=>`<circle cx="${a}" cy="${b}" r="8.5" fill="#6a3a78"/>`).join("")}</g>`).join("")}
+   <path d="M0 270 H640" stroke="#c8d7b6" stroke-width="40"/>`,
+"Uma mente renovada": id=>artSky("#d8e6f3","#f6efe0",id)+sun(id,90,70,20)+
+  `<path d="M0 260 Q320 236 640 262 V300 H0Z" fill="#9cbf8a"/>
+   <path d="M-10 50 C 80 40 140 60 240 44" stroke="#6b4a2b" stroke-width="8" fill="none" stroke-linecap="round"/><path d="M150 52 V140" stroke="#6b4a2b" stroke-width="3"/>
+   ${[[40,46],[100,40],[200,48]].map(([x,y])=>`<ellipse cx="${x}" cy="${y-10}" rx="16" ry="7" fill="#6fb36a" transform="rotate(-20 ${x} ${y-10})"/><circle cx="${x+14}" cy="${y-4}" r="6" fill="#f6c6d6"/>`).join("")}
+   <path d="M150 140 q-16 30 0 66 q16 -36 0 -66z" fill="#a08156"/><path d="M146 150 q-6 26 4 48" stroke="#7a6040" stroke-width="2" fill="none"/>
+   <g transform="translate(420,150)"><path d="M0 0 C -60 -70 -120 -20 -70 20 C -110 50 -40 80 0 10Z" fill="#e1b553"/><path d="M0 0 C 60 -70 120 -20 70 20 C 110 50 40 80 0 10Z" fill="#3f6c99"/>
+   <circle cx="-56" cy="-14" r="9" fill="#fff6d0"/><circle cx="56" cy="-14" r="9" fill="#cfe3ff"/><rect x="-4" y="-22" width="8" height="54" rx="4" fill="${ART_C.night}"/><path d="M-2 -22 q-10 -18 -18 -20 M2 -22 q10 -18 18 -20" stroke="${ART_C.night}" stroke-width="2" fill="none"/></g>
+   <path d="M200 120 q60 -40 130 10" stroke="#9aa9bf" stroke-width="2" fill="none" stroke-dasharray="4 7"/>`,
+"A fé que vê o invisível": id=>artSky("#0b1430","#22396a",id)+stars(70,11)+
+  `<path d="M0 240 Q320 210 640 240 V300 H0Z" fill="#c9a874"/><path d="M0 262 Q320 240 640 262 V300 H0Z" fill="#b08e5c"/>
+   <path d="M150 240 L200 185 L250 240Z" fill="#e8d9b6"/><path d="M200 185 L200 240" stroke="#a88a5a" stroke-width="2"/><path d="M188 240 L200 214 L212 240Z" fill="#6b4a2b"/>
+   <g transform="translate(420,240)"><circle cx="0" cy="-58" r="8" fill="#1b1530"/><path d="M-9 -50 h18 l5 50 h-28z" fill="#1b1530"/><path d="M8 -46 l26 -34" stroke="#1b1530" stroke-width="5" stroke-linecap="round"/></g>`,
+"Lançar sobre ele a ansiedade": id=>artSky("#bcd6ea","#f3efe2",id)+sun(id,520,70,22)+
+  `${[[120,90,1],[180,70,.8],[250,105,.9],[330,60,.7],[400,95,1],[150,140,.7]].map(([x,y,s])=>`<path transform="translate(${x},${y}) scale(${s})" d="M-20 0 q10 -14 20 0 q10 -14 20 0" stroke="${ART_C.night}" stroke-width="4" fill="none" stroke-linecap="round"/>`).join("")}
+   <path d="M0 230 Q200 190 400 230 T640 220 V300 H0Z" fill="#8fb07a"/><path d="M0 260 Q260 236 640 262 V300 H0Z" fill="#7aa06a"/>
+   ${Array.from({length:16},(_,i)=>`<g transform="translate(${30+i*40},${250+(i%3)*12})"><path d="M0 0 V-12" stroke="#4f7a43" stroke-width="2"/><circle cx="0" cy="-14" r="4" fill="${["#f7f1e6","#e1b553","#c98bb0"][i%3]}"/></g>`).join("")}`,
+"Nova criação": id=>artSky("#f7c89a","#fff0d6",id)+sun(id,470,150,34)+
+  `<path d="M0 220 Q320 190 640 220 V300 H0Z" fill="#6f9a66"/>
+   <g transform="translate(420,222)"><rect x="-6" y="-80" width="12" height="80" fill="#6b4a2b"/>${[[-30,-90,34],[20,-100,36],[0,-120,32],[-40,-60,24],[40,-64,26]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#9cc48a"/>`).join("")}${[[-30,-100],[10,-118],[30,-88],[-10,-80],[-44,-66],[44,-70],[0,-140]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="#f6c6d6"/>`).join("")}</g>
+   <g transform="translate(160,222)"><path d="M0 0 V-40" stroke="#3f7a3a" stroke-width="5"/><ellipse cx="-14" cy="-40" rx="16" ry="7" fill="#6fb36a" transform="rotate(-25 -14 -40)"/><ellipse cx="14" cy="-46" rx="16" ry="7" fill="#6fb36a" transform="rotate(25 14 -46)"/></g>
+   ${[60,250,600].map(x=>`<g transform="translate(${x},224)"><path d="M0 0 V-14" stroke="#3f7a3a" stroke-width="3"/><circle cx="0" cy="-17" r="4" fill="#f2c14e"/></g>`).join("")}`
+};
+function devoArt(title){
+  const f=DEVO_ART[title]; if(!f) return "";
+  const id="art"+Math.abs([...title].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7));
+  return `<svg class="devo-art-svg" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração: ${esc(title)}">${f(id)}</svg>`;
+}
+/* Converte a arte em imagem PNG (para compartilhar junto com o texto) */
+async function devoArtPng(dv){
+  const svg=devoArt(dv.title).replace('<svg class="devo-art-svg"','<svg width="1280" height="600"');
+  const card=`<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760"><rect width="1280" height="760" fill="#132447"/>${svg.replace('<svg width="1280" height="600"','<svg x="0" y="0" width="1280" height="600"')}
+    <text x="640" y="672" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#f4ead2">${esc(dv.title)}</text>
+    <text x="640" y="726" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="24" letter-spacing="5" fill="#e1b553">SOLA · BÍBLIA &amp; TEOLOGIA</text></svg>`;
+  const img=new Image(); img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(card);
+  await img.decode();
+  const cv=document.createElement("canvas"); cv.width=1280; cv.height=760; cv.getContext("2d").drawImage(img,0,0);
+  return await new Promise(r=>cv.toBlob(r,"image/png"));
+}
 /* =====================================================================
    OUVIR (leitura em voz alta, no próprio aparelho)
    ===================================================================== */
