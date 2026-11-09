@@ -112,7 +112,13 @@ a{color:var(--accent)}
 .scope{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:8px}
 .header-tools{display:flex;gap:6px;align-items:center}
 .share-opts{display:flex;flex-direction:column;gap:8px}
-.share-opts .btn{justify-content:center;width:100%;min-height:46px;font-size:15px}
+.share-opts .btn{justify-content:center;width:100%;min-height:52px;font-size:16px;font-weight:700;border-radius:14px}
+.share-opts .btn-wa{background:#1fa855!important;border-color:#1fa855!important;color:#fff!important}
+.share-opts .btn-wa .icon{stroke:#fff}
+#shareTop{border-color:transparent!important;background:transparent!important;box-shadow:none!important;display:inline-flex;flex-direction:column;align-items:center}
+#shareTop::after{content:attr(data-label);font-size:10px;display:block;line-height:1;margin-top:2px;color:var(--ink-2)}
+@media (max-width:430px){.brand .brand-sub{letter-spacing:.08em!important;font-size:9.5px!important}
+  .header-tools{gap:4px!important} #shareTop,#themeBtn{padding-left:4px!important;padding-right:4px!important}}
 
 /* Faixa de aviso sobre os dados */
 .demo-banner{max-width:1500px;margin:12px auto 0;padding:0 16px}
@@ -1298,7 +1304,7 @@ dialog.car-mode[open]{display:flex}
     </nav>
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
-      <button type="button" class="btn btn-icon" id="shareTop" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
+      <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
       <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
@@ -1734,6 +1740,7 @@ dialog.car-mode[open]{display:flex}
     <a href="#config" data-cfg="cfgAjuda"><span class="ci" style="background:#4f7a63"><svg class="icon" aria-hidden="true"><use href="#i-listen"/></svg></span><b>Voz, ajuda e lembretes</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgDados"><span class="ci" style="background:#6b5a8e"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></span><b>Meus dados e backup</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgAtual"><span class="ci" style="background:#2f6b3a"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><b>Atualizações</b><small id="ciVer"></small><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-opensh><span class="ci" style="background:#1fa855"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span><b>Enviar o SOLA para alguém</b><small>WhatsApp</small><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgSugestoes"><span class="ci" style="background:#d9694c"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><b>Sugestões</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgPriv"><span class="ci" style="background:#132447"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg></span><b>Privacidade e termos</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgSobre"><span class="ci" style="background:#0f1b33"><img src="icons/mark.svg?v=3" alt="" width="22" height="22"></span><b>Sobre o SOLA</b><span class="chev" aria-hidden="true">›</span></a>
@@ -5125,6 +5132,7 @@ const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos",
 const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
+document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); $("#shareTop")?.click(); } });
 /* Voltar ao índice das configurações: link em cada seção e botão flutuante */
 document.querySelectorAll("#view-config .cfg-card").forEach(c=>c.insertAdjacentHTML("afterbegin",`<button type="button" class="cfg-back" data-cfgback><span aria-hidden="true">‹</span> Todas as configurações</button>`));
 const cfgToIndex=()=>{   // sem rolagem suave: no iPhone duas rolagens suaves se cancelam
