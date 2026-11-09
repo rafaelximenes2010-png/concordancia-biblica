@@ -51,13 +51,24 @@ Versões como ARA, ARC, NVI, NAA e NTLH têm direitos autorais e só podem ser i
 Gere `biblias/CODIGO.json` no formato `{ code, name, lang, dir, license, books: { GEN: [[v1, v2, …], …] } }` e acrescente a entrada em `biblias/index.json`.
 Ao publicar uma nova versão do app, altere `CACHE` em `sw.js`.
 
+## Site, privacidade e termos
+
+- Site: `site/index.html` → https://rafaelximenes2010-png.github.io/concordancia-biblica/site/
+- Política de privacidade: `site/privacidade.html` · Termos de uso: `site/termos.html`
+
+## Devocionais mensais
+
+Cada mês tem um arquivo `devocionais/AAAA-MM.json` com um devocional por dia (`title`, `ref`, `art`, `theme`, `reflection`, `story`, `close`, `application`) e a paleta do mês. Sem o arquivo, o app usa a coleção básica.
+
 ## Pendências (deixadas para depois)
 
 | Item | Situação | O que falta |
 |---|---|---|
 | **Voz masculina natural** (locutor Antônio, áudio no CarPlay/Bluetooth e com tela bloqueada) | Código pronto no app e em `tradutor/worker.js` | Criar conta Azure + recurso **Speech** (Free F0), colar a chave no Worker do Cloudflare e informar o endereço do Worker (`TR_PROXY`). Passo a passo em `tradutor/LEIA-ME.md`. |
-| **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, política de privacidade e termos, empacotamento do app, telas e textos da loja. |
+| **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, empacotamento (política de privacidade e termos já prontos em `site/`) do app, telas e textos da loja. |
 | Tradutor sem limite | Código pronto | Conta Azure (Translator F0) + Cloudflare; mesma ponte da voz. |
-| Endereço próprio | Não iniciado | Organização gratuita no GitHub (ex.: `solabiblia`) e, se quiser, domínio `.com.br`. |
+| Endereço próprio | Site pronto em `site/` | Registrar um domínio (ex.: `solabiblia.com.br` no Registro.br) e apontá-lo para o GitHub Pages. |
+| Tradução revisada das confissões | Breve Catecismo e Heidelberg prontos | Catecismo Maior, Confissão de Westminster, Belga, Dort, Escocesa, Segunda Helvética e Batista de 1689 (hoje em tradução automática no app). |
+| Devocionais de dezembro em diante | Novembro pronto; calendário em `devocionais/series.json` | Escrever `devocionais/2026-12.json` (“A Luz veio ao mundo”) e os meses seguintes. |
 | Estatísticas de uso | Código pronto | Conta GoatCounter e o código do site. |
 | Canal de sugestões | Usando GitHub | E-mail ou WhatsApp do SOLA. |

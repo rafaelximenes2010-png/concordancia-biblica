@@ -700,13 +700,29 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .avatar-big{width:76px;height:76px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:600;overflow:hidden;flex:none;border:2px solid var(--gold)}
 .avatar-big img,.avatar-btn img{width:100%;height:100%;object-fit:cover;display:block}
 .profile-photo-btns{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
-.avatar-btn{padding:0!important;width:38px;height:38px;border-radius:50%!important;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;
+.avatar-btn{padding:0!important;width:38px;height:38px;border-radius:50%!important;overflow:visible;position:relative;display:inline-flex;align-items:center;justify-content:center;
   background:#1c2747!important;border:2px solid var(--gold)!important;color:#fff!important;box-shadow:0 2px 6px rgba(0,0,0,.18)}
 .avatar-btn .icon{stroke:#fff}
 #themeBtn{border-color:transparent!important;background:transparent!important;box-shadow:none!important;opacity:.85}
 #themeBtn::after{content:attr(data-label);font-size:10px;display:block;line-height:1;margin-top:2px;color:var(--ink-2)}
 #themeBtn{display:inline-flex;flex-direction:column;align-items:center}
-.avatar-btn #cfgAvatar{display:flex;width:100%;height:100%;align-items:center;justify-content:center}
+.avatar-btn #cfgAvatar{display:flex;width:100%;height:100%;align-items:center;justify-content:center;border-radius:50%;overflow:hidden}
+.cfg-gear{position:absolute;right:-5px;bottom:-4px;width:18px;height:18px;border-radius:50%;background:var(--gold);display:grid;place-items:center;box-shadow:0 0 0 2px var(--surface)}
+.cfg-gear .icon{width:12px!important;height:12px!important;stroke:#1c2747!important;stroke-width:2.4}
+/* Configurações: índice no estilo iOS */
+.cfg-index{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:0 0 16px}
+.cfg-index a{display:flex;align-items:center;gap:12px;padding:12px 14px;text-decoration:none;color:var(--ink);border-top:1px solid var(--border);font-size:16px;min-height:52px}
+.cfg-index a:first-child{border-top:0}
+.cfg-index a:hover{background:var(--surface-2)}
+.cfg-index .ci{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none;color:#fff}
+.cfg-index .ci .icon{stroke:#fff;width:18px;height:18px}
+.cfg-index b{font-weight:600;flex:1}
+.cfg-index small{color:var(--ink-3);font-size:13px;margin-left:auto;text-align:right}
+.cfg-index .chev{color:var(--ink-3);font-size:20px;line-height:1}
+.cfg-card{scroll-margin-top:84px;transition:box-shadow .3s}
+.cfg-card.cfg-flash{box-shadow:0 0 0 3px var(--gold)}
+.home-cfg .cfg-index{margin:4px 0 0;border-radius:12px}
+.home-cfg .cfg-index a{min-height:46px;padding:9px 12px;font-size:15px}
 .avatar-btn .ini{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px}
 .changelog{margin:6px 0 8px 18px;padding:0 10px 0 0}
 .changelog li{margin:3px 0;font-size:14px}
@@ -1077,6 +1093,41 @@ dialog.car-mode[open]{display:flex}
 .car-prog{font-size:16px;opacity:.8;margin:0}
 .car-hint{font-size:13px;opacity:.65;max-width:420px;margin:0}
 
+/* Estudos em lista (estilo app de ministério: miniatura, título, subtítulo e seta) */
+.st-group{margin:0 0 18px}
+.st-h{display:flex;align-items:baseline;gap:8px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin:18px 4px 8px;font-weight:800}
+.st-h small{letter-spacing:0;text-transform:none;font-weight:600}
+.st-list{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.st-row{border-top:1px solid var(--border)}
+.st-row:first-child{border-top:0}
+.st-row>summary,.st-row>button{list-style:none;display:flex;align-items:center;gap:12px;padding:10px 12px;cursor:pointer;min-height:68px;width:100%;background:none;border:0;text-align:left;color:var(--ink);font:inherit}
+.st-row>summary::-webkit-details-marker{display:none}
+.st-row>summary:hover,.st-row>button:hover{background:var(--surface-2)}
+.st-thumb{width:52px;height:52px;border-radius:10px;flex:none;display:grid;place-items:center;color:#fff;font-weight:800;font-size:16px;letter-spacing:.02em;background:var(--c,#2b3a67);overflow:hidden;position:relative}
+.st-thumb svg.devo-art-svg{width:100%;height:100%;display:block}
+.st-thumb .icon{stroke:#fff;width:24px;height:24px}
+.st-tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.st-tx b{font-size:16px;font-weight:650;line-height:1.25}
+.st-tx small{color:var(--ink-3);font-size:13.5px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-row .chev{color:var(--ink-3);font-size:22px;line-height:1;transition:transform .2s;flex:none}
+.st-row[open]>summary .chev{transform:rotate(90deg)}
+.st-row.today>button{background:var(--gold-soft)}
+.st-row.today .st-tx small{color:var(--ink-2)}
+.st-badge{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:var(--gold);color:#1c2747;border-radius:999px;padding:2px 8px;flex:none}
+.st-body{padding:2px 14px 14px 76px;color:var(--ink-2);font-size:15px}
+.st-body p{margin:4px 0 8px}
+.st-body .row-actions,.st-body .br-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+@media (max-width:520px){.st-body{padding-left:14px}}
+.doc-item.qa .qa-lbl{margin:0 0 2px;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ext)}
+.doc-item.qa .qa-r{margin-top:10px;color:var(--sage)}
+.doc-item.qa .q{font-weight:700;font-size:1.06em;margin:0}
+.doc-item.qa .tr-box .txt{margin-top:2px}
+.doc-en{margin-top:10px;padding:10px 12px;border-left:3px solid var(--border);color:var(--ink-2);font-size:.95em}
+.doc-en .q{font-weight:600}
+.devo-series{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin:0 0 10px;font-size:14px}
+.devo-series span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ext);font-weight:800}
+.devo-series strong{font-family:var(--font-text);font-size:17px}
+.devo-series em{font-style:normal;color:var(--ink-3);font-size:13px;margin-left:auto}
 .devo-art{margin:-4px -4px 6px;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.12);line-height:0}
 .devo-art-svg{width:100%;height:auto;display:block}
 </style>
@@ -1238,7 +1289,7 @@ dialog.car-mode[open]{display:flex}
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
-      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Meu perfil e cadastro, configurações e atualizações" title="Meu perfil e cadastro"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span></button>
+      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -1302,6 +1353,14 @@ dialog.car-mode[open]{display:flex}
       <h3>Credos e Catecismos</h3>
       <p style="margin:0;color:var(--ink-2)">Credo Apostólico e Niceno, Catecismo de Heidelberg, Breve e Maior de Westminster, Confissões e Cânones de Dort.</p>
       <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-go="catecismos">Abrir</button></div>
+    </article>
+    <article class="home-card home-cfg" id="homeCfg">
+      <h3><svg class="icon" aria-hidden="true" style="width:22px;height:22px;vertical-align:-4px;margin-right:6px"><use href="#i-gear"/></svg>Configurações</h3>
+      <nav class="cfg-index" aria-label="Atalhos das configurações">
+        <a href="#config" data-cfg="cfgPerfil"><span class="ci" style="background:#2b3a67"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><b>Meu perfil</b><span class="chev" aria-hidden="true">›</span></a>
+        <a href="#config" data-cfg="cfgLeitura"><span class="ci" style="background:#b8862e"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span><b>Letra, tema e versão</b><span class="chev" aria-hidden="true">›</span></a>
+        <a href="#config" data-cfg="cfgAjuda"><span class="ci" style="background:#4f7a63"><svg class="icon" aria-hidden="true"><use href="#i-listen"/></svg></span><b>Voz e lembretes</b><span class="chev" aria-hidden="true">›</span></a>
+      </nav>
     </article>
     <article class="home-card" id="homeShare">
       <h3>Compartilhar o app</h3>
@@ -1547,6 +1606,7 @@ dialog.car-mode[open]{display:flex}
     <button type="button" class="btn btn-ghost" data-devo="0">Hoje</button>
     <button type="button" class="btn" data-devo="1">Próximo ›</button>
   </div>
+  <div id="devoMonth"></div>
   <div class="home-card" id="remindersCard2" style="margin-top:6px"></div>
 </section>
 
@@ -1571,7 +1631,7 @@ dialog.car-mode[open]{display:flex}
     <label class="sr-only" for="bpType">Tipo</label><select id="bpType"></select>
   </div>
   <p class="muted" id="bpCount" aria-live="polite"></p>
-  <div class="bp-grid" id="bpList"></div>
+  <div id="bpList"></div>
   <p class="bp-note" style="margin-top:14px"><strong>Nota para estudo reformado:</strong> o BibleProject é muito usado pelo panorama literário que oferece. Alguns autores reformados criticam a forma como certos vídeos tratam doutrinas como a expiação, em especial a propiciação. Vale assistir com a Escritura aberta e comparar com os comentários do app.</p>
 </section>
 
@@ -1608,7 +1668,7 @@ dialog.car-mode[open]{display:flex}
     <button type="submit" class="btn btn-primary">Buscar artigos</button>
   </form>
   <div id="artToday"></div>
-  <div class="bp-grid" id="artList"></div>
+  <div id="artList"></div>
 </section>
 
 <!-- ===================== CREDOS E CATECISMOS ===================== -->
@@ -1654,8 +1714,19 @@ dialog.car-mode[open]{display:flex}
 </section>
 <section class="view" id="view-config" hidden aria-labelledby="cfgTitle">
   <div class="view-head">
-    <div style="flex:1"><p class="eyebrow">Seu aplicativo</p><h2 id="cfgTitle" class="ttl-ico"><img src="icons/mark.svg?v=3" alt="" width="30" height="30">Perfil, configurações e atualizações</h2></div>
+    <div style="flex:1"><p class="eyebrow">Seu aplicativo</p><h2 id="cfgTitle" class="ttl-ico"><img src="icons/mark.svg?v=3" alt="" width="30" height="30">Configurações</h2></div>
   </div>
+  <nav class="cfg-index" aria-label="Seções das configurações">
+    <a href="#config" data-cfg="cfgPerfil"><span class="ci" style="background:#2b3a67"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><b>Meu perfil</b><small id="ciName"></small><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgLeitura"><span class="ci" style="background:#b8862e"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg></span><b>Leitura e aparência</b><small>Tema, letra, versão</small><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgComentarios"><span class="ci" style="background:#3f6c99"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></span><b>Comentários e tradução</b><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgAjuda"><span class="ci" style="background:#4f7a63"><svg class="icon" aria-hidden="true"><use href="#i-listen"/></svg></span><b>Voz, ajuda e lembretes</b><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgDados"><span class="ci" style="background:#6b5a8e"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></span><b>Meus dados e backup</b><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgAtual"><span class="ci" style="background:#2f6b3a"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><b>Atualizações</b><small id="ciVer"></small><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgSugestoes"><span class="ci" style="background:#d9694c"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><b>Sugestões</b><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgPriv"><span class="ci" style="background:#132447"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg></span><b>Privacidade e termos</b><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-cfg="cfgSobre"><span class="ci" style="background:#0f1b33"><img src="icons/mark.svg?v=3" alt="" width="22" height="22"></span><b>Sobre o SOLA</b><span class="chev" aria-hidden="true">›</span></a>
+  </nav>
   <div class="cfg-grid">
     <section class="cfg-card" id="cfgPerfil" aria-labelledby="cfgPerfilT">
       <h3 id="cfgPerfilT"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Meu perfil</h3>
@@ -1676,7 +1747,7 @@ dialog.car-mode[open]{display:flex}
       <p class="hint" id="pfHint">Seu perfil fica salvo só neste aparelho. O envio de novidades por e-mail e a conta online (para usar em vários aparelhos) ainda não existem; quando forem lançados, este cadastro já estará pronto para ser vinculado. Nada é enviado hoje.</p>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgLeituraT">
+    <section class="cfg-card" id="cfgLeitura" aria-labelledby="cfgLeituraT">
       <h3 id="cfgLeituraT"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Leitura e aparência</h3>
       <div class="cfg-form">
         <label>Tema<select id="cfgTheme"><option value="light">Claro</option><option value="dark">Escuro</option></select></label>
@@ -1690,7 +1761,7 @@ dialog.car-mode[open]{display:flex}
       </div>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgComT">
+    <section class="cfg-card" id="cfgComentarios" aria-labelledby="cfgComT">
       <h3 id="cfgComT"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Comentários bíblicos</h3>
       <div class="cfg-form">
         <label>Comentarista brasileiro padrão<select id="cfgBr"></select></label>
@@ -1703,7 +1774,7 @@ dialog.car-mode[open]{display:flex}
       </div>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgAjudaT">
+    <section class="cfg-card" id="cfgAjuda" aria-labelledby="cfgAjudaT">
       <h3 id="cfgAjudaT"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>Ajuda e lembretes</h3>
       <div class="cfg-form">
         <label class="radio"><input type="checkbox" id="cfgNatVoice"><span>Usar voz natural de locutor (masculina, português do Brasil), que toca no CarPlay e com a tela bloqueada</span></label>
@@ -1721,7 +1792,7 @@ dialog.car-mode[open]{display:flex}
       </div>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgDadosT">
+    <section class="cfg-card" id="cfgDados" aria-labelledby="cfgDadosT">
       <h3 id="cfgDadosT"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Meus dados</h3>
       <p class="muted" id="cfgStats"></p>
       <div class="cfg-form">
@@ -1731,7 +1802,7 @@ dialog.car-mode[open]{display:flex}
       </div>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgUpdT">
+    <section class="cfg-card" id="cfgAtual" aria-labelledby="cfgUpdT">
       <h3 id="cfgUpdT"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Atualizações</h3>
       <p>Versão instalada: <strong id="cfgVer"></strong></p>
       <div class="cfg-form">
@@ -1758,7 +1829,16 @@ dialog.car-mode[open]{display:flex}
       <p class="muted">Grupos de estudo, compartilhar notas com a sua igreja e um visual opcional mais leve estão nos planos. Ainda não existem: quando chegarem, aparecerão aqui.</p>
     </section>
 
-    <section class="cfg-card" aria-labelledby="cfgSobreT">
+    <section class="cfg-card" id="cfgPriv" aria-labelledby="cfgPrivT">
+      <h3 id="cfgPrivT"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg>Privacidade e termos</h3>
+      <p class="muted">Sem cadastro obrigatório e sem anúncios. Seu perfil, notas e grifos ficam neste aparelho.</p>
+      <div class="cfg-form">
+        <a class="btn btn-sm" href="site/privacidade.html" target="_blank" rel="noopener">Política de privacidade ↗</a>
+        <a class="btn btn-sm" href="site/termos.html" target="_blank" rel="noopener">Termos de uso ↗</a>
+        <a class="btn btn-sm" href="site/" target="_blank" rel="noopener">Site do SOLA | Bíblia &amp; Teologia ↗</a>
+      </div>
+    </section>
+    <section class="cfg-card" id="cfgSobre" aria-labelledby="cfgSobreT">
       <h3 id="cfgSobreT"><img src="icons/mark.svg?v=3" alt="" width="26" height="26" style="border-radius:7px">Sobre o SOLA | Bíblia &amp; Teologia e licenças</h3>
       <p class="muted">SOLA | Bíblia &amp; Teologia é um app gratuito de estudo bíblico de orientação reformada. Os textos bíblicos embutidos são de domínio público ou licença livre (a licença de cada versão aparece junto ao texto). Versões com direitos autorais (ARA, NVI, NVT, NTLH…) abrem nos sites oficiais. Os comentários clássicos vêm da Free Use Bible API (bible.helloao.org); os comentários brasileiros têm direitos autorais e por isso são indicados por links, sem reproduzir o texto. Não há vínculo com YouVersion, BibleProject, Spotify ou editoras citadas. Se as estatísticas de uso forem ativadas, o app conta apenas visitas e instalações de forma anônima, sem cookies e sem dados pessoais; perfil, notas e grifos nunca saem do aparelho.</p>
     </section>
@@ -3675,14 +3755,35 @@ async function renderVotd(){
 
 /* ---------- Devocional ---------- */
 let devoOffset=0;
-const devoFor = d => DEVOS[((dayIndex(d)%DEVOS.length)+DEVOS.length)%DEVOS.length];
+/* Séries mensais: devocionais/AAAA-MM.json traz um devocional por dia, com
+   tema e paleta de imagens do mês. Sem o arquivo, usa a coleção básica. */
+const monthKey = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+const DevoSeries = {
+  cache:{}, pending:{},
+  get(m){ return this.cache[m]; },
+  load(m){
+    if(m in this.cache) return Promise.resolve(this.cache[m]);
+    if(this.pending[m]) return this.pending[m];
+    return this.pending[m] = fetch("devocionais/"+m+".json").then(r=>r.ok?r.json():null).catch(()=>null)
+      .then(j=>{ if(j && Array.isArray(j.days)) j.days=j.days.map(x=>{ const [b,c,r]=x.ref.split(" "); const [v1,v2]=r.split("-").map(Number); return { ...x, p:{ b, c:+c, v1, v2:v2||v1 } }; });
+        this.cache[m]=(j && j.days?.length)?j:null; delete this.pending[m]; return this.cache[m]; });
+  },
+  forDate(d){
+    const s=this.cache[monthKey(d)]; const e=s?.days.find(x=>x.day===d.getDate());
+    if(e) return { ...e, series:s.series, palette:s.palette, total:s.days.length, month:s.month };
+    return DEVOS[((dayIndex(d)%DEVOS.length)+DEVOS.length)%DEVOS.length];
+  }
+};
+const devoFor = d => DevoSeries.forDate(d);
+DevoSeries.load(monthKey(new Date())).then(s=>{ if(!s) return; if(currentView==="inicio") renderHome(); if(currentView==="devocional") renderDevo(); });
 async function renderDevo(){
-  const d=addDays(devoOffset), dv=devoFor(d), box=$("#devoBody");
+  const d=addDays(devoOffset), box=$("#devoBody"); await DevoSeries.load(monthKey(d)); const dv=devoFor(d);
   $("#devoDate").textContent = (devoOffset===0?"Hoje, ":"")+fmtDate(d);
   box.innerHTML=`<p class="muted">Carregando…</p>`;
   try{
     const ps=await getPassage(dv.p);
-    box.innerHTML = `<figure class="devo-art">${devoArt(dv.title)}</figure>
+    box.innerHTML = `${dv.series?`<p class="devo-series"><span>Série de ${esc(d.toLocaleDateString("pt-BR",{month:"long"}))}</span><strong>${esc(dv.series)}</strong><em>Dia ${dv.day} de ${dv.total}</em></p>`:""}
+      <figure class="devo-art">${devoArt(dv)}</figure>
       <h3 style="font-size:22px;margin:10px 0 4px">${esc(dv.title)}</h3>
       <p class="day-ref" style="font-size:16px">${esc(ps.label)}</p>${versionTag(ps.t)}
       ${listenBar("devo")}
@@ -3701,9 +3802,31 @@ async function renderDevo(){
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
       </div>
       <h4 class="devo-end">Para terminar em adoração</h4>${spotifyBox(dv.theme||themeOf(ps.text+" "+dv.title), ps)}`;
-    box.dataset.kind="devo"; box._ps=ps; box._p=dv.p; box._dv=dv;
+    box.dataset.kind="devo"; box._ps=ps; box._p=dv.p; box._dv=dv; renderDevoMonth(d);
   }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a passagem do devocional.</div>`; }
 }
+
+/* Lista dos devocionais do mês (do dia 1 até hoje, o mais recente primeiro) */
+function renderDevoMonth(shown){
+  const box=$("#devoMonth"); if(!box) return;
+  const now=new Date(), m=monthKey(shown), ser=DevoSeries.get(m);
+  if(!ser){ box.innerHTML=""; return; }
+  const isNow=m===monthKey(now); const last=isNow?now.getDate():ser.days.length;
+  const rows=ser.days.filter(x=>x.day<=last).reverse();
+  const mName=new Date(shown.getFullYear(),shown.getMonth(),1).toLocaleDateString("pt-BR",{month:"long"});
+  box.innerHTML=`<div class="st-group"><h3 class="st-h">Série de ${esc(mName)} · ${esc(ser.series)} <small>${rows.length} de ${ser.days.length}</small></h3>
+    ${ser.subtitle?`<p class="muted" style="margin:-4px 4px 10px">${esc(ser.subtitle)}</p>`:""}
+    <div class="st-list">${rows.map(x=>{ const dt=new Date(shown.getFullYear(),shown.getMonth(),x.day); const cur=x.day===shown.getDate();
+      return `<div class="st-row ${cur?"today":""}"><button type="button" data-devoday="${x.day}"><span class="st-thumb">${devoArt({ ...x, palette:ser.palette }).replace("<svg ","<svg preserveAspectRatio=\"xMidYMid slice\" ")}</span>
+        <span class="st-tx"><b>${esc(x.title)}</b><small>Dia ${x.day} · ${esc(passageLabel(x.p))} · ${esc(dt.toLocaleDateString("pt-BR",{weekday:"short"}).replace(".",""))}</small></span>
+        ${isNow && x.day===now.getDate()?`<span class="st-badge">Hoje</span>`:""}<span class="chev" aria-hidden="true">›</span></button></div>`; }).join("")}</div></div>`;
+}
+$("#devoMonth").addEventListener("click",e=>{
+  const b=e.target.closest("[data-devoday]"); if(!b) return;
+  const base=addDays(devoOffset); const target=new Date(base.getFullYear(),base.getMonth(),+b.dataset.devoday);
+  const today=new Date(); today.setHours(0,0,0,0); devoOffset=Math.round((target-today)/864e5);
+  renderDevo(); $("#view-devocional").scrollIntoView({ behavior:"smooth", block:"start" });
+});
 
 /* Ações comuns dos cartões diários (Texto do dia, Devocional e Início) */
 async function dayAction(act, box){
@@ -3810,17 +3933,17 @@ function renderBP(){
   const items=BP.filter(x=>(!bk||x.book===bk)&&(!th||x.themes.includes(th))&&(!ty||x.type===ty)&&
     (!q||norm([x.title,x.ref,x.desc,BOOK[x.book].name,...x.themes].join(" ")).includes(q)));
   $("#bpCount").textContent = `${items.length} ${items.length===1?"estudo":"estudos"}`;
-  $("#bpList").innerHTML = items.length ? items.map((x,i)=>`<article class="bp-card">
-      <div class="bp-thumb" aria-hidden="true"><svg><use href="#${x.type==="Tema bíblico"?"ill-lamp":"ill-film"}"/></svg></div>
-      <h3>${esc(x.title)}</h3>
-      <p class="meta">${esc(x.type)} · ${esc(x.ref)}</p>
-      <p>${esc(x.desc)}</p>
-      <div>${x.themes.map(t=>`<span class="pill">${esc(t)}</span>`).join(" ")}</div>
+  const grp=[["Antigo Testamento",x=>x.type!=="Tema bíblico"&&BOOK[x.book].testament==="AT","#4f7a63"],["Novo Testamento",x=>x.type!=="Tema bíblico"&&BOOK[x.book].testament==="NT","#3f6c99"],["Temas bíblicos",x=>x.type==="Tema bíblico","#b8862e"]];
+  const ab=x=>{ const a=BOOK[x.book].aliases?.[0]||x.book; return a.charAt(0).toUpperCase()+a.slice(1); };
+  $("#bpList").innerHTML = items.length ? grp.map(([h,f,c])=>{ const arr=items.filter(f); return arr.length?`<div class="st-group"><h3 class="st-h">${h} <small>${arr.length}</small></h3><div class="st-list">${arr.map(x=>`<details class="st-row">
+      <summary><span class="st-thumb" style="--c:${c}" aria-hidden="true">${x.type==="Tema bíblico"?`<svg class="icon"><use href="#i-lamp"/></svg>`:esc(ab(x))}</span>
+      <span class="st-tx"><b>${esc(x.title)}</b><small>${esc(x.ref)} · ${esc(x.themes.join(", "))}</small></span><span class="chev" aria-hidden="true">›</span></summary>
+      <div class="st-body"><p>${esc(x.desc)}</p>
       <div class="row-actions">
         <a class="btn btn-sm btn-ext primary" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">Abrir na fonte oficial ↗</a>
         <a class="btn btn-sm btn-ext" href="https://www.youtube.com/results?search_query=${encodeURIComponent("BibleProject Português "+x.title)}" target="_blank" rel="noopener noreferrer">Vídeo em português ↗</a>
         <button type="button" class="btn btn-sm" data-bpnote="${esc(x.slug)}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar em nota</button>
-      </div></article>`).join("")
+      </div></div></details>`).join("")}</div></div>`:""; }).join("")
     : `<div class="empty"><h3>Nenhum estudo com esses filtros</h3><p class="muted">Limpe a busca ou escolha outro livro, tema ou tipo.</p></div>`;
 }
 $("#bpList").addEventListener("click",e=>{
@@ -4280,15 +4403,17 @@ const ART_TOPICS = [
   ["Espírito Santo","obra do Espírito Santo"],["Últimas coisas","escatologia volta de Cristo"]
 ];
 const artSearch = (q, sites) => "https://www.google.com/search?q="+encodeURIComponent(`${q} (${sites.map(x=>"site:"+x).join(" OR ")})`);
-function artCard(title, q){
-  return `<article class="bp-card art-card"><h3>${esc(title)}</h3>
-    <div class="row-actions">
+const ART_COLORS=["#2b3a67","#3f6c99","#4f7a63","#b8862e","#8a5a9e","#d9694c","#2f6b3a","#7a3550"];
+function artCard(title, q, i=0){
+  return `<details class="st-row"><summary><span class="st-thumb" style="--c:${ART_COLORS[i%ART_COLORS.length]}" aria-hidden="true"><svg class="icon"><use href="#i-article"/></svg></span>
+    <span class="st-tx"><b>${esc(title)}</b><small>Ministério Fiel, Voltemos ao Evangelho, Coalizão e outros</small></span><span class="chev" aria-hidden="true">›</span></summary>
+    <div class="st-body"><div class="row-actions">
       <a class="btn btn-sm btn-ext primary" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Artigos em português ↗</a>
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_EN))}" target="_blank" rel="noopener noreferrer">Em inglês ↗</a>
-    </div></article>`;
+    </div></div></details>`;
 }
 function renderArticles(){
-  $("#artList").innerHTML = ART_TOPICS.map(([t,q])=>artCard(t,q)).join("");
+  $("#artList").innerHTML = `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length}</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>artCard(t,q,i)).join("")}</div></div>`;
   const dv=devoFor(new Date()); const ref=passageLabel(dv.p);
   $("#artToday").innerHTML = `<div class="bp-note" style="background:var(--gold-soft);border-style:solid;border-color:var(--gold)">
     <strong>Ligado ao devocional de hoje:</strong> ${esc(dv.title)} (${esc(ref)}) —
@@ -4315,7 +4440,7 @@ async function renderCatHome(){
     const list=await docsIndex(); const groups=[...new Set(list.map(d=>d.group))];
     box.innerHTML = groups.map(g=>`<section class="cat-group"><h3>${esc(g)}</h3><div class="cat-grid">${list.filter(d=>d.group===g).map(d=>`
       <button type="button" class="cat-card" data-doc="${d.id}"><strong>${esc(d.title)}</strong>
-        <span class="meta">${esc(KIND_LABEL[d.kind])} · ${esc(d.year)} · ${d.lang==="pt"?"em português":`original em inglês · ${d.count} ${d.kind==="catecismo"?"perguntas":"seções"}`}</span>
+        <span class="meta">${esc(KIND_LABEL[d.kind])} · ${esc(d.year)} · ${d.lang==="pt"?`em português${d.count>1?` · ${d.count} ${d.kind==="catecismo"?"perguntas e respostas":"seções"}`:""}`:`português (tradução automática) · ${d.count} ${d.kind==="catecismo"?"perguntas e respostas":"seções"}`}</span>
         <p>${esc(d.desc)}</p></button>`).join("")}</div></section>`).join("");
   }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a lista. ${navigator.onLine?"":"Conecte-se uma vez para baixá-la."}</div>`; }
 }
@@ -4345,32 +4470,38 @@ function renderDoc(){
        <p class="hint">${esc(d.translation)}</p>`
     : shown.map(({it,i})=>{
         const ch = (d.kind==="confissao" && it.c!==lastCh) ? `<h4 class="doc-ch">${d.id==="dort"?"Capítulo":(it.n?"Capítulo":"Artigo")} ${esc(it.c)}${it.ct?` — ${esc(it.ct)}`:""}</h4>` : ""; lastCh=it.c;
-        const head = d.kind==="catecismo" ? `<p class="q"><span class="num">${it.n}.</span>${esc(it.q)}</p>` : (it.n?`<p class="q"><span class="num">${esc(/^A\d/.test(it.n)?"Artigo "+it.n.slice(1):/^R\d/.test(it.n)?"Rejeição de erros "+it.n.slice(1):"Seção "+it.n)}</span></p>`:"");
-        return ch+`<article class="doc-item" data-i="${i}">${head}<div class="tr-box"><p class="txt">${esc(d.kind==="catecismo"?it.a:it.t)}</p></div>${refBtns(it.r)}
+        const head = d.kind==="catecismo" ? `<p class="qa-lbl">Pergunta ${it.n}</p><p class="q">${esc(it.q)}</p><p class="qa-lbl qa-r">Resposta</p>` : (it.n?`<p class="q"><span class="num">${esc(/^A\d/.test(it.n)?"Artigo "+it.n.slice(1):/^R\d/.test(it.n)?"Rejeição de erros "+it.n.slice(1):"Seção "+it.n)}</span></p>`:"");
+        const ptDoc=d.lang==="pt";
+        return ch+`<article class="doc-item ${d.kind==="catecismo"?"qa":""}" data-i="${i}">${head}<div class="tr-box"><p class="txt">${esc(d.kind==="catecismo"?it.a:it.t)}</p></div>${refBtns(it.r)}
+          ${ptDoc&&it.aEn?`<div class="doc-en" hidden><p class="q">${esc(it.qEn)}</p><p class="txt">${esc(it.aEn)}</p></div>`:""}
           <div class="row-actions">
-            <button type="button" class="btn btn-sm btn-primary" data-dact="tr" data-i="${i}">Traduzir para o português</button>
-            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${docItemText(d,it)}\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+            ${ptDoc ? (it.aEn?`<button type="button" class="btn btn-sm btn-ghost" data-dact="en" data-i="${i}">Ver original em inglês</button>`:"") : `<button type="button" class="btn btn-sm btn-primary" data-dact="tr" data-i="${i}">Traduzir para o português</button>`}
+            <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${d.kind==="catecismo"?`*P.* ${it.q}\n*R.* ${it.a}`:docItemText(d,it)}\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
             <button type="button" class="btn btn-sm" data-dact="note" data-i="${i}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
           </div></article>`; }).join("");
   box.innerHTML = `<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
     <div class="doc-head" style="margin-top:12px"><div><h3>${esc(d.title)}</h3>
       <p class="muted" style="margin:2px 0 0">${esc(KIND_LABEL[d.kind])} · ${esc(d.year)} · ${esc(d.group)} · ${esc(d.license)}${d.lang==="en"?` · original: <em>${esc(d.titleEn)}</em>`:""}</p></div></div>
-    ${d.kind!=="credo"?`<div class="doc-tools"><label class="sr-only" for="docQ">Procurar no documento</label><input id="docQ" type="search" placeholder="Procurar neste documento (ex.: grace, faith, Christ)" value="${esc($("#docQ")?.value||"")}">
-      <label class="radio" style="margin:0"><input type="checkbox" id="docAutoTr" ${Tr.auto?"checked":""}><span>Traduzir automaticamente</span></label>
+    ${d.kind!=="credo"?`<div class="doc-tools"><label class="sr-only" for="docQ">Procurar no documento</label><input id="docQ" type="search" placeholder="${d.lang==="pt"?"Procurar neste documento (ex.: graça, fé, Cristo)":"Procurar neste documento (busca no original em inglês)"}" value="${esc($("#docQ")?.value||"")}">
+      ${d.lang==="pt"?"":`<label class="radio" style="margin:0"><input type="checkbox" id="docAutoTr" ${store.get("docTr",true)?"checked":""}><span>Mostrar em português</span></label>`}
       <span class="muted">${items.length} ${d.kind==="catecismo"?"perguntas":"seções"}</span></div>`:""}
-    ${body || `<p class="muted">Nada encontrado com esse termo. A busca é feita no texto original em inglês.</p>`}
+    ${d.lang==="en"&&d.kind!=="credo"?`<p class="notice" style="margin:8px 0">Este documento aparece em português por tradução automática. A tradução revisada do SOLA está em preparação e substituirá esta automaticamente.</p>`:""}
+    ${d.lang==="pt"&&d.translation&&d.kind!=="credo"?`<p class="hint" style="margin:6px 0 10px">${esc(d.translation)}</p>`:""}
+    ${body || `<p class="muted">Nada encontrado com esse termo.${d.lang==="en"?" A busca é feita no texto original em inglês.":""}</p>`}
     ${items.length>shown.length?`<div class="more-wrap"><button type="button" class="btn" data-dact="more">Mostrar mais (${items.length-shown.length})</button></div>`:""}`;
   const qi=$("#docQ"); if(qi){ qi.addEventListener("input",()=>{ docPage=1; const pos=qi.selectionStart; renderDoc(); const n=$("#docQ"); n.focus(); n.setSelectionRange(pos,pos); }); }
-  const at=$("#docAutoTr"); if(at) at.addEventListener("change",()=>{ Tr.auto=at.checked; renderDoc(); });
-  if(Tr.auto && d.kind!=="credo") box.querySelectorAll("[data-dact='tr']").forEach(b=>translateDocItem(b));
+  const at=$("#docAutoTr"); if(at) at.addEventListener("change",()=>{ store.set("docTr",at.checked); renderDoc(); });
+  if(d.lang!=="pt" && store.get("docTr",true) && d.kind!=="credo") box.querySelectorAll("[data-dact='tr']").forEach(b=>translateDocItem(b));
 }
 function translateDocItem(btn){
   const i=+btn.dataset.i, it=curDoc.items[i], art=btn.closest(".doc-item");
   if(curDoc.kind==="catecismo" && art.dataset.state!=="pt" && !art._q){ art._q=art.querySelector(".q").innerHTML; }
-  const qEl=art.querySelector(".q");
+  const qEl=art.querySelector(".q"); const toPt=art.querySelector(".tr-box").dataset.state!=="pt";
+  const qP = (curDoc.kind==="catecismo" && toPt) ? Tr.toPt(it.q).catch(()=>null) : null;   // pergunta primeiro
+  if(qP) qP.then(t=>{ if(t && qEl) qEl.textContent=t; });
   translateBlock(art.querySelector(".tr-box"), curDoc.kind==="catecismo"?it.a:it.t, btn).then(async()=>{
     if(curDoc.kind==="catecismo" && qEl){
-      if(art.querySelector(".tr-box").dataset.state==="pt"){ try{ qEl.innerHTML=`<span class="num">${it.n}.</span>${esc(await Tr.toPt(it.q))}`; }catch(e){} }
+      if(art.querySelector(".tr-box").dataset.state==="pt"){ const t=await qP; if(t) qEl.textContent=t; }
       else qEl.innerHTML=art._q;
     }
   });
@@ -4382,6 +4513,7 @@ $("#catDoc").addEventListener("click",async e=>{
   const a=e.target.closest("[data-dact]"); if(!a) return; const act=a.dataset.dact, it=curDoc.items[+a.dataset.i];
   if(act==="more"){ docPage++; renderDoc(); }
   if(act==="tr") translateDocItem(a);
+  if(act==="en"){ const o=a.closest(".doc-item").querySelector(".doc-en"); o.hidden=!o.hidden; a.textContent=o.hidden?"Ver original em inglês":"Ocultar o original"; return; }
   if(act==="orig"){ const o=$("#docOrig"); o.hidden=!o.hidden; a.textContent=o.hidden?"Ver texto em inglês":"Ocultar texto em inglês"; }
   if(act==="copy"){ try{ await navigator.clipboard.writeText(`${curDoc.title}\n\n${it.t}`); toast("Texto copiado."); }catch(err){ toast("Não foi possível copiar."); } }
   if(act==="note") openNoteEditor({ type:"estudo",
@@ -4392,8 +4524,17 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.0.0";
+const APP_VERSION = "3.1.0";
 const CHANGELOG = [
+  { v:"3.1.0", d:"novembro de 2026", items:[
+    "Devocional novo a cada dia, em séries mensais com tema e paleta de imagens próprios. Novembro: “Graça que basta”, 30 devocionais.",
+    "Lista dos devocionais do mês, para rever os dias anteriores, e novas paisagens: floresta, lago, rio e campo de trigo.",
+    "Estudos organizados em listas: vídeos por Antigo Testamento, Novo Testamento e temas; artigos por tema; pensadores por área.",
+    "Breve Catecismo de Westminster e Catecismo de Heidelberg em português, no formato pergunta e resposta, com o original em inglês para consulta.",
+    "Os demais catecismos e confissões aparecem em português automaticamente, enquanto a tradução revisada é preparada.",
+    "Configurações em destaque: atalho no Início, índice no estilo do iPhone e engrenagem no botão do perfil.",
+    "Política de privacidade, termos de uso e site do SOLA | Bíblia & Teologia."
+  ]},
   { v:"3.0.0", d:"novembro de 2026", items:[
     "Novo nome: SOLA | Bíblia & Teologia, com o ícone do farol e abertura animada com a luz do farol.",
     "Versículo central do app: 2 Coríntios 12:9.",
@@ -4716,7 +4857,7 @@ function renderConfig(){
   fillVoices();
   $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-AntonioNeural");
   $("#natHint").textContent = TR_PROXY ? "A voz natural é gerada uma vez por devocional e fica guardada no aparelho." : "A voz natural será ativada quando a ponte do Cloudflare (a mesma do tradutor) for configurada com o serviço de voz da Microsoft. Até lá, o app usa a voz do aparelho.";
-  $("#cfgVer").textContent=APP_VERSION;
+  $("#cfgVer").textContent=APP_VERSION; $("#ciVer").textContent="v"+APP_VERSION; $("#ciName").textContent=(p.name||"").trim().split(/\s+/)[0]||"Toque para preencher";
   $("#cfgChangelog").innerHTML=CHANGELOG.map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
   $("#cfgStats").textContent=`${NotesStore.all().length} notas · ${Object.keys(Hl.all()).length} versículos grifados · ${TextMarks.all().length} trechos grifados · ${Saved.all().length} comentários salvos · ${store.get("favorites",[]).length||0} favoritos`;
   Comm.available().then(async list=>{ const def=await Comm.defaultId();
@@ -4931,8 +5072,13 @@ const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos",
 const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a[data-cfg]"); if(!a) return; e.preventDefault();
+  const go=()=>{ const t=document.getElementById(a.dataset.cfg); if(!t) return; t.scrollIntoView({ behavior:"smooth", block:"start" }); t.classList.add("cfg-flash"); setTimeout(()=>t.classList.remove("cfg-flash"),1400); };
+  if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
+});
 const VIEW_TITLE={ inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
-  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Perfil e configurações" };
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
@@ -5246,15 +5392,17 @@ function renderPensadores(){
   $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
   const list=PENSADORES.filter(p=>(!penCat||p.cat===penCat) && (!q || norm(p.name+" "+p.area+" "+p.idea+" "+p.works+" "+p.where).includes(q)));
   const byCat=Object.keys(PEN_CATS).map(k=>[k,list.filter(p=>p.cat===k)]).filter(([,a])=>a.length);
-  $("#penList").innerHTML = byCat.length ? byCat.map(([k,arr])=>`<div class="pen-group" style="--pc:${PEN_CATS[k][1]}"><h3>${PEN_CATS[k][0]}</h3><div class="pen-grid">${arr.map(penCard).join("")}</div></div>`).join("")
+  $("#penList").innerHTML = byCat.length ? byCat.map(([k,arr])=>`<div class="st-group"><h3 class="st-h">${PEN_CATS[k][0]} <small>${arr.length}</small></h3><div class="st-list">${arr.map(p=>penCard(p,PEN_CATS[k][1])).join("")}</div></div>`).join("")
     : `<p class="muted">Nenhum pensador encontrado.</p>`;
 }
-function penCard(p){
+function penCard(p, color){
   const nm=p.name.replace(/ \(política\)$/,"");
+  const ini=nm.replace(/^(St\.|São|Santo)\s+/,"").split(/\s+/).filter(w=>/^[A-ZÀ-Ý]/.test(w)).map(w=>w[0]).slice(0,2).join("")||nm[0];
   const q=`Quem foi ${nm} e quais são suas principais ideias${p.cat==="pol"?" sobre política e sociedade":p.cat==="psi"?" sobre psicologia, aconselhamento e saúde da alma":" filosóficas e teológicas"}, na perspectiva da fé reformada? Responda em português, com fontes.`;
-  return `<article class="pen-card">
-    <header><h4>${authorBtn(nm, p.area)}</h4><span class="pen-meta">${esc([p.years,p.where].filter(Boolean).join(" · "))}</span></header>
-    <p class="pen-area">${esc(p.area)}</p>
+  return `<details class="st-row"><summary><span class="st-thumb" style="--c:${color||"#2b3a67"}" aria-hidden="true">${esc(ini)}</span>
+    <span class="st-tx"><b>${esc(nm)}</b><small>${esc([p.years,p.area].filter(Boolean).join(" · "))}</small></span><span class="chev" aria-hidden="true">›</span></summary>
+    <div class="st-body">
+    <p class="pen-meta">${esc(p.where||"")} · ${authorBtn(nm, p.area, "Ver quem é")}</p>
     <p class="pen-idea">${esc(p.idea)}</p>
     ${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
     <div class="br-links">
@@ -5262,7 +5410,7 @@ function penCard(p){
       <a class="btn btn-sm btn-gpt" href="${esc(gptUrl(q))}" target="_blank" rel="noopener noreferrer">ChatGPT ↗</a>
       <a class="btn btn-sm" href="${esc("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(nm))}" target="_blank" rel="noopener noreferrer">Livros ↗</a>
       <a class="btn btn-sm" href="${esc("https://www.youtube.com/results?search_query="+encodeURIComponent(nm+" palestra"))}" target="_blank" rel="noopener noreferrer">Vídeos ↗</a>
-    </div></article>`;
+    </div></div></details>`;
 }
 $("#penQ").addEventListener("input",renderPensadores);
 $("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
@@ -5343,22 +5491,56 @@ const DEVO_ART = {
   `${[[120,90,1],[180,70,.8],[250,105,.9],[330,60,.7],[400,95,1],[150,140,.7]].map(([x,y,s])=>`<path transform="translate(${x},${y}) scale(${s})" d="M-20 0 q10 -14 20 0 q10 -14 20 0" stroke="${ART_C.night}" stroke-width="4" fill="none" stroke-linecap="round"/>`).join("")}
    <path d="M0 230 Q200 190 400 230 T640 220 V300 H0Z" fill="#8fb07a"/><path d="M0 260 Q260 236 640 262 V300 H0Z" fill="#7aa06a"/>
    ${Array.from({length:16},(_,i)=>`<g transform="translate(${30+i*40},${250+(i%3)*12})"><path d="M0 0 V-12" stroke="#4f7a43" stroke-width="2"/><circle cx="0" cy="-14" r="4" fill="${["#f7f1e6","#e1b553","#c98bb0"][i%3]}"/></g>`).join("")}`,
+"floresta": id=>artSky("#e9efd6","#fbf3df",id)+sun(id,520,60,22)+
+  `${Array.from({length:5},(_,i)=>`<path d="M520 60 L${300+i*70} 300 L${330+i*70} 300Z" fill="#fff6d6" opacity=".22"/>`).join("")}
+   ${[[20,150,.55],[90,140,.6],[600,145,.55],[640,160,.5]].map(([x,y,o])=>`<path d="M${x} ${y} l-34 110 h68z" fill="#7f9f84" opacity="${o}"/>`).join("")}
+   <path d="M0 250 Q320 228 640 250 V300 H0Z" fill="#8fae7a"/>
+   ${[[40,120],[120,105],[200,128],[440,118],[520,100],[600,124]].map(([x,y],i)=>`<g><rect x="${x-4}" y="${y+60}" width="8" height="${90-i%2*10}" fill="#5a4630"/><path d="M${x} ${y} l-${34+i%3*6} ${96} h${68+i%3*12}z" fill="${i%2?"#3f6b4f":"#4f7a5a"}"/><path d="M${x} ${y+30} l-${40+i%3*6} ${96} h${80+i%3*12}z" fill="${i%2?"#355e44":"#44704f"}"/></g>`).join("")}
+   <path d="M290 300 C 300 270 340 262 330 250 S 312 236 322 228" stroke="#e8d7ae" stroke-width="22" fill="none" stroke-linecap="round" opacity=".9"/>
+   <rect y="210" width="640" height="40" fill="#ffffff" opacity=".16"/>`,
+"lago": id=>artSky("#f5c6a8","#fde9d3",id)+sun(id,410,168,24)+
+  `<path d="M0 178 L90 110 L170 160 L260 86 L360 168 L450 120 L540 150 L640 104 V178Z" fill="#8a97b8"/>
+   <path d="M0 178 L120 136 L220 170 L330 128 L430 172 L560 132 L640 160 V178Z" fill="#6b7aa0"/>
+   <path d="M250 98 L260 86 L272 100 L262 96Z" fill="#f4f1ea"/><path d="M80 118 L90 110 L100 120Z" fill="#f4f1ea"/>
+   <rect y="178" width="640" height="122" fill="#a9bfd6"/>
+   <g opacity=".35" transform="translate(0,356) scale(1,-1)"><path d="M0 178 L90 110 L170 160 L260 86 L360 168 L450 120 L540 150 L640 104 V178Z" fill="#8a97b8"/></g>
+   <ellipse cx="410" cy="190" rx="60" ry="6" fill="#ffe7b0" opacity=".6"/>
+   ${[[60,214],[200,232],[360,222],[480,246],[560,212],[120,262],[300,276]].map(([x,y])=>`<path d="M${x} ${y} h${30+x%40}" stroke="#eef4fb" stroke-width="2" opacity=".7" stroke-linecap="round"/>`).join("")}
+   <path d="M0 300 V262 Q60 250 120 266 Q90 284 0 300Z" fill="#4f7a5a"/><path d="M640 300 V250 Q560 252 520 272 Q580 290 640 300Z" fill="#44704f"/>`,
+"rio": id=>artSky("#cfe4f1","#f6f1e1",id)+sun(id,140,70,20)+
+  `<path d="M0 150 Q120 118 260 146 T640 132 V300 H0Z" fill="#a8c495"/><path d="M0 190 Q200 160 380 190 T640 178 V300 H0Z" fill="#88ad78"/>
+   <path d="M330 150 C 350 170 300 180 330 200 S 420 230 360 260 S 260 290 300 300 H420 C 400 290 480 270 460 250 S 380 215 400 196 S 360 170 345 150Z" fill="#9fc6dd"/>
+   <path d="M342 170 q14 6 4 14 M372 214 q20 6 6 16 M330 268 q24 8 8 18" stroke="#eef6fb" stroke-width="2" fill="none" opacity=".8"/>
+   ${[[180,180,26],[230,196,20],[480,176,24],[540,190,30],[90,210,30]].map(([x,y,r])=>`<g><rect x="${x-3}" y="${y}" width="6" height="${r}" fill="#5a4630"/><circle cx="${x}" cy="${y-6}" r="${r}" fill="#5f8f5a"/><circle cx="${x-r*.4}" cy="${y-2}" r="${r*.7}" fill="#6f9f66"/></g>`).join("")}
+   ${[[230,60],[256,52]].map(([x,y])=>`<path d="M${x} ${y} q7 -7 14 0 q7 -7 14 0" stroke="#6a5a4a" stroke-width="2.5" fill="none"/>`).join("")}`,
+"trigo": id=>artSky("#f4b97c","#fde7c2",id)+sun(id,330,190,36)+
+  `<path d="M0 196 Q320 176 640 196 V300 H0Z" fill="#d9a54c"/><path d="M0 222 Q320 204 640 224 V300 H0Z" fill="#c99236"/>
+   <g transform="translate(520,196)"><rect x="-4" y="-50" width="8" height="50" fill="#5a4630"/><circle cx="0" cy="-62" r="26" fill="#6f7a3a"/><circle cx="-18" cy="-52" r="16" fill="#7f8a44"/></g>
+   ${Array.from({length:34},(_,i)=>{ const x=8+i*19, h=60+(i*37)%40, y=300; return `<g><path d="M${x} ${y} q${(i%3)-1} -${h/2} ${(i%5)-2} -${h}" stroke="#a87424" stroke-width="2" fill="none"/>${[0,1,2,3].map(k=>`<ellipse cx="${x+(i%5)-2+(k%2?3:-3)}" cy="${y-h+6+k*7}" rx="2.6" ry="5" fill="#e8b85a" transform="rotate(${k%2?20:-20} ${x+(i%5)-2} ${y-h+6+k*7})"/>`).join("")}</g>`; }).join("")}
+   ${[[150,92],[176,82],[470,100]].map(([x,y])=>`<path d="M${x} ${y} q7 -7 14 0 q7 -7 14 0" stroke="#6a4a3a" stroke-width="2.5" fill="none"/>`).join("")}`,
 "Nova criação": id=>artSky("#f7c89a","#fff0d6",id)+sun(id,470,150,34)+
   `<path d="M0 220 Q320 190 640 220 V300 H0Z" fill="#6f9a66"/>
    <g transform="translate(420,222)"><rect x="-6" y="-80" width="12" height="80" fill="#6b4a2b"/>${[[-30,-90,34],[20,-100,36],[0,-120,32],[-40,-60,24],[40,-64,26]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#9cc48a"/>`).join("")}${[[-30,-100],[10,-118],[30,-88],[-10,-80],[-44,-66],[44,-70],[0,-140]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="#f6c6d6"/>`).join("")}</g>
    <g transform="translate(160,222)"><path d="M0 0 V-40" stroke="#3f7a3a" stroke-width="5"/><ellipse cx="-14" cy="-40" rx="16" ry="7" fill="#6fb36a" transform="rotate(-25 -14 -40)"/><ellipse cx="14" cy="-46" rx="16" ry="7" fill="#6fb36a" transform="rotate(25 14 -46)"/></g>
    ${[60,250,600].map(x=>`<g transform="translate(${x},224)"><path d="M0 0 V-14" stroke="#3f7a3a" stroke-width="3"/><circle cx="0" cy="-17" r="4" fill="#f2c14e"/></g>`).join("")}`
 };
-function devoArt(title){
-  const f=DEVO_ART[title]; if(!f) return "";
-  const id="art"+Math.abs([...title].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7));
-  return `<svg class="devo-art-svg" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração: ${esc(title)}">${f(id)}</svg>`;
+/* Nomes curtos das cenas (usados nas séries mensais) */
+const SCENE = { pasto:"O Senhor é o meu pastor", cruz:"Amor que toma a iniciativa", campo:"Salvos pela graça, criados para boas obras",
+  noite:"Descanso para os cansados", aurora:"Misericórdias novas a cada manhã", rocha:"Força na fraqueza", lampada:"Lâmpada para os pés",
+  trilha:"Confiar sem entender tudo", farol:"Não temas", videira:"Permanecer na videira", jardim:"Uma mente renovada",
+  estrelas:"A fé que vê o invisível", passaros:"Lançar sobre ele a ansiedade", arvore:"Nova criação" };
+function devoArt(dv){
+  if(typeof dv==="string") dv={ title:dv };
+  const key=dv.art ? (SCENE[dv.art]||dv.art) : dv.title; const f=DEVO_ART[key]; if(!f) return "";
+  const id="art"+Math.abs([...(dv.title+key)].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7));
+  const pal=dv.palette; const tint=pal?`<defs><linearGradient id="${id}t" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${pal.tint}" stop-opacity="${pal.tintOpacity*1.6}"/><stop offset=".6" stop-color="${pal.tint}" stop-opacity="${pal.tintOpacity*.5}"/><stop offset="1" stop-color="${pal.tint}" stop-opacity="${pal.tintOpacity}"/></linearGradient></defs><rect width="640" height="300" fill="url(#${id}t)"/>`:"";
+  return `<svg class="devo-art-svg" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração: ${esc(dv.title)}">${f(id)}${tint}</svg>`;
 }
 /* Converte a arte em imagem PNG (para compartilhar junto com o texto) */
 let MARK_SVG=null;
 async function devoArtPng(dv){
   if(!MARK_SVG){ try{ MARK_SVG=(await fetch("icons/mark.svg?v=3").then(r=>r.text())).replace(/<\?xml[^>]*>/,""); }catch(e){ MARK_SVG=""; } }
-  const art=devoArt(dv.title).replace('<svg class="devo-art-svg" viewBox="0 0 640 300"','<svg x="0" y="0" width="1280" height="600" viewBox="0 0 640 300"');
+  const art=devoArt(dv).replace('<svg class="devo-art-svg" viewBox="0 0 640 300"','<svg x="0" y="0" width="1280" height="600" viewBox="0 0 640 300"');
   const mark=MARK_SVG ? MARK_SVG.replace('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">','<svg x="44" y="38" width="88" height="88" viewBox="0 0 512 512">') : "";
   const W=1280,H=720;
   const card=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">

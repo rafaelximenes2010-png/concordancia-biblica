@@ -1,0 +1,17 @@
+{
+ "about": "Calendário das séries de devocionais do SOLA | Bíblia & Teologia. Cada mês tem um arquivo AAAA-MM.json com um devocional por dia, um tema e uma paleta de imagens próprios. Se o arquivo do mês ainda não existir, o app usa a coleção básica.",
+ "months": [
+  { "month":"2026-11", "series":"Graça que basta", "palette":{ "name":"Outono dourado", "tint":"#c8742c", "tintOpacity":0.16, "glow":"#ffd28a" }, "status":"pronto" },
+  { "month":"2026-12", "series":"A Luz veio ao mundo", "focus":"Advento e Natal: promessas, profecias e o nascimento de Cristo", "palette":{ "name":"Noite de Advento", "tint":"#1f3466", "tintOpacity":0.22, "glow":"#ffe2a0" }, "status":"planejado" },
+  { "month":"2027-01", "series":"Recomeços com Deus", "focus":"Arrependimento, novos começos e alianças", "palette":{ "name":"Manhã de verão", "tint":"#3f8fb0", "tintOpacity":0.14, "glow":"#fff0b8" }, "status":"planejado" },
+  { "month":"2027-02", "series":"Senhor, ensina-nos a orar", "focus":"O Pai-Nosso e as orações da Bíblia", "palette":{ "name":"Mata atlântica", "tint":"#3f7a58", "tintOpacity":0.15, "glow":"#e9ffd0" }, "status":"planejado" },
+  { "month":"2027-03", "series":"O caminho da cruz", "focus":"A paixão de Cristo segundo os evangelhos", "palette":{ "name":"Entardecer", "tint":"#7a3550", "tintOpacity":0.16, "glow":"#ffc79a" }, "status":"planejado" },
+  { "month":"2027-04", "series":"Ele vive", "focus":"Ressurreição e esperança", "palette":{ "name":"Primavera", "tint":"#c06a8a", "tintOpacity":0.12, "glow":"#fff1c2" }, "status":"planejado" },
+  { "month":"2027-05", "series":"O fruto do Espírito", "focus":"Gálatas 5 e a vida no Espírito", "palette":{ "name":"Pomar", "tint":"#6f8f3a", "tintOpacity":0.14, "glow":"#fff3b0" }, "status":"planejado" },
+  { "month":"2027-06", "series":"Salmos para o caminho", "focus":"Salmos de confiança, lamento e louvor", "palette":{ "name":"Serra e neblina", "tint":"#5a6f8a", "tintOpacity":0.16, "glow":"#f2f0e0" }, "status":"planejado" },
+  { "month":"2027-07", "series":"Sabedoria para a vida", "focus":"Provérbios, Eclesiastes e Tiago", "palette":{ "name":"Campo de trigo", "tint":"#b88a2a", "tintOpacity":0.14, "glow":"#ffe7a3" }, "status":"planejado" },
+  { "month":"2027-08", "series":"A família de Deus", "focus":"Casa, filhos, amizade e igreja", "palette":{ "name":"Lago ao entardecer", "tint":"#2f6f7a", "tintOpacity":0.15, "glow":"#ffd8a8" }, "status":"planejado" },
+  { "month":"2027-09", "series":"As cinco solas", "focus":"Escritura, fé, graça, Cristo e a glória de Deus", "palette":{ "name":"Ipês", "tint":"#b0862a", "tintOpacity":0.13, "glow":"#ffe28a" }, "status":"planejado" },
+  { "month":"2027-10", "series":"Reforma, ontem e hoje", "focus":"Mês da Reforma: Lutero, Calvino e a fé reformada", "palette":{ "name":"Mar e farol", "tint":"#1d3f6e", "tintOpacity":0.18, "glow":"#ffe3a0" }, "status":"planejado" }
+ ]
+}
