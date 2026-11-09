@@ -145,6 +145,15 @@ a{color:var(--accent)}
 .share-opts .btn{justify-content:center;width:100%;min-height:52px;font-size:16px;font-weight:700;border-radius:14px}
 .share-opts .btn-wa{background:#1fa855!important;border-color:#1fa855!important;color:#fff!important}
 .share-opts .btn-wa .icon{stroke:#fff}
+.now-top{background:#13213a!important;border-color:#13213a!important;width:42px;height:42px;border-radius:50%!important;display:inline-grid;place-items:center;padding:0!important}
+.now-top[hidden]{display:none!important}
+@media (max-width:430px){ .header-tools:has(#nowTop:not([hidden])) #instTop{display:none!important} }
+.eq{display:flex;align-items:flex-end;gap:3px;height:16px}
+.eq i{width:3px;background:#e1b553;border-radius:2px;animation:eqb 1s ease-in-out infinite}
+.eq i:nth-child(1){height:60%}.eq i:nth-child(2){height:100%;animation-delay:.2s}.eq i:nth-child(3){height:40%;animation-delay:.4s}
+.now-top.paused .eq i{animation:none;height:35%}
+@keyframes eqb{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+.eq i{transform-origin:bottom}
 #shareTop{border-color:transparent!important;background:transparent!important;box-shadow:none!important;display:inline-flex;flex-direction:column;align-items:center}
 #shareTop::after{content:attr(data-label);font-size:10px;display:block;line-height:1;margin-top:2px;color:var(--ink-2)}
 @media (max-width:430px){.brand .brand-sub{letter-spacing:.08em!important;font-size:9.5px!important}
@@ -1430,6 +1439,7 @@ body.has-mini{padding-bottom:84px}
     </nav>
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
+      <button type="button" class="btn btn-icon now-top" id="nowTop" hidden aria-label="Abrir o tocador" title="Tocando agora"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
       <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
       <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
@@ -5013,8 +5023,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.7.5";
+const APP_VERSION = "3.7.6";
 const CHANGELOG = [
+  { v:"3.7.6", d:"novembro de 2026", items:["Ícone “tocando agora” no alto do app, com ondinhas animadas: um toque abre o tocador em tela cheia."] },
   { v:"3.7.5", d:"novembro de 2026", items:["Tocador em tela cheia, como no Spotify: toque no mini player para abrir, com capa, barra de progresso, -15/+15, tocar/pausar e abrir o texto; arraste para baixo para minimizar."] },
   { v:"3.7.4", d:"novembro de 2026", items:["O mini player aparece sempre que o tocador sai da tela, inclusive ao voltar para o app pelo ícone do áudio, com -15, tocar/pausar, ir ao texto e fechar."] },
   { v:"3.7.3", d:"novembro de 2026", items:["Referências bíblicas lidas por extenso na voz: “Gênesis, capítulo 2, versículo 24” e “Primeira Coríntios”."] },
@@ -5509,6 +5520,7 @@ function audioNow(){
 function audioBusy(){ const a=audioNow(); return !!(a && a.playing); }
 function paintMini(){
   const mp=$("#miniPlayer"); if(!mp) return; const a=audioNow();
+  const nt=$("#nowTop"); if(nt){ nt.hidden=!a; if(a) nt.classList.toggle("paused",!a.playing); }
   const barOnScreen = el => { if(!el || el.offsetParent===null) return false; const r=el.getBoundingClientRect(); return r.bottom>60 && r.top<innerHeight-90; };
   const onSource = a && ((a.kind==="da" && barOnScreen(document.querySelector(`.da-host[data-docid="${DA.doc.id}"] .da-bar`))) || (a.kind!=="da" && currentView===a.home && barOnScreen(document.querySelector(".listen-bar"))));
   mp.hidden = !a || !!onSource || !$("#fullPlayer").hidden; document.body.classList.toggle("has-mini",!mp.hidden); if(mp.hidden) return;
@@ -5546,6 +5558,7 @@ $("#fpOpen").addEventListener("click",()=>{ closeFull(); setTimeout(()=>mpGoSour
 let fpY0=null; $("#fullPlayer").addEventListener("touchstart",e=>{ fpY0=e.touches[0].clientY; },{passive:true});
 $("#fullPlayer").addEventListener("touchend",e=>{ if(fpY0!==null && e.changedTouches[0].clientY-fpY0>90 && !e.target.closest("input")) closeFull(); fpY0=null; });
 $("#mpGo").addEventListener("click",()=>openFull());
+$("#nowTop").addEventListener("click",()=>openFull());
 function mpGoSource(){ const a=$("#miniPlayer")._a || audioNow(); if(!a) return;
   if(a.kind==="da"){ const d=DA.doc; if(d.kind==="devo"||d.kind==="votd"){ showView(a.home); return; } if(d.kind==="artigo"){ showView("artigos"); setTimeout(()=>openArticle(d.src.id).then(()=>daFocus()),200); } else { showView("catecismos"); setTimeout(()=>{ openDoc(d.id).then(()=>daFocus()); },200); } }
   else showView(a.home); }
