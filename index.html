@@ -1843,9 +1843,9 @@ dialog.car-mode[open]{display:flex}
     <h3 style="margin:0">Postar o devocional de hoje no Canal</h3>
     <button type="button" class="btn inv-big inv-wa" id="mdPostNow"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Postar no Canal agora</button>
     <ol class="md-steps">
-      <li><b>Toque no botão verde acima.</b> O texto já é copiado e a imagem do dia abre para compartilhar.</li>
-      <li><b>Escolha WhatsApp</b> e, na lista, toque no canal <b>SOLA | Bíblia &amp; Teologia</b> (fica no topo, em “Canais”).</li>
-      <li><b>Envie.</b> Se o texto não aparecer junto da imagem, toque e segure na legenda e escolha <b>Colar</b>.</li>
+      <li><b>Toque no botão verde.</b> A imagem e o texto do dia são copiados e o WhatsApp abre direto no Canal SOLA.</li>
+      <li><b>Toque e segure no campo de mensagem</b> e escolha <b>Colar</b>. A imagem do dia aparece pronta.</li>
+      <li><b>Envie.</b> Se o texto não vier como legenda, toque e segure na legenda › <b>Colar</b>.</li>
     </ol>
     <details class="md-more"><summary>Ver o texto do post</summary>
       <pre class="share-preview" id="mdPost"></pre>
@@ -4709,8 +4709,9 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.3.1";
+const APP_VERSION = "3.3.2";
 const CHANGELOG = [
+  { v:"3.3.2", d:"novembro de 2026", items:["“Postar no Canal agora” abre o WhatsApp direto no Canal SOLA, com imagem e texto prontos para colar."] },
   { v:"3.3.1", d:"novembro de 2026", items:["Postar o devocional no Canal SOLA ficou em um toque: botão “Postar no Canal agora” com passo a passo."] },
   { v:"3.3.0", d:"novembro de 2026", items:[
     "Compartilhe o SOLA: cartão de convite, mensagem editável, WhatsApp, copiar convite, compartilhar o site, instalar e QR Code.",
@@ -5310,7 +5311,7 @@ async function renderMeuDevo(){
     const admin=store.get("canalAdmin",false); $("#mdAdmin").hidden=!admin;
     if(admin){ const post=canalPost(dv,ps,d); $("#mdPost").textContent=post.replace(/\*/g,""); $("#mdPost")._t=post;
       const o=$("#mdOpen"); if(WA_CHANNEL){ o.href=WA_CHANNEL; o.hidden=false; } else o.hidden=true; $("#mdImg")._dv=dv;
-      $("#mdPostNow")._blob=null; devoArtPng(dv).then(b=>{ $("#mdPostNow")._blob=b; }).catch(()=>{}); }
+      mdPrepPng(dv); }
     $("#mdAdmToggle").checked=admin; mdPostState(); if(admin) $("#mdToday").before($("#mdAdmin"));
   }catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o devocional agora.</p>`; }
 }
@@ -5320,22 +5321,25 @@ $("#mdAdmToggle").addEventListener("change",e=>{ store.set("canalAdmin",e.target
 function mdMarkPosted(){ store.set("canalPosted",todayKey(new Date())); mdPostState(); }
 function mdPostState(){ const b=$("#mdPostNow"); if(!b) return; const done=store.get("canalPosted","")===todayKey(new Date());
   b.classList.toggle("md-done",done); b.lastChild.textContent=done?"✓ Já postado hoje":"Postar no Canal agora"; }
-$("#mdPostNow").addEventListener("click",async()=>{
+$("#mdPostNow").addEventListener("click",()=>{
   const btn=$("#mdPostNow"), txt=$("#mdPost")._t||"";
   if(store.get("canalPosted","")===todayKey(new Date()) && !confirm("O devocional de hoje já foi postado. Postar de novo?")) return;
-  try{ navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{}); }catch(e){}
-  let blob=btn._blob; if(!blob){ toast("Preparando a imagem… toque de novo em 2 segundos."); try{ btn._blob=await devoArtPng($("#mdImg")._dv); }catch(e){} return; }
-  const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
+  if(!WA_CHANNEL){ toast("Canal ainda não configurado."); return; }
+  let ok=false;
   try{
-    if(navigator.canShare && navigator.canShare({ files:[f], text:txt })){ await navigator.share({ files:[f], text:txt }); mdMarkPosted(); toast("Pronto! Devocional de hoje enviado."); return; }
-    if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f] }); mdMarkPosted(); toast("Texto copiado: cole na legenda."); return; }
-    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="devocional-SOLA.jpg"; a.click();
-    toast("Imagem salva e texto copiado. Abra o Canal e envie."); if(WA_CHANNEL) setTimeout(()=>window.open(WA_CHANNEL,"_blank"),900);
-  }catch(e){ if(!(e && e.name==="AbortError")) toast("Não foi possível compartilhar. Use “Ver o texto do post”."); } });
-$("#mdImg").addEventListener("click",async()=>{ const dv=$("#mdImg")._dv; if(!dv) return;
-  try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
-    if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f] }); return; }
-    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="devocional-SOLA.jpg"; a.click(); }catch(e){ if(!(e && e.name==="AbortError")) toast("Não foi possível gerar a imagem."); } });
+    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && btn._png){
+      navigator.clipboard.write([new ClipboardItem({ "image/png": btn._png, "text/plain": new Blob([txt],{type:"text/plain"}) })]).catch(()=>navigator.clipboard.writeText(txt).catch(()=>{}));
+      ok=true;
+    } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).catch(()=>{}); }
+  }catch(e){ try{ navigator.clipboard.writeText(txt); }catch(_){} }
+  window.open(WA_CHANNEL,"_blank");
+  mdMarkPosted();
+  toast(ok?"Abrindo o Canal SOLA: toque no campo de mensagem › Colar › Enviar.":"Texto copiado. No Canal, toque no campo › Colar › Enviar.");
+});
+async function mdPrepPng(dv){ const btn=$("#mdPostNow"); btn._png=null;
+  try{ const jpg=await devoArtPng(dv); const bmp=await createImageBitmap(jpg); const c=document.createElement("canvas");
+    c.width=bmp.width; c.height=bmp.height; c.getContext("2d").drawImage(bmp,0,0);
+    btn._png=await new Promise(r=>c.toBlob(r,"image/png")); }catch(e){} }
 
 const FEEDBACK = { email:"", whatsapp:"", github:"https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new" };
 const Suggest = {
