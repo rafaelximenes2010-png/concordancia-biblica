@@ -41,7 +41,7 @@
    ========================================================= */
 :root{
   --bg:#fbf7f0; --surface:#ffffff; --surface-2:#f4eee3; --border:#e6dccb;
-  --ink:#24283b; --ink-2:#555b72; --ink-3:#868aa0;
+  --ink:#1f2336; --ink-2:#434960; --ink-3:#5f6479; --gold-text:#7a560f;
   --accent:#2b3a67; --accent-ink:#ffffff; --accent-soft:#e3e8f6;
   --gold:#e0a93b; --gold-soft:#fbefd2; --coral:#d9694c; --sage:#6fa48a; --sage-soft:#e2f0e8;
   --sky:#4f86c6; --sky-soft:#e3eefa; --plum:#8a5a9e; --hero-a:#2b3a67; --hero-b:#4a5f9e;
@@ -57,7 +57,7 @@
 }
 [data-theme="dark"]{
   --bg:#12172a; --surface:#1b2238; --surface-2:#242c46; --border:#323b5a;
-  --ink:#eef0f7; --ink-2:#c0c5d8; --ink-3:#8c93ad;
+  --ink:#eef0f7; --ink-2:#cfd3e2; --ink-3:#a7adc4; --gold-text:#e8c06a;
   --accent:#f2c25b; --accent-ink:#1b1606; --accent-soft:#3a3420;
   --gold:#f2c25b; --gold-soft:#3a3420; --coral:#f08f74; --sage:#86c2a5; --sage-soft:#1f3a30;
   --sky:#7fb0ea; --sky-soft:#1d2d47; --plum:#c39ad6; --hero-a:#24305a; --hero-b:#3b4c85;
@@ -485,7 +485,7 @@ dialog.note-dlg{max-width:620px}
 /* =========================================================
    10. AJUSTES DE ESTILO FORMAL
    ========================================================= */
-:root{ --gold:#b8892f; --gold-soft:#f6ecd6; --coral:#8c2f39; --sage:#4f7a63; --sage-soft:#e6efe9; --sky:#3f6c99; --sky-soft:#e6eef7; --plum:#5e4a72;
+:root{ --gold:#b8892f; --gold-soft:#f3e2bb; --coral:#8c2f39; --sage:#4f7a63; --sage-soft:#e6efe9; --sky:#3f6c99; --sky-soft:#e6eef7; --plum:#5e4a72;
        --hero-a:#1c2747; --hero-b:#2b3a67; --radius:12px }
 [data-theme="dark"]{ --coral:#d8848c; --gold:#d9b25f; --sage:#8fb8a1; --plum:#b9a3cc; --gold-soft:#3a3420; --sage-soft:#1f3a30; --sky:#7fb0ea; --sky-soft:#1d2d47 }
 .hero h2,.view-head h2,.home-card h3,.day-ref,.brand span,.bp-card h3,.note-card h3{font-family:var(--font-text);font-weight:600;letter-spacing:.1px}
@@ -664,7 +664,7 @@ i.hl-dot{width:14px;height:14px;vertical-align:-2px;margin-right:4px;border-widt
 .hl-pop-t{font-size:13px;color:var(--ink-2);margin-right:2px}
 .rd-verse .rd-tr,.v-tr{display:block;font-size:.88em;color:var(--ink-2);border-left:3px solid var(--gold);padding:2px 0 2px 8px;margin:4px 0 2px}
 .v-tr{margin:6px 0}
-.tr-lbl{font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-right:4px}
+.tr-lbl{font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--gold-text);font-weight:700;margin-right:4px}
 .rd-trbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:var(--accent-soft);border-radius:10px;padding:8px 10px;margin-bottom:10px;font-size:14px}
 .card .verse{cursor:pointer}
 .author-btn{background:none;border:0;padding:0;font:inherit;color:var(--accent);cursor:pointer;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;text-align:left}
@@ -781,7 +781,7 @@ details.br-acc > summary,details.com-text > summary{display:flex;align-items:cen
   background:var(--gold-soft);color:var(--ink);font:inherit;font-size:20px;font-weight:700;cursor:pointer;text-align:left}
 .rd-pick .icon{width:26px;height:26px;color:var(--accent)}
 .rd-pick #rdPickLbl{flex:1;font-family:var(--font-text)}
-.rd-pick-hint{font-size:13px;font-weight:600;color:var(--ink-2)}
+.rd-pick-hint{font-size:13px;font-weight:700;color:var(--gold-text)}
 .rd-pick .chev{font-size:18px;color:var(--accent)}
 @media (max-width:899px){ .reader-bar #rdBook,.reader-bar #rdChap{display:none} }
 dialog.picker{width:min(760px,100vw);max-width:100vw;height:min(92vh,900px);max-height:100dvh;padding:0;border:0;border-radius:18px;display:none;flex-direction:column;background:var(--bg);color:var(--ink)}
@@ -912,7 +912,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 .brand img{border-radius:10px}
 .brand-txt{display:flex;flex-direction:column;line-height:1.05}
 .brand .brand-name{font:800 21px/1 ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;letter-spacing:.16em;color:var(--accent)}
-.brand .brand-sub{font:700 10.5px/1.2 system-ui,sans-serif!important;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:3px}
+.brand .brand-sub{font:700 10.5px/1.2 system-ui,sans-serif!important;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-text);margin-top:3px}
 [data-theme="dark"] .brand .brand-name{color:#f4f1ea}
 /* Versículo central */
 .sola-verse{margin:0 0 14px;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#132447,#22396a);color:#f4f1ea;position:relative;overflow:hidden;box-shadow:0 6px 18px rgba(19,36,71,.22)}
@@ -949,7 +949,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 .pen-works span{font-style:normal;font-weight:700}
 
 /* ===== Comentários com apresentação editorial ===== */
-.cd-eyebrow{margin:0 0 4px;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.cd-eyebrow{margin:0 0 4px;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-text)}
 .cd-author h3{font-size:24px!important;font-weight:600;letter-spacing:.01em;border-bottom:1px solid var(--border);padding-bottom:8px;margin-bottom:6px!important}
 .cd-text,.com-text .tr-box,.saved-text{font-family:var(--font-text);font-size:17.5px;line-height:1.78;hyphens:auto;-webkit-hyphens:auto;text-align:left;max-width:68ch}
 .cd-text p:first-of-type::first-letter,.com-text .tr-box p:first-of-type::first-letter{float:left;font-size:3.1em;line-height:.9;padding:.06em .1em 0 0;color:var(--accent);font-weight:600}
@@ -981,7 +981,7 @@ dialog.drawer.closing .cd-panel{animation:cdOut .18s ease-in forwards}
 .cd-foot.h-scroll .btn{min-width:auto;white-space:nowrap}
 .multi-mode .rd-verse::before{display:none}
 .rd-verse.msel{background:none!important;text-decoration:underline dotted var(--accent);text-decoration-thickness:2px;text-underline-offset:6px;outline:none}
-.rd-verse.msel sup{color:var(--gold)}
+.rd-verse.msel sup{color:var(--gold-text)}
 .reader-multi{gap:10px;box-shadow:0 -8px 24px rgba(0,0,0,.12)}
 .rm-top strong{font-size:17px}
 .rm-colors{display:flex;align-items:center;gap:12px;padding:2px 2px}
@@ -1057,11 +1057,11 @@ dialog.reader.has-sel .reader-nav{display:none}
 .listen-st{font-size:13px}
 .devo-lead p{font-style:italic}
 .devo-story{margin:16px 0;padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--gold)}
-.devo-story h4{margin:0 0 10px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.devo-story h4{margin:0 0 10px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
 .devo-story p{margin:0 0 12px;font-family:var(--font-text);font-size:17.5px;line-height:1.7;display:flex;gap:10px}
 .devo-story p:last-child{margin-bottom:0}
 .ds-n{flex:none;width:24px;height:24px;margin-top:3px;border-radius:50%;background:var(--accent);color:#fff;font:700 12px/24px system-ui,sans-serif;text-align:center}
-.devo-end{margin:18px 0 0;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.devo-end{margin:18px 0 0;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
 
 /* ===== Ouvir: play grande, Para pensar, Modo carro ===== */
 .listen-bar{gap:12px;padding:10px 12px;flex-wrap:nowrap}
