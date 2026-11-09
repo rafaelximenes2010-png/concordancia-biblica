@@ -64,9 +64,9 @@ Cada mês tem um arquivo `devocionais/AAAA-MM.json` com um devocional por dia (`
 
 | Item | Situação | O que falta |
 |---|---|---|
-| **Voz masculina natural** (locutor Antônio, áudio no CarPlay/Bluetooth e com tela bloqueada) | Código pronto no app e em `tradutor/worker.js` | Criar conta Azure + recurso **Speech** (Free F0), colar a chave no Worker do Cloudflare e informar o endereço do Worker (`TR_PROXY`). Passo a passo em `tradutor/LEIA-ME.md`. |
+| **Voz masculina natural** (locutor Antônio, CarPlay/Bluetooth) | **Concluído em 09/11/2026** | Worker `tradutor.rafael-ximenes-2010.workers.dev` com SPEECH_KEY, SPEECH_REGION e KV TR_CACHE. |
 | **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, empacotamento (política de privacidade e termos já prontos em `site/`) do app, telas e textos da loja. |
-| Tradutor sem limite | Código pronto | Conta Azure (Translator F0) + Cloudflare; mesma ponte da voz. |
+| Tradutor sem limite | Ponte pronta e ligada | Criar o recurso Translator (Free F0) e adicionar AZURE_KEY (Secret) e AZURE_REGION no Worker. |
 | Endereço próprio | Site pronto em `site/` | Registrar um domínio (ex.: `solabiblia.com.br` no Registro.br) e apontá-lo para o GitHub Pages. |
 | Tradução revisada das confissões | Breve Catecismo, Heidelberg e Catecismo Maior prontos | Confissão de Westminster, Belga, Dort, Escocesa, Segunda Helvética e Batista de 1689 (hoje em tradução automática no app). |
 | Devocionais de janeiro em diante | Novembro e dezembro prontos; calendário em `devocionais/series.json` | Escrever `devocionais/2027-01.json` (“Recomeços com Deus”) e os meses seguintes. |
