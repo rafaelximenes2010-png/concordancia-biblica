@@ -4783,7 +4783,7 @@ $("#artForm").addEventListener("submit",e=>{ e.preventDefault(); const q=$("#art
    ===================================================================== */
 const Docs = { list:null, cache:{} };
 async function docsIndex(){ if(!Docs.list){ const r=await fetch("docs/index.json"); if(!r.ok) throw new Error("docs"); Docs.list=await r.json(); } return Docs.list; }
-async function docGet(id){ if(!Docs.cache[id]){ const r=await fetch(`docs/${id}.json`); if(!r.ok) throw new Error("doc"); Docs.cache[id]=await r.json(); } return Docs.cache[id]; }
+async function docGet(id){ if(!Docs.cache[id]){ let r; try{ r=await fetch(`docs/${id}.json?v=${APP_VERSION}`); }catch(e){ r=await fetch(`docs/${id}.json`); } if(!r.ok) throw new Error("doc"); Docs.cache[id]=await r.json(); } return Docs.cache[id]; }
 const KIND_LABEL={ credo:"Credo", catecismo:"Catecismo", confissao:"Confissão" };
 function catBackToList(){ const id=curDoc?.id; renderCatHome().then(()=>{ const c=id&&document.querySelector(`#catList [data-doc="${id}"]`); if(c) c.scrollIntoView({block:"center"}); else window.scrollTo({top:0}); }); }
 async function renderCatHome(){
@@ -4804,7 +4804,11 @@ async function openDoc(id){
   const box=$("#catDoc"); $("#catHome").hidden=true; box.hidden=false; window.scrollTo({top:0});
   box.innerHTML=`<p class="muted">Carregando o documento…</p>`;
   try{ curDoc=await docGet(id); }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível abrir o documento.</div><button type="button" class="btn" data-dback>‹ Voltar</button>`; return; }
-  docPage=1; renderDoc();
+  docPage=1;
+  try{ renderDoc(); }
+  catch(e){ console.error(e); box.innerHTML=`<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
+    <div class="notice error" style="margin-top:12px">Este documento não abriu neste navegador. Toque em “Atualizar” para baixar a versão mais recente do SOLA.<br><small>Detalhe técnico: ${esc(String(e&&e.message||e))}</small></div>
+    <button type="button" class="btn btn-primary" onclick="location.reload()">Atualizar</button>`; }
 }
 function docItemText(d,it){ return d.kind==="catecismo" ? `${it.q}\n${it.a}` : it.t; }
 function renderDoc(){
@@ -5023,8 +5027,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.7.7";
+const APP_VERSION = "3.7.8";
 const CHANGELOG = [
+  { v:"3.7.8", d:"novembro de 2026", items:["Credos e catecismos: abertura mais robusta no computador (busca sempre a versão atual dos documentos e mostra aviso claro se algo falhar)."] },
   { v:"3.7.7", d:"novembro de 2026", items:["Ajuste nos temas dos Artigos: “Sexo antes do casamento”."] },
   { v:"3.7.6", d:"novembro de 2026", items:["Ícone “tocando agora” no alto do app, com ondinhas animadas: um toque abre o tocador em tela cheia."] },
   { v:"3.7.5", d:"novembro de 2026", items:["Tocador em tela cheia, como no Spotify: toque no mini player para abrir, com capa, barra de progresso, -15/+15, tocar/pausar e abrir o texto; arraste para baixo para minimizar."] },
