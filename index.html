@@ -4826,6 +4826,31 @@ $("#catDoc").addEventListener("click",async e=>{
 
 /* ---------- Ouvir credos, catecismos e confissões (audiolivro) ---------- */
 const DA_REG = {};
+/* Pronúncia de nomes estrangeiros pela voz brasileira (só no áudio; o texto na tela não muda) */
+const PRONUNCIA = [
+  [/\bJohn Piper\b/g,"Djón Páiper"],[/\bPiper\b/g,"Páiper"],
+  [/\bPaul David Tripp\b/g,"Pól Dêivid Trip"],[/\bPaul Tripp\b/g,"Pól Trip"],[/\bTedd Tripp\b/g,"Téd Trip"],[/\bTripp\b/g,"Trip"],
+  [/\bJ\. ?I\. Packer\b/g,"Djêi Ái Péquer"],[/\bPacker\b/g,"Péquer"],
+  [/\bTim Keller\b/g,"Tim Kéler"],[/\bKathy Keller\b/g,"Kéti Kéler"],[/\bKeller\b/g,"Kéler"],
+  [/\bR\. ?C\. Sproul\b/g,"Ár Ci Sprôul"],[/\bSproul\b/g,"Sprôul"],
+  [/\bJordan B\. Peterson\b/g,"Djórdan Píterson"],[/\bJordan Peterson\b/g,"Djórdan Píterson"],[/\bPeterson\b/g,"Píterson"],
+  [/\bKevin DeYoung\b/g,"Kévin De Iâng"],[/\bDeYoung\b/g,"De Iâng"],[/\bTed Kluck\b/g,"Téd Klâk"],
+  [/\bMichael Horton\b/g,"Máicol Hórton"],[/\bMichael Reeves\b/g,"Máicol Rívs"],[/\bReeves\b/g,"Rívs"],
+  [/\bDane Ortlund\b/g,"Dêin Órtlund"],[/\bOrtlund\b/g,"Órtlund"],
+  [/\bSinclair Ferguson\b/g,"Sinclér Fârguson"],[/\bFerguson\b/g,"Fârguson"],
+  [/\bMartyn Lloyd-Jones\b/g,"Mártin Lóid Djôns"],[/\bLloyd-Jones\b/g,"Lóid Djôns"],
+  [/\bCharles H\. Spurgeon\b/g,"Tchárls Spârdjon"],[/\bCharles Spurgeon\b/g,"Tchárls Spârdjon"],[/\bSpurgeon\b/g,"Spârdjon"],
+  [/\bJ\. ?C\. Ryle\b/g,"Djêi Ci Ráil"],[/\bRyle\b/g,"Ráil"],
+  [/\bJohn Owen\b/g,"Djón Ôuen"],[/\bOwen\b/g,"Ôuen"],[/\bJohn Bunyan\b/g,"Djón Bânian"],[/\bBunyan\b/g,"Bânian"],
+  [/\bJonathan Edwards\b/g,"Djônatan Éduards"],[/\bEdwards\b/g,"Éduards"],
+  [/\bThomas Watson\b/g,"Tômas Uótson"],[/\bWatson\b/g,"Uótson"],[/\bThomas Goodwin\b/g,"Tômas Gúduin"],[/\bGoodwin\b/g,"Gúduin"],
+  [/\bRichard Sibbes\b/g,"Rítchard Síbs"],[/\bSibbes\b/g,"Síbs"],
+  [/\bAbraham Kuyper\b/g,"Abraão Cáiper"],[/\bKuyper\b/g,"Cáiper"],[/\bHerman Bavinck\b/g,"Hérman Bávink"],[/\bBavinck\b/g,"Bávink"],
+  [/\bTimothy Lane\b/g,"Tímoti Lêin"],[/\bLuella\b/g,"Luéla"],[/\bTim\b/g,"Tim"],
+  [/\bDesiring God\b/g,"Dizáiring Gód"],[/\bLigonier\b/g,"Ligonír"],[/\bWestminster\b/g,"Uéstminster"],[/\bHeidelberg\b/g,"Ráidelberg"],
+  [/\bMinneapolis\b/g,"Mineápolis"],[/\bLondres\b/g,"Londres"],[/\bOxford\b/g,"Ócsford"],[/\bLiverpool\b/g,"Líverpul"]
+];
+function pronuncia(t){ let x=String(t); for(const [re,v] of PRONUNCIA) x=x.replace(re,v); return x; }
 /* Texto pensado para o ouvido: tira referências entre parênteses e notas, ajusta títulos em CAIXA ALTA e abreviações. */
 function speechClean(t){
   return String(t)
@@ -4849,7 +4874,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
       if(!r || r.trim()===t.trim() || looksEnglish(r)) throw new Error("tr");   // nunca ler inglês com voz brasileira
       return r; };
-    return speechClean(await this.rawText(d,i,tp)).replace(/\n{2,}/g,"\n"); },   // transições curtas entre partes (sem pausas longas)
+    return pronuncia(speechClean(await this.rawText(d,i,tp))).replace(/\n{2,}/g,"\n"); },   // transições curtas entre partes (sem pausas longas)
   async rawText(d,i,tp){ const it=d.items[i];
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
@@ -4930,8 +4955,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.8";
+const APP_VERSION = "3.6.9";
 const CHANGELOG = [
+  { v:"3.6.9", d:"novembro de 2026", items:["Pronúncia correta dos nomes na voz: John Piper, Paul Tripp, J. I. Packer, Tim Keller, Spurgeon, Westminster e outros."] },
   { v:"3.6.8", d:"novembro de 2026", items:["Leitura em voz mais fluida: transições curtas entre títulos, parágrafos e perguntas, sem pausas longas."] },
   { v:"3.6.7", d:"novembro de 2026", items:["Artigos voltam a ser lidos na velocidade natural, do começo ao fim."] },
   { v:"3.6.6", d:"novembro de 2026", items:["Tocador na tela bloqueada e na Central de Controle, como nos apps de música: SOLA, título do artigo, capa, barra de progresso e -15/+15."] },
@@ -6283,7 +6309,7 @@ function narrText(kind){
   parts.push(ps.text);
   if(dv){ parts.push("Em poucas palavras.", dv.reflection); if(dv.story?.length){ parts.push("A história por trás do texto."); dv.story.forEach(t=>parts.push(t)); }
     if(dv.close) parts.push("Para pensar.", dv.close); parts.push("Aplicação prática.", dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
-  return parts.join("\n\n");
+  return pronuncia(parts.join("\n\n"));
 }
 /* No iPhone, marca o áudio como mídia (igual a música/podcast): toca no
    Bluetooth/CarPlay, com a tela bloqueada e mesmo com a chave de silêncio. */

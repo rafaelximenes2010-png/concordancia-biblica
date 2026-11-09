@@ -39,3 +39,6 @@
 4. **Variedade.** Não repetir no mesmo tema uma obra já usada. Alternar autores contemporâneos (Piper, Tripp, Packer, Keller, Sproul, DeYoung, Ferguson, Reeves, Ortlund, Horton, Augustus Nicodemus, Hernandes Dias Lopes, Franklin Ferreira e outros), clássicos em domínio público (Calvino, Lutero, Agostinho, puritanos, Spurgeon, Ryle, Edwards, Bavinck, Kuyper) e, com leitura reformada crítica, vozes fora da tradição, como Jordan Peterson e C. S. Lewis.
 5. **Fidelidade confessional:** de acordo com os Padrões de Westminster, as Três Formas de Unidade e a Confissão Batista de 1689, respeitando as diferenças entre elas.
 6. Validar antes de publicar: `python3 tools/validar-artigos.py`.
+
+## Pronúncia na voz
+Nomes estrangeiros são reescritos só no áudio pela lista `PRONUNCIA` em `index.html` (por exemplo, John Piper vira "Djón Páiper"). Ao incluir um autor novo com nome estrangeiro, acrescente a forma falada a essa lista.
