@@ -4346,7 +4346,7 @@ function dayShareText(ps, dv){
     dv.close ? `*Para pensar*\n_${dv.close}_` : "",
     `*Aplicação prática*\n${dv.application}`,
     `🎵 *Para terminar em adoração* — louvores sobre ${theme}:\nhttps://open.spotify.com/search/${encodeURIComponent("louvor "+theme)}`,
-    `Devocional do app *SOLA | Bíblia & Teologia* — “A minha graça te basta.”\nInstale grátis: ${APP_URL}?instalar`
+    `Devocional do app *SOLA | Bíblia & Teologia* — “A minha graça te basta.”\nInstale grátis: ${APP_URL}?instalar\n📬 Receba todo dia no Canal SOLA: ${WA_CHANNEL}`
   ].filter(Boolean).join("\n\n");
 }
 (function initShareApp(){
@@ -5213,7 +5213,7 @@ document.addEventListener("click",e=>{
    COMPARTILHE O SOLA · MEU DEVOCIONAL DIÁRIO (Canal do WhatsApp)
    >>> Cole em WA_CHANNEL o link do Canal SOLA (ex.: https://whatsapp.com/channel/XXXX) <<<
    ===================================================================== */
-const WA_CHANNEL = "";
+const WA_CHANNEL = "https://whatsapp.com/channel/0029VbE22ry84Om9DmiIaM43";
 const SITE_URL = () => APP_URL.replace(/\/$/,"")+"/site/";
 const INSTALL_URL = () => APP_URL+"?instalar";
 const INVITE_DEFAULT = () => `*Conheça o SOLA! 📖*
@@ -5229,6 +5229,8 @@ Tudo em um ambiente moderno, intuitivo e desenvolvido para acompanhar sua caminh
 🌐 Acesse o site: ${SITE_URL()}
 
 📱 Instale o aplicativo: ${INSTALL_URL()}
+
+📬 Devocional diário no WhatsApp: ${WA_CHANNEL}
 
 *SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
 function inviteText(){ return store.get("inviteMsg","") || INVITE_DEFAULT(); }
