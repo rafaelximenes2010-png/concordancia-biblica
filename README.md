@@ -2,7 +2,7 @@
 
 Aplicativo (PWA) de estudo bíblico para celular e computador.
 
-**Abrir o app:** https://rafaelximenes2010-png.github.io/concordancia-biblica/
+**Abrir o app:** https://solabiblia.net.br/
 **iPhone:** abra no Safari → Compartilhar → Adicionar à Tela de Início. **Android:** Chrome → menu ⋮ → Instalar app.
 
 ## Abas
@@ -53,7 +53,7 @@ Ao publicar uma nova versão do app, altere `CACHE` em `sw.js`.
 
 ## Site, privacidade e termos
 
-- Site: `site/index.html` → https://rafaelximenes2010-png.github.io/concordancia-biblica/site/
+- Site: `site/index.html` → https://solabiblia.net.br/site/
 - Política de privacidade: `site/privacidade.html` · Termos de uso: `site/termos.html`
 
 ## Devocionais mensais

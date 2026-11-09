@@ -14,6 +14,8 @@
    ===================================================================== */
 
 const DEFAULT_ALLOWED = [
+  "https://solabiblia.net.br",
+  "https://www.solabiblia.net.br",
   "https://rafaelximenes2010-png.github.io",
   "https://concordanciabiblica.github.io",
   "https://comentariosbiblicos.github.io",
