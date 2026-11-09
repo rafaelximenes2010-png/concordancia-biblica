@@ -1045,6 +1045,37 @@ dialog.reader.has-sel .reader-nav{display:none}
 .devo-story p:last-child{margin-bottom:0}
 .ds-n{flex:none;width:24px;height:24px;margin-top:3px;border-radius:50%;background:var(--accent);color:#fff;font:700 12px/24px system-ui,sans-serif;text-align:center}
 .devo-end{margin:18px 0 0;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+
+/* ===== Ouvir: play grande, Para pensar, Modo carro ===== */
+.listen-bar{gap:12px;padding:10px 12px;flex-wrap:nowrap}
+.listen-big{flex:none;width:52px;height:52px;border-radius:50%;border:0;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(19,36,71,.3)}
+.listen-big .icon{width:26px;height:26px;color:#fff;stroke:#fff}
+.listen-bar.on .listen-big{background:var(--gold);color:#1b1606}
+.listen-lbl{flex:1;display:flex;flex-direction:column;min-width:0}
+.listen-lbl strong{font-size:15px}
+.listen-lbl .listen-st{font-size:12.5px}
+.listen-car{flex:none;display:inline-flex;align-items:center;gap:5px}
+.listen-rate{flex:none}
+@media (max-width:420px){ .listen-bar{flex-wrap:wrap} .listen-lbl{min-width:60%} }
+.devo-close{margin:14px 0;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#132447,#22396a);color:#f1ece0}
+.devo-close h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e1b553}
+.devo-close p{margin:0;font:italic 17.5px/1.7 var(--font-text)}
+dialog.car-mode{width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0;padding:calc(16px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));border:0;
+  background:radial-gradient(120% 80% at 50% 10%,#22396a,#0b1630);color:#fff;flex-direction:column;align-items:center;justify-content:space-between;text-align:center}
+dialog.car-mode[open]{display:flex}
+.car-top{width:100%;display:flex;justify-content:space-between;align-items:center}
+.car-brand{display:flex;align-items:center;gap:8px;font-weight:700;letter-spacing:.06em;color:#e1b553}
+.car-brand img{border-radius:8px}
+.car-x{width:52px;height:52px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font-size:22px;cursor:pointer}
+.car-title{font:600 26px/1.3 var(--font-text);margin:10px 0 0}
+.car-now{font:22px/1.5 var(--font-text);max-width:640px;min-height:6em;opacity:.95;overflow:auto}
+.car-ctrl{display:flex;align-items:center;gap:26px}
+.car-btn{width:84px;height:84px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(255,255,255,.06);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.car-btn .icon{width:36px;height:36px;color:#fff;stroke:#fff}
+.car-play{width:124px;height:124px;background:#e1b553;border-color:#e1b553;color:#132447}
+.car-play .icon{width:56px;height:56px;color:#132447;stroke:#132447}
+.car-prog{font-size:16px;opacity:.8;margin:0}
+.car-hint{font-size:13px;opacity:.65;max-width:420px;margin:0}
 </style>
 </head>
 <body>
@@ -1181,6 +1212,10 @@ dialog.reader.has-sel .reader-nav{display:none}
   <symbol id="i-plus-sq" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
   <symbol id="i-listen" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></symbol>
+  <symbol id="i-playfill" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-car" viewBox="0 0 24 24"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v3H3z"/><circle cx="7.5" cy="16" r="1.5"/><circle cx="16.5" cy="16" r="1.5"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M18 6v12L9 12z" fill="currentColor" stroke="none"/><path d="M6 6v12"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M6 6v12l9-6z" fill="currentColor" stroke="none"/><path d="M18 6v12"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8.5 11h5"/></symbol>
 </svg>
 
@@ -1757,6 +1792,18 @@ dialog.reader.has-sel .reader-nav{display:none}
     <button type="button" class="btn btn-icon btn-ghost" id="instClose" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="dlg-body" id="instBody"></div>
+</dialog>
+<dialog id="carMode" class="car-mode" aria-label="Modo carro">
+  <div class="car-top"><span class="car-brand"><img src="icons/mark.svg?v=3" alt="" width="30" height="30">SOLA · Modo carro</span><button type="button" class="car-x" id="carClose" aria-label="Sair do modo carro">✕</button></div>
+  <p class="car-title" id="carTitle"></p>
+  <p class="car-now" id="carNow" aria-live="polite"></p>
+  <div class="car-ctrl">
+    <button type="button" class="car-btn" data-car="prev" aria-label="Voltar um trecho"><svg class="icon" aria-hidden="true"><use href="#i-prev"/></svg></button>
+    <button type="button" class="car-btn car-play" data-car="play" aria-label="Tocar ou pausar"><svg class="icon" aria-hidden="true"><use href="#i-playfill"/></svg></button>
+    <button type="button" class="car-btn" data-car="next" aria-label="Avançar um trecho"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
+  </div>
+  <p class="car-prog" id="carProg"></p>
+  <p class="car-hint">Mantenha o app aberto com a tela ligada. Use com o celular no suporte e sem mexer enquanto dirige.</p>
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
@@ -3274,91 +3321,91 @@ const DEVO_STORY = {
 "theme": "o Bom Pastor",
 "story": [
 "Na Bíblia, pastorear é uma imagem de liderança. Abel, Abraão, Moisés e Davi cuidaram de ovelhas antes de cuidar de pessoas, e os reis de Israel eram chamados a ser pastores do povo.",
-"O problema é que muitos desses pastores falharam. Em Ezequiel 34, Deus denuncia os líderes que se alimentavam das ovelhas em vez de alimentá-las, e então promete: “Eu mesmo buscarei as minhas ovelhas”.",
 "O Salmo 23 nasce dessa esperança. Davi, o rei-pastor, olha para cima e confessa que ele mesmo precisa de um Pastor. O verbo hebraico ra‘ah fala de guiar, alimentar e proteger: tudo o que uma ovelha frágil não consegue fazer sozinha.",
 "Quando Jesus diz “Eu sou o bom pastor”, ele está assumindo essa promessa. Ele não apenas conduz ao descanso; ele dá a vida pelas ovelhas e as busca quando se perdem.",
-"Por isso a história termina em Apocalipse com o Cordeiro que também é Pastor, guiando seu povo às fontes da água da vida. Os vales escuros continuam reais, mas não são o fim do caminho."
-]
+"Talvez o mais difícil do salmo seja a primeira frase: admitir que precisamos ser conduzidos. Gostamos de nos ver como pastores da própria vida, e não como ovelhas que dependem de cuidado."
+],
+"close": "Agostinho dizia que o coração humano vive inquieto até descansar em Deus. O Salmo 23 é essa inquietação encontrando lugar: não a ausência de vales, mas a certeza de uma Presença. Talvez a pergunta de hoje não seja “para onde estou indo?”, e sim “quem está me conduzindo?”."
 },
 "Amor que toma a iniciativa": {
 "theme": "o amor de Deus",
 "story": [
 "Logo depois da primeira desobediência, no Éden, é Deus quem sai à procura: “Onde estás?”. Desde o início, a iniciativa da reconciliação é dele, não nossa.",
-"Quando escolhe Israel, Deus faz questão de explicar o motivo: não porque eram maiores ou melhores, mas simplesmente porque os amou (Deuteronômio 7). O amor da aliança não se apoia no mérito de quem é amado.",
 "Paulo leva esse fio ao seu ponto mais alto. Cristo morreu por nós quando estávamos “ainda fracos”, “ainda pecadores”, e em seguida ele dirá: “inimigos”. A palavra agápē aqui descreve um amor que se doa a quem não tem nada a oferecer de volta.",
 "A cruz, então, não convence Deus a nos amar; ela prova que ele já nos amava. É a demonstração pública de um amor que precedeu qualquer arrependimento nosso.",
-"Quem descansa nesse amor é libertado da necessidade de merecer aceitação. E passa a amar os outros do mesmo jeito: tomando a iniciativa, antes que eles mereçam."
-]
+"Isso confronta a lógica que aprendemos desde cedo: ser aceito depois de provar valor. No evangelho a ordem é inversa; primeiro somos amados, depois somos transformados."
+],
+"close": "Pensadores cristãos sempre perceberam que o maior obstáculo para receber esse amor não é a nossa maldade, mas o nosso orgulho: é difícil aceitar um presente que não podemos pagar. Talvez a fé comece exatamente aí, no dia em que paramos de negociar com Deus e simplesmente nos deixamos amar."
 },
 "Salvos pela graça, criados para boas obras": {
 "theme": "graça",
 "story": [
 "Em Gênesis, o ser humano é colocado no jardim “para o cultivar e o guardar”. Fomos criados para trabalhar com Deus, refletindo o seu cuidado sobre o mundo.",
-"A queda distorceu esse chamado. O trabalho virou peso, e a obra humana passou a ser usada para se justificar, como em Babel, onde quiseram “fazer um nome” para si mesmos.",
 "Efésios 2 inverte essa lógica. A salvação é charis, graça: presente que não se compra. Ninguém pode se gloriar, porque ninguém contribuiu com nada.",
 "Mas Paulo continua: somos “feitura” de Deus, em grego poiēma, palavra ligada a uma obra cuidadosamente feita. Em Cristo, Deus recomeça a criação, agora em nós.",
-"Assim, as boas obras voltam ao lugar certo. Não são a raiz da salvação, mas o fruto dela: caminhos que Deus mesmo preparou para que andássemos neles."
-]
+"Isso alivia e desafia ao mesmo tempo. Alivia, porque não precisamos mais provar nada; desafia, porque cada dia comum se torna lugar de serviço."
+],
+"close": "Abraham Kuyper lembrava que não existe um centímetro da vida que Cristo não reivindique como seu. Se é assim, o trabalho no escritório, o cuidado da casa e a conversa com o vizinho deixam de ser coisas “seculares”. A pergunta deixa de ser “o que preciso fazer para ser aceito?” e passa a ser “o que posso fazer, já sendo aceito?”."
 },
 "Descanso para os cansados": {
 "theme": "descanso em Deus",
 "story": [
 "A Bíblia começa com descanso. No sétimo dia, Deus descansa e abençoa esse dia, mostrando que a criação foi feita para viver em paz na presença dele.",
-"Israel recebeu o sábado como lembrete semanal: vocês não são escravos, como no Egito. Mesmo assim, o Salmo 95 lamenta uma geração que, por incredulidade, não entrou no descanso de Deus.",
 "Quando Jesus diz “Vinde a mim”, ele fala a pessoas sobrecarregadas, inclusive por exigências religiosas pesadas. Os mestres falavam do “jugo da Lei”; Jesus oferece o seu jugo, que é suave.",
 "O jugo era a peça que unia dois bois para puxar juntos. A imagem não é de ausência de trabalho, mas de caminhar atrelado a alguém manso e humilde, que carrega o peso conosco.",
-"Hebreus 4 diz que ainda resta um descanso para o povo de Deus. Em Cristo já o provamos hoje, e um dia o teremos por completo."
-]
+"Vivemos numa cultura que mede valor por produtividade. Até o descanso virou estratégia para render mais. Jesus oferece outro tipo de descanso: o de quem não precisa se justificar pelo que produz."
+],
+"close": "Pascal observou que boa parte da infelicidade humana vem de não sabermos ficar quietos num quarto. O convite de Jesus toca exatamente essa ferida: paramos de correr não porque terminamos tudo, mas porque encontramos Alguém que nos basta. O verdadeiro descanso talvez não seja ausência de tarefas, mas presença de sentido."
 },
 "Misericórdias novas a cada manhã": {
 "theme": "a fidelidade de Deus",
 "story": [
 "Lamentações é escrito sobre as ruínas de Jerusalém, destruída pela Babilônia. São poemas de dor organizados em acróstico, como se o luto precisasse percorrer o alfabeto inteiro.",
 "Bem no centro do livro, o poeta se lembra de algo e a esperança volta. A palavra hebraica hesed descreve o amor leal da aliança, o amor que permanece quando tudo cai.",
-"Essa palavra ecoa Êxodo 34, quando Deus se apresenta a Moisés como “grande em amor e fidelidade”. Deus não muda de caráter quando muda o cenário.",
-"“Novas a cada manhã” lembra o maná no deserto: suficiente para um dia, nunca estocável. A graça de Deus chega como provisão diária, renovada a cada amanhecer.",
-"Em Jesus vemos o hesed de Deus em carne: fiel até a cruz. Por isso podemos lamentar com honestidade e, no mesmo fôlego, dizer: “A minha porção é o Senhor”."
-]
+"Em Jesus vemos o hesed de Deus em carne: fiel até a cruz. Por isso podemos lamentar com honestidade e, no mesmo fôlego, dizer: “A minha porção é o Senhor”.",
+"A fé bíblica não pede que finjamos que está tudo bem. Ela nos ensina a chorar e a esperar ao mesmo tempo, sem que uma coisa anule a outra."
+],
+"close": "Há uma diferença entre otimismo e esperança. O otimismo aposta que as circunstâncias vão melhorar; a esperança se apoia em quem Deus é, mesmo que elas não melhorem. Cada manhã é um pequeno argumento contra o desespero: se o sol voltou a nascer, a misericórdia também voltou."
 },
 "Força na fraqueza": {
 "theme": "a graça de Deus",
 "story": [
-"A Bíblia tem um padrão surpreendente: Deus gosta de agir pelos fracos. Gideão com trezentos homens, Davi ainda menino diante de Golias, uma estéril que se torna mãe.",
 "Paulo conhecia esse padrão, mas precisou vivê-lo na pele. Ele pediu três vezes que um “espinho na carne” fosse retirado, e a resposta não foi cura, foi presença: “A minha graça te basta”.",
 "O verbo grego traduzido por “basta” (arkei) fala de algo suficiente, que não deixa faltar. A graça não é um complemento para quando nossa força acaba; ela é o próprio sustento.",
 "No centro dessa história está a cruz. Em 1 Coríntios, Paulo diz que a mensagem de um Messias crucificado parece loucura e fraqueza, mas é poder de Deus para salvação.",
-"Por isso a fraqueza deixa de ser apenas vergonha e pode virar lugar de encontro. Onde não há força própria para exibir, o poder de Cristo repousa sobre nós."
-]
+"Nossa cultura esconde fragilidades e celebra quem nunca cai. O evangelho, ao contrário, nos permite ser honestos sobre os limites, porque o centro da história não é a nossa força."
+],
+"close": "Kierkegaard dizia que a fé exige uma espécie de rendição: deixar de ser o fundamento de si mesmo. Talvez a fraqueza seja o lugar onde essa rendição se torna possível. Quando já não temos onde nos apoiar, descobrimos que nunca fomos nós que sustentamos a nossa vida."
 },
 "Lâmpada para os pés": {
 "theme": "a Palavra de Deus",
 "story": [
-"O Salmo 119 é o maior capítulo da Bíblia, um acróstico com as 22 letras do alfabeto hebraico. É como se o salmista quisesse dizer tudo, de A a Z, sobre a Palavra de Deus.",
 "A palavra Torá, muitas vezes traduzida por “lei”, significa instrução, o ensino de um pai que deseja o bem do filho. Não é peso, é caminho de vida.",
 "A lâmpada de barro, com azeite e pavio, iluminava só alguns passos à frente. A imagem lembra Israel no deserto, guiado por uma coluna de fogo que mostrava o caminho noite após noite.",
 "No Novo Testamento, a luz ganha rosto. Jesus diz: “Eu sou a luz do mundo; quem me segue não andará em trevas”. A Palavra escrita aponta para a Palavra que se fez carne.",
-"Seguir essa luz raramente significa ver o mapa inteiro. Significa dar o próximo passo de obediência, confiando que haverá luz para o passo seguinte."
-]
+"Muitas vezes pedimos a Deus o mapa completo, quando ele nos oferece uma lâmpada. Não é falta de cuidado; é um convite à confiança diária."
+],
+"close": "Queremos certeza antes de obedecer, mas a vida espiritual costuma funcionar ao contrário: a clareza vem enquanto caminhamos. Calvino comparava as Escrituras a óculos que corrigem a nossa visão turva. Não vemos tudo, mas, pela primeira vez, vemos direito o próximo passo."
 },
 "Confiar sem entender tudo": {
 "theme": "confiança em Deus",
 "story": [
 "O verbo hebraico para confiar (batach) traz a ideia de apoiar todo o peso em algo seguro. Confiar é deixar de se sustentar sozinho.",
-"Provérbios contrasta duas bases: o Senhor ou o “próprio entendimento”. Não é desprezo pela inteligência, mas o reconhecimento de que ela tem limites.",
 "Abraão viveu isso quando saiu “sem saber para onde ia”. A história dele é a de alguém que recebeu promessas maiores do que conseguia enxergar.",
 "Jesus levou a confiança ao extremo no Getsêmani: “Não seja como eu quero, mas como tu queres”. Ele confiou no Pai mesmo diante da cruz, e o Pai o vindicou na ressurreição.",
-"“Ele endireitará as tuas veredas” não promete uma estrada sem curvas, mas um Guia fiel. Reconhecer a Deus em todos os caminhos é convidá-lo para as decisões grandes e pequenas."
-]
+"Confiar não significa desligar a mente, mas reconhecer que ela não é o último tribunal. Há decisões em que fizemos todo o possível e, ainda assim, precisamos entregar o resultado."
+],
+"close": "Agostinho resumiu a postura cristã em uma frase: crer para entender. A fé não é inimiga da razão; é o solo onde ela respira. Talvez a pergunta mais honesta não seja “entendo tudo?”, mas “em quem eu confio quando não entendo?”."
 },
 "Não temas": {
 "theme": "não temas",
 "story": [
 "Isaías 40 a 55 fala a um povo exilado na Babilônia, longe da terra e com a sensação de que Deus os tinha esquecido. É nesse cenário que soa o “Não temas”.",
-"Essa expressão aparece muitas vezes na Bíblia, quase sempre acompanhada de uma promessa de presença: Deus a Abraão, a Josué, a Maria. O antídoto para o medo não é coragem própria, é companhia.",
 "Deus se apresenta com pronomes pessoais: “eu sou contigo”, “eu sou o teu Deus”, “eu te fortaleço”. E fala da sua “mão direita”, símbolo de poder que liberta, como no Êxodo.",
 "Em Jesus, a promessa ganha nome: Emanuel, Deus conosco. Ele diz aos discípulos assustados no mar: “Tende bom ânimo, sou eu; não temais”.",
-"O medo pode bater à porta, mas não precisa governar. A resposta cristã ao medo é lembrar quem está conosco e transformar o temor em oração."
-]
+"O medo costuma falar no futuro: e se der errado? A promessa de Deus fala no presente: eu estou contigo. Ela não elimina o amanhã, mas nos devolve ao hoje."
+],
+"close": "Calvino ensinava que conhecer a Deus e conhecer a nós mesmos andam juntos. Quando olhamos só para nós, o medo cresce; quando olhamos para Deus, nos vemos do tamanho certo, pequenos, mas segurados por uma mão forte. A coragem não é ausência de medo; é o medo que aprendeu a orar."
 },
 "Permanecer na videira": {
 "theme": "permanecer em Cristo",
@@ -3366,49 +3413,49 @@ const DEVO_STORY = {
 "No Antigo Testamento, Israel é retratado como uma videira plantada por Deus (Salmo 80; Isaías 5). Mas o profeta lamenta: Deus esperava uvas boas e a vinha deu uvas bravas.",
 "Por isso a frase de Jesus é tão forte: “Eu sou a videira verdadeira”. Ele é o Israel fiel, aquele que finalmente dá o fruto que Deus sempre buscou.",
 "O verbo grego menō, permanecer, aparece repetidas vezes em João 15. Fala de habitar, ficar, fazer morada, como quem se instala numa casa e não apenas a visita.",
-"O ramo não se esforça para produzir; ele recebe a seiva. O fruto, Paulo dirá mais tarde, é obra do Espírito: amor, alegria, paz, paciência.",
-"Permanecer em Cristo é uma prática diária de dependência: Palavra, oração, comunhão. Longe dele não fazemos nada que dure; nele, a vida floresce."
-]
+"Vivemos tentando produzir resultados espirituais por força de vontade. Jesus nos lembra que fruto é consequência de ligação, não de pressa."
+],
+"close": "Há uma diferença entre fazer muitas coisas para Deus e viver com Deus. A primeira cansa; a segunda frutifica. Jonathan Edwards dizia que a verdadeira religião está nas afeições, no que o coração ama. Talvez a pergunta do dia seja simples: onde o meu coração tem feito morada?"
 },
 "Uma mente renovada": {
 "theme": "entrega a Deus",
 "story": [
-"Romanos 1 a 11 descreve as misericórdias de Deus: pecado, graça, justificação, Espírito e o plano de Deus para judeus e gentios. Só depois vem o “portanto” do capítulo 12.",
 "Paulo usa a linguagem do templo. No lugar de animais oferecidos e mortos, ele fala de um “sacrifício vivo”: a vida inteira entregue a Deus como culto (latreia).",
 "“Não vos conformeis” pode ser entendido como não se deixar moldar pela forma deste mundo. Em vez disso, “transformai-vos” (metamorphoō), a mesma raiz usada para a transfiguração de Jesus.",
 "Essa mudança começa na mente. Paulo não fala de mudança apenas de comportamento, mas de um novo jeito de pensar, aprendido com a Palavra e pelo Espírito.",
-"O objetivo é experimentar a vontade de Deus, boa, perfeita e agradável. A entrega não diminui a vida; ela a devolve ao propósito para o qual foi criada."
-]
+"Somos moldados todos os dias por aquilo que vemos, ouvimos e repetimos. A renovação da mente é um caminho lento de trocar mentiras antigas por verdades de Deus."
+],
+"close": "Pensadores reformados como Herman Dooyeweerd insistiam que ninguém pensa de forma neutra: todo pensamento nasce de um coração que adora alguma coisa. Por isso a transformação começa na adoração. Mudamos de verdade quando aquilo que amamos muda."
 },
 "A fé que vê o invisível": {
 "theme": "fé",
 "story": [
 "Hebreus foi escrito a cristãos cansados e perseguidos, tentados a voltar atrás. O capítulo 11 é uma galeria de pessoas que continuaram andando sem ver o fim da história.",
 "A fé é chamada de “certeza” das coisas que se esperam. A palavra hypostasis traz a ideia de algo firme, que dá sustentação, como uma base sobre a qual se pode ficar de pé.",
-"O texto começa na criação: o mundo foi formado pela palavra de Deus. A mesma Palavra que fez o visível a partir do invisível sustenta as promessas que ainda não vemos cumpridas.",
-"Abel, Noé, Abraão, Sara e Moisés morreram “sem ter recebido as promessas”, mas as viram de longe. Abraão esperava “a cidade que tem fundamentos”.",
-"Hebreus 12 conclui apontando para Jesus, “autor e consumador da fé”. Fé não é salto no escuro, é olhar para ele e correr com perseverança."
-]
+"Hebreus 12 conclui apontando para Jesus, “autor e consumador da fé”. Fé não é salto no escuro, é olhar para ele e correr com perseverança.",
+"A fé não nos tira do mundo real; ela nos faz enxergá-lo com mais profundidade. Aquilo que se vê é passageiro; o que não se vê sustenta tudo."
+],
+"close": "Alvin Plantinga argumentou que crer em Deus pode ser tão racional quanto confiar na própria memória ou nos próprios sentidos. A fé não é o oposto do conhecimento; é uma forma de conhecer. Talvez o convite de hoje seja viver como quem vê mais longe, mesmo sem ver tudo."
 },
 "Lançar sobre ele a ansiedade": {
 "theme": "entrega da ansiedade",
 "story": [
-"Pedro escreve a cristãos espalhados e sofrendo por causa da fé. Ele não promete ausência de dificuldade; ensina como viver no meio dela.",
 "“Humilhai-vos sob a poderosa mão de Deus” evoca o Êxodo, quando Deus libertou Israel “com mão forte”. A mão que parece pesar sobre nós é a mesma que liberta e exalta no tempo certo.",
 "O verbo “lançar” (epiriptō) é o mesmo usado quando os discípulos lançaram seus mantos sobre o jumentinho de Jesus (Lucas 19). É um gesto concreto de transferir o peso.",
 "Pedro sabia o que era ansiedade: afundou ao olhar o vento, negou Jesus por medo. E foi restaurado por um Senhor que cuidou dele quando ele falhou.",
-"Lançamos sobre Deus a ansiedade não porque o problema é pequeno, mas porque ele cuida de nós. A oração honesta se torna o lugar onde o peso muda de ombros."
-]
+"A ansiedade quer controle; a fé aceita os limites. Entregar não é desistir de agir, mas parar de carregar o que só Deus pode carregar."
+],
+"close": "Há um paradoxo bonito aqui: a humildade nos liberta. Quando paramos de fingir que somos o centro do universo, o peso do universo deixa de estar sobre nós. Lançar a ansiedade é, no fundo, uma confissão de fé: alguém cuida de mim melhor do que eu mesmo."
 },
 "Nova criação": {
 "theme": "nova criação",
 "story": [
 "A Bíblia começa com “No princípio criou Deus os céus e a terra” e termina com novos céus e nova terra. Toda a história caminha de uma criação boa para uma criação renovada.",
-"Os profetas anunciaram esse dia. Isaías 65 fala de Deus criando “novos céus e nova terra”, onde as coisas passadas não serão mais lembradas.",
 "A ressurreição de Jesus, no primeiro dia da semana, é o início dessa nova criação. Por isso Paulo diz: se alguém está em Cristo, é nova criação.",
 "Junto vem a reconciliação. O verbo grego katallassō fala de trocar inimizade por paz. Deus reconcilia o mundo consigo mesmo e confia aos reconciliados esse ministério.",
-"Ser nova criação não apaga a história, mas muda o seu sentido. O passado não define mais quem somos, e nossa vida passa a anunciar a paz que recebemos."
-]
+"Isso significa que ninguém está preso para sempre ao que já foi. Em Cristo, o recomeço não é um esforço de autoajuda, é um ato criador de Deus."
+],
+"close": "Somos criaturas de memória e de esperança: carregamos o passado e caminhamos para o futuro. A fé cristã não apaga a memória, mas a cura, e dá à esperança um endereço. A última palavra da história não é ruína, é renovação; e quem crê nisso começa a viver hoje como cidadão do amanhã."
 }
 };
 const DEVOS = [
@@ -3454,7 +3501,7 @@ const DEVOS = [
   { title:"Nova criação", ref:"2CO 5 17-18",
     reflection:"Estar em Cristo é participar de uma nova criação. O passado não define mais a identidade de quem foi reconciliado com Deus, e quem foi reconciliado recebe também o ministério da reconciliação.",
     application:"Procure reconciliar-se ou dar um passo de paz em um relacionamento estremecido nesta semana." }
-].map(d=>{ const [b,c,r]=d.ref.split(" "); const [v1,v2]=r.split("-").map(Number); const st=DEVO_STORY[d.title]||{}; return { ...d, story:st.story||[], theme:st.theme, p:{ b, c:+c, v1, v2:v2||v1 } }; });
+].map(d=>{ const [b,c,r]=d.ref.split(" "); const [v1,v2]=r.split("-").map(Number); const st=DEVO_STORY[d.title]||{}; return { ...d, story:st.story||[], close:st.close||"", theme:st.theme, p:{ b, c:+c, v1, v2:v2||v1 } }; });
 
 /* =====================================================================
    CATÁLOGO BIBLEPROJECT (links para conteúdo público e oficial)
@@ -3630,6 +3677,7 @@ async function renderDevo(){
       <p class="day-text" style="font-size:19px">${passageHtml(ps)}</p>
       <div class="devo-block devo-lead"><h4>Em poucas palavras</h4><p>${esc(dv.reflection)}</p></div>
       ${dv.story?.length?`<div class="devo-story"><h4>A história por trás do texto</h4>${dv.story.map((t,i)=>`<p><span class="ds-n">${i+1}</span>${esc(t)}</p>`).join("")}</div>`:""}
+      ${dv.close?`<div class="devo-close"><h4>Para pensar</h4><p>${esc(dv.close)}</p></div>`:""}
       <div class="devo-block"><h4>Aplicação prática</h4><p>${esc(dv.application)}</p></div>
       <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px">
         ${devoOffset===0?doneBtn():""}
@@ -4589,7 +4637,7 @@ const HELP = {
   biblia:["Bíblia",[["Versão, livro e capítulo","Escolha no topo. ‹ e › mudam de capítulo; A− e A+ mudam o tamanho da letra."],["Comparar","Mostra uma segunda versão abaixo de cada versículo."],["Tocar nos versículos","Marca o versículo (sublinhado pontilhado). Toque em quantos quiser; embaixo aparece a barra com as cores para grifar e as ações: Comentário, Copiar, WhatsApp, Compartilhar, Anotar, Favoritar e Todos. Deslize a fileira de ações para o lado para ver todas. O X limpa a seleção."],["Comentário","Abre o painel de comentários e o versículo continua visível em cima. Escolha o comentarista nos botões redondos."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
   busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Abre a gaveta de comentários ao lado, onde você escolhe o comentarista."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
-  devocional:["Devocional",[["Ouvir","Lê em voz alta o texto, a reflexão, a história por trás do texto e a aplicação. Toque de novo para pausar; o botão 1× muda a velocidade."],["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
+  devocional:["Devocional",[["▶ Ouvir","Toque no botão redondo ▶ para ouvir o devocional inteiro em voz alta. Toque de novo para pausar; 1× muda a velocidade."],["Modo carro","Tela cheia com botões grandes (voltar, tocar/pausar, avançar), texto grande e a tela sempre ligada. Use com o celular no suporte."],["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
   pensadores:["Pensadores",[["Áreas","Filtre por Filosofia e teologia, Psicologia e aconselhamento ou Política e sociedade."],["Nome do pensador","Toque para ver quem é, formação e links."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre as ideias daquele pensador na perspectiva reformada."]]],
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
@@ -5178,10 +5226,12 @@ const Speak = { on:false, paused:false, parts:[], i:0, rate:store.get("ttsRate",
 function listenBar(kind){
   if(!("speechSynthesis" in window)) return "";
   return `<div class="listen-bar" data-listen="${kind}">
-    <button type="button" class="btn btn-primary listen-play" data-ls="play"><svg class="icon" aria-hidden="true"><use href="#i-listen"/></svg><span>Ouvir</span></button>
+    <button type="button" class="listen-big" data-ls="play" aria-label="Ouvir o devocional"><svg class="icon" aria-hidden="true"><use href="#i-playfill"/></svg></button>
+    <div class="listen-lbl"><strong>Ouvir ${kind==="devo"?"o devocional":"o texto do dia"}</strong><span class="listen-st muted" aria-live="polite">Leitura em voz alta, ideal para o carro</span></div>
+    <button type="button" class="btn btn-sm listen-car" data-ls="car"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>Modo carro</button>
     <button type="button" class="btn btn-sm" data-ls="stop" hidden>Parar</button>
     <button type="button" class="btn btn-sm listen-rate" data-ls="rate" title="Velocidade da leitura">${Speak.rate}×</button>
-    <span class="listen-st muted" aria-live="polite"></span></div>`;
+    </div>`;
 }
 function ptVoice(){ const vs=speechSynthesis.getVoices(); return vs.find(v=>/pt[-_]BR/i.test(v.lang) && /luciana|felipe|google|premium|enhanced/i.test(v.name)) || vs.find(v=>/pt[-_]BR/i.test(v.lang)) || vs.find(v=>/^pt/i.test(v.lang)); }
 if("speechSynthesis" in window){ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged=()=>{}; }
@@ -5192,7 +5242,7 @@ function speakTextFor(kind){
   if(dv) parts.push(dv.title+".");
   parts.push(ps.label.replace(/(\d+):(\d+)/g,"$1, versículos $2").replace(/–|-/g," a ")+".");
   parts.push(ps.text);
-  if(dv){ parts.push("Em poucas palavras. "+dv.reflection); (dv.story||[]).forEach(t=>parts.push(t)); parts.push("Aplicação prática. "+dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
+  if(dv){ parts.push("Em poucas palavras. "+dv.reflection); (dv.story||[]).forEach(t=>parts.push(t)); if(dv.close) parts.push("Para pensar. "+dv.close); parts.push("Aplicação prática. "+dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
   // divide em frases curtas (o iPhone corta textos longos)
   return parts.flatMap(t=>t.match(/[^.!?…]+[.!?…”"]*\s*/g)||[t]).map(x=>x.trim()).filter(Boolean);
 }
@@ -5200,23 +5250,56 @@ function speakNext(){
   if(!Speak.on) return;
   if(Speak.i>=Speak.parts.length){ stopSpeak(); return; }
   const u=new SpeechSynthesisUtterance(Speak.parts[Speak.i]); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate;
-  u.onend=()=>{ Speak.i++; speakNext(); }; u.onerror=()=>{ Speak.i++; speakNext(); };
+  const tok=Speak.tok=(Speak.tok||0)+1;
+  u.onend=()=>{ if(tok!==Speak.tok) return; Speak.i++; speakNext(); }; u.onerror=()=>{ if(tok!==Speak.tok) return; Speak.i++; speakNext(); };
   speechSynthesis.speak(u); paintListen();
 }
+
+/* ---------- Modo carro: botões grandes e tela sempre ligada ---------- */
+let wakeLock=null;
+async function keepAwake(on){ try{ if(on && "wakeLock" in navigator){ wakeLock=await navigator.wakeLock.request("screen"); } else if(!on && wakeLock){ await wakeLock.release(); wakeLock=null; } }catch(e){} }
+function paintCar(){
+  const d=$("#carMode"); if(!d.open) return;
+  $("#carNow").textContent = Speak.parts[Math.min(Speak.i,Speak.parts.length-1)]||"";
+  $("#carProg").textContent = Speak.parts.length ? `${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "";
+  d.querySelector('[data-car="play"] use').setAttribute("href", Speak.on && !Speak.paused ? "#i-pause" : "#i-playfill");
+}
+function openCarMode(kind){
+  const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
+  $("#carTitle").textContent = box._dv ? box._dv.title : (box._ps?.label||"Texto do dia");
+  if(!(Speak.on && Speak.kind===kind)){ stopSpeak(); Speak.kind=kind; Speak.parts=speakTextFor(kind); Speak.i=0; Speak.on=true; speakNext(); }
+  $("#carMode").showModal(); keepAwake(true); paintCar();
+  if("mediaSession" in navigator){ try{ navigator.mediaSession.metadata=new MediaMetadata({ title:$("#carTitle").textContent, artist:"SOLA | Bíblia & Teologia", artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" }] }); }catch(e){} }
+}
+$("#carClose").addEventListener("click",()=>{ $("#carMode").close(); keepAwake(false); });
+$("#carMode").addEventListener("click",e=>{
+  const b=e.target.closest("[data-car]"); if(!b) return;
+  if(b.dataset.car==="play"){
+    if(!Speak.on){ Speak.parts=speakTextFor(Speak.kind||"devo"); Speak.i=0; Speak.on=true; speakNext(); }
+    else if(Speak.paused){ Speak.paused=false; speechSynthesis.resume(); } else { Speak.paused=true; speechSynthesis.pause(); }
+  }
+  if(b.dataset.car==="prev" || b.dataset.car==="next"){
+    Speak.i=Math.max(0, Math.min(Speak.parts.length-1, Speak.i+(b.dataset.car==="next"?1:-1)));
+    Speak.on=true; Speak.paused=false; Speak.tok=(Speak.tok||0)+1; speechSynthesis.cancel(); setTimeout(speakNext,80);
+  }
+  paintListen(); paintCar();
+});
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && $("#carMode").open) keepAwake(true); });
 function stopSpeak(){ Speak.on=false; Speak.paused=false; try{ speechSynthesis.cancel(); }catch(e){} paintListen(); }
 function paintListen(){
+  if(typeof paintCar==="function") paintCar();
   document.querySelectorAll(".listen-bar").forEach(bar=>{
     const mine = Speak.on && bar.dataset.listen===Speak.kind;
-    bar.querySelector('[data-ls="play"] span').textContent = mine ? (Speak.paused?"Continuar":"Pausar") : "Ouvir";
-    bar.querySelector('[data-ls="play"] use').setAttribute("href", mine && !Speak.paused ? "#i-pause" : "#i-listen");
+    bar.querySelector('[data-ls="play"] use').setAttribute("href", mine && !Speak.paused ? "#i-pause" : "#i-playfill");
     bar.querySelector('[data-ls="stop"]').hidden = !mine;
-    bar.querySelector('.listen-st').textContent = mine ? `${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "";
+    bar.querySelector('.listen-st').textContent = mine ? (Speak.paused?"Pausado · ":"Tocando · ")+`${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "Leitura em voz alta, ideal para o carro";
     bar.classList.toggle("on", mine);
   });
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-ls]"); if(!b) return; const kind=b.closest(".listen-bar").dataset.listen;
   if(b.dataset.ls==="stop") return stopSpeak();
+  if(b.dataset.ls==="car") return openCarMode(kind);
   if(b.dataset.ls==="rate"){ const r=[0.8,1,1.2,1.4]; Speak.rate=r[(r.indexOf(Speak.rate)+1)%r.length]||1; store.set("ttsRate",Speak.rate);
     document.querySelectorAll(".listen-rate").forEach(x=>x.textContent=Speak.rate+"×"); if(Speak.on && !Speak.paused){ speechSynthesis.cancel(); } return; }
   if(Speak.on && Speak.kind===kind){
