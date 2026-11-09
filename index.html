@@ -4709,8 +4709,9 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.3.3";
+const APP_VERSION = "3.4.0";
 const CHANGELOG = [
+  { v:"3.4.0", d:"novembro de 2026", items:["Canal SOLA no Telegram: devocional publicado automaticamente todo dia às 5h."] },
   { v:"3.3.3", d:"novembro de 2026", items:["Post do Canal em um só Colar: o link do devocional mostra a imagem do dia no WhatsApp."] },
   { v:"3.3.2", d:"novembro de 2026", items:["“Postar no Canal agora” abre o WhatsApp direto no Canal SOLA, com imagem e texto prontos para colar."] },
   { v:"3.3.1", d:"novembro de 2026", items:["Postar o devocional no Canal SOLA ficou em um toque: botão “Postar no Canal agora” com passo a passo."] },
@@ -5233,7 +5234,7 @@ document.addEventListener("click",e=>{
    COMPARTILHE O SOLA · MEU DEVOCIONAL DIÁRIO (Canal do WhatsApp)
    >>> Cole em WA_CHANNEL o link do Canal SOLA (ex.: https://whatsapp.com/channel/XXXX) <<<
    ===================================================================== */
-const TG_CHANNEL_URL = "";   // ex.: https://t.me/solabiblia
+const TG_CHANNEL_URL = "https://t.me/solabiblia";   // ex.: https://t.me/solabiblia
 const WA_CHANNEL = "https://whatsapp.com/channel/0029VbE22ry84Om9DmiIaM43";
 const SITE_URL = () => APP_URL.replace(/\/$/,"")+"/site/";
 const INSTALL_URL = () => APP_URL+"?instalar";
@@ -5252,6 +5253,7 @@ Tudo em um ambiente moderno, intuitivo e desenvolvido para acompanhar sua caminh
 📱 Instale o aplicativo: ${INSTALL_URL()}
 
 📬 Devocional diário no WhatsApp: ${WA_CHANNEL}
+✈️ Ou no Telegram (todo dia às 5h): ${TG_CHANNEL_URL}
 
 *SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
 function inviteText(){ return store.get("inviteMsg","") || INVITE_DEFAULT(); }
