@@ -1703,6 +1703,9 @@ dialog.car-mode[open]{display:flex}
     <section class="cfg-card" aria-labelledby="cfgAjudaT">
       <h3 id="cfgAjudaT"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>Ajuda e lembretes</h3>
       <div class="cfg-form">
+        <label>Voz da leitura (Ouvir e Modo carro)<select id="cfgVoice"><option value="">Automática (voz masculina, se houver)</option></select></label>
+        <button type="button" class="btn btn-sm" id="cfgVoiceTest">▶ Testar voz</button>
+        <p class="hint">No iPhone, para uma voz masculina mais natural: Ajustes › Acessibilidade › Conteúdo Falado › Vozes › Português (Brasil) › baixe <strong>Felipe (Aprimorada)</strong>. Depois escolha-a aqui. Com o celular conectado ao carro (Bluetooth ou CarPlay), o som sai pelos alto-falantes do carro.</p>
         <label class="radio"><input type="checkbox" id="cfgTips"><span>Explicar cada botão na primeira vez que eu tocar nele</span></label>
         <button type="button" class="btn btn-sm" id="cfgTipsReset">Mostrar as explicações de novo</button>
         <button type="button" class="btn btn-sm" data-view="devocional">Configurar lembrete diário</button>
@@ -1803,7 +1806,7 @@ dialog.car-mode[open]{display:flex}
     <button type="button" class="car-btn" data-car="next" aria-label="Avançar um trecho"><svg class="icon" aria-hidden="true"><use href="#i-next"/></svg></button>
   </div>
   <p class="car-prog" id="carProg"></p>
-  <p class="car-hint">Mantenha o app aberto com a tela ligada. Use com o celular no suporte e sem mexer enquanto dirige.</p>
+  <p class="car-hint">🔊 Conecte o celular ao carro pelo Bluetooth ou CarPlay: a leitura sai pelo som do carro. Mantenha o app aberto e o celular no suporte; não mexa enquanto dirige.</p>
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
@@ -4679,6 +4682,7 @@ function renderConfig(){
   $("#cfgBr").innerHTML=REFORMED.brazil.map(c=>`<option ${c.name===brDefault()?"selected":""}>${esc(c.name)}</option>`).join("");
   $("#cfgAutoTr").checked=Tr.auto; $("#cfgInline").checked=!!Comm.inline; $("#cfgTrEmail").checked=store.get("trEmail",false);
   $("#cfgTips").checked=store.get("tips",true);
+  fillVoices();
   $("#cfgVer").textContent=APP_VERSION;
   $("#cfgChangelog").innerHTML=CHANGELOG.map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
   $("#cfgStats").textContent=`${NotesStore.all().length} notas · ${Object.keys(Hl.all()).length} versículos grifados · ${TextMarks.all().length} trechos grifados · ${Saved.all().length} comentários salvos · ${store.get("favorites",[]).length||0} favoritos`;
@@ -4707,6 +4711,15 @@ $("#cfgInline").addEventListener("change",e=>{ Comm.inline=e.target.checked; sto
 $("#cfgTrEmail").addEventListener("change",e=>{ if(e.target.checked && !/\S+@\S+\.\S+/.test(Profile.get().email||"")){ e.target.checked=false; toast("Salve um e-mail no perfil primeiro."); return; } store.set("trEmail",e.target.checked); });
 $("#cfgTrClear").addEventListener("click",()=>{ store.set("trCache",{}); Tr.mem.clear(); toast("Traduções guardadas apagadas."); });
 $("#cfgTips").addEventListener("change",e=>store.set("tips",e.target.checked));
+function fillVoices(){
+  const sel=$("#cfgVoice"); if(!sel || !("speechSynthesis" in window)) return;
+  const vs=ptVoices().sort((a,b)=>voiceScore(b)-voiceScore(a)); const saved=store.get("ttsVoice","");
+  sel.innerHTML=`<option value="">Automática (voz masculina, se houver)</option>`+vs.map(v=>`<option value="${esc(v.name)}" ${v.name===saved?"selected":""}>${esc(v.name)} · ${esc(v.lang)}${MALE_PT.test(v.name)?" · masculina":""}${NICE.test(v.name)?" · natural":""}</option>`).join("");
+}
+if("speechSynthesis" in window) speechSynthesis.addEventListener?.("voiceschanged", fillVoices);
+$("#cfgVoice").addEventListener("change",e=>{ store.set("ttsVoice",e.target.value); toast("Voz da leitura alterada."); });
+$("#cfgVoiceTest").addEventListener("click",()=>{ if(!("speechSynthesis" in window)) return toast("Este navegador não tem leitura em voz alta.");
+  speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance("A minha graça te basta, porque o poder se aperfeiçoa na fraqueza."); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate*0.92; u.pitch=0.95; speechSynthesis.speak(u); });
 $("#cfgTipsReset").addEventListener("click",()=>{ store.set("tipsSeen",[]); store.set("tips",true); $("#cfgTips").checked=true; toast("As explicações aparecerão de novo."); });
 function backupKeys(){ const ks=[]; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k.startsWith("cb:") && k!=="cb:trCache") ks.push(k); } }catch(e){} return ks; }
 $("#cfgExport").addEventListener("click",()=>{
@@ -5227,13 +5240,21 @@ function listenBar(kind){
   if(!("speechSynthesis" in window)) return "";
   return `<div class="listen-bar" data-listen="${kind}">
     <button type="button" class="listen-big" data-ls="play" aria-label="Ouvir o devocional"><svg class="icon" aria-hidden="true"><use href="#i-playfill"/></svg></button>
-    <div class="listen-lbl"><strong>Ouvir ${kind==="devo"?"o devocional":"o texto do dia"}</strong><span class="listen-st muted" aria-live="polite">Leitura em voz alta, ideal para o carro</span></div>
+    <div class="listen-lbl"><strong>Ouvir ${kind==="devo"?"o devocional":"o texto do dia"}</strong><span class="listen-st muted" aria-live="polite">Voz suave · toca no som do carro via Bluetooth</span></div>
     <button type="button" class="btn btn-sm listen-car" data-ls="car"><svg class="icon" aria-hidden="true"><use href="#i-car"/></svg>Modo carro</button>
     <button type="button" class="btn btn-sm" data-ls="stop" hidden>Parar</button>
     <button type="button" class="btn btn-sm listen-rate" data-ls="rate" title="Velocidade da leitura">${Speak.rate}×</button>
     </div>`;
 }
-function ptVoice(){ const vs=speechSynthesis.getVoices(); return vs.find(v=>/pt[-_]BR/i.test(v.lang) && /luciana|felipe|google|premium|enhanced/i.test(v.name)) || vs.find(v=>/pt[-_]BR/i.test(v.lang)) || vs.find(v=>/^pt/i.test(v.lang)); }
+/* Vozes masculinas em português conhecidas (iPhone/Mac, Windows/Edge, Android) */
+const MALE_PT = /felipe|antonio|ant[oô]nio|daniel|thiago|fabio|f[aá]bio|humberto|julio|j[uú]lio|nicolau|donato|valerio|val[eé]rio|ricardo|pt-br-x-ptd|pt-br-x-pte|male|masculin/i;
+const NICE = /natural|neural|premium|aprimorad|enhanced|online/i;
+function ptVoices(){ return speechSynthesis.getVoices().filter(v=>/^pt/i.test(v.lang)); }
+function voiceScore(v){ let s=0; if(/pt[-_]BR/i.test(v.lang)) s+=4; if(MALE_PT.test(v.name)) s+=5; if(NICE.test(v.name)) s+=3; if(v.localService) s+=1; return s; }
+function ptVoice(){
+  const vs=ptVoices(); const saved=store.get("ttsVoice","");
+  return vs.find(v=>v.name===saved) || vs.sort((a,b)=>voiceScore(b)-voiceScore(a))[0];
+}
 if("speechSynthesis" in window){ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged=()=>{}; }
 function speakTextFor(kind){
   const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
@@ -5249,9 +5270,10 @@ function speakTextFor(kind){
 function speakNext(){
   if(!Speak.on) return;
   if(Speak.i>=Speak.parts.length){ stopSpeak(); return; }
-  const u=new SpeechSynthesisUtterance(Speak.parts[Speak.i]); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate;
+  const u=new SpeechSynthesisUtterance(Speak.parts[Speak.i]); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v;
+  u.rate=Speak.rate*0.92; u.pitch=0.95; u.volume=1;   // um pouco mais lento e grave: leitura mais suave
   const tok=Speak.tok=(Speak.tok||0)+1;
-  u.onend=()=>{ if(tok!==Speak.tok) return; Speak.i++; speakNext(); }; u.onerror=()=>{ if(tok!==Speak.tok) return; Speak.i++; speakNext(); };
+  u.onend=()=>{ if(tok!==Speak.tok) return; Speak.i++; const endPar=/[.!?…”]\s*$/.test(Speak.parts[Speak.i-1]||""); setTimeout(()=>{ if(tok===Speak.tok) speakNext(); }, endPar?450:200); }; u.onerror=()=>{ if(tok!==Speak.tok) return; Speak.i++; speakNext(); };
   speechSynthesis.speak(u); paintListen();
 }
 
@@ -5285,6 +5307,14 @@ $("#carMode").addEventListener("click",e=>{
   paintListen(); paintCar();
 });
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible" && $("#carMode").open) keepAwake(true); });
+if("mediaSession" in navigator){
+  try{
+    navigator.mediaSession.setActionHandler("play",()=>{ if(Speak.on && Speak.paused){ Speak.paused=false; speechSynthesis.resume(); paintListen(); } });
+    navigator.mediaSession.setActionHandler("pause",()=>{ if(Speak.on && !Speak.paused){ Speak.paused=true; speechSynthesis.pause(); paintListen(); } });
+    navigator.mediaSession.setActionHandler("nexttrack",()=>$('#carMode [data-car="next"]')?.click());
+    navigator.mediaSession.setActionHandler("previoustrack",()=>$('#carMode [data-car="prev"]')?.click());
+  }catch(e){}
+}
 function stopSpeak(){ Speak.on=false; Speak.paused=false; try{ speechSynthesis.cancel(); }catch(e){} paintListen(); }
 function paintListen(){
   if(typeof paintCar==="function") paintCar();
@@ -5292,7 +5322,7 @@ function paintListen(){
     const mine = Speak.on && bar.dataset.listen===Speak.kind;
     bar.querySelector('[data-ls="play"] use').setAttribute("href", mine && !Speak.paused ? "#i-pause" : "#i-playfill");
     bar.querySelector('[data-ls="stop"]').hidden = !mine;
-    bar.querySelector('.listen-st').textContent = mine ? (Speak.paused?"Pausado · ":"Tocando · ")+`${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "Leitura em voz alta, ideal para o carro";
+    bar.querySelector('.listen-st').textContent = mine ? (Speak.paused?"Pausado · ":"Tocando · ")+`${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "Voz suave · toca no som do carro via Bluetooth";
     bar.classList.toggle("on", mine);
   });
 }
