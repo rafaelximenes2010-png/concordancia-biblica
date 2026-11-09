@@ -68,7 +68,7 @@ Cada mês tem um arquivo `devocionais/AAAA-MM.json` com um devocional por dia (`
 | **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, empacotamento (política de privacidade e termos já prontos em `site/`) do app, telas e textos da loja. |
 | Tradutor sem limite | Código pronto | Conta Azure (Translator F0) + Cloudflare; mesma ponte da voz. |
 | Endereço próprio | Site pronto em `site/` | Registrar um domínio (ex.: `solabiblia.com.br` no Registro.br) e apontá-lo para o GitHub Pages. |
-| Tradução revisada das confissões | Breve Catecismo e Heidelberg prontos | Catecismo Maior, Confissão de Westminster, Belga, Dort, Escocesa, Segunda Helvética e Batista de 1689 (hoje em tradução automática no app). |
-| Devocionais de dezembro em diante | Novembro pronto; calendário em `devocionais/series.json` | Escrever `devocionais/2026-12.json` (“A Luz veio ao mundo”) e os meses seguintes. |
+| Tradução revisada das confissões | Breve Catecismo, Heidelberg e Catecismo Maior prontos | Confissão de Westminster, Belga, Dort, Escocesa, Segunda Helvética e Batista de 1689 (hoje em tradução automática no app). |
+| Devocionais de janeiro em diante | Novembro e dezembro prontos; calendário em `devocionais/series.json` | Escrever `devocionais/2027-01.json` (“Recomeços com Deus”) e os meses seguintes. |
 | Estatísticas de uso | Código pronto | Conta GoatCounter e o código do site. |
 | Canal de sugestões | Usando GitHub | E-mail ou WhatsApp do SOLA. |
