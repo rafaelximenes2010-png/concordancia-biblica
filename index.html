@@ -4866,21 +4866,33 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
   player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
     a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
-    a.addEventListener("play",()=>{ this.playing=true; daPaint(); });
-    let lastSave=0; a.addEventListener("timeupdate",()=>{ if(!this.doc || this.doc.kind!=="artigo") return; daPaint();
+    a.addEventListener("play",()=>{ this.playing=true; daPaint(); try{ navigator.mediaSession.playbackState="playing"; }catch(e){} this.pos(); });
+    a.addEventListener("pause",()=>{ try{ navigator.mediaSession.playbackState="paused"; }catch(e){} this.pos(); });
+    a.addEventListener("loadedmetadata",()=>{ a.preservesPitch=true; a.webkitPreservesPitch=true;
+      a.playbackRate = (this.doc && this.doc.kind==="artigo" && a.duration>150) ? Math.min(1.3, a.duration/148) : 1;   // artigos em até ~2min30
+      this.pos(); daPaint(); });
+    let lastSave=0; a.addEventListener("timeupdate",()=>{ if(!this.doc || this.doc.kind!=="artigo") return; daPaint(); if(Math.abs(a.currentTime-(this._lp||0))>5){ this._lp=a.currentTime; this.pos(); }
       if(Math.abs(a.currentTime-lastSave)>4){ lastSave=a.currentTime; store.set("daT:"+this.doc.id, a.duration && a.currentTime>a.duration-8 ? 0 : a.currentTime); } }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
     this.el=a; return a; },
-  media(){ if(!("mediaSession" in navigator)) return; const a=this.el;
-    try{ navigator.mediaSession.metadata=new MediaMetadata({ title:this.label(this.doc,this.i), artist:"SOLA | Bíblia & Teologia", album:this.doc.title,
-        artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" },{ src:"icons/icon-mac-512.png?v=3", sizes:"512x512", type:"image/png" }] });
-      navigator.mediaSession.setActionHandler("play",()=>a.play()); navigator.mediaSession.setActionHandler("pause",()=>a.pause());
-      navigator.mediaSession.setActionHandler("nexttrack",()=>this.go(this.i+1)); navigator.mediaSession.setActionHandler("previoustrack",()=>this.go(this.i-1));
-      navigator.mediaSession.setActionHandler("seekbackward",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
-      navigator.mediaSession.setActionHandler("seekforward",()=>{ a.currentTime=Math.min(a.duration||0,a.currentTime+15); }); }catch(e){} },
+  media(){ if(!("mediaSession" in navigator)) return; const a=this.el, d=this.doc, ms=navigator.mediaSession; const abs=u=>new URL(u,location.href).href;
+    try{ ms.metadata=new MediaMetadata({ title: d.kind==="artigo" ? d.title : this.label(d,this.i), artist:"SOLA | Bíblia & Teologia",
+        album: d.kind==="artigo" ? `Artigos · ${d.author}` : d.title,
+        artwork:[120,180,512].map(n=>({ src:abs(n===512?"icons/icon-512.png?v=3":`icons/apple-touch-${n}.png?v=3`), sizes:`${n}x${n}`, type:"image/png" })) });
+      const set=(k,f)=>{ try{ ms.setActionHandler(k,f); }catch(e){} };
+      set("play",()=>a.play()); set("pause",()=>a.pause()); set("stop",()=>this.stop());
+      set("seekbackward",()=>{ a.currentTime=Math.max(0,a.currentTime-15); this.pos(); });
+      set("seekforward",()=>{ a.currentTime=Math.min((a.duration||0)-0.5,a.currentTime+15); this.pos(); });
+      set("seekto",ev=>{ if(ev && isFinite(ev.seekTime)) a.currentTime=ev.seekTime; this.pos(); });
+      if(d.kind==="artigo"){ set("nexttrack",null); set("previoustrack",null); }      // tela bloqueada mostra -15/+15
+      else { set("nexttrack",()=>this.go(this.i+1)); set("previoustrack",()=>this.go(this.i-1)); }
+    }catch(e){} },
+  pos(){ try{ const a=this.el; if(a && "mediaSession" in navigator && navigator.mediaSession.setPositionState && isFinite(a.duration) && a.duration>0)
+      navigator.mediaSession.setPositionState({ duration:a.duration, playbackRate:a.playbackRate||1, position:Math.min(a.currentTime,a.duration) }); }catch(e){} },
+  eff(t){ return t/((this.el&&this.el.playbackRate)||1); },
   start(d,i){ try{ narrStop(); stopSpeak(); }catch(e){} mediaAudioSession(); this.doc=d; this.player(); this.go(Math.min(Math.max(0,i||0),d.items.length-1)); },
   async go(i){ const d=this.doc; if(!d || i<0 || i>=d.items.length) return; this.i=i; this.loading=true; store.set("daPos:"+d.id,i); daPaint(); daFocus();
     const a=this.player();
-    try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; this.loading=false; this.media();
+    try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; a.playbackRate=1; this.loading=false; this.media();
       if(d.kind==="artigo"){ const t=store.get("daT:"+d.id,0); if(t>5){ try{ a.currentTime=t; }catch(e){ a.addEventListener("loadedmetadata",()=>{ a.currentTime=t; },{once:true}); } } }
       await a.play();
       if(i+1<d.items.length) this.url(d,i+1).catch(()=>{}); }
@@ -4895,9 +4907,9 @@ function daPaint(){ if(typeof paintMini==="function") setTimeout(paintMini,30);
     pb.setAttribute("aria-label", on && DA.playing ? "Pausar" : "Ouvir");
     const pos = on ? DA.i : store.get("daPos:"+d.id,0);
     const savedT = d.kind==="artigo" ? store.get("daT:"+d.id,0) : 0;
-    if(d.kind==="artigo" && !on && savedT>5){ bar.querySelector(".da-t").textContent="Continuar de onde parou"; bar.querySelector(".da-s").textContent=`${fmtT(savedT)} · ${d.author}`; }
+    if(d.kind==="artigo" && !on && savedT>5){ bar.querySelector(".da-t").textContent="Continuar de onde parou"; bar.querySelector(".da-s").textContent=`${d.author} · voz natural`; }
     else if(on || pos>0){ bar.querySelector(".da-t").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(d,pos);
-      bar.querySelector(".da-s").textContent = d.kind==="credo" ? d.title : d.kind==="artigo" ? (on && DA.el && DA.el.duration ? `${fmtT(DA.el.currentTime)} de ${fmtT(DA.el.duration)} · ${d.author}` : `${d.author} · voz natural`) : `${pos+1} de ${d.items.length} · ${d.title}`; }
+      bar.querySelector(".da-s").textContent = d.kind==="credo" ? d.title : d.kind==="artigo" ? (on && DA.el && DA.el.duration ? `${fmtT(DA.eff(DA.el.currentTime))} de ${fmtT(DA.eff(DA.el.duration))} · ${d.author}` : `${d.author} · voz natural`) : `${pos+1} de ${d.items.length} · ${d.title}`; }
     if(d.kind==="artigo" && on) bar.querySelector(".da-t").textContent = DA.loading ? "Preparando o áudio…" : DA.playing ? "Ouvindo o artigo" : "Pausado";
     const host=bar.closest(".da-host"); if(host) host.querySelectorAll(".doc-item[data-i]").forEach(x=>x.classList.toggle("da-now", on && +x.dataset.i===DA.i && (DA.playing||DA.loading)));
   });
@@ -4918,8 +4930,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.5";
+const APP_VERSION = "3.6.6";
 const CHANGELOG = [
+  { v:"3.6.6", d:"novembro de 2026", items:["Artigos em áudio com até cerca de 2 minutos e 30 segundos.","Tocador na tela bloqueada e na Central de Controle, como nos apps de música: SOLA, título do artigo, capa, barra de progresso e -15/+15."] },
   { v:"3.6.5", d:"novembro de 2026", items:["Artigos tocam em um único áudio, do começo ao fim, com botões de -15 e +15 segundos; o app lembra onde você parou.","Voltar dentro de Artigos, Credos e Configurações leva de volta à lista, no ponto em que você estava."] },
   { v:"3.6.4", d:"novembro de 2026", items:["Mensagem de boas-vindas com o seu nome ao abrir o app."] },
   { v:"3.6.3", d:"novembro de 2026", items:["O áudio continua tocando ao voltar ou trocar de seção, com um mini player no rodapé (pausar, parar e voltar ao texto).","Atualizações do app esperam o áudio terminar para não interromper a escuta."] },
@@ -5396,7 +5409,7 @@ paintAvatar();
 const PLAY_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>', PAUSE_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
 function audioNow(){
   if(typeof DA!=="undefined" && DA.doc && DA.el && (DA.el.src || DA.loading) && (DA.playing || DA.loading || (DA.el.currentTime>0 && !DA.el.ended)))
-    return { kind:"da", playing:DA.playing||DA.loading, t:DA.label(DA.doc,DA.i), s: DA.doc.kind==="artigo" ? (DA.el && DA.el.duration ? `${fmtT(DA.el.currentTime)} de ${fmtT(DA.el.duration)} · ${DA.doc.author}` : DA.doc.author) : DA.doc.kind==="credo" ? "Credo · voz natural" : `${DA.i+1} de ${DA.doc.items.length} · ${DA.doc.title}`, home: DA.doc.kind==="artigo"?"artigos":"catecismos" };
+    return { kind:"da", playing:DA.playing||DA.loading, t:DA.label(DA.doc,DA.i), s: DA.doc.kind==="artigo" ? (DA.el && DA.el.duration ? `${fmtT(DA.eff(DA.el.currentTime))} de ${fmtT(DA.eff(DA.el.duration))} · ${DA.doc.author}` : DA.doc.author) : DA.doc.kind==="credo" ? "Credo · voz natural" : `${DA.i+1} de ${DA.doc.items.length} · ${DA.doc.title}`, home: DA.doc.kind==="artigo"?"artigos":"catecismos" };
   if(typeof Narr!=="undefined" && Narr.audio) return { kind:"narr", playing:!Narr.audio.paused, t: Narr.kind==="devo"?"Devocional de hoje":"Texto do dia", s:"SOLA | Bíblia & Teologia", home: Narr.kind==="devo"?"devocional":"texto" };
   if(typeof Speak!=="undefined" && Speak.on) return { kind:"speak", playing:!Speak.paused, t: Speak.kind==="devo"?"Devocional de hoje":"Leitura em voz alta", s:"Voz do aparelho", home: Speak.kind==="devo"?"devocional":"texto" };
   return null;
@@ -6294,8 +6307,10 @@ async function narrPlay(kind){
     a.addEventListener("ended",()=>{ narrStop(); });
     if("mediaSession" in navigator){
       try{ navigator.mediaSession.metadata=new MediaMetadata({ title: box._dv?box._dv.title:(box._ps?.label||"Texto do dia"), artist:"SOLA | Bíblia & Teologia", album: box._dv?"Devocional":"Texto do dia",
-        artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" },{ src:"icons/icon-mac-512.png?v=3", sizes:"512x512", type:"image/png" }] });
+        artwork:[{ src:new URL("icons/apple-touch-180.png?v=3",location.href).href, sizes:"180x180", type:"image/png" },{ src:new URL("icons/icon-512.png?v=3",location.href).href, sizes:"512x512", type:"image/png" }] });
         navigator.mediaSession.setActionHandler("play",()=>a.play()); navigator.mediaSession.setActionHandler("pause",()=>a.pause());
+        try{ navigator.mediaSession.setActionHandler("seekto",ev=>{ if(isFinite(ev.seekTime)) a.currentTime=ev.seekTime; }); }catch(e){}
+        a.addEventListener("loadedmetadata",()=>{ try{ navigator.mediaSession.setPositionState({ duration:a.duration, playbackRate:1, position:0 }); }catch(e){} },{once:true});
         navigator.mediaSession.setActionHandler("seekbackward",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
         navigator.mediaSession.setActionHandler("seekforward",()=>{ a.currentTime=Math.min(a.duration||0,a.currentTime+15); });
         navigator.mediaSession.setActionHandler("previoustrack",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
