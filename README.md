@@ -50,3 +50,14 @@ Versões como ARA, ARC, NVI, NAA e NTLH têm direitos autorais e só podem ser i
 ## Como adicionar uma versão
 Gere `biblias/CODIGO.json` no formato `{ code, name, lang, dir, license, books: { GEN: [[v1, v2, …], …] } }` e acrescente a entrada em `biblias/index.json`.
 Ao publicar uma nova versão do app, altere `CACHE` em `sw.js`.
+
+## Pendências (deixadas para depois)
+
+| Item | Situação | O que falta |
+|---|---|---|
+| **Voz masculina natural** (locutor Antônio, áudio no CarPlay/Bluetooth e com tela bloqueada) | Código pronto no app e em `tradutor/worker.js` | Criar conta Azure + recurso **Speech** (Free F0), colar a chave no Worker do Cloudflare e informar o endereço do Worker (`TR_PROXY`). Passo a passo em `tradutor/LEIA-ME.md`. |
+| **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, política de privacidade e termos, empacotamento do app, telas e textos da loja. |
+| Tradutor sem limite | Código pronto | Conta Azure (Translator F0) + Cloudflare; mesma ponte da voz. |
+| Endereço próprio | Não iniciado | Organização gratuita no GitHub (ex.: `solabiblia`) e, se quiser, domínio `.com.br`. |
+| Estatísticas de uso | Código pronto | Conta GoatCounter e o código do site. |
+| Canal de sugestões | Usando GitHub | E-mail ou WhatsApp do SOLA. |
