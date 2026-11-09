@@ -5261,7 +5261,7 @@ const devoLink = d => `${APP_URL}?devo=${todayKey(d)}#devocional`;
   if(!location.hash) history.replaceState(null,"",location.pathname+location.search+"#devocional");
 })();
 function canalPost(dv, ps, d){
-  const resumo=((dv.reflection||"").match(/[^.!?]+[.!?]+/g)||[dv.reflection||""]).slice(0,2).join(" ").trim();
+  const resumo=((dv.reflection||"").match(/[^.!?]+[.!?]+/g)||[dv.reflection||""]).slice(0,2).join(" ").replace(/\s{2,}/g," ").trim();
   return `*SOLA | Devocional Diário 📖*
 
 *${dv.title}*
