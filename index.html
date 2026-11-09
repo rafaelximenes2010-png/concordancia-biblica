@@ -4783,7 +4783,17 @@ $("#artForm").addEventListener("submit",e=>{ e.preventDefault(); const q=$("#art
    ===================================================================== */
 const Docs = { list:null, cache:{} };
 async function docsIndex(){ if(!Docs.list){ const r=await fetch("docs/index.json"); if(!r.ok) throw new Error("docs"); Docs.list=await r.json(); } return Docs.list; }
-async function docGet(id){ if(!Docs.cache[id]){ let r; try{ r=await fetch(`docs/${id}.json?v=${APP_VERSION}`); }catch(e){ r=await fetch(`docs/${id}.json`); } if(!r.ok) throw new Error("doc"); Docs.cache[id]=await r.json(); } return Docs.cache[id]; }
+async function docGet(id){
+  if(Docs.cache[id]) return Docs.cache[id];
+  const urls=[`docs/${id}.json?v=${APP_VERSION}`, `https://raw.githubusercontent.com/rafaelximenes2010-png/concordancia-biblica/main/docs/${id}.json`];
+  const fails=[];
+  for(const u of urls){
+    try{ const r=await fetch(u,{ cache:"no-cache" }); if(!r.ok){ fails.push(`${r.status} em ${u.split("?")[0]}`); continue; }
+      const t=await r.text(); try{ Docs.cache[id]=JSON.parse(t); return Docs.cache[id]; }catch(e){ fails.push(`conteúdo inválido (${t.slice(0,30).replace(/\s+/g," ")}…) em ${u.split("?")[0]}`); } }
+    catch(e){ fails.push(`${e.message} em ${u.split("?")[0]}`); }
+  }
+  const err=new Error(fails.join(" · ")); err.detail=fails.join(" · "); throw err;
+}
 const KIND_LABEL={ credo:"Credo", catecismo:"Catecismo", confissao:"Confissão" };
 function catBackToList(){ const id=curDoc?.id; renderCatHome().then(()=>{ const c=id&&document.querySelector(`#catList [data-doc="${id}"]`); if(c) c.scrollIntoView({block:"center"}); else window.scrollTo({top:0}); }); }
 async function renderCatHome(){
@@ -4803,7 +4813,8 @@ let curDoc=null, docPage=1;
 async function openDoc(id){
   const box=$("#catDoc"); $("#catHome").hidden=true; box.hidden=false; window.scrollTo({top:0});
   box.innerHTML=`<p class="muted">Carregando o documento…</p>`;
-  try{ curDoc=await docGet(id); }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível abrir o documento.</div><button type="button" class="btn" data-dback>‹ Voltar</button>`; return; }
+  try{ curDoc=await docGet(id); }catch(e){ console.error(e); box.innerHTML=`<div class="notice error">Não foi possível abrir o documento “${esc(id)}”.<br><small>Detalhe técnico: ${esc(e.detail||e.message||String(e))}</small></div>
+    <div class="row-actions"><button type="button" class="btn" data-dback>‹ Voltar</button><button type="button" class="btn btn-primary" onclick="location.reload()">Atualizar o app</button></div>`; return; }
   docPage=1;
   try{ renderDoc(); }
   catch(e){ console.error(e); box.innerHTML=`<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
@@ -5027,8 +5038,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.7.8";
+const APP_VERSION = "3.7.9";
 const CHANGELOG = [
+  { v:"3.7.9", d:"novembro de 2026", items:["Credos e catecismos: se o servidor principal falhar, o documento é buscado numa segunda fonte."] },
   { v:"3.7.8", d:"novembro de 2026", items:["Credos e catecismos: abertura mais robusta no computador (busca sempre a versão atual dos documentos e mostra aviso claro se algo falhar)."] },
   { v:"3.7.7", d:"novembro de 2026", items:["Ajuste nos temas dos Artigos: “Sexo antes do casamento”."] },
   { v:"3.7.6", d:"novembro de 2026", items:["Ícone “tocando agora” no alto do app, com ondinhas animadas: um toque abre o tocador em tela cheia."] },
