@@ -4649,6 +4649,10 @@ async function renderArticles(){
     <strong>Ligado ao devocional de hoje:</strong> ${esc(dv.title)} (${esc(ref)}) —
     <a href="${esc(artSearch(ref,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">artigos sobre ${esc(ref)} ↗</a></div>`;
 }
+function artShareText(x,d){
+  const body=d.items.map((it,i)=>(i>0&&it.h?`*${it.h}*\n\n`:"")+it.paras.join("\n\n")).join("\n\n");
+  return `📖 *SOLA | Bíblia & Teologia*\n_Artigos para ler e ouvir_\n\n*${x.title}*\n_A partir de ${x.author} · ${x.work}_\n\n${body}\n\n━━━━━━━━━━\n🎧 Ouça este artigo em voz natural no app:\n${APP_URL}?artigo=${x.id}#artigos\n\n*SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
+}
 function artAsDoc(x){
   const parts=x.body.split(/\n(?=## )/); const items=parts.map((p,k)=>{ const m=p.match(/^## (.+)\n/); const h=m?m[1].trim():(k===0?"Introdução":"");
     const paras=(m?p.slice(m[0].length):p).trim().split(/\n\s*\n/).map(t=>t.trim()).filter(Boolean); return { n:String(k+1), h, paras }; });
@@ -4667,7 +4671,8 @@ async function openArticle(id){
       ${d.items.map((it,i)=>`<section class="doc-item art-sec" data-i="${i}">${i>0&&it.h?`<h3>${esc(it.h)}</h3>`:""}${it.paras.map(p=>`<p>${esc(p)}</p>`).join("")}
         <button type="button" class="btn btn-sm btn-ghost art-from" data-da="from" data-i="${i}">▶ Ouvir daqui</button></section>`).join("")}
       <div class="art-links"><h3>Para ir além</h3>${x.links.map(l=>/^bib:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artbib="${esc(l.url.slice(4))}">📖 ${esc(l.label)}</button>`:/^doc:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artdoc="${esc(l.url.slice(4))}">📜 ${esc(l.label)}</button>`:`<a class="btn btn-sm btn-ext" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("")}
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${x.title}*\n_${x.author}_\n\n${d.items[0].paras[0]}\n\nLeia ou ouça no app SOLA | Bíblia & Teologia: ${APP_URL}?artigo=${x.id}#artigos`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a></div>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(artShareText(x,d)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar artigo completo</a>
+        <button type="button" class="btn btn-sm" data-artcopy="1"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar texto</button></div>
       <p class="hint">Texto do SOLA | Bíblia & Teologia que apresenta, com palavras próprias, o pensamento do autor. Para conhecer a obra completa, procure o livro original.</p>
     </article>`;
   daPaint();
@@ -4675,6 +4680,7 @@ async function openArticle(id){
 $("#artList").addEventListener("click",e=>{ const b=e.target.closest("[data-art]"); if(b) openArticle(b.dataset.art); });
 $("#artReader").addEventListener("click",e=>{
   if(e.target.closest("[data-artback]")) return renderArticles();
+  if(e.target.closest("[data-artcopy]")){ const host=e.target.closest(".da-host"); const d=DA_REG[host.dataset.docid]; return copyText(artShareText(d.src,d),"Artigo copiado com a marca SOLA."); }
   const bb=e.target.closest("[data-artbib]"); if(bb){ const [b,c]=bb.dataset.artbib.split("."); return openReader({ b, c:+c, asView:false }); }
   const dd=e.target.closest("[data-artdoc]"); if(dd){ showView("catecismos"); setTimeout(()=>openDoc(dd.dataset.artdoc),150); }
 });
@@ -4854,8 +4860,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.0";
+const APP_VERSION = "3.6.1";
 const CHANGELOG = [
+  { v:"3.6.1", d:"novembro de 2026", items:["Mais 16 artigos (Spurgeon, Ryle, Bavinck, Augustus Nicodemus, Hernandes Dias Lopes, Sibbes, Goodwin, Kuyper, Bunyan e outros): agora são 3 por tema.","Enviar pelo WhatsApp manda o artigo completo, com a marca SOLA e o link para ouvir."] },
   { v:"3.6.0", d:"novembro de 2026", items:["32 artigos do SOLA para ler e ouvir, dois por tema, apresentando John Piper, Paul Tripp, J. I. Packer, Tim Keller, R. C. Sproul, Jordan Peterson (com leitura reformada) e outros."] },
   { v:"3.5.0", d:"novembro de 2026", items:["Ouça os credos, catecismos e confissões em voz natural, pergunta por pergunta, com avançar e voltar pelo carro e pela tela bloqueada. O app lembra onde você parou."] },
   { v:"3.4.2", d:"novembro de 2026", items:["Nove vozes femininas naturais para a leitura (Thalita, Francisca, Brenda e outras)."] },

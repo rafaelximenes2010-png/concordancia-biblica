@@ -1,5 +1,5 @@
 {
- "version": 1,
+ "version": 2,
  "note": "Textos originais do SOLA | Bíblia & Teologia que apresentam, com palavras próprias, o pensamento de cada autor. As obras citadas pertencem aos seus autores e editoras.",
  "items": [
   {
@@ -37,6 +37,25 @@
     {
      "label": "Romanos 8 na Bíblia do SOLA",
      "url": "bib:ROM.8"
+    }
+   ]
+  },
+  {
+   "id": "spurgeon-tudo-pela-graca",
+   "t": 0,
+   "title": "Tudo pela graça",
+   "author": "Charles H. Spurgeon",
+   "work": "Tudo pela Graça (All of Grace, 1886)",
+   "min": 2,
+   "body": "Charles Spurgeon, o “príncipe dos pregadores”, pregou para multidões em Londres no século dezenove. Entre dezenas de livros, escreveu um pequeno volume pensado para quem ainda não era cristão ou tinha dúvidas sobre a própria salvação. O título resume a mensagem: tudo pela graça.\n\n## Deus justifica o ímpio\n\nSpurgeon começa por Romanos 4:5: Deus justifica o ímpio. Ele observa que muita gente acha que o evangelho é para os bons, e que precisa melhorar antes de vir a Deus. Mas a Bíblia diz o contrário. Cristo veio salvar pecadores. Ninguém é bom demais para precisar de graça, e ninguém é mau demais para recebê-la.\n\n## Graça pela fé\n\nSpurgeon explica a fé com imagens simples. A fé é como a mão que recebe um presente, ou como o cano por onde a água chega. O valor não está no cano, mas na fonte. Não somos salvos porque a nossa fé é forte, mas porque o Cristo em quem cremos é forte. Uma fé pequena em um grande Salvador salva completamente.\n\n## E se eu cair de novo?\n\nUma parte do livro trata do medo de não perseverar. Spurgeon responde que quem começou a obra é o próprio Deus, e ele não abandona o que começou. A graça que nos chamou também nos guarda. Isso não é licença para pecar, porque quem foi alcançado pela graça passa a odiar o pecado e a amar quem o salvou.\n\n## Um convite direto\n\nO livro termina com um apelo pessoal, típico de Spurgeon: não adie. Ele escreve ao leitor como se falasse cara a cara: olhe para Cristo agora. Não espere sentir algo especial nem se tornar digno. A porta está aberta para você hoje.",
+   "links": [
+    {
+     "label": "Tudo pela Graça (domínio público, em inglês) · busca",
+     "url": "https://www.google.com/search?q=Tudo+pela+Gra%C3%A7a"
+    },
+    {
+     "label": "Romanos 4 na Bíblia do SOLA",
+     "url": "bib:ROM.4"
     }
    ]
   },
@@ -79,6 +98,25 @@
    ]
   },
   {
+   "id": "watson-todas-as-coisas",
+   "t": 1,
+   "title": "Todas as coisas cooperam para o bem",
+   "author": "Thomas Watson",
+   "work": "Todas as Coisas Cooperam para o Bem (A Divine Cordial, 1663)",
+   "min": 2,
+   "body": "Thomas Watson foi um pastor puritano inglês expulso do púlpito em 1662, junto com cerca de dois mil ministros que não aceitaram as imposições da Igreja oficial. No ano seguinte, ele publicou um livro inteiro sobre um único versículo: “sabemos que todas as coisas cooperam para o bem daqueles que amam a Deus” (Romanos 8:28). Watson escrevia sobre providência enquanto vivia a perda do seu ministério.\n\n## As coisas boas cooperam\n\nWatson começa pelo mais fácil: os atributos de Deus, as promessas, as misericórdias, as orações dos santos e até os anjos trabalham para o bem do crente. Tudo o que vem de Deus é para nós.\n\n## As coisas ruins também\n\nDepois vem o ponto mais difícil e mais consolador. As aflições, as tentações, as deserções e até os nossos pecados, sem deixarem de ser maus, são usados por Deus para o nosso bem. A aflição nos humilha e nos ensina a orar. A tentação nos faz depender de Cristo. A queda, quando gera arrependimento, nos torna mais vigilantes e mais gratos pela graça. Deus não aprova o mal, mas o governa.\n\n## Para quem é a promessa\n\nWatson insiste em uma condição do versículo: aos que amam a Deus. A promessa não é para todos indistintamente, mas para os que foram chamados e amam a Deus. Por isso ele dedica páginas a examinar se amamos a Deus de verdade: se pensamos nele com prazer, se odiamos o que ele odeia, se desejamos a sua presença.\n\n## Um cordial para o coração\n\nO título original fala de um cordial, um remédio que fortalece o coração. Watson queria que o crente tomasse essa verdade como remédio diário. Quando a vida parece desarrumada, ele convida a lembrar: o Deus que governa todas as coisas está trabalhando para o meu bem, mesmo quando eu ainda não enxergo como.",
+   "links": [
+    {
+     "label": "A Divine Cordial (domínio público) · busca",
+     "url": "https://www.google.com/search?q=A+Divine+Cordial"
+    },
+    {
+     "label": "Romanos 8 na Bíblia do SOLA",
+     "url": "bib:ROM.8"
+    }
+   ]
+  },
+  {
    "id": "keller-oracao",
    "t": 2,
    "title": "Oração: conversa e encontro",
@@ -117,6 +155,25 @@
    ]
   },
   {
+   "id": "hernandes-oracao-avivamento",
+   "t": 2,
+   "title": "Oração e avivamento",
+   "author": "Hernandes Dias Lopes",
+   "work": "Tema recorrente em seus livros, comentários expositivos e pregações",
+   "min": 2,
+   "body": "Hernandes Dias Lopes é pastor presbiteriano no Brasil, conhecido em todo o país pelas suas pregações e pelos comentários expositivos de livros da Bíblia. Um tema aparece com frequência no seu ministério: a relação entre oração e avivamento. Este artigo apresenta, com nossas palavras, o eixo dessa ênfase.\n\n## A igreja nasce orando\n\nHernandes costuma lembrar que a igreja de Atos nasceu em reunião de oração. Antes do Pentecostes, os discípulos perseveravam unânimes em oração (Atos 1:14). Antes da ousadia na pregação, houve um clamor que fez tremer o lugar onde estavam (Atos 4:31). Na leitura dele, a história da igreja mostra o mesmo padrão: Deus age quando o seu povo se humilha e ora.\n\n## Avivamento não é evento\n\nUma distinção importante na pregação reformada sobre o tema é que avivamento não é um culto agitado nem uma campanha marcada no calendário. É uma visitação soberana de Deus que leva a igreja ao arrependimento, ao amor pela Palavra, à santidade e ao zelo pelos perdidos. Não se fabrica; se pede. Por isso a oração é o caminho, e a Palavra é o conteúdo.\n\n## Palavra e oração juntas\n\nHernandes insiste que a oração sem a Palavra vira misticismo, e a Palavra sem oração vira intelectualismo frio. Os apóstolos disseram: “nos consagraremos à oração e ao ministério da palavra” (Atos 6:4). Pregadores e igrejas precisam das duas coisas para ver vidas transformadas.\n\n## Um chamado para hoje\n\nO desafio prático é começar pelo próprio coração: separar tempo diário de oração, orar pela própria igreja e pelos pastores, e participar das reuniões de oração da comunidade. O avivamento que desejamos para a igreja começa com o quebrantamento que permitimos em nós.",
+   "links": [
+    {
+     "label": "Busca: pregações de Hernandes Dias Lopes",
+     "url": "https://www.google.com/search?q=Hernandes+Dias+Lopes+ora%C3%A7%C3%A3o+avivamento"
+    },
+    {
+     "label": "Atos 4 na Bíblia do SOLA",
+     "url": "bib:ACT.4"
+    }
+   ]
+  },
+  {
    "id": "owen-mortificacao",
    "t": 3,
    "title": "Mate o pecado, ou ele matará você",
@@ -126,8 +183,8 @@
    "body": "John Owen, o grande teólogo puritano inglês, pregou a jovens estudantes de Oxford uma série de sermões sobre Romanos 8:13: “se, pelo Espírito, mortificardes os feitos do corpo, certamente vivereis”. Desses sermões nasceu um pequeno livro que, mais de três séculos depois, continua sendo um dos guias mais sérios sobre a luta contra o pecado.\n\n## Uma luta para toda a vida\n\nA frase mais lembrada da obra resume a urgência: esteja sempre matando o pecado, ou ele estará matando você. Owen ensina que o pecado que permanece no crente não tira férias. Ele não se contenta com pouco; sempre quer chegar ao extremo. Por isso a mortificação não é um evento único, mas um hábito diário.\n\n## O que mortificar não é\n\nOwen faz distinções preciosas. Mortificar não é apenas esconder o pecado ou trocar um vício por outro. Não é simplesmente acalmar a consciência depois de uma queda. E não é obra da força de vontade: só o Espírito Santo mata o pecado. Tentativas puramente humanas, diz Owen, produzem orgulho ou desespero, nunca santidade.\n\n## Como lutar\n\nO caminho que Owen propõe envolve passos concretos: considerar honestamente a gravidade do pecado, sem diminuí-lo; encher a consciência da culpa que ele traz; desejar ardentemente a libertação; vigiar as ocasiões que o alimentam; e, acima de tudo, olhar para Cristo. A fé que contempla Cristo crucificado enfraquece o pecado pela raiz, porque enche o coração de um amor maior.\n\n## Esperança no combate\n\nO livro não é sombrio. Owen escreve para crentes que já estão unidos a Cristo, a quem a vitória final está garantida. A luta é real, mas é a luta de quem já foi libertado. Cada pequena vitória, pelo Espírito, é sinal de vida. E cada queda é motivo para correr de novo para Cristo, e não para longe dele.",
    "links": [
     {
-     "label": "A Mortificação do Pecado (domínio público) · CCEL",
-     "url": "https://ccel.org/ccel/owen/mort"
+     "label": "A Mortificação do Pecado (domínio público) · busca",
+     "url": "https://www.google.com/search?q=A+Mortifica%C3%A7%C3%A3o+do+Pecado"
     },
     {
      "label": "Romanos 8 na Bíblia do SOLA",
@@ -151,6 +208,25 @@
     {
      "label": "Lucas 6 na Bíblia do SOLA",
      "url": "bib:LUK.6"
+    }
+   ]
+  },
+  {
+   "id": "ryle-santidade",
+   "t": 3,
+   "title": "Santidade, sem a qual ninguém verá o Senhor",
+   "author": "J. C. Ryle",
+   "work": "Santidade (Holiness, 1877)",
+   "min": 2,
+   "body": "J. C. Ryle foi o primeiro bispo anglicano de Liverpool e um dos escritores evangélicos mais lidos da Inglaterra vitoriana. Em seu tempo, cresciam ensinos que prometiam uma santidade instantânea, alcançada por um passo de fé, sem luta. Ryle respondeu com um livro claro e firme, baseado em Hebreus 12:14: “segui a santificação, sem a qual ninguém verá o Senhor”.\n\n## Santidade é fruto, não raiz\n\nRyle começa pelo pecado. Ninguém entende a santidade sem entender quão profundo é o pecado. Depois ele distingue: somos justificados somente pela fé, e a santificação é o fruto inevitável dessa justificação. Quem foi realmente perdoado começa a ser transformado. Uma fé que não produz santidade não é a fé que salva.\n\n## Uma luta real\n\nO capítulo mais conhecido trata da luta. Ryle diz que o verdadeiro cristão é um soldado. Ele combate o mundo, a carne e o diabo todos os dias. A paz com Deus traz guerra com o pecado. Por isso ele desconfia de quem diz viver sem conflito interior. A luta não é sinal de derrota; é sinal de vida.\n\n## Marcas de uma pessoa santa\n\nRyle descreve traços práticos: a pessoa santa procura agradar a Deus em tudo, odeia o pecado, segue o exemplo de Cristo, cresce em humildade, mansidão e domínio próprio, cuida do próximo e ama a Palavra e a oração. Ele avisa que ninguém tem todas essas marcas de forma perfeita, mas o rumo da vida aponta nessa direção.\n\n## Um apelo sincero\n\nRyle não queria assustar, mas despertar. Ele pergunta ao leitor: você está crescendo em santidade? Não para conquistar o céu, mas porque quem vai para o céu já começa a se parecer com ele aqui. O caminho passa por olhar para Cristo, usar os meios da graça e perseverar.",
+   "links": [
+    {
+     "label": "Holiness (domínio público) · busca",
+     "url": "https://www.google.com/search?q=Holiness"
+    },
+    {
+     "label": "Hebreus 12 na Bíblia do SOLA",
+     "url": "bib:HEB.12"
     }
    ]
   },
@@ -193,6 +269,25 @@
    ]
   },
   {
+   "id": "bavinck-familia-crista",
+   "t": 4,
+   "title": "A família cristã",
+   "author": "Herman Bavinck",
+   "work": "A Família Cristã (Het christelijk huisgezin, 1908)",
+   "min": 2,
+   "body": "Herman Bavinck, teólogo reformado holandês, é conhecido sobretudo pela sua grande Dogmática Reformada. Mas ele também escreveu para a igreja comum. Em 1908, publicou um livro sobre a família, num momento em que a modernidade começava a questionar o casamento e o lar. As suas reflexões continuam atuais.\n\n## A família vem de Deus\n\nBavinck começa pela criação. A família não é uma invenção social nem um contrato que podemos redesenhar à vontade; ela foi instituída por Deus no Éden. O casamento entre homem e mulher, a geração de filhos e a vida em comum fazem parte do desenho do Criador para o mundo. Por isso a família tem dignidade própria.\n\n## Ferida pelo pecado, restaurada pela graça\n\nBavinck não idealiza a família. Ele mostra como o pecado atingiu o lar desde Gênesis 3: domínio, conflito, ciúme, violência. Mas a graça de Cristo não destrói a família; ela a cura e a eleva. O evangelho transforma maridos, esposas, pais e filhos de dentro para fora.\n\n## A escola do amor\n\nUma ideia bonita do livro é que a família é a primeira escola da humanidade. Ali aprendemos autoridade e obediência, cuidado e responsabilidade, perdão e paciência. Bavinck dizia que a sociedade inteira depende da saúde dos lares. Quando a família se desfaz, a comunidade inteira sofre.\n\n## Para hoje\n\nBavinck lembra que a família é importante, mas não é Deus. Ela serve ao Reino e aponta para a família maior de Deus, a igreja. Por isso um lar cristão deve ser um lugar de culto, de hospitalidade e de serviço, onde a fé é vivida e passada adiante, de geração em geração.",
+   "links": [
+    {
+     "label": "Busca: The Christian Family, Herman Bavinck",
+     "url": "https://www.google.com/search?q=Herman+Bavinck+The+Christian+Family"
+    },
+    {
+     "label": "Gênesis 2 na Bíblia do SOLA",
+     "url": "bib:GEN.2"
+    }
+   ]
+  },
+  {
    "id": "tedd-tripp-pastoreando",
    "t": 5,
    "title": "Pastoreando o coração da criança",
@@ -227,6 +322,25 @@
     {
      "label": "Deuteronômio 6 na Bíblia do SOLA",
      "url": "bib:DEU.6"
+    }
+   ]
+  },
+  {
+   "id": "ryle-deveres-pais",
+   "t": 5,
+   "title": "O caminho em que a criança deve andar",
+   "author": "J. C. Ryle",
+   "work": "Os Deveres dos Pais (The Duties of Parents, 1888)",
+   "min": 2,
+   "body": "J. C. Ryle escreveu um sermão curto e muito prático sobre Provérbios 22:6: “ensina a criança no caminho em que deve andar, e, ainda quando for velho, não se desviará dele”. O texto virou um pequeno livro, até hoje lido por pais cristãos. Ryle lista conselhos diretos, quase como um manual.\n\n## Educar no caminho certo\n\nRyle começa lembrando que a criança deve ser educada no caminho em que deve andar, e não no caminho em que gostaria de andar. O coração da criança, como o de todos nós, tende ao pecado. Por isso os pais não podem simplesmente deixar que ela siga os próprios desejos. Amar é orientar.\n\n## Conselhos práticos\n\nEntre os conselhos de Ryle estão: educar com ternura e paciência, e não com dureza; ensinar a Bíblia desde cedo e com regularidade; ensinar a criança a orar; levá-la aos cultos e explicar o que acontece ali; ensinar obediência e veracidade; cuidar das companhias e das influências; e lembrar que o exemplo dos pais ensina mais que as palavras. Ele insiste em que os pais não deixem para depois, porque a infância passa rápido.\n\n## A oração dos pais\n\nRyle termina com o conselho mais importante: orar pelos filhos. Os pais podem plantar e regar, mas só Deus dá o crescimento. Nenhuma técnica substitui a graça. Por isso pais cristãos educam com diligência e oram com dependência.\n\n## Para levar consigo\n\nRyle não promete resultados automáticos. Provérbios ensina princípios de sabedoria, não garantias mecânicas. Mas ele anima os pais a confiar em Deus, que costuma abençoar a fidelidade. A pergunta prática é: que passo concreto posso dar nesta semana para ensinar a Palavra aos meus filhos?",
+   "links": [
+    {
+     "label": "The Duties of Parents (domínio público) · busca",
+     "url": "https://www.google.com/search?q=J.C.+Ryle+The+Duties+of+Parents"
+    },
+    {
+     "label": "Provérbios 22 na Bíblia do SOLA",
+     "url": "bib:PRO.22"
     }
    ]
   },
@@ -269,6 +383,25 @@
    ]
   },
   {
+   "id": "spurgeon-desmaios",
+   "t": 6,
+   "title": "Quando o pregador desanima",
+   "author": "Charles H. Spurgeon",
+   "work": "Lições aos Meus Alunos (Lectures to My Students), palestra “Os desmaios do ministro”",
+   "min": 2,
+   "body": "Pouca gente imagina que Charles Spurgeon, o pregador que lotava templos em Londres, lutou com crises profundas de tristeza durante boa parte da vida. Ele falou disso abertamente aos alunos do seu seminário, numa palestra sobre os “desmaios” do ministro. Essa honestidade é um presente para todo cristão que enfrenta o desânimo.\n\n## Até os fortes caem\n\nSpurgeon lembra que os grandes homens da Bíblia também desanimaram. Elias pediu para morrer debaixo de um arbusto (1 Reis 19). Jeremias amaldiçoou o dia em que nasceu. Davi perguntou à própria alma por que estava abatida. Se eles passaram por isso, não devemos nos surpreender quando acontece conosco.\n\n## Causas diversas\n\nCom sabedoria, Spurgeon aponta causas variadas: o corpo frágil, o cansaço do trabalho, a solidão, as críticas, as perdas e até os momentos que vêm logo depois de grandes vitórias. Ele próprio sofria de gota e de outras doenças, e reconhecia que corpo e alma estão ligados. Por isso recomenda descanso, ar livre e cuidado com a saúde, sem desprezar os meios comuns que Deus dá.\n\n## Graça nas trevas\n\nSpurgeon também viu propósito espiritual no seu sofrimento. Ele escreveu que as crises o tornavam mais humilde, mais dependente de Deus e mais compassivo com os que sofriam. O vale escuro ensinava o que o púlpito iluminado não ensinava.\n\n## Para quem está no vale\n\nSe você está atravessando um tempo de tristeza, Spurgeon diria: você não é menos cristão por isso. Busque ajuda, inclusive profissional quando necessário, cuide do corpo, fale com irmãos de confiança e continue se apoiando em Cristo, mesmo que seja com pouca força. O mesmo Deus que alimentou Elias no deserto cuida de você.",
+   "links": [
+    {
+     "label": "Lectures to My Students (domínio público) · CCEL",
+     "url": "https://ccel.org/ccel/spurgeon/lectures"
+    },
+    {
+     "label": "1 Reis 19 na Bíblia do SOLA",
+     "url": "bib:1KI.19"
+    }
+   ]
+  },
+  {
    "id": "keller-dor-sofrimento",
    "t": 7,
    "title": "Caminhando com Deus em meio à dor",
@@ -303,6 +436,25 @@
     {
      "label": "Romanos 8 na Bíblia do SOLA",
      "url": "bib:ROM.8"
+    }
+   ]
+  },
+  {
+   "id": "sibbes-cana-quebrada",
+   "t": 7,
+   "title": "A cana quebrada",
+   "author": "Richard Sibbes",
+   "work": "A Cana Quebrada (The Bruised Reed, 1630)",
+   "min": 2,
+   "body": "Richard Sibbes era conhecido na Inglaterra do século dezessete como “o doce dispensador”, pela ternura com que pregava a graça. Seu livro mais famoso nasceu de sermões sobre Isaías 42:3, citado em Mateus 12:20: “não esmagará a cana quebrada, nem apagará o pavio que fumega”.\n\n## Quem é a cana quebrada\n\nSibbes explica as imagens. A cana já é uma planta frágil; quebrada, parece inútil. O pavio que fumega quase não tem fogo, só fumaça. Assim são muitos cristãos: feridos pela culpa, enfraquecidos pelo sofrimento, com uma fé que mais parece fumaça do que chama. E é exatamente com esses que Cristo tem cuidado especial.\n\n## A ternura de Cristo\n\nSibbes mostra que Cristo não trata os fracos com dureza. Ele não exige uma fé perfeita para começar a ajudar. Ele sopra a pequena brasa até que ela se acenda. Uma das frases mais lembradas do livro diz, em resumo, que há mais misericórdia em Cristo do que pecado em nós. Isso não diminui o pecado; engrandece o Salvador.\n\n## O lado bom da ferida\n\nSibbes também vê propósito na fragilidade. Deus quebra para curar. A ferida do arrependimento e o peso da provação nos esvaziam da autossuficiência e nos fazem correr para Cristo. Uma cana quebrada que se apoia em Cristo está mais segura do que uma árvore orgulhosa que se apoia em si mesma.\n\n## Uma palavra para os cansados\n\nSe a sua fé parece fumaça, Sibbes diria: não apague o pouco que você tem com desespero. Leve a brasa até Cristo. Ele não a despreza. A cana quebrada não precisa fingir força; precisa apenas ficar perto daquele que é manso e humilde de coração.",
+   "links": [
+    {
+     "label": "The Bruised Reed (domínio público) · busca",
+     "url": "https://www.google.com/search?q=Richard+Sibbes+The+Bruised+Reed"
+    },
+    {
+     "label": "Isaías 42 na Bíblia do SOLA",
+     "url": "bib:ISA.42"
     }
    ]
   },
@@ -345,6 +497,25 @@
    ]
   },
   {
+   "id": "nicodemus-igreja",
+   "t": 8,
+   "title": "O que estão fazendo com a igreja?",
+   "author": "Augustus Nicodemus Lopes",
+   "work": "O que Estão Fazendo com a Igreja (2008)",
+   "min": 2,
+   "body": "Augustus Nicodemus Lopes é pastor presbiteriano e um dos teólogos reformados mais conhecidos do Brasil, com longa atuação no ensino teológico. Em 2008, publicou um livro que provocou debate ao analisar com franqueza os rumos do movimento evangélico brasileiro. Este artigo apresenta, com nossas palavras, as preocupações centrais da obra.\n\n## Crescimento e crise\n\nO livro reconhece o crescimento impressionante dos evangélicos no Brasil, mas pergunta: crescimento de quê? Para o autor, números não bastam. Uma igreja pode crescer em frequência e diminuir em fidelidade bíblica. O sucesso visível não é, por si só, sinal de bênção.\n\n## Desvios identificados\n\nEntre as preocupações levantadas estão a teologia da prosperidade, que transforma Deus em meio para obter bens; o abandono da pregação expositiva em favor de mensagens motivacionais; o personalismo de líderes sem prestação de contas; e práticas que colocam experiências acima das Escrituras. O tom é de alerta pastoral, e não de desprezo.\n\n## O caminho de volta\n\nA resposta proposta é antiga: voltar às Escrituras. Pregação fiel do texto bíblico, culto centrado em Deus, liderança qualificada segundo 1 Timóteo 3, disciplina com amor e um evangelho que fala de pecado, cruz, arrependimento e fé. A Reforma do século dezesseis continua sendo um modelo: a igreja reformada deve estar sempre se reformando pela Palavra.\n\n## Para refletir\n\nA pergunta que o livro deixa vale para toda igreja local e para cada cristão: o que tem moldado a nossa fé, a Bíblia ou as tendências do momento? Amar a igreja inclui desejar que ela seja fiel ao seu Senhor.",
+   "links": [
+    {
+     "label": "Busca: Augustus Nicodemus · artigos",
+     "url": "https://www.google.com/search?q=Augustus+Nicodemus+Lopes+igreja"
+    },
+    {
+     "label": "1 Timóteo 3 na Bíblia do SOLA",
+     "url": "bib:1TI.3"
+    }
+   ]
+  },
+  {
    "id": "calvino-ceia",
    "t": 9,
    "title": "A Ceia: Cristo verdadeiramente nos alimenta",
@@ -375,6 +546,25 @@
     {
      "label": "Catecismo de Heidelberg no SOLA",
      "url": "doc:heidelberg"
+    },
+    {
+     "label": "Romanos 6 na Bíblia do SOLA",
+     "url": "bib:ROM.6"
+    }
+   ]
+  },
+  {
+   "id": "lutero-fui-batizado",
+   "t": 9,
+   "title": "“Eu fui batizado”",
+   "author": "Martinho Lutero",
+   "work": "Catecismo Maior (1529), parte sobre o batismo",
+   "min": 2,
+   "body": "Conta-se que Martinho Lutero, nos momentos de maior tentação e angústia, escrevia ou dizia a si mesmo: “eu fui batizado”. Não era superstição. Era um modo de se agarrar à promessa de Deus quando os sentimentos falhavam. No seu Catecismo Maior, escrito para pastores e famílias, ele explica por que o batismo é um tesouro para toda a vida.\n\n## A Palavra junto da água\n\nLutero ensina que o batismo não é só água; é água unida à Palavra e à ordem de Deus. O que dá valor ao batismo não é o elemento, mas a promessa: “quem crer e for batizado será salvo” (Marcos 16:16). Por isso ele insiste que o batismo deve ser recebido com fé, e que a fé se apoia na promessa, não na nossa experiência.\n\n## Um batismo para todos os dias\n\nPara Lutero, o batismo não fica no passado. Ele descreve a vida cristã como um batismo diário: o velho homem é afogado pelo arrependimento e o novo homem ressurge pela fé, todos os dias. Romanos 6 descreve exatamente isso: sepultados com Cristo, ressuscitados para andar em novidade de vida.\n\n## Consolo nas acusações\n\nQuando a consciência acusa e o diabo diz “você não pertence a Deus”, Lutero manda responder com o fato objetivo: eu fui batizado em nome do Pai, do Filho e do Espírito Santo. A promessa de Deus é mais firme que os nossos sentimentos. As tradições reformadas e batistas divergem de Lutero em pontos sobre os sacramentos, mas todas podem aprender com esse consolo: o crente se apoia na promessa de Deus, e não em si mesmo.\n\n## Para hoje\n\nNa próxima vez que presenciar um batismo na sua igreja, lembre-se do seu. Pergunte: estou vivendo como quem foi sepultado e ressuscitado com Cristo? O sinal visível aponta para a realidade invisível: você pertence a ele.",
+   "links": [
+    {
+     "label": "Catecismo Maior (domínio público) · busca",
+     "url": "https://www.google.com/search?q=Luther+Large+Catechism+baptism"
     },
     {
      "label": "Romanos 6 na Bíblia do SOLA",
@@ -421,6 +611,25 @@
    ]
   },
   {
+   "id": "spurgeon-ganhador-almas",
+   "t": 10,
+   "title": "O ganhador de almas",
+   "author": "Charles H. Spurgeon",
+   "work": "O Ganhador de Almas (The Soul Winner, 1895)",
+   "min": 2,
+   "body": "Charles Spurgeon era calvinista convicto e, ao mesmo tempo, um dos evangelistas mais apaixonados da história. Para ele, crer na soberania de Deus nunca foi motivo para cruzar os braços. O livro O Ganhador de Almas reúne palestras dadas a estudantes e sermões sobre o tema, com base em Provérbios 11:30: “o que ganha almas é sábio”.\n\n## O que é ganhar almas\n\nSpurgeon deixa claro que ganhar almas não é aumentar o rol de membros nem conseguir decisões apressadas. É ver pessoas verdadeiramente convertidas: arrependidas, crendo em Cristo e mudadas. Ele advertia contra métodos que produzem números, mas não discípulos.\n\n## As qualidades do ganhador\n\nSpurgeon aponta qualidades espirituais: santidade de vida, porque o pregador incoerente afasta as pessoas; conhecimento sério da Palavra; humildade; e, acima de tudo, amor verdadeiro pelas pessoas. Ele dizia que é preciso ter o coração quebrantado pelos perdidos. Quem não chora por almas dificilmente as alcançará.\n\n## Como falar de Cristo\n\nOs conselhos práticos são muitos: falar com clareza, sem jargão; ser direto, mas gentil; usar as Escrituras; responder às objeções com paciência; e chamar à decisão, convidando a confiar em Cristo agora. Spurgeon também enfatiza o papel de cada membro da igreja, e não apenas dos pastores: uma palavra em casa, no trabalho ou numa carta pode ser usada por Deus.\n\n## Oração e dependência\n\nO livro termina onde tudo começa: na oração. Só o Espírito Santo converte, diz Spurgeon. Por isso o ganhador de almas planta e rega de joelhos. A pergunta para nós é simples: por quem você está orando, pelo nome, para que venha a Cristo?",
+   "links": [
+    {
+     "label": "The Soul Winner (domínio público) · busca",
+     "url": "https://www.google.com/search?q=The+Soul+Winner"
+    },
+    {
+     "label": "Provérbios 11 na Bíblia do SOLA",
+     "url": "bib:PRO.11"
+    }
+   ]
+  },
+  {
    "id": "deyoung-palavra",
    "t": 11,
    "title": "Levar Deus a sério na sua Palavra",
@@ -455,6 +664,25 @@
     {
      "label": "2 Timóteo 3 na Bíblia do SOLA",
      "url": "bib:2TI.3"
+    }
+   ]
+  },
+  {
+   "id": "nicodemus-interpretes",
+   "t": 11,
+   "title": "Como ler a Bíblia: lições da história da interpretação",
+   "author": "Augustus Nicodemus Lopes",
+   "work": "A Bíblia e Seus Intérpretes (2004)",
+   "min": 2,
+   "body": "Em A Bíblia e Seus Intérpretes, Augustus Nicodemus Lopes percorre a história de como a Bíblia foi lida ao longo dos séculos, dos rabinos judeus e dos pais da igreja até a Reforma e o método histórico-crítico. O objetivo não é só informar, mas ajudar o leitor de hoje a interpretar bem as Escrituras. Este artigo resume, com nossas palavras, as lições principais.\n\n## Os perigos da alegoria\n\nUma das lições da história é o risco da alegoria descontrolada. Durante séculos, muitos intérpretes procuraram sentidos ocultos em cada detalhe do texto, e assim podiam fazer a Bíblia dizer quase qualquer coisa. O texto deixava de corrigir o leitor e passava a refletir as ideias de quem o lia.\n\n## A virada da Reforma\n\nOs reformadores, como Lutero e Calvino, insistiram em buscar o sentido natural do texto, considerando a gramática, o contexto histórico e a intenção do autor. Esse caminho ficou conhecido como método gramático-histórico. E eles acrescentaram um princípio precioso: a Escritura interpreta a Escritura. Passagens mais claras iluminam as mais difíceis.\n\n## O desafio moderno\n\nO livro também avalia a crítica histórica moderna, que muitas vezes trata a Bíblia apenas como literatura humana, desconfiando dos milagres e da inspiração. A resposta reformada não é ignorar as perguntas históricas, mas investigá-las crendo que a Escritura é a Palavra de Deus.\n\n## Para o leitor comum\n\nAlgumas perguntas simples ajudam qualquer pessoa: o que o texto diz? O que significava para os primeiros leitores? Como ele se encaixa na Bíblia inteira e aponta para Cristo? E o que Deus me chama a crer e a fazer? Ler bem a Bíblia é um modo de amar a Deus com o entendimento.",
+   "links": [
+    {
+     "label": "Busca: A Bíblia e Seus Intérpretes",
+     "url": "https://www.google.com/search?q=Augustus+Nicodemus+A+B%C3%ADblia+e+seus+int%C3%A9rpretes"
+    },
+    {
+     "label": "Lucas 24 na Bíblia do SOLA",
+     "url": "bib:LUK.24"
     }
    ]
   },
@@ -497,6 +725,25 @@
    ]
   },
   {
+   "id": "bavinck-trindade-coracao",
+   "t": 12,
+   "title": "A Trindade, coração da fé",
+   "author": "Herman Bavinck",
+   "work": "Dogmática Reformada, vol. 2 (Gereformeerde Dogmatiek, 1895–1901)",
+   "min": 2,
+   "body": "Na sua grande Dogmática Reformada, Herman Bavinck dedicou páginas extensas à doutrina de Deus. Ele chegou a uma conclusão que marca toda a sua teologia: a Trindade não é um apêndice da fé cristã, mas o seu centro vivo. Nas palavras dele, em resumo, é no Deus trino que pulsa o coração de toda a revelação.\n\n## Sem a Trindade, outro evangelho\n\nBavinck observa que todas as grandes verdades da fé dependem da Trindade. A criação é obra do Pai pelo Filho no Espírito. A redenção é o Pai enviando o Filho e o Espírito aplicando a obra do Filho. Se tirarmos a Trindade, a encarnação perde sentido, a cruz perde valor e a habitação do Espírito vira mera influência. Por isso, diz Bavinck, os grandes erros da história da igreja quase sempre começaram com desvios na doutrina de Deus.\n\n## Mistério que alimenta\n\nBavinck é reverente. Ele afirma que a Trindade é um mistério que não podemos dominar com a razão, mas que podemos conhecer porque Deus se revelou. Não é contradição, porque Deus não é um e três no mesmo sentido: é um em essência e três em pessoas. A teologia, para Bavinck, começa e termina em adoração.\n\n## O Deus que se relaciona\n\nUma das contribuições mais bonitas de Bavinck é mostrar que Deus não é solidão eterna. Nele há vida, comunhão e amor desde sempre. Por isso a criação não foi uma necessidade de Deus, mas um transbordamento da sua plenitude. E por isso a salvação é ser incluído nessa vida divina como filhos.\n\n## Para a vida\n\nA fé trinitária muda o modo de orar e de viver. Oramos ao Pai, por meio do Filho, no Espírito. Somos chamados a viver em comunhão, refletindo o Deus que é comunhão. E aguardamos o dia em que veremos face a face o Deus trino, fonte de toda alegria.",
+   "links": [
+    {
+     "label": "Busca: Bavinck Reformed Dogmatics Trinity",
+     "url": "https://www.google.com/search?q=Bavinck+Reformed+Dogmatics+Trinity"
+    },
+    {
+     "label": "Mateus 28 na Bíblia do SOLA",
+     "url": "bib:MAT.28"
+    }
+   ]
+  },
+  {
    "id": "ortlund-manso-humilde",
    "t": 13,
    "title": "Manso e humilde: o coração de Cristo",
@@ -527,6 +774,25 @@
     {
      "label": "Definição de Calcedônia no SOLA",
      "url": "doc:calcedonia"
+    },
+    {
+     "label": "Hebreus 4 na Bíblia do SOLA",
+     "url": "bib:HEB.4"
+    }
+   ]
+  },
+  {
+   "id": "goodwin-coracao-cristo-ceu",
+   "t": 13,
+   "title": "O coração de Cristo no céu",
+   "author": "Thomas Goodwin",
+   "work": "O Coração de Cristo no Céu para com os Pecadores na Terra (1651)",
+   "min": 2,
+   "body": "Thomas Goodwin, puritano inglês e um dos teólogos da Assembleia de Westminster, escreveu uma obra com um título longo e uma pergunta simples: depois que Jesus subiu ao céu e foi glorificado, o coração dele continua o mesmo com os pecadores? Ou a glória o tornou distante?\n\n## O mesmo Jesus\n\nGoodwin responde com firmeza: o mesmo. O Jesus que chorou com Marta e Maria, que tocou leprosos e recebeu pecadores, é o Jesus que hoje está à direita do Pai. A ascensão não endureceu o seu coração. Pelo contrário, ele continua humano, com afeições humanas glorificadas, e por isso se compadece das nossas fraquezas (Hebreus 4:15).\n\n## As últimas palavras antes de partir\n\nGoodwin analisa os discursos de Jesus em João 13 a 17, feitos na véspera da cruz. Ali Jesus promete não deixar os discípulos órfãos, prepara lugar para eles e ora por eles. Goodwin vê nessas palavras uma janela para o que Jesus sente agora. Se ele amava assim antes de ir, ama assim depois de chegar.\n\n## Compaixão que cresce\n\nUm ponto ousado do livro: Goodwin sugere que a glória aumentou a capacidade de Cristo de amar, em vez de diminuí-la. Ele está mais livre e mais pleno para se compadecer dos seus. Quando um crente sofre ou peca, o coração de Cristo se move em direção a ele, para socorrer e restaurar.\n\n## Para os que se sentem longe\n\nDane Ortlund popularizou essa obra em Manso e Humilde, também no SOLA. Goodwin nos convida a substituir a imagem de um Cristo distante por um Cristo intercessor, que conhece o nosso nome e se inclina para nós. Hoje mesmo, ele está orando pelos seus.",
+   "links": [
+    {
+     "label": "Busca: Thomas Goodwin The Heart of Christ",
+     "url": "https://www.google.com/search?q=Thomas+Goodwin+The+Heart+of+Christ+in+Heaven"
     },
     {
      "label": "Hebreus 4 na Bíblia do SOLA",
@@ -573,6 +839,25 @@
    ]
   },
   {
+   "id": "kuyper-obra-espirito",
+   "t": 14,
+   "title": "A obra do Espírito Santo",
+   "author": "Abraham Kuyper",
+   "work": "A Obra do Espírito Santo (Het werk van den Heiligen Geest, 1888)",
+   "min": 2,
+   "body": "Abraham Kuyper foi teólogo, jornalista, fundador de universidade e primeiro-ministro da Holanda. Mesmo com uma agenda política intensa, escreveu um dos tratados mais completos sobre o Espírito Santo na tradição reformada. Kuyper queria corrigir um esquecimento: muitas igrejas falavam do Pai e do Filho, mas quase nada do Espírito.\n\n## O Espírito na criação\n\nKuyper começa antes da salvação. O Espírito pairava sobre as águas na criação (Gênesis 1:2). Ele dá vida, ordem e beleza ao mundo. Kuyper atribui ao Espírito até os dons naturais: a habilidade do artesão, o talento do artista, a sabedoria do governante. Bezalel, que construiu o tabernáculo, foi cheio do Espírito para trabalhar com arte (Êxodo 31). Isso significa que nenhum trabalho honesto está fora do interesse de Deus.\n\n## O Espírito na redenção\n\nDepois, Kuyper descreve a obra do Espírito na salvação: ele inspirou as Escrituras, formou o corpo de Cristo no ventre de Maria, ungiu Jesus no seu ministério, regenera os pecadores, produz a fé, une o crente a Cristo e o santifica. Tudo o que Cristo conquistou, o Espírito aplica.\n\n## O Espírito na igreja e no indivíduo\n\nKuyper equilibra a dimensão comunitária e a pessoal. O Espírito habita a igreja como templo e também cada crente. Ele distribui dons para a edificação de todos e produz frutos de amor e santidade. Uma espiritualidade que despreza a igreja ou que ignora o coração está incompleta.\n\n## Para viver\n\nA obra de Kuyper amplia o olhar: o Espírito está presente no culto e também no trabalho de segunda-feira. Peça a ele não só força para orar, mas sabedoria para trabalhar, criatividade para servir e amor para conviver. Cada área da vida é território onde o Espírito quer agir.",
+   "links": [
+    {
+     "label": "The Work of the Holy Spirit (domínio público) · busca",
+     "url": "https://www.google.com/search?q=The+Work+of+the+Holy+Spirit"
+    },
+    {
+     "label": "Gálatas 5 na Bíblia do SOLA",
+     "url": "bib:GAL.5"
+    }
+   ]
+  },
+  {
    "id": "keller-esperanca-ressurreicao",
    "t": 15,
    "title": "Esperança em tempos de medo",
@@ -607,6 +892,25 @@
     {
      "label": "1 Coríntios 13 na Bíblia do SOLA",
      "url": "bib:1CO.13"
+    }
+   ]
+  },
+  {
+   "id": "bunyan-peregrino-rio",
+   "t": 15,
+   "title": "O peregrino atravessa o rio",
+   "author": "John Bunyan",
+   "work": "O Peregrino (The Pilgrim's Progress, 1678)",
+   "min": 2,
+   "body": "John Bunyan era um funileiro pobre e pregador batista que passou doze anos preso por pregar sem licença. Na prisão, escreveu uma alegoria que se tornou um dos livros mais lidos da história depois da Bíblia: O Peregrino. Cristão, o personagem principal, deixa a Cidade da Destruição e caminha até a Cidade Celestial. A cena final é uma das mais comoventes da literatura cristã.\n\n## Um caminho cheio de provas\n\nAntes do fim, o peregrino passa pelo Pântano do Desânimo, pela Colina da Dificuldade, pelo Vale da Humilhação, pela Feira da Vaidade e pelo Castelo da Dúvida. Bunyan retrata a vida cristã com realismo: há quedas, tentações e desânimos, mas também há companheiros fiéis, abrigo e a cruz, onde o fardo da culpa cai das costas de Cristão.\n\n## O rio sem ponte\n\nAo chegar perto da Cidade Celestial, o peregrino encontra um rio fundo, sem ponte. É a imagem da morte. Cristão tem medo e quase se afoga, assaltado por lembranças dos seus pecados. Seu companheiro, Esperançoso, o segura e diz que sente o fundo, e que o fundo é bom. Então Cristão se lembra de Cristo e da promessa de Isaías 43:2: quando passares pelas águas, eu serei contigo. E atravessa.\n\n## Do outro lado\n\nDo outro lado, anjos recebem os peregrinos, e eles entram na cidade ao som de trombetas. Bunyan descreve a alegria de quem chega em casa. A morte, para o crente, não é o fim do caminho, mas a última travessia antes da glória.\n\n## Para a nossa viagem\n\nO Peregrino nos lembra que somos estrangeiros neste mundo, a caminho da pátria. Vale perguntar: em que trecho do caminho estou? E vale descansar na certeza de Esperançoso: o fundo do rio é firme para quem está em Cristo.",
+   "links": [
+    {
+     "label": "The Pilgrim's Progress (domínio público) · CCEL",
+     "url": "https://ccel.org/ccel/bunyan/pilgrim"
+    },
+    {
+     "label": "Isaías 43 na Bíblia do SOLA",
+     "url": "bib:ISA.43"
     }
    ]
   }
