@@ -111,6 +111,8 @@ a{color:var(--accent)}
 .search-box .icon{color:var(--ink-3)}
 .scope{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:8px}
 .header-tools{display:flex;gap:6px;align-items:center}
+.share-opts{display:flex;flex-direction:column;gap:8px}
+.share-opts .btn{justify-content:center;width:100%;min-height:46px;font-size:15px}
 
 /* Faixa de aviso sobre os dados */
 .demo-banner{max-width:1500px;margin:12px auto 0;padding:0 16px}
@@ -1037,8 +1039,8 @@ dialog.reader.has-sel .reader-nav{display:none}
 .ib-txt strong{font-size:16px} .ib-txt span{font-size:13px;color:var(--ink-2)}
 .inst-banner .btn-primary{display:inline-flex;align-items:center;gap:6px;flex:none}
 .ib-x{position:absolute;top:4px;right:6px;border:0;background:none;color:var(--ink-2);font-size:14px;cursor:pointer;padding:4px}
-.inst-dlg h2{display:flex;align-items:center;gap:10px}
-.inst-dlg h2 img{border-radius:9px}
+.inst-dlg h2,.share-dlg h2{display:flex;align-items:center;gap:10px}
+.inst-dlg h2 img,.share-dlg h2 img{border-radius:9px}
 .inst-steps{list-style:none;margin:6px 0 10px;padding:0;display:flex;flex-direction:column;gap:12px;counter-reset:st}
 .inst-steps li{display:flex;align-items:center;gap:12px;font-size:16px;line-height:1.4;counter-increment:st}
 .inst-steps li::before{content:counter(st);flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
@@ -1296,6 +1298,7 @@ dialog.car-mode[open]{display:flex}
     </nav>
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
+      <button type="button" class="btn btn-icon" id="shareTop" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
       <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
@@ -1905,6 +1908,21 @@ dialog.car-mode[open]{display:flex}
   </div>
   <p class="car-prog" id="carProg"></p>
   <p class="car-hint">🔊 Conecte o celular ao carro pelo Bluetooth ou CarPlay: a leitura sai pelo som do carro. Mantenha o app aberto e o celular no suporte; não mexa enquanto dirige.</p>
+</dialog>
+<dialog id="shareDialog" class="note-dlg share-dlg" aria-labelledby="shareTitle">
+  <div class="dlg-head">
+    <h2 id="shareTitle"><img src="icons/apple-touch-180.png?v=3" alt="" width="34" height="34">Compartilhar o app</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="shareClose" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="dlg-body">
+    <p style="margin:0 0 12px;color:var(--ink-2)">Envie o link para baixar o <strong>SOLA | Bíblia &amp; Teologia</strong>. Quem abrir verá o passo a passo para instalar no celular. É gratuito.</p>
+    <div class="share-opts">
+      <a class="btn btn-wa" id="shareDlgWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
+      <button type="button" class="btn btn-primary" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Outros apps (com o farol)</button>
+      <button type="button" class="btn" id="shareDlgCopy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
+    </div>
+    <p class="muted" id="shareDlgUrl" style="margin:12px 0 0;font-size:13px;word-break:break-all"></p>
+  </div>
 </dialog>
 <dialog id="helpDialog" class="note-dlg" aria-labelledby="helpTitle">
   <div class="dlg-head">
@@ -3704,11 +3722,11 @@ async function shareSola(){
     if(navigator.share){
       let files=null;
       try{ const blob=await fetch("icons/og-sola.png?v=3").then(r=>r.blob()); const f=new File([blob],"SOLA.png",{type:"image/png"}); if(navigator.canShare && navigator.canShare({ files:[f] })) files=[f]; }catch(e){}
-      await navigator.share(files ? { files, title:"SOLA | Bíblia & Teologia", text:`${text} ${APP_URL}` } : { title:"SOLA | Bíblia & Teologia", text, url:APP_URL });
+      await navigator.share(files ? { files, title:"SOLA | Bíblia & Teologia", text:`${text} ${APP_URL}?instalar` } : { title:"SOLA | Bíblia & Teologia", text, url:`${APP_URL}?instalar` });
       return;
     }
   }catch(e){ if(e && e.name==="AbortError") return; }
-  copyText(`${text} ${APP_URL}`,"Convite copiado — cole onde quiser enviar.");
+  copyText(`${text} ${APP_URL}?instalar`,"Convite copiado — cole onde quiser enviar.");
 }
 
 /* ---------- Sequência de estudo (incentivo diário) ---------- */
@@ -4210,8 +4228,20 @@ function dayShareText(ps, dv){
   ].filter(Boolean).join("\n\n");
 }
 (function initShareApp(){
-  const msg=`Conheça o app *SOLA | Bíblia & Teologia*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito, abre no celular:\n${APP_URL}`;
+  const INSTALL_URL=`${APP_URL}?instalar`;
+  const msg=`Conheça o app *SOLA | Bíblia & Teologia*: Bíblia em várias versões, comentários bíblicos, concordância, texto do dia, devocional e notas de cultos. Gratuito — toque no link para baixar e instalar no celular:\n${INSTALL_URL}`;
   const a=$("#inviteWA"); if(a) a.href=waUrl(msg);
+  /* Botão Compartilhar fixo no topo: abre a janela com WhatsApp, outros apps e copiar link */
+  const dlg=$("#shareDialog");
+  if(dlg){
+    $("#shareDlgWA").href=waUrl(msg);
+    $("#shareDlgUrl").textContent=INSTALL_URL;
+    $("#shareTop")?.addEventListener("click",()=>openDialog(dlg));
+    $("#shareClose").addEventListener("click",()=>dlg.close());
+    dlg.addEventListener("click",e=>{ if(e.target===dlg) dlg.close(); });
+    $("#shareDlgWA").addEventListener("click",()=>setTimeout(()=>dlg.close(),300));
+    $("#shareDlgCopy").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(INSTALL_URL); toast("Link para baixar o app copiado."); }catch(e){ toast(INSTALL_URL); } });
+  }
   document.querySelectorAll("[data-share-sola]").forEach(b=>b.addEventListener("click",shareSola));
   $("#copyAppLink")?.addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(APP_URL); toast("Link do app copiado."); }catch(e){ toast(APP_URL); } });
 })();
