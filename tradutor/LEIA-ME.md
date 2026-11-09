@@ -1,4 +1,4 @@
-# Ponte de tradução (Microsoft Translator + Cloudflare)
+# Ponte de tradução e voz natural (Microsoft + Cloudflare)
 
 Traduz os comentários e textos do app com o Microsoft Translator (plano gratuito
 F0, 2 milhões de caracteres por mês) e guarda cada tradução para sempre no
@@ -25,3 +25,13 @@ Cloudflare: o mesmo trecho nunca é traduzido duas vezes, para nenhum usuário.
 ## 3. Ligar no app
 No `index.html`, preencha `const TR_PROXY = "https://tradutor.SEUNOME.workers.dev";`
 e publique. A chave fica só no Cloudflare; o app nunca a vê.
+
+## 4. Voz natural de locutor (devocional em áudio, CarPlay)
+1. No portal do Azure, procure **Speech** (Serviços de Fala) › **Criar**. Região **Brazil South**, preço **Free F0**.
+2. Em **Chaves e Ponto de Extremidade**, copie a **Chave 1**.
+3. No Worker do Cloudflare (**Settings › Variables and Secrets**):
+   - `SPEECH_KEY` (Secret): a chave do Speech
+   - `SPEECH_REGION` (Text): `brazilsouth`
+4. Cole de novo o `worker.js` atualizado e clique em **Deploy**.
+
+A voz padrão é `pt-BR-AntonioNeural` (masculina). Cada devocional é gerado uma única vez e fica guardado no Cloudflare e no celular.

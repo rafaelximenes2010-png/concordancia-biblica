@@ -1706,7 +1706,13 @@ dialog.car-mode[open]{display:flex}
     <section class="cfg-card" aria-labelledby="cfgAjudaT">
       <h3 id="cfgAjudaT"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>Ajuda e lembretes</h3>
       <div class="cfg-form">
-        <label>Voz da leitura (Ouvir e Modo carro)<select id="cfgVoice"><option value="">Automática (voz masculina, se houver)</option></select></label>
+        <label class="radio"><input type="checkbox" id="cfgNatVoice"><span>Usar voz natural de locutor (masculina, português do Brasil), que toca no CarPlay e com a tela bloqueada</span></label>
+        <label>Locutor da voz natural<select id="cfgNatName">
+          <option value="pt-BR-AntonioNeural">Antônio (masculina, calorosa)</option><option value="pt-BR-FabioNeural">Fábio (masculina)</option>
+          <option value="pt-BR-HumbertoNeural">Humberto (masculina)</option><option value="pt-BR-JulioNeural">Júlio (masculina)</option>
+          <option value="pt-BR-NicolauNeural">Nicolau (masculina)</option><option value="pt-BR-ValerioNeural">Valério (masculina)</option><option value="pt-BR-DonatoNeural">Donato (masculina)</option></select></label>
+        <p class="hint" id="natHint"></p>
+        <label>Voz do aparelho (quando a voz natural não estiver disponível)<select id="cfgVoice"><option value="">Automática (voz masculina, se houver)</option></select></label>
         <button type="button" class="btn btn-sm" id="cfgVoiceTest">▶ Testar voz</button>
         <p class="hint">No iPhone, para uma voz masculina mais natural: Ajustes › Acessibilidade › Conteúdo Falado › Vozes › Português (Brasil) › baixe <strong>Felipe (Aprimorada)</strong>. Depois escolha-a aqui. Com o celular conectado ao carro (Bluetooth ou CarPlay), o som sai pelos alto-falantes do carro.</p>
         <label class="radio"><input type="checkbox" id="cfgTips"><span>Explicar cada botão na primeira vez que eu tocar nele</span></label>
@@ -4701,6 +4707,8 @@ function renderConfig(){
   $("#cfgAutoTr").checked=Tr.auto; $("#cfgInline").checked=!!Comm.inline; $("#cfgTrEmail").checked=store.get("trEmail",false);
   $("#cfgTips").checked=store.get("tips",true);
   fillVoices();
+  $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-AntonioNeural");
+  $("#natHint").textContent = TR_PROXY ? "A voz natural é gerada uma vez por devocional e fica guardada no aparelho." : "A voz natural será ativada quando a ponte do Cloudflare (a mesma do tradutor) for configurada com o serviço de voz da Microsoft. Até lá, o app usa a voz do aparelho.";
   $("#cfgVer").textContent=APP_VERSION;
   $("#cfgChangelog").innerHTML=CHANGELOG.map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
   $("#cfgStats").textContent=`${NotesStore.all().length} notas · ${Object.keys(Hl.all()).length} versículos grifados · ${TextMarks.all().length} trechos grifados · ${Saved.all().length} comentários salvos · ${store.get("favorites",[]).length||0} favoritos`;
@@ -4735,6 +4743,8 @@ function fillVoices(){
   sel.innerHTML=`<option value="">Automática (voz masculina, se houver)</option>`+vs.map(v=>`<option value="${esc(v.name)}" ${v.name===saved?"selected":""}>${esc(v.name)} · ${esc(v.lang)}${MALE_PT.test(v.name)?" · masculina":""}${NICE.test(v.name)?" · natural":""}</option>`).join("");
 }
 if("speechSynthesis" in window) speechSynthesis.addEventListener?.("voiceschanged", fillVoices);
+$("#cfgNatVoice").addEventListener("change",e=>store.set("naturalVoice",e.target.checked));
+$("#cfgNatName").addEventListener("change",e=>{ store.set("ttsVoiceNat",e.target.value); toast("Locutor alterado."); });
 $("#cfgVoice").addEventListener("change",e=>{ store.set("ttsVoice",e.target.value); toast("Voz da leitura alterada."); });
 $("#cfgVoiceTest").addEventListener("click",()=>{ if(!("speechSynthesis" in window)) return toast("Este navegador não tem leitura em voz alta.");
   speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance("A minha graça te basta, porque o poder se aperfeiçoa na fraqueza."); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate*0.92; u.pitch=0.95; speechSynthesis.speak(u); });
@@ -5398,6 +5408,10 @@ let wakeLock=null;
 async function keepAwake(on){ try{ if(on && "wakeLock" in navigator){ wakeLock=await navigator.wakeLock.request("screen"); } else if(!on && wakeLock){ await wakeLock.release(); wakeLock=null; } }catch(e){} }
 function paintCar(){
   const d=$("#carMode"); if(!d.open) return;
+  if(typeof Narr!=="undefined" && Narr.kind){ const a=Narr.audio;
+    $("#carNow").textContent = Narr.loading ? "Preparando a voz…" : "Ouvindo pelo som do carro (CarPlay ou Bluetooth). Use ⏮ e ⏭ para voltar ou avançar 15 segundos.";
+    $("#carProg").textContent = a ? `${fmtT(a.currentTime)} / ${fmtT(a.duration)}` : "";
+    d.querySelector('[data-car="play"] use').setAttribute("href", a && !a.paused ? "#i-pause" : "#i-playfill"); return; }
   $("#carNow").textContent = Speak.parts[Math.min(Speak.i,Speak.parts.length-1)]||"";
   $("#carProg").textContent = Speak.parts.length ? `${Math.min(Speak.i+1,Speak.parts.length)} de ${Speak.parts.length}` : "";
   d.querySelector('[data-car="play"] use').setAttribute("href", Speak.on && !Speak.paused ? "#i-pause" : "#i-playfill");
@@ -5405,6 +5419,7 @@ function paintCar(){
 function openCarMode(kind){
   const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
   $("#carTitle").textContent = box._dv ? box._dv.title : (box._ps?.label||"Texto do dia");
+  if(narrAvailable()){ $("#carMode").showModal(); keepAwake(true); if(Narr.kind!==kind) narrPlay(kind); paintCar(); return; }
   if(!(Speak.on && Speak.kind===kind)){ stopSpeak(); Speak.kind=kind; Speak.parts=speakTextFor(kind); Speak.i=0; Speak.on=true; speakNext(); }
   $("#carMode").showModal(); keepAwake(true); paintCar();
   if("mediaSession" in navigator){ try{ navigator.mediaSession.metadata=new MediaMetadata({ title:$("#carTitle").textContent, artist:"SOLA | Bíblia & Teologia", artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" }] }); }catch(e){} }
@@ -5412,6 +5427,11 @@ function openCarMode(kind){
 $("#carClose").addEventListener("click",()=>{ $("#carMode").close(); keepAwake(false); });
 $("#carMode").addEventListener("click",e=>{
   const b=e.target.closest("[data-car]"); if(!b) return;
+  if(Narr.kind){ const a=Narr.audio;
+    if(b.dataset.car==="play"){ if(!a) return; a.paused?a.play():a.pause(); }
+    if(a && b.dataset.car==="prev") a.currentTime=Math.max(0,a.currentTime-15);
+    if(a && b.dataset.car==="next") a.currentTime=Math.min(a.duration||0,a.currentTime+15);
+    return paintCar(); }
   if(b.dataset.car==="play"){
     if(!Speak.on){ Speak.parts=speakTextFor(Speak.kind||"devo"); Speak.i=0; Speak.on=true; speakNext(); }
     else if(Speak.paused){ Speak.paused=false; speechSynthesis.resume(); } else { Speak.paused=true; speechSynthesis.pause(); }
@@ -5431,10 +5451,65 @@ if("mediaSession" in navigator){
     navigator.mediaSession.setActionHandler("previoustrack",()=>$('#carMode [data-car="prev"]')?.click());
   }catch(e){}
 }
+
+/* ---------- Voz natural gravada (MP3): toca no CarPlay, Bluetooth e com a tela bloqueada ---------- */
+const Narr = { audio:null, kind:null, loading:false, url:null };
+function narrAvailable(){ return !!TR_PROXY && store.get("naturalVoice",true); }
+function narrText(kind){
+  const box = kind==="devo" ? $("#devoBody") : $("#votdBody"); const ps=box._ps, dv=box._dv; if(!ps) return "";
+  const parts=[]; if(dv) parts.push(dv.title+".");
+  parts.push(ps.label.replace(/(\d+):(\d+)/g,"$1, versículos $2").replace(/–|-/g," a ")+".");
+  parts.push(ps.text);
+  if(dv){ parts.push("Em poucas palavras. "+dv.reflection); (dv.story||[]).forEach(t=>parts.push(t)); if(dv.close) parts.push("Para pensar. "+dv.close); parts.push("Aplicação prática. "+dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
+  return parts.join("\n\n");
+}
+async function narrPlay(kind){
+  const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
+  if(Narr.audio && Narr.kind===kind){ if(Narr.audio.paused) Narr.audio.play(); else Narr.audio.pause(); return paintListen(); }
+  narrStop(); Narr.kind=kind; Narr.loading=true; paintListen();
+  const text=narrText(kind); const ck="narr:"+Tr.key(text)+":"+store.get("ttsVoiceNat","pt-BR-AntonioNeural");
+  try{
+    let blob=null; const cache=await caches.open("sola-audio-v1").catch(()=>null);
+    const hit=cache && await cache.match("/__narr/"+encodeURIComponent(ck)); if(hit) blob=await hit.blob();
+    if(!blob){
+      const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice:store.get("ttsVoiceNat","pt-BR-AntonioNeural") }) });
+      if(!r.ok) throw new Error("tts "+r.status); blob=await r.blob();
+      try{ cache && await cache.put("/__narr/"+encodeURIComponent(ck), new Response(blob,{ headers:{ "Content-Type":"audio/mpeg" } })); }catch(e){}
+    }
+    if(Narr.kind!==kind) return;
+    Narr.url=URL.createObjectURL(blob); const a=new Audio(Narr.url); a.preload="auto"; a.setAttribute("playsinline",""); Narr.audio=a;
+    a.addEventListener("timeupdate",paintListen); a.addEventListener("play",paintListen); a.addEventListener("pause",paintListen);
+    a.addEventListener("ended",()=>{ narrStop(); });
+    if("mediaSession" in navigator){
+      try{ navigator.mediaSession.metadata=new MediaMetadata({ title: box._dv?box._dv.title:(box._ps?.label||"Texto do dia"), artist:"SOLA | Bíblia & Teologia", album: box._dv?"Devocional":"Texto do dia",
+        artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" },{ src:"icons/icon-mac-512.png?v=3", sizes:"512x512", type:"image/png" }] });
+        navigator.mediaSession.setActionHandler("play",()=>a.play()); navigator.mediaSession.setActionHandler("pause",()=>a.pause());
+        navigator.mediaSession.setActionHandler("seekbackward",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
+        navigator.mediaSession.setActionHandler("seekforward",()=>{ a.currentTime=Math.min(a.duration||0,a.currentTime+15); });
+        navigator.mediaSession.setActionHandler("previoustrack",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
+        navigator.mediaSession.setActionHandler("nexttrack",()=>{ a.currentTime=Math.min(a.duration||0,a.currentTime+15); });
+      }catch(e){}
+    }
+    Narr.loading=false; await a.play();
+  }catch(e){
+    Narr.loading=false; Narr.kind=null; toast("Voz natural indisponível agora; usando a voz do aparelho.",3500);
+    Speak.kind=kind; Speak.parts=speakTextFor(kind); Speak.i=0; Speak.on=true; speakNext();
+  }
+  paintListen();
+}
+function narrStop(){ if(Narr.audio){ Narr.audio.pause(); Narr.audio=null; } if(Narr.url){ URL.revokeObjectURL(Narr.url); Narr.url=null; } Narr.kind=null; Narr.loading=false; paintListen(); }
+const fmtT = t => isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,"0")}` : "–";
 function stopSpeak(){ Speak.on=false; Speak.paused=false; try{ speechSynthesis.cancel(); }catch(e){} paintListen(); }
 function paintListen(){
   if(typeof paintCar==="function") paintCar();
   document.querySelectorAll(".listen-bar").forEach(bar=>{
+    if(typeof Narr!=="undefined" && Narr.kind===bar.dataset.listen){
+      const a=Narr.audio, playing=a && !a.paused;
+      bar.querySelector('[data-ls="play"] use').setAttribute("href", playing ? "#i-pause" : "#i-playfill");
+      bar.querySelector('[data-ls="stop"]').hidden=false; bar.classList.add("on");
+      bar.querySelector('.listen-st').textContent = Narr.loading ? "Preparando a voz…" : a ? `${playing?"Tocando":"Pausado"} · ${fmtT(a.currentTime)} / ${fmtT(a.duration)} · som do carro via CarPlay/Bluetooth` : "";
+      return;
+    }
     const mine = Speak.on && bar.dataset.listen===Speak.kind;
     bar.querySelector('[data-ls="play"] use').setAttribute("href", mine && !Speak.paused ? "#i-pause" : "#i-playfill");
     bar.querySelector('[data-ls="stop"]').hidden = !mine;
@@ -5444,7 +5519,7 @@ function paintListen(){
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-ls]"); if(!b) return; const kind=b.closest(".listen-bar").dataset.listen;
-  if(b.dataset.ls==="stop") return stopSpeak();
+  if(b.dataset.ls==="stop"){ narrStop(); return stopSpeak(); }
   if(b.dataset.ls==="car") return openCarMode(kind);
   if(b.dataset.ls==="rate"){ const r=[0.8,1,1.2,1.4]; Speak.rate=r[(r.indexOf(Speak.rate)+1)%r.length]||1; store.set("ttsRate",Speak.rate);
     document.querySelectorAll(".listen-rate").forEach(x=>x.textContent=Speak.rate+"×"); if(Speak.on && !Speak.paused){ speechSynthesis.cancel(); } return; }
@@ -5452,6 +5527,7 @@ document.addEventListener("click",e=>{
     if(Speak.paused){ Speak.paused=false; speechSynthesis.resume(); } else { Speak.paused=true; speechSynthesis.pause(); }
     return paintListen();
   }
+  if(narrAvailable()){ if(Speak.on) stopSpeak(); return narrPlay(kind); }
   stopSpeak(); Speak.kind=kind; Speak.parts=speakTextFor(kind); Speak.i=0; Speak.on=true; speakNext();
 });
 /* =====================================================================
