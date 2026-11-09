@@ -19,6 +19,7 @@
 | 7 | Sofrimento e consolo | 15 | Últimas coisas |
 | 16 | Homossexualidade e fé cristã | 17 | Sexualidade e sexo antes do casamento |
 | 18 | Aborto e a santidade da vida | 19 | Conselhos para o casamento |
+| 20 | Especial de Natal (só em dezembro) | | |
 
 ## Formato de cada item (em `artigos/sola.json` › `items`)
 ```json
@@ -47,3 +48,10 @@ Nomes estrangeiros são reescritos só no áudio pela lista `PRONUNCIA` em `inde
 
 ## Temas sensíveis (16, 17 e 18)
 Apresentar a ética sexual e a defesa da vida segundo a fé reformada histórica, com firmeza bíblica e compaixão pastoral. Nunca usar linguagem de desprezo ou de ódio. Sempre oferecer o evangelho, o perdão de Cristo e o cuidado da igreja a quem luta ou já passou por essas situações.
+
+## Especial de Natal (tema 20)
+- De 1º a 25 de dezembro, entra **um artigo por dia**. Cada item tem `t: 20`, `mes: "AAAA-12"` e `dia: "AAAA-12-DD"`.
+- O app mostra só os dias que já chegaram, em destaque no topo dos Artigos ("dia N de 25"); os anteriores ficam em "Dias anteriores".
+- Os 25 artigos são publicados de uma vez, até o fim de novembro; o app libera um por dia.
+- Percurso sugerido do Advento: promessas do Antigo Testamento (Gn 3:15, Is 7, Is 9, Mq 5), Zacarias e Isabel, Maria, José, o nome Jesus e Emanuel, Belém, os pastores, os anjos, Simeão e Ana, os magos, Herodes e a fuga para o Egito, a encarnação (Jo 1, Fp 2, Hb 2), o Natal na história da igreja e na Reforma, hinos de Natal, o Natal e o sofrimento, o Natal e a família, o Natal e a segunda vinda, e, no dia 25, "Hoje vos nasceu o Salvador" (Lc 2:11).
+- Autores: Lutero (sermões de Natal), Calvino, Spurgeon (sermões de Natal), Agostinho, Atanásio (*A Encarnação do Verbo*), Tim Keller (*Hidden Christmas*, 2016), John Piper (*Good News of Great Joy*, leituras de Advento), Sinclair Ferguson, R. C. Sproul, Nancy Guthrie, além de autores brasileiros. As mesmas regras de originalidade, precisão e pronúncia valem aqui.
