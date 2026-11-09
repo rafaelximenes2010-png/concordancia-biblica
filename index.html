@@ -4681,13 +4681,13 @@ async function renderArticles(){
     <a href="${esc(artSearch(ref,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">artigos sobre ${esc(ref)} ↗</a></div>`;
 }
 function artShareText(x,d){
-  const body=d.items.map((it,i)=>(i>0&&it.h?`*${it.h}*\n\n`:"")+it.paras.join("\n\n")).join("\n\n");
+  const body=d.secs.map((it,i)=>(i>0&&it.h?`*${it.h}*\n\n`:"")+it.paras.join("\n\n")).join("\n\n");
   return `📖 *SOLA | Bíblia & Teologia*\n_Artigos para ler e ouvir_\n\n*${x.title}*\n_A partir de ${x.author} · ${x.work}_\n\n${body}\n\n━━━━━━━━━━\n🎧 Ouça este artigo em voz natural no app:\n${APP_URL}?artigo=${x.id}#artigos\n\n*SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
 }
 function artAsDoc(x){
   const parts=x.body.split(/\n(?=## )/); const items=parts.map((p,k)=>{ const m=p.match(/^## (.+)\n/); const h=m?m[1].trim():(k===0?"Introdução":"");
     const paras=(m?p.slice(m[0].length):p).trim().split(/\n\s*\n/).map(t=>t.trim()).filter(Boolean); return { n:String(k+1), h, paras }; });
-  return { id:"art-"+x.id, kind:"artigo", title:x.title, author:x.author, work:x.work, items, src:x };
+  return { id:"art-"+x.id, kind:"artigo", title:x.title, author:x.author, work:x.work, secs:items, items:[{ n:"1", h:"", paras:[] }], src:x };   // um único áudio com o artigo inteiro
 }
 async function openArticle(id){
   const list=await artsLoad().catch(()=>[]); const x=list.find(a=>a.id===id); if(!x) return toast("Artigo não encontrado.");
@@ -4699,8 +4699,7 @@ async function openArticle(id){
       <h2 class="art-h">${esc(x.title)}</h2>
       <p class="art-by">A partir de <b>${esc(x.author)}</b><br><small>${esc(x.work)}</small></p>
       ${daBarHtml(d)}
-      ${d.items.map((it,i)=>`<section class="doc-item art-sec" data-i="${i}">${i>0&&it.h?`<h3>${esc(it.h)}</h3>`:""}${it.paras.map(p=>`<p>${esc(p)}</p>`).join("")}
-        <button type="button" class="btn btn-sm btn-ghost art-from" data-da="from" data-i="${i}">▶ Ouvir daqui</button></section>`).join("")}
+      ${d.secs.map((it,i)=>`<section class="art-sec">${i>0&&it.h?`<h3>${esc(it.h)}</h3>`:""}${it.paras.map(p=>`<p>${esc(p)}</p>`).join("")}</section>`).join("")}
       <div class="art-links"><h3>Para ir além</h3>${x.links.map(l=>/^bib:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artbib="${esc(l.url.slice(4))}">📖 ${esc(l.label)}</button>`:/^doc:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artdoc="${esc(l.url.slice(4))}">📜 ${esc(l.label)}</button>`:`<a class="btn btn-sm btn-ext" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("")}
         <a class="btn btn-sm btn-wa" href="${esc(waUrl(artShareText(x,d)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar artigo completo</a>
         <button type="button" class="btn btn-sm" data-artcopy="1"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar texto</button></div>
@@ -4708,9 +4707,12 @@ async function openArticle(id){
     </article>`;
   daPaint();
 }
-$("#artList").addEventListener("click",e=>{ const b=e.target.closest("[data-art]"); if(b) openArticle(b.dataset.art); });
+let artLastId=null;
+async function artBackToList(){ await renderArticles(); const r=artLastId && document.querySelector(`#artList [data-art="${artLastId}"]`);
+  if(r){ const det=r.closest("details"); if(det) det.open=true; const od=r.closest(".art-old"); if(od) od.open=true; r.scrollIntoView({block:"center"}); } else window.scrollTo({top:0}); }
+$("#artList").addEventListener("click",e=>{ const b=e.target.closest("[data-art]"); if(b){ artLastId=b.dataset.art; openArticle(b.dataset.art); } });
 $("#artReader").addEventListener("click",e=>{
-  if(e.target.closest("[data-artback]")) return renderArticles();
+  if(e.target.closest("[data-artback]")) return artBackToList();
   if(e.target.closest("[data-artcopy]")){ const host=e.target.closest(".da-host"); const d=DA_REG[host.dataset.docid]; return copyText(artShareText(d.src,d),"Artigo copiado com a marca SOLA."); }
   const bb=e.target.closest("[data-artbib]"); if(bb){ const [b,c]=bb.dataset.artbib.split("."); return openReader({ b, c:+c, asView:false }); }
   const dd=e.target.closest("[data-artdoc]"); if(dd){ showView("catecismos"); setTimeout(()=>openDoc(dd.dataset.artdoc),150); }
@@ -4730,6 +4732,7 @@ const Docs = { list:null, cache:{} };
 async function docsIndex(){ if(!Docs.list){ const r=await fetch("docs/index.json"); if(!r.ok) throw new Error("docs"); Docs.list=await r.json(); } return Docs.list; }
 async function docGet(id){ if(!Docs.cache[id]){ const r=await fetch(`docs/${id}.json`); if(!r.ok) throw new Error("doc"); Docs.cache[id]=await r.json(); } return Docs.cache[id]; }
 const KIND_LABEL={ credo:"Credo", catecismo:"Catecismo", confissao:"Confissão" };
+function catBackToList(){ const id=curDoc?.id; renderCatHome().then(()=>{ const c=id&&document.querySelector(`#catList [data-doc="${id}"]`); if(c) c.scrollIntoView({block:"center"}); else window.scrollTo({top:0}); }); }
 async function renderCatHome(){
   $("#catDoc").hidden=true; $("#catHome").hidden=false;
   const box=$("#catList"); box.innerHTML=`<p class="muted">Carregando…</p>`;
@@ -4807,7 +4810,7 @@ function translateDocItem(btn){
   });
 }
 $("#catDoc").addEventListener("click",async e=>{
-  if(e.target.closest("[data-dback]")) return renderCatHome();
+  if(e.target.closest("[data-dback]")) return catBackToList();
   const r=e.target.closest("[data-dref]"); if(r){ const [b,c,v]=r.dataset.dref.split("."); const t=await dailyVersion(b);
     const vv=(await Repo.getChapter(t,b,+c)).find(x=>x.v===+v); return openContext(vv||{ t, b, c:+c, v:+v, text:"" }); }
   const a=e.target.closest("[data-dact]"); if(!a) return; const act=a.dataset.dact, it=curDoc.items[+a.dataset.i];
@@ -4837,10 +4840,11 @@ function looksEnglish(t){ const w=(" "+String(t).toLowerCase()+" ").match(/ (the
 function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
       <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="da-info"><b class="da-t">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":d.kind==="artigo"?"o artigo":"a confissão"}</b><small class="da-s">${d.kind==="credo"?"Leitura em voz natural":d.kind==="artigo"?"Voz natural · ideal para o carro":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
-      ${d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
+      ${d.kind==="artigo"?`<button type="button" class="da-btn" data-da="back15" aria-label="Voltar 15 segundos">-15</button><button type="button" class="da-btn" data-da="fwd15" aria-label="Avançar 15 segundos">+15</button>`
+        : d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
     </div>`; }
 const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
-  label(d,i){ const it=d.items[i]; if(d.kind==="artigo") return i===0?d.title:(it.h||`Parte ${i+1}`); return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
+  label(d,i){ const it=d.items[i]; if(d.kind==="artigo") return d.title; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
   async text(d,i){ const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
     const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
       if(!r || r.trim()===t.trim() || looksEnglish(r)) throw new Error("tr");   // nunca ler inglês com voz brasileira
@@ -4849,7 +4853,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   async rawText(d,i,tp){ const it=d.items[i];
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
-    if(d.kind==="artigo") return (i===0?`${d.title}.\n\nUm artigo do SOLA a partir de ${d.author}.\n\n`:`${it.h}.\n\n`)+it.paras.join("\n\n");
+    if(d.kind==="artigo") return `${d.title}.\n\nUm artigo do SOLA a partir de ${d.author}.\n\n` + d.secs.map((sc,k)=>(k>0&&sc.h?`${sc.h}.\n\n`:"")+sc.paras.join("\n\n")).join("\n\n");
     const head = it.n ? `Capítulo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}. Seção ${it.n}.` : `Artigo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}.`;
     return `${head}\n\n${await tp(it.t)}`; },
   async url(d,i){ const k=d.id+":"+i; if(this.urls[k]) return this.urls[k];
@@ -4861,8 +4865,10 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
       return URL.createObjectURL(blob); })();
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
   player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
-    a.addEventListener("ended",()=>{ if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
-    a.addEventListener("play",()=>{ this.playing=true; daPaint(); }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
+    a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
+    a.addEventListener("play",()=>{ this.playing=true; daPaint(); });
+    let lastSave=0; a.addEventListener("timeupdate",()=>{ if(!this.doc || this.doc.kind!=="artigo") return; daPaint();
+      if(Math.abs(a.currentTime-lastSave)>4){ lastSave=a.currentTime; store.set("daT:"+this.doc.id, a.duration && a.currentTime>a.duration-8 ? 0 : a.currentTime); } }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
     this.el=a; return a; },
   media(){ if(!("mediaSession" in navigator)) return; const a=this.el;
     try{ navigator.mediaSession.metadata=new MediaMetadata({ title:this.label(this.doc,this.i), artist:"SOLA | Bíblia & Teologia", album:this.doc.title,
@@ -4874,7 +4880,9 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   start(d,i){ try{ narrStop(); stopSpeak(); }catch(e){} mediaAudioSession(); this.doc=d; this.player(); this.go(Math.min(Math.max(0,i||0),d.items.length-1)); },
   async go(i){ const d=this.doc; if(!d || i<0 || i>=d.items.length) return; this.i=i; this.loading=true; store.set("daPos:"+d.id,i); daPaint(); daFocus();
     const a=this.player();
-    try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; this.loading=false; this.media(); await a.play();
+    try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; this.loading=false; this.media();
+      if(d.kind==="artigo"){ const t=store.get("daT:"+d.id,0); if(t>5){ try{ a.currentTime=t; }catch(e){ a.addEventListener("loadedmetadata",()=>{ a.currentTime=t; },{once:true}); } } }
+      await a.play();
       if(i+1<d.items.length) this.url(d,i+1).catch(()=>{}); }
     catch(e){ this.loading=false; this.playing=false; daPaint(); toast(e && e.message==="tr" ? "A tradução deste trecho não ficou pronta. Toque em ▶ de novo em instantes." : "Não foi possível carregar a voz agora. Verifique a internet.",3500); } },
   toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
@@ -4886,8 +4894,11 @@ function daPaint(){ if(typeof paintMini==="function") setTimeout(paintMini,30);
     const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
     pb.setAttribute("aria-label", on && DA.playing ? "Pausar" : "Ouvir");
     const pos = on ? DA.i : store.get("daPos:"+d.id,0);
-    if(on || pos>0){ bar.querySelector(".da-t").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(d,pos);
-      bar.querySelector(".da-s").textContent = d.kind==="credo" ? d.title : `${pos+1} de ${d.items.length} · ${d.title}`; }
+    const savedT = d.kind==="artigo" ? store.get("daT:"+d.id,0) : 0;
+    if(d.kind==="artigo" && !on && savedT>5){ bar.querySelector(".da-t").textContent="Continuar de onde parou"; bar.querySelector(".da-s").textContent=`${fmtT(savedT)} · ${d.author}`; }
+    else if(on || pos>0){ bar.querySelector(".da-t").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(d,pos);
+      bar.querySelector(".da-s").textContent = d.kind==="credo" ? d.title : d.kind==="artigo" ? (on && DA.el && DA.el.duration ? `${fmtT(DA.el.currentTime)} de ${fmtT(DA.el.duration)} · ${d.author}` : `${d.author} · voz natural`) : `${pos+1} de ${d.items.length} · ${d.title}`; }
+    if(d.kind==="artigo" && on) bar.querySelector(".da-t").textContent = DA.loading ? "Preparando o áudio…" : DA.playing ? "Ouvindo o artigo" : "Pausado";
     const host=bar.closest(".da-host"); if(host) host.querySelectorAll(".doc-item[data-i]").forEach(x=>x.classList.toggle("da-now", on && +x.dataset.i===DA.i && (DA.playing||DA.loading)));
   });
 }
@@ -4899,6 +4910,7 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
   e.stopPropagation(); const k=da.dataset.da, cur=DA.doc&&DA.doc.id===d.id, pos=store.get("daPos:"+d.id,0);
   if(k==="play") return cur ? DA.toggle() : DA.start(d,pos);
   if(k==="from") return DA.start(d,+da.dataset.i);
+  if(k==="back15"||k==="fwd15"){ if(!cur || !DA.el) return; const a=DA.el; a.currentTime = k==="back15" ? Math.max(0,a.currentTime-15) : Math.min((a.duration||0)-0.5,a.currentTime+15); return; }
   if(k==="next") return cur ? DA.go(DA.i+1) : DA.start(d,pos+1);
   if(k==="prev") return cur ? DA.go(DA.i-1) : DA.start(d,Math.max(0,pos-1));
 },true);
@@ -4906,8 +4918,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.4";
+const APP_VERSION = "3.6.5";
 const CHANGELOG = [
+  { v:"3.6.5", d:"novembro de 2026", items:["Artigos tocam em um único áudio, do começo ao fim, com botões de -15 e +15 segundos; o app lembra onde você parou.","Voltar dentro de Artigos, Credos e Configurações leva de volta à lista, no ponto em que você estava."] },
   { v:"3.6.4", d:"novembro de 2026", items:["Mensagem de boas-vindas com o seu nome ao abrir o app."] },
   { v:"3.6.3", d:"novembro de 2026", items:["O áudio continua tocando ao voltar ou trocar de seção, com um mini player no rodapé (pausar, parar e voltar ao texto).","Atualizações do app esperam o áudio terminar para não interromper a escuta."] },
   { v:"3.6.2", d:"novembro de 2026", items:["Confissões em inglês agora traduzidas pelo Microsoft Translator, com leitura em voz natural em português.","Áudio mais limpo: o locutor pula referências entre parênteses e notas, e lê títulos em caixa alta com naturalidade."] },
@@ -5383,7 +5396,7 @@ paintAvatar();
 const PLAY_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>', PAUSE_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
 function audioNow(){
   if(typeof DA!=="undefined" && DA.doc && DA.el && (DA.el.src || DA.loading) && (DA.playing || DA.loading || (DA.el.currentTime>0 && !DA.el.ended)))
-    return { kind:"da", playing:DA.playing||DA.loading, t:DA.label(DA.doc,DA.i), s: DA.doc.kind==="artigo" ? `${DA.doc.author} · parte ${DA.i+1} de ${DA.doc.items.length}` : DA.doc.kind==="credo" ? "Credo · voz natural" : `${DA.i+1} de ${DA.doc.items.length} · ${DA.doc.title}`, home: DA.doc.kind==="artigo"?"artigos":"catecismos" };
+    return { kind:"da", playing:DA.playing||DA.loading, t:DA.label(DA.doc,DA.i), s: DA.doc.kind==="artigo" ? (DA.el && DA.el.duration ? `${fmtT(DA.el.currentTime)} de ${fmtT(DA.el.duration)} · ${DA.doc.author}` : DA.doc.author) : DA.doc.kind==="credo" ? "Credo · voz natural" : `${DA.i+1} de ${DA.doc.items.length} · ${DA.doc.title}`, home: DA.doc.kind==="artigo"?"artigos":"catecismos" };
   if(typeof Narr!=="undefined" && Narr.audio) return { kind:"narr", playing:!Narr.audio.paused, t: Narr.kind==="devo"?"Devocional de hoje":"Texto do dia", s:"SOLA | Bíblia & Teologia", home: Narr.kind==="devo"?"devocional":"texto" };
   if(typeof Speak!=="undefined" && Speak.on) return { kind:"speak", playing:!Speak.paused, t: Speak.kind==="devo"?"Devocional de hoje":"Leitura em voz alta", s:"Voz do aparelho", home: Speak.kind==="devo"?"devocional":"texto" };
   return null;
@@ -5703,7 +5716,9 @@ function goBack(){
   if($("#bookPicker")?.open){ if(bp.book) renderBookGrid(); else $("#bookPicker").close(); return; }
   if($("#noteDialog").open){ $("#noteDialog").close(); return; }
   if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
-  if(currentView==="catecismos" && !$("#catDoc").hidden){ renderCatHome(); window.scrollTo({top:0}); return; }
+  if(currentView==="catecismos" && !$("#catDoc").hidden){ catBackToList(); return; }
+  if(currentView==="artigos" && !$("#artReader").hidden){ artBackToList(); return; }
+  if(currentView==="config" && $("#cfgTop") && !$("#cfgTop").hidden){ cfgToIndex(); return; }
   if(navStack.length){ try{ history.back(); return; }catch(e){} const prev=navStack.pop(); showView(prev,{push:false}); try{ history.replaceState(null,"","#"+prev); }catch(e){} return; }
   showView("inicio");
 }
