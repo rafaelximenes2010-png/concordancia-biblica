@@ -721,6 +721,7 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .cfg-index small{color:var(--ink-3);font-size:13px;margin-left:auto;text-align:right}
 .cfg-index .chev{color:var(--ink-3);font-size:20px;line-height:1}
 .cfg-card{scroll-margin-top:84px;transition:box-shadow .3s}
+#cfgIndex{scroll-margin-top:96px}
 .cfg-top{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:40;
   display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:999px;border:0;font:700 15px/1 var(--font-ui);
   background:var(--accent);color:var(--accent-ink);box-shadow:0 6px 18px rgba(0,0,0,.22);cursor:pointer}
@@ -5089,8 +5090,11 @@ let lastView="inicio";
 let currentView="inicio", bpReady=false;
 /* Voltar ao índice das configurações: link em cada seção e botão flutuante */
 document.querySelectorAll("#view-config .cfg-card").forEach(c=>c.insertAdjacentHTML("afterbegin",`<button type="button" class="cfg-back" data-cfgback><span aria-hidden="true">‹</span> Todas as configurações</button>`));
-const cfgToIndex=()=>{ $("#view-config").scrollIntoView({ behavior:"smooth", block:"start" }); window.scrollTo({ top:0, behavior:"smooth" }); };
-document.addEventListener("click",e=>{ if(e.target.closest("[data-cfgback],#cfgTop")){ e.preventDefault(); cfgToIndex(); } });
+const cfgToIndex=()=>{   // sem rolagem suave: no iPhone duas rolagens suaves se cancelam
+  const se=document.scrollingElement||document.documentElement; se.scrollTop=0; document.body.scrollTop=0; window.scrollTo(0,0);
+  const v=$("#view-config"); let p=v.parentElement; while(p){ if(p.scrollHeight>p.clientHeight+2 && /auto|scroll/.test(getComputedStyle(p).overflowY)) p.scrollTop=0; p=p.parentElement; }
+  $("#cfgIndex").scrollIntoView({ block:"start" }); $("#cfgTop").hidden=true; };
+document.addEventListener("click",e=>{ if(e.target.closest("[data-cfgback],#cfgTop")){ e.preventDefault(); e.stopPropagation(); cfgToIndex(); } }, true);
 if("IntersectionObserver" in window){ new IntersectionObserver(([en])=>{ $("#cfgTop").hidden = en.isIntersecting || currentView!=="config"; }).observe($("#cfgIndex")); }
 document.addEventListener("click",e=>{
   const a=e.target.closest("a[data-cfg]"); if(!a) return; e.preventDefault();
