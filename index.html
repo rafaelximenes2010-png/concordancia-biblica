@@ -1187,6 +1187,17 @@ dialog.car-mode[open]{display:flex}
 .da-spin{width:20px;height:20px;border-radius:50%;border:3px solid rgba(19,33,58,.25);border-top-color:#13213a;animation:daspin .8s linear infinite}
 @keyframes daspin{to{transform:rotate(360deg)}}
 .doc-item.da-now{outline:2px solid #e1b553;outline-offset:2px;border-radius:12px}
+.art-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 4px;background:none;border:0;border-top:1px solid var(--border);text-align:left;color:var(--ink);font:inherit;cursor:pointer}
+.art-dot{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent,#2b3a67);font-weight:800;font-size:13px;letter-spacing:.02em}
+.art-read{max-width:720px;margin:0 auto}
+.art-h{font:600 30px/1.15 var(--font-text);margin:0 0 6px}
+.art-by{color:var(--ink-2);margin:0 0 6px}.art-by small{color:var(--ink-3,#888)}
+.art-sec{padding:4px 0;border:0;background:none}
+.art-sec h3{font:600 20px/1.25 var(--font-text);margin:18px 0 6px}
+.art-sec p{font:400 18px/1.7 var(--font-text);margin:0 0 12px;color:var(--ink)}
+.art-sec .art-from{margin:0 0 6px}
+.art-links{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border)}
+.art-links h3{width:100%;margin:0 0 2px;font-size:16px}
 .md-follow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .md-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 9px 10px;border-radius:999px;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f4ead2!important;
@@ -1746,9 +1757,10 @@ dialog.car-mode[open]{display:flex}
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
   </nav>
-  <div class="view-head"><div><p class="eyebrow">Estudos · leitura</p><h2 id="artTitle">Artigos</h2>
-    <p>Artigos de sites cristãos reformados, em português e em inglês, organizados por tema.</p></div></div>
-  <p class="bp-note">Os botões abrem uma busca nos próprios sites: Ministério Fiel, Voltemos ao Evangelho, Coalizão pelo Evangelho e outros. O app não reproduz os artigos e não é afiliado a esses ministérios.</p>
+  <div id="artReader" hidden></div>
+  <div id="artHome">
+  <div class="view-head"><div><p class="eyebrow">Estudos · ler e ouvir</p><h2 id="artTitle">Artigos</h2>
+    <p>Artigos do SOLA para ler ou ouvir no carro, apresentando o pensamento de John Piper, Paul Tripp, J. I. Packer, Tim Keller, R. C. Sproul e outros, além de buscas em sites reformados.</p></div></div>
   <form class="quick-search" id="artForm" role="search" style="margin-bottom:12px">
     <label class="sr-only" for="artQ">Buscar artigos sobre</label>
     <input id="artQ" type="search" placeholder="Buscar artigos sobre… (ex.: perdão, Romanos 8, oração)">
@@ -1756,6 +1768,8 @@ dialog.car-mode[open]{display:flex}
   </form>
   <div id="artToday"></div>
   <div id="artList"></div>
+  <p class="bp-note">Os artigos do SOLA são textos próprios que apresentam, com nossas palavras, as ideias de cada autor; as obras citadas pertencem aos seus autores e editoras. Os botões “Mais artigos” abrem buscas nos sites: Ministério Fiel, Voltemos ao Evangelho, Coalizão pelo Evangelho e outros. O SOLA não é afiliado a esses ministérios.</p>
+  </div>
 </section>
 
 <!-- ===================== CREDOS E CATECISMOS ===================== -->
@@ -4614,21 +4628,57 @@ const ART_TOPICS = [
 ];
 const artSearch = (q, sites) => "https://www.google.com/search?q="+encodeURIComponent(`${q} (${sites.map(x=>"site:"+x).join(" OR ")})`);
 const ART_COLORS=["#2b3a67","#3f6c99","#4f7a63","#b8862e","#8a5a9e","#d9694c","#2f6b3a","#7a3550"];
-function artCard(title, q, i=0){
-  return `<details class="st-row"><summary><span class="st-thumb" style="--c:${ART_COLORS[i%ART_COLORS.length]}" aria-hidden="true"><svg class="icon"><use href="#i-article"/></svg></span>
-    <span class="st-tx"><b>${esc(title)}</b><small>Ministério Fiel, Voltemos ao Evangelho, Coalizão e outros</small></span><span class="chev" aria-hidden="true">›</span></summary>
-    <div class="st-body"><div class="row-actions">
-      <a class="btn btn-sm btn-ext primary" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Artigos em português ↗</a>
+const Arts = { list:null };
+async function artsLoad(){ if(!Arts.list){ const r=await fetch("artigos/sola.json"); if(!r.ok) throw new Error("arts"); Arts.list=(await r.json()).items; } return Arts.list; }
+function artRow(x){ return `<button type="button" class="art-row" data-art="${x.id}"><span class="art-dot" aria-hidden="true">${esc((w=>w.length>1?w[0][0]+w[w.length-1][0]:(w[0]||"S")[0])(x.author.split(/ \(| e /)[0].split(" ").filter(w=>/^[A-ZÁÉÍÓÚ]/.test(w))))}</span>
+  <span class="st-tx"><b>${esc(x.title)}</b><small>${esc(x.author)} · ${x.min} min · ler ou ouvir</small></span><span class="chev" aria-hidden="true">›</span></button>`; }
+function artCard(title, q, i=0, arts=[]){
+  return `<details class="st-row"${i<2?" open":""}><summary><span class="st-thumb" style="--c:${ART_COLORS[i%ART_COLORS.length]}" aria-hidden="true"><svg class="icon"><use href="#i-article"/></svg></span>
+    <span class="st-tx"><b>${esc(title)}</b><small>${arts.length?`${arts.length} artigos do SOLA · `:""}${esc(arts.map(x=>x.author.split(" (")[0]).join(", ")||"Ministério Fiel, Voltemos ao Evangelho e outros")}</small></span><span class="chev" aria-hidden="true">›</span></summary>
+    <div class="st-body">${arts.map(artRow).join("")}<div class="row-actions">
+      <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Mais artigos em português ↗</a>
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_EN))}" target="_blank" rel="noopener noreferrer">Em inglês ↗</a>
     </div></div></details>`;
 }
-function renderArticles(){
-  $("#artList").innerHTML = `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length}</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>artCard(t,q,i)).join("")}</div></div>`;
+async function renderArticles(){
+  let list=[]; try{ list=await artsLoad(); }catch(e){}
+  $("#artReader").hidden=true; $("#artHome").hidden=false;
+  $("#artList").innerHTML = `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length}</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>artCard(t,q,i,list.filter(x=>x.t===i))).join("")}</div></div>`;
   const dv=devoFor(new Date()); const ref=passageLabel(dv.p);
   $("#artToday").innerHTML = `<div class="bp-note" style="background:var(--gold-soft);border-style:solid;border-color:var(--gold)">
     <strong>Ligado ao devocional de hoje:</strong> ${esc(dv.title)} (${esc(ref)}) —
     <a href="${esc(artSearch(ref,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">artigos sobre ${esc(ref)} ↗</a></div>`;
 }
+function artAsDoc(x){
+  const parts=x.body.split(/\n(?=## )/); const items=parts.map((p,k)=>{ const m=p.match(/^## (.+)\n/); const h=m?m[1].trim():(k===0?"Introdução":"");
+    const paras=(m?p.slice(m[0].length):p).trim().split(/\n\s*\n/).map(t=>t.trim()).filter(Boolean); return { n:String(k+1), h, paras }; });
+  return { id:"art-"+x.id, kind:"artigo", title:x.title, author:x.author, work:x.work, items, src:x };
+}
+async function openArticle(id){
+  const list=await artsLoad().catch(()=>[]); const x=list.find(a=>a.id===id); if(!x) return toast("Artigo não encontrado.");
+  const d=artAsDoc(x); DA_REG[d.id]=d; const box=$("#artReader"); $("#artHome").hidden=true; box.hidden=false; window.scrollTo({top:0});
+  const topic=ART_TOPICS[x.t]?.[0]||"";
+  box.innerHTML=`<button type="button" class="btn btn-sm" data-artback>‹ Todos os artigos</button>
+    <article class="art-read da-host" data-docid="${d.id}">
+      <p class="eyebrow" style="margin:14px 0 4px">${esc(topic)} · ${x.min} min</p>
+      <h2 class="art-h">${esc(x.title)}</h2>
+      <p class="art-by">A partir de <b>${esc(x.author)}</b><br><small>${esc(x.work)}</small></p>
+      ${daBarHtml(d)}
+      ${d.items.map((it,i)=>`<section class="doc-item art-sec" data-i="${i}">${i>0&&it.h?`<h3>${esc(it.h)}</h3>`:""}${it.paras.map(p=>`<p>${esc(p)}</p>`).join("")}
+        <button type="button" class="btn btn-sm btn-ghost art-from" data-da="from" data-i="${i}">▶ Ouvir daqui</button></section>`).join("")}
+      <div class="art-links"><h3>Para ir além</h3>${x.links.map(l=>/^bib:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artbib="${esc(l.url.slice(4))}">📖 ${esc(l.label)}</button>`:/^doc:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artdoc="${esc(l.url.slice(4))}">📜 ${esc(l.label)}</button>`:`<a class="btn btn-sm btn-ext" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("")}
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${x.title}*\n_${x.author}_\n\n${d.items[0].paras[0]}\n\nLeia ou ouça no app SOLA | Bíblia & Teologia: ${APP_URL}?artigo=${x.id}#artigos`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a></div>
+      <p class="hint">Texto do SOLA | Bíblia & Teologia que apresenta, com palavras próprias, o pensamento do autor. Para conhecer a obra completa, procure o livro original.</p>
+    </article>`;
+  daPaint();
+}
+$("#artList").addEventListener("click",e=>{ const b=e.target.closest("[data-art]"); if(b) openArticle(b.dataset.art); });
+$("#artReader").addEventListener("click",e=>{
+  if(e.target.closest("[data-artback]")) return renderArticles();
+  const bb=e.target.closest("[data-artbib]"); if(bb){ const [b,c]=bb.dataset.artbib.split("."); return openReader({ b, c:+c, asView:false }); }
+  const dd=e.target.closest("[data-artdoc]"); if(dd){ showView("catecismos"); setTimeout(()=>openDoc(dd.dataset.artdoc),150); }
+});
+(function artDeepLink(){ const id=new URLSearchParams(location.search).get("artigo"); if(id) setTimeout(()=>{ showView("artigos"); setTimeout(()=>openArticle(id),300); },600); })();
 $("#artForm").addEventListener("submit",e=>{ e.preventDefault(); const q=$("#artQ").value.trim(); if(!q){ toast("Digite um tema ou uma referência."); return; }
   window.open(artSearch(q,ART_SITES_PT),"_blank","noopener") || (location.href=artSearch(q,ART_SITES_PT)); });
 
@@ -4665,7 +4715,7 @@ async function openDoc(id){
 }
 function docItemText(d,it){ return d.kind==="catecismo" ? `${it.q}\n${it.a}` : it.t; }
 function renderDoc(){
-  const d=curDoc, box=$("#catDoc"); const q=norm(($("#docQ")?.value)||"").trim();
+  const d=curDoc, box=$("#catDoc"); DA_REG[d.id]=d; box.classList.add("da-host"); box.dataset.docid=d.id; const q=norm(($("#docQ")?.value)||"").trim();
   const items=d.items.map((it,i)=>({it,i})).filter(({it})=>!q || norm(docItemText(d,it)+" "+(it.ct||"")).includes(q));
   const shown=items.slice(0, docPage*40);
   let lastCh=null;
@@ -4693,11 +4743,7 @@ function renderDoc(){
   box.innerHTML = `<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
     <div class="doc-head" style="margin-top:12px"><div><h3>${esc(d.title)}</h3>
       <p class="muted" style="margin:2px 0 0">${esc(KIND_LABEL[d.kind])} · ${esc(d.year)} · ${esc(d.group)} · ${esc(d.license)}${d.lang==="en"?` · original: <em>${esc(d.titleEn)}</em>`:""}</p></div></div>
-    <div class="da-bar" id="daBar">
-      <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
-      <div class="da-info"><b id="daTitle">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":"a confissão"}</b><small id="daSub">${d.kind==="credo"?"Leitura em voz natural":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
-      ${d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
-    </div>
+    ${daBarHtml(d)}
     ${d.kind!=="credo"?`<div class="doc-tools"><label class="sr-only" for="docQ">Procurar no documento</label><input id="docQ" type="search" placeholder="${d.lang==="pt"?"Procurar neste documento (ex.: graça, fé, Cristo)":"Procurar neste documento (busca no original em inglês)"}" value="${esc($("#docQ")?.value||"")}">
       ${d.lang==="pt"?"":`<label class="radio" style="margin:0"><input type="checkbox" id="docAutoTr" ${store.get("docTr",true)?"checked":""}><span>Mostrar em português</span></label>`}
       <span class="muted">${items.length} ${d.kind==="catecismo"?"perguntas":"seções"}</span></div>`:""}
@@ -4724,12 +4770,6 @@ function translateDocItem(btn){
   });
 }
 $("#catDoc").addEventListener("click",async e=>{
-  const da=e.target.closest("[data-da]"); if(da){ const k=da.dataset.da;
-    if(k==="play") return DA.doc===curDoc ? DA.toggle() : DA.start(curDoc, store.get("daPos:"+curDoc.id,0));
-    if(k==="from") return DA.start(curDoc, +da.dataset.i);
-    if(k==="next") return DA.doc===curDoc ? DA.go(DA.i+1) : DA.start(curDoc, store.get("daPos:"+curDoc.id,0)+1);
-    if(k==="prev") return DA.doc===curDoc ? DA.go(DA.i-1) : DA.start(curDoc, Math.max(0,store.get("daPos:"+curDoc.id,0)-1));
-  }
   if(e.target.closest("[data-dback]")) return renderCatHome();
   const r=e.target.closest("[data-dref]"); if(r){ const [b,c,v]=r.dataset.dref.split("."); const t=await dailyVersion(b);
     const vv=(await Repo.getChapter(t,b,+c)).find(x=>x.v===+v); return openContext(vv||{ t, b, c:+c, v:+v, text:"" }); }
@@ -4745,12 +4785,19 @@ $("#catDoc").addEventListener("click",async e=>{
 });
 
 /* ---------- Ouvir credos, catecismos e confissões (audiolivro) ---------- */
+const DA_REG = {};
+function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
+      <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="da-info"><b class="da-t">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":d.kind==="artigo"?"o artigo":"a confissão"}</b><small class="da-s">${d.kind==="credo"?"Leitura em voz natural":d.kind==="artigo"?"Voz natural · ideal para o carro":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
+      ${d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
+    </div>`; }
 const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
-  label(d,i){ const it=d.items[i]; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
+  label(d,i){ const it=d.items[i]; if(d.kind==="artigo") return i===0?d.title:(it.h||`Parte ${i+1}`); return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
   async text(d,i){ const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
     const tp=async t=>{ if(!en) return t; try{ return await Tr.toPt(t); }catch(e){ return t; } };
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
+    if(d.kind==="artigo") return (i===0?`${d.title}.\n\nUm artigo do SOLA a partir de ${d.author}.\n\n`:`${it.h}.\n\n`)+it.paras.join("\n\n");
     const head = it.n ? `Capítulo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}. Seção ${it.n}.` : `Artigo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}.`;
     return `${head}\n\n${await tp(it.t)}`; },
   async url(d,i){ const k=d.id+":"+i; if(this.urls[k]) return this.urls[k];
@@ -4781,23 +4828,35 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
   stop(){ if(this.el){ this.el.pause(); } this.playing=false; daPaint(); }
 };
-function daPaint(){ const bar=$("#daBar"); if(!bar || !curDoc) return; const on=DA.doc===curDoc;
-  bar.classList.toggle("on", on && (DA.playing||DA.loading));
-  const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
-  pb.setAttribute("aria-label", on && DA.playing ? "Pausar" : "Ouvir");
-  const pos = on ? DA.i : store.get("daPos:"+curDoc.id,0);
-  if(on || pos>0){ $("#daTitle").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(curDoc,pos);
-    $("#daSub").textContent = curDoc.kind==="credo" ? curDoc.title : `${pos+1} de ${curDoc.items.length} · ${curDoc.title}`; }
-  document.querySelectorAll("#catDoc .doc-item").forEach(x=>x.classList.toggle("da-now", on && +x.dataset.i===DA.i && (DA.playing||DA.loading)));
+function daPaint(){
+  document.querySelectorAll(".da-bar[data-docid]").forEach(bar=>{ const d=DA_REG[bar.dataset.docid]; if(!d) return; const on=DA.doc && DA.doc.id===d.id;
+    bar.classList.toggle("on", on && (DA.playing||DA.loading));
+    const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+    pb.setAttribute("aria-label", on && DA.playing ? "Pausar" : "Ouvir");
+    const pos = on ? DA.i : store.get("daPos:"+d.id,0);
+    if(on || pos>0){ bar.querySelector(".da-t").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(d,pos);
+      bar.querySelector(".da-s").textContent = d.kind==="credo" ? d.title : `${pos+1} de ${d.items.length} · ${d.title}`; }
+    const host=bar.closest(".da-host"); if(host) host.querySelectorAll(".doc-item[data-i]").forEach(x=>x.classList.toggle("da-now", on && +x.dataset.i===DA.i && (DA.playing||DA.loading)));
+  });
 }
-function daFocus(){ if(DA.doc!==curDoc || $("#catDoc").hidden) return; const need=Math.ceil((DA.i+1)/40); if(need>docPage && !($("#docQ")?.value)){ docPage=need; renderDoc(); }
-  const el=document.querySelector(`#catDoc .doc-item[data-i="${DA.i}"]`); if(el) el.scrollIntoView({ behavior:"smooth", block:"center" }); }
+function daFocus(){ if(!DA.doc) return;
+  if(DA.doc===curDoc && !$("#catDoc").hidden){ const need=Math.ceil((DA.i+1)/40); if(need>docPage && !($("#docQ")?.value)){ docPage=need; renderDoc(); } }
+  const host=document.querySelector(`.da-host[data-docid="${DA.doc.id}"]`); if(!host || host.offsetParent===null) return;
+  const el=host.querySelector(`.doc-item[data-i="${DA.i}"]`); if(el) el.scrollIntoView({ behavior:"smooth", block:"center" }); }
+document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); if(!da) return; const host=da.closest(".da-host"); const d=host && DA_REG[host.dataset.docid]; if(!d) return;
+  e.stopPropagation(); const k=da.dataset.da, cur=DA.doc&&DA.doc.id===d.id, pos=store.get("daPos:"+d.id,0);
+  if(k==="play") return cur ? DA.toggle() : DA.start(d,pos);
+  if(k==="from") return DA.start(d,+da.dataset.i);
+  if(k==="next") return cur ? DA.go(DA.i+1) : DA.start(d,pos+1);
+  if(k==="prev") return cur ? DA.go(DA.i-1) : DA.start(d,Math.max(0,pos-1));
+},true);
 
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.5.0";
+const APP_VERSION = "3.6.0";
 const CHANGELOG = [
+  { v:"3.6.0", d:"novembro de 2026", items:["32 artigos do SOLA para ler e ouvir, dois por tema, apresentando John Piper, Paul Tripp, J. I. Packer, Tim Keller, R. C. Sproul, Jordan Peterson (com leitura reformada) e outros."] },
   { v:"3.5.0", d:"novembro de 2026", items:["Ouça os credos, catecismos e confissões em voz natural, pergunta por pergunta, com avançar e voltar pelo carro e pela tela bloqueada. O app lembra onde você parou."] },
   { v:"3.4.2", d:"novembro de 2026", items:["Nove vozes femininas naturais para a leitura (Thalita, Francisca, Brenda e outras)."] },
   { v:"3.4.1", d:"novembro de 2026", items:["Botão “Ouvir o locutor” testa a voz natural masculina escolhida."] },

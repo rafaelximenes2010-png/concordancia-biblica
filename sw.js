@@ -1,9 +1,9 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "sola-v71";
+const CACHE = "sola-v72";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json", "./docs/index.json",
-  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg"];
+  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg", "./artigos/sola.json"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
@@ -31,7 +31,7 @@ self.addEventListener("fetch", e => {
   }
   // App: rede primeiro (para receber atualizações), cópia guardada se estiver offline
   // Página e arquivos do app sempre conferidos no servidor (ignora o cache de 10 min do GitHub Pages)
-  const fresh = e.request.mode === "navigate" || /(\/|\.html|\.webmanifest|index\.json|devocionais\/[^/]+\.json)$/.test(url.pathname);
+  const fresh = e.request.mode === "navigate" || /(\/|\.html|\.webmanifest|index\.json|devocionais\/[^/]+\.json|artigos\/[^/]+\.json)$/.test(url.pathname);
   const req = fresh ? fetch(url.href, { cache: "no-cache", credentials: "same-origin" }) : fetch(e.request);
   e.respondWith(req.then(res => {
     if (res.ok) { const copy=res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
