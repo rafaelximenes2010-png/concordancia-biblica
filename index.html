@@ -1177,7 +1177,14 @@ dialog.car-mode[open]{display:flex}
 .devo-art{margin:-4px -4px 6px;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.12);line-height:0}
 .devo-art-svg{width:100%;height:auto;display:block}
 .inv-big.md-done{background:#6b7d6e !important}
-.md-tg{background:#2a9ed8 !important;color:#fff !important;margin-top:8px}
+.md-follow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.md-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 9px 10px;border-radius:999px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f4ead2!important;
+  font:600 14px/1 var(--font-ui,system-ui);text-decoration:none;backdrop-filter:blur(6px);transition:background .2s,border-color .2s}
+.md-pill:hover,.md-pill:active{background:rgba(255,255,255,.16);border-color:rgba(225,181,83,.6)}
+.md-pill svg{width:20px;height:20px;flex:none}
+.md-pill small{font-weight:500;opacity:.65}
+.md-pill[aria-disabled]{opacity:.55}
 .md-steps{margin:4px 0 0;padding-left:22px;display:grid;gap:8px;color:var(--ink-2);font-size:15px}
 .md-steps li::marker{color:var(--gold-text,#b8862e);font-weight:700}
 .md-more summary{cursor:pointer;color:var(--gold-text,#b8862e);font-weight:600;font-size:14px}
@@ -1823,9 +1830,11 @@ dialog.car-mode[open]{display:flex}
     <img src="icons/mark.svg?v=3" alt="" width="64" height="64">
     <p class="eyebrow" style="color:#e1b553">Meu devocional diário</p>
     <h2 id="mdTitle">Comece seu dia com a Palavra.</h2>
-    <p>Siga o <strong>Canal SOLA no WhatsApp</strong> e receba gratuitamente uma nova reflexão bíblica sempre que um devocional for publicado.</p>
-    <a class="btn inv-big inv-wa" id="mdFollow"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Seguir o Canal SOLA no WhatsApp</a>
-    <a class="btn inv-big md-tg" id="mdTg" target="_blank" rel="noopener" hidden><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Seguir no Telegram (chega às 5h)</a>
+    <p>Receba gratuitamente a reflexão do dia. Escolha onde seguir:</p>
+    <div class="md-follow">
+      <a class="md-pill" id="mdFollow"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#25d366" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.1.3.7 1.2 1.5 1.9 1 .9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.4Z"/></svg><span>WhatsApp</span></a>
+      <a class="md-pill" id="mdTg" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#2aabee"/><path fill="#fff" d="m6.6 11.7 9.7-3.8c.5-.2.9.1.7.8l-1.6 7.7c-.1.6-.5.7-1 .4l-2.5-1.8-1.2 1.2c-.1.1-.3.2-.5.2l.2-2.6 4.7-4.3c.2-.2 0-.3-.3-.1L9 13.2l-2.5-.8c-.5-.2-.5-.5.1-.7Z"/></svg><span>Telegram <small>· 5h</small></span></a>
+    </div>
     <p class="md-note" id="mdNote"></p>
   </div>
   <div class="home-card" id="mdToday"><p class="muted">Carregando o devocional de hoje…</p></div>
@@ -5302,8 +5311,8 @@ SOLA | Bíblia & Teologia — A Palavra no centro de tudo.`;
 async function renderMeuDevo(){
   const f=$("#mdFollow"), note=$("#mdNote"), tgb=$("#mdTg");
   if(TG_CHANNEL_URL){ tgb.href=TG_CHANNEL_URL; tgb.hidden=false; } else tgb.hidden=true;
-  if(WA_CHANNEL){ f.href=WA_CHANNEL; f.target="_blank"; f.rel="noopener"; f.removeAttribute("aria-disabled"); note.textContent="Gratuito. Abre o WhatsApp no Canal SOLA: toque em “Seguir”."; }
-  else { f.removeAttribute("href"); f.setAttribute("aria-disabled","true"); f.style.opacity=".75";
+  if(WA_CHANNEL){ f.href=WA_CHANNEL; f.target="_blank"; f.rel="noopener"; f.removeAttribute("aria-disabled"); note.textContent="Grátis · basta tocar em “Seguir” no canal."; }
+  else { f.removeAttribute("href"); f.setAttribute("aria-disabled","true");
     note.textContent="O Canal SOLA está sendo preparado. Enquanto isso, ative o lembrete diário neste celular."; }
   const box=$("#mdToday"), d=new Date(); await DevoSeries.load(monthKey(d)); const dv=devoFor(d);
   try{
