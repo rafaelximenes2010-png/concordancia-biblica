@@ -4869,7 +4869,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     a.addEventListener("play",()=>{ this.playing=true; daPaint(); try{ navigator.mediaSession.playbackState="playing"; }catch(e){} this.pos(); });
     a.addEventListener("pause",()=>{ try{ navigator.mediaSession.playbackState="paused"; }catch(e){} this.pos(); });
     a.addEventListener("loadedmetadata",()=>{ a.preservesPitch=true; a.webkitPreservesPitch=true;
-      a.playbackRate = (this.doc && this.doc.kind==="artigo" && a.duration>150) ? Math.min(1.3, a.duration/148) : 1;   // artigos em até ~2min30
+      a.playbackRate = 1;   // velocidade natural: o artigo dura o tempo que precisar
       this.pos(); daPaint(); });
     let lastSave=0; a.addEventListener("timeupdate",()=>{ if(!this.doc || this.doc.kind!=="artigo") return; daPaint(); if(Math.abs(a.currentTime-(this._lp||0))>5){ this._lp=a.currentTime; this.pos(); }
       if(Math.abs(a.currentTime-lastSave)>4){ lastSave=a.currentTime; store.set("daT:"+this.doc.id, a.duration && a.currentTime>a.duration-8 ? 0 : a.currentTime); } }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
@@ -4930,9 +4930,10 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.6";
+const APP_VERSION = "3.6.7";
 const CHANGELOG = [
-  { v:"3.6.6", d:"novembro de 2026", items:["Artigos em áudio com até cerca de 2 minutos e 30 segundos.","Tocador na tela bloqueada e na Central de Controle, como nos apps de música: SOLA, título do artigo, capa, barra de progresso e -15/+15."] },
+  { v:"3.6.7", d:"novembro de 2026", items:["Artigos voltam a ser lidos na velocidade natural, do começo ao fim."] },
+  { v:"3.6.6", d:"novembro de 2026", items:["Tocador na tela bloqueada e na Central de Controle, como nos apps de música: SOLA, título do artigo, capa, barra de progresso e -15/+15."] },
   { v:"3.6.5", d:"novembro de 2026", items:["Artigos tocam em um único áudio, do começo ao fim, com botões de -15 e +15 segundos; o app lembra onde você parou.","Voltar dentro de Artigos, Credos e Configurações leva de volta à lista, no ponto em que você estava."] },
   { v:"3.6.4", d:"novembro de 2026", items:["Mensagem de boas-vindas com o seu nome ao abrir o app."] },
   { v:"3.6.3", d:"novembro de 2026", items:["O áudio continua tocando ao voltar ou trocar de seção, com um mini player no rodapé (pausar, parar e voltar ao texto).","Atualizações do app esperam o áudio terminar para não interromper a escuta."] },
