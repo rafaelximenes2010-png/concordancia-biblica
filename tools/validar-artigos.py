@@ -13,7 +13,7 @@ for i, a in enumerate(data["items"]):
     if a.get("id") in ids: erros.append(f"{tag}: id repetido")
     ids.add(a.get("id"))
     if not re.fullmatch(r"[a-z0-9-]+", a.get("id", "")): erros.append(f"{tag}: id inválido")
-    if not (0 <= a.get("t", -1) <= 20): erros.append(f"{tag}: tema fora de 0–20")
+    if not (0 <= a.get("t", -1) <= 20) or a.get("t")==16: erros.append(f"{tag}: tema inválido (0–20, exceto 16)")
     if not re.fullmatch(r"20\d\d-(0[1-9]|1[0-2])", a.get("mes", "")): erros.append(f"{tag}: mes deve ser AAAA-MM")
     if "dia" in a and not re.fullmatch(r"20\d\d-\d\d-\d\d", a["dia"]): erros.append(f"{tag}: dia deve ser AAAA-MM-DD")
     if "dia" in a and not a["dia"].startswith(a.get("mes", "")): erros.append(f"{tag}: dia fora do mes")

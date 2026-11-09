@@ -3,7 +3,7 @@
 ## Regra
 - O app mostra **até 5 artigos por tema**: os 5 mais recentes pelo campo `mes` (AAAA-MM).
 - Os mais antigos não são apagados. Ficam em **"Edições anteriores"**, para não perder o que já foi lido, ouvido ou compartilhado.
-- **Todo mês entram 2 artigos novos por tema**, ou seja, 40 por mês para os 20 temas. Com isso, em 2 a 3 meses cada tema renova o destaque por completo.
+- **Todo mês entram 2 artigos novos por tema**, ou seja, 38 por mês para os 19 temas (0 a 15 e 17 a 19; o 16 foi retirado). Com isso, em 2 a 3 meses cada tema renova o destaque por completo.
 - Os artigos de um mês são publicados até o dia 25 do mês anterior, com `mes` igual ao mês seguinte. O app só exibe artigos com `mes` menor ou igual ao mês atual, então eles aparecem sozinhos no dia 1º.
 
 ## Temas (campo `t`)
@@ -17,7 +17,7 @@
 | 5 | Criação de filhos | 13 | Pessoa de Cristo |
 | 6 | Ansiedade, medo e fé | 14 | Espírito Santo |
 | 7 | Sofrimento e consolo | 15 | Últimas coisas |
-| 16 | Homossexualidade e fé cristã | 17 | Sexualidade e sexo antes do casamento |
+| 16 | (tema retirado: não usar) | 17 | Sexo antes do casamento |
 | 18 | Aborto e a santidade da vida | 19 | Conselhos para o casamento |
 | 20 | Especial de Natal (só em dezembro) | | |
 
@@ -46,7 +46,7 @@
 ## Pronúncia na voz
 Nomes estrangeiros são reescritos só no áudio pela lista `PRONUNCIA` em `index.html` (por exemplo, John Piper vira "Djón Páiper"). Ao incluir um autor novo com nome estrangeiro, acrescente a forma falada a essa lista.
 
-## Temas sensíveis (16, 17 e 18)
+## Temas sensíveis (17 e 18)
 Apresentar a ética sexual e a defesa da vida segundo a fé reformada histórica, com firmeza bíblica e compaixão pastoral. Nunca usar linguagem de desprezo ou de ódio. Sempre oferecer o evangelho, o perdão de Cristo e o cuidado da igreja a quem luta ou já passou por essas situações.
 
 ## Especial de Natal (tema 20)

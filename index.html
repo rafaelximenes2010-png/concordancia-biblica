@@ -4697,7 +4697,7 @@ const ART_TOPICS = [
   ["Evangelismo e missões","evangelismo missões"],["As Escrituras","inerrância suficiência das Escrituras"],
   ["Trindade","doutrina da Trindade"],["Pessoa de Cristo","cristologia pessoa de Cristo"],
   ["Espírito Santo","obra do Espírito Santo"],["Últimas coisas","escatologia volta de Cristo"],
-  ["Homossexualidade e fé cristã","homossexualidade Bíblia fé cristã"],["Sexualidade e sexo antes do casamento","sexo antes do casamento pureza sexual"],
+  null,["Sexo antes do casamento","sexo antes do casamento pureza sexual"],
   ["Aborto e a santidade da vida","aborto santidade da vida"],["Conselhos para o casamento","conselhos para o casamento cristão"],
   ["Especial de Natal","natal advento encarnação de Cristo"]
 ];
@@ -4727,7 +4727,7 @@ async function renderArticles(){
   const natal=vis.filter(x=>x.t===ART_NATAL && x.dia && x.dia.slice(0,7)===mk);
   const natalHtml = natal.length ? `<div class="st-group art-natal"><h3 class="st-h">🎄 Especial de Natal <small>dia ${+natal[0].dia.slice(8)} de 25 · um artigo novo por dia</small></h3>
     <div class="st-list"><div class="st-body" style="display:block">${artRow(natal[0]).replace('class="art-row"','class="art-row art-today"')}${natal.length>1?`<details class="art-old"><summary>Dias anteriores (${natal.length-1})</summary>${natal.slice(1).map(artRow).join("")}</details>`:""}</div></div></div>` : "";
-  $("#artList").innerHTML = natalHtml + `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length} · novos artigos todo mês</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>{ const its=vis.filter(x=>x.t===i); return (i===ART_NATAL && !its.length) ? "" : artCard(t,q,i,its); }).join("")}</div></div>`;
+  $("#artList").innerHTML = natalHtml + `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.filter((t,i)=>t && i!==ART_NATAL).length} · novos artigos todo mês</small></h3><div class="st-list">${ART_TOPICS.map((tp,i)=>{ if(!tp) return ""; const [t,q]=tp; const its=vis.filter(x=>x.t===i); return (i===ART_NATAL && !its.length) ? "" : artCard(t,q,i,its); }).join("")}</div></div>`;
   const dv=devoFor(new Date()); const ref=passageLabel(dv.p);
   $("#artToday").innerHTML = `<div class="bp-note" style="background:var(--gold-soft);border-style:solid;border-color:var(--gold)">
     <strong>Ligado ao devocional de hoje:</strong> ${esc(dv.title)} (${esc(ref)}) —
@@ -4745,7 +4745,7 @@ function artAsDoc(x){
 async function openArticle(id){
   const list=await artsLoad().catch(()=>[]); const x=list.find(a=>a.id===id); if(!x) return toast("Artigo não encontrado.");
   const d=artAsDoc(x); DA_REG[d.id]=d; const box=$("#artReader"); $("#artHome").hidden=true; box.hidden=false; window.scrollTo({top:0});
-  const topic=ART_TOPICS[x.t]?.[0]||"";
+  const topic=(ART_TOPICS[x.t]||[])[0]||"";
   box.innerHTML=`<button type="button" class="btn btn-sm" data-artback>‹ Todos os artigos</button>
     <article class="art-read da-host" data-docid="${d.id}">
       <p class="eyebrow" style="margin:14px 0 4px">${esc(topic)} · ${x.min} min</p>
@@ -5023,8 +5023,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.7.6";
+const APP_VERSION = "3.7.7";
 const CHANGELOG = [
+  { v:"3.7.7", d:"novembro de 2026", items:["Ajuste nos temas dos Artigos: “Sexo antes do casamento”."] },
   { v:"3.7.6", d:"novembro de 2026", items:["Ícone “tocando agora” no alto do app, com ondinhas animadas: um toque abre o tocador em tela cheia."] },
   { v:"3.7.5", d:"novembro de 2026", items:["Tocador em tela cheia, como no Spotify: toque no mini player para abrir, com capa, barra de progresso, -15/+15, tocar/pausar e abrir o texto; arraste para baixo para minimizar."] },
   { v:"3.7.4", d:"novembro de 2026", items:["O mini player aparece sempre que o tocador sai da tela, inclusive ao voltar para o app pelo ícone do áudio, com -15, tocar/pausar, ir ao texto e fechar."] },
