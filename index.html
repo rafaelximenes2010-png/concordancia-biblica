@@ -112,6 +112,36 @@ a{color:var(--accent)}
 .scope{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:8px}
 .header-tools{display:flex;gap:6px;align-items:center}
 .share-opts{display:flex;flex-direction:column;gap:8px}
+/* Compartilhe o SOLA e Meu devocional diário */
+.inv-card{margin:0 0 14px;padding:26px 20px 20px;border-radius:22px;text-align:center;color:#f4ead2;
+  background:radial-gradient(120% 90% at 50% 0%,#22396a 0%,#132447 55%,#0f1b33 100%);box-shadow:0 14px 32px rgba(15,27,51,.28)}
+.inv-card img{border-radius:18px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.inv-brand{margin:10px 0 2px}.inv-brand b{display:block;font:800 30px/1 var(--font-ui);letter-spacing:.24em;color:#fff}
+.inv-brand span{display:block;margin-top:4px;font:700 11px/1 var(--font-ui);letter-spacing:.22em;color:#e1b553}
+.inv-motto{margin:12px 0 10px;font:600 12px/1 var(--font-ui);letter-spacing:.2em;text-transform:uppercase;color:#c9d2e3}
+.inv-card blockquote{margin:0;font:italic 22px/1.3 var(--font-text);color:#f4ead2}
+.inv-card blockquote small{display:block;margin-top:6px;font:700 11px/1 var(--font-ui);letter-spacing:.16em;color:#e1b553;font-style:normal;text-transform:uppercase}
+.inv-url{margin:14px 0 0;font:600 14px/1.3 var(--font-ui);color:#dfe5f1;word-break:break-all}
+.inv-actions{display:grid;gap:10px;margin:0 0 14px}
+.inv-big{justify-content:center;font-size:17px!important;font-weight:700!important;padding:15px 16px!important;border-radius:14px!important}
+.inv-wa{background:#1fa855!important;border-color:#1fa855!important;color:#fff!important}
+.inv-wa .icon{stroke:#fff;width:22px;height:22px}
+.inv-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.inv-row .btn{justify-content:center;min-height:48px;font-weight:600;min-width:0;white-space:normal;text-align:center;font-size:14px;line-height:1.2}
+.share-preview{white-space:pre-wrap;font:14px/1.45 var(--font-ui);background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin:8px 0 0;color:var(--ink-2);max-height:340px;overflow:auto}
+.leve-grid{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.leve-grid img{border-radius:12px;border:1px solid var(--border);background:#fff;padding:6px;flex:none}
+.inv-msg{width:100%;font:15px/1.5 var(--font-ui);padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--ink);resize:vertical}
+.inv-qr{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.inv-qr img{border-radius:12px;border:1px solid var(--border);background:#fff;padding:6px}
+.md-hero{text-align:center;padding:26px 20px 22px;margin:0 0 14px;border-radius:22px;color:#f4ead2;
+  background:radial-gradient(120% 90% at 50% 0%,#22396a 0%,#132447 55%,#0f1b33 100%)}
+.md-hero img{border-radius:16px}
+.md-hero h2{font:600 28px/1.15 var(--font-text);color:#fff;margin:4px 0 8px}
+.md-hero p{color:#d7deeb;margin:0 0 16px}
+.md-hero .inv-big{display:flex;max-width:420px;margin:0 auto}
+.md-note{font-size:13px;margin:10px 0 0!important;color:#aeb9cf!important}
+.md-admin{border-color:var(--gold)!important}
 .share-opts .btn{justify-content:center;width:100%;min-height:52px;font-size:16px;font-weight:700;border-radius:14px}
 .share-opts .btn-wa{background:#1fa855!important;border-color:#1fa855!important;color:#fff!important}
 .share-opts .btn-wa .icon{stroke:#fff}
@@ -1379,6 +1409,11 @@ dialog.car-mode[open]{display:flex}
         <a href="#config" data-cfg="cfgAjuda"><span class="ci" style="background:#4f7a63"><svg class="icon" aria-hidden="true"><use href="#i-listen"/></svg></span><b>Voz e lembretes</b><span class="chev" aria-hidden="true">›</span></a>
       </nav>
     </article>
+    <article class="home-card hc-meudevo">
+      <h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-lamp"/></svg>Receba o devocional diário</h3>
+      <p style="margin:0;color:var(--ink-2)">Comece o dia com a Palavra: siga o Canal SOLA no WhatsApp ou ative o lembrete neste celular.</p>
+      <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-view="meudevocional">Quero receber</button></div>
+    </article>
     <article class="home-card" id="homeShare">
       <h3>Compartilhar o app</h3>
       <p style="margin:0;color:var(--ink-2)">Envie o app SOLA | Bíblia & Teologia para amigos, família ou o grupo da igreja.</p>
@@ -1386,11 +1421,22 @@ dialog.car-mode[open]{display:flex}
         <a class="btn btn-sm btn-wa" id="inviteWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar pelo WhatsApp</a>
         <button type="button" class="btn btn-sm btn-primary" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar com o farol</button>
         <button type="button" class="btn btn-sm" id="copyAppLink"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar link</button>
+        <button type="button" class="btn btn-sm" data-view="compartilhe">Convite e QR Code ›</button>
       </div>
     </article>
     <article class="home-card wide" id="remindersCard"></article>
     <article class="home-card wide" id="installCard">
-      <h3><img src="icons/icon.svg?v=3" alt="" width="28" height="28">Instalar como aplicativo</h3>
+      <h3><img src="icons/icon.svg?v=3" alt="" width="28" height="28">Leve o SOLA com você</h3>
+      <div class="leve-grid">
+        <img src="icons/qr-instalar.svg" alt="QR Code para instalar o SOLA" width="112" height="112">
+        <div style="flex:1;min-width:200px">
+          <p style="margin:0 0 8px;color:var(--ink-2)">Estude a Bíblia, acompanhe seus devocionais e aprofunde sua compreensão das Escrituras onde estiver.</p>
+          <div class="row-actions" style="margin:0">
+            <button type="button" class="btn btn-sm btn-primary" id="leveInstall"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Instalar SOLA</button>
+            <button type="button" class="btn btn-sm" data-view="compartilhe"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar com um amigo</button>
+          </div>
+        </div>
+      </div>
       <div class="install" id="installBar" role="region" aria-label="Instalar aplicativo" style="padding:0;margin:0">
         <div class="install-box">
           <p id="installText">Instale na tela inicial para abrir em tela cheia e usar sem conexão.</p>
@@ -1729,6 +1775,72 @@ dialog.car-mode[open]{display:flex}
   </div>
   <div id="np-salvos" hidden><div id="savedList"></div></div>
 </section>
+<!-- ===================== COMPARTILHE O SOLA ===================== -->
+<section class="view narrow" id="view-compartilhe" hidden aria-labelledby="invTitle">
+  <div class="view-head"><div><p class="eyebrow">Convites</p><h2 id="invTitle">Compartilhe o SOLA</h2>
+    <p>Envie o convite para amigos, família e o grupo da igreja. Quem tocar no link vê o passo a passo para instalar.</p></div></div>
+  <figure class="inv-card" aria-label="Cartão de convite do SOLA">
+    <img src="icons/mark.svg?v=3" alt="" width="76" height="76">
+    <div class="inv-brand"><b>SOLA</b><span>BÍBLIA &amp; TEOLOGIA</span></div>
+    <p class="inv-motto">Estude · Reflita · Aprofunde-se</p>
+    <blockquote>“A minha graça te basta.”<small>2 Coríntios 12:9</small></blockquote>
+    <p class="inv-url" id="invUrl"></p>
+  </figure>
+  <div class="inv-actions">
+    <a class="btn inv-big inv-wa" id="invWA"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Compartilhar pelo WhatsApp</a>
+    <div class="inv-row">
+      <button type="button" class="btn" id="invCopy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar convite</button>
+      <button type="button" class="btn" id="invSite"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Compartilhar site</button>
+      <button type="button" class="btn" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Com a imagem do farol</button>
+      <button type="button" class="btn" id="invInstall"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Instalar aplicativo</button>
+    </div>
+  </div>
+  <div class="home-card">
+    <h3 style="margin:0">Mensagem do convite</h3>
+    <p class="muted" style="margin:0">Você pode editar antes de enviar. O texto fica guardado neste aparelho.</p>
+    <label class="sr-only" for="invMsg">Mensagem do convite</label>
+    <textarea id="invMsg" rows="14" class="inv-msg"></textarea>
+    <div class="row-actions"><button type="button" class="btn btn-sm btn-ghost" id="invReset">Restaurar o texto original</button></div>
+  </div>
+  <div class="home-card inv-qr">
+    <img src="icons/qr-instalar.svg" alt="QR Code para instalar o SOLA" width="150" height="150">
+    <div><h3 style="margin:0 0 4px">QR Code para instalar</h3>
+      <p class="muted" style="margin:0">Mostre na tela, num slide do culto ou num cartaz: quem apontar a câmera do celular abre o guia de instalação.</p>
+      <a class="btn btn-sm" href="icons/qr-instalar.svg" download="QR-SOLA.svg" style="margin-top:8px">Baixar o QR Code</a></div>
+  </div>
+</section>
+
+<!-- ===================== MEU DEVOCIONAL DIÁRIO ===================== -->
+<section class="view narrow" id="view-meudevocional" hidden aria-labelledby="mdTitle">
+  <div class="md-hero">
+    <img src="icons/mark.svg?v=3" alt="" width="64" height="64">
+    <p class="eyebrow" style="color:#e1b553">Meu devocional diário</p>
+    <h2 id="mdTitle">Comece seu dia com a Palavra.</h2>
+    <p>Siga o <strong>Canal SOLA no WhatsApp</strong> e receba gratuitamente uma nova reflexão bíblica sempre que um devocional for publicado.</p>
+    <a class="btn inv-big inv-wa" id="mdFollow"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Seguir o Canal SOLA no WhatsApp</a>
+    <p class="md-note" id="mdNote"></p>
+  </div>
+  <div class="home-card" id="mdToday"><p class="muted">Carregando o devocional de hoje…</p></div>
+  <div class="home-card">
+    <h3 style="margin:0">Também neste celular</h3>
+    <p class="muted" style="margin:0">Receba um lembrete diário do SOLA no horário que preferir, sem depender do WhatsApp.</p>
+    <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-view="devocional">Configurar lembrete diário</button></div>
+  </div>
+  <div class="home-card md-privacy">
+    <h3 style="margin:0">Privacidade</h3>
+    <p class="muted" style="margin:0">Ao seguir um canal, o seu número de telefone não aparece para o administrador nem para os outros seguidores. Para deixar de receber, basta tocar em “Seguindo” no canal e escolher “Deixar de seguir”. Veja a <a href="site/privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</p>
+  </div>
+  <div class="home-card md-admin" id="mdAdmin" hidden>
+    <h3 style="margin:0">Administração · post do Canal de hoje</h3>
+    <p class="muted" style="margin:0">Copie o texto, abra o Canal SOLA no WhatsApp e cole. Leva menos de um minuto.</p>
+    <pre class="share-preview" id="mdPost"></pre>
+    <div class="row-actions">
+      <button type="button" class="btn btn-sm btn-primary" id="mdCopy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar o post</button>
+      <button type="button" class="btn btn-sm" id="mdImg"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Imagem do dia</button>
+      <a class="btn btn-sm" id="mdOpen" target="_blank" rel="noopener">Abrir o Canal</a>
+    </div>
+  </div>
+</section>
 <section class="view" id="view-config" hidden aria-labelledby="cfgTitle">
   <div class="view-head">
     <div style="flex:1"><p class="eyebrow">Seu aplicativo</p><h2 id="cfgTitle" class="ttl-ico"><img src="icons/mark.svg?v=3" alt="" width="30" height="30">Configurações</h2></div>
@@ -1741,6 +1853,7 @@ dialog.car-mode[open]{display:flex}
     <a href="#config" data-cfg="cfgDados"><span class="ci" style="background:#6b5a8e"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></span><b>Meus dados e backup</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgAtual"><span class="ci" style="background:#2f6b3a"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><b>Atualizações</b><small id="ciVer"></small><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-opensh><span class="ci" style="background:#1fa855"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></span><b>Enviar o SOLA para alguém</b><small>WhatsApp</small><span class="chev" aria-hidden="true">›</span></a>
+    <a href="#config" data-view="meudevocional"><span class="ci" style="background:#b8862e"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg></span><b>Meu devocional diário</b><small>Canal no WhatsApp</small><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgSugestoes"><span class="ci" style="background:#d9694c"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></span><b>Sugestões</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgPriv"><span class="ci" style="background:#132447"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg></span><b>Privacidade e termos</b><span class="chev" aria-hidden="true">›</span></a>
     <a href="#config" data-cfg="cfgSobre"><span class="ci" style="background:#0f1b33"><img src="icons/mark.svg?v=3" alt="" width="22" height="22"></span><b>Sobre o SOLA</b><span class="chev" aria-hidden="true">›</span></a>
@@ -1808,6 +1921,7 @@ dialog.car-mode[open]{display:flex}
         <label class="radio"><input type="checkbox" id="cfgTips"><span>Explicar cada botão na primeira vez que eu tocar nele</span></label>
         <button type="button" class="btn btn-sm" id="cfgTipsReset">Mostrar as explicações de novo</button>
         <button type="button" class="btn btn-sm" data-view="devocional">Configurar lembrete diário</button>
+        <label class="radio"><input type="checkbox" id="cfgCanalAdmin"><span>Sou administrador do Canal SOLA (mostra o post pronto do dia em “Meu devocional diário”)</span></label>
       </div>
     </section>
 
@@ -3835,7 +3949,8 @@ async function renderDevo(){
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
       </div>
-      <h4 class="devo-end">Para terminar em adoração</h4>${spotifyBox(dv.theme||themeOf(ps.text+" "+dv.title), ps)}`;
+      <h4 class="devo-end">Para terminar em adoração</h4>${spotifyBox(dv.theme||themeOf(ps.text+" "+dv.title), ps)}
+      <div class="row-actions" style="margin-top:12px"><button type="button" class="btn btn-sm" data-view="meudevocional">📬 Receber o devocional todo dia</button></div>`;
     box.dataset.kind="devo"; box._ps=ps; box._p=dv.p; box._dv=dv; renderDevoMonth(d);
   }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a passagem do devocional.</div>`; }
 }
@@ -4243,7 +4358,7 @@ function dayShareText(ps, dv){
   if(dlg){
     $("#shareDlgWA").href=waUrl(msg);
     $("#shareDlgUrl").textContent=INSTALL_URL;
-    $("#shareTop")?.addEventListener("click",()=>openDialog(dlg));
+    $("#shareTop")?.addEventListener("click",()=>showView("compartilhe"));
     $("#shareClose").addEventListener("click",()=>dlg.close());
     dlg.addEventListener("click",e=>{ if(e.target===dlg) dlg.close(); });
     $("#shareDlgWA").addEventListener("click",()=>setTimeout(()=>dlg.close(),300));
@@ -4577,8 +4692,15 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.2.0";
+const APP_VERSION = "3.3.0";
 const CHANGELOG = [
+  { v:"3.3.0", d:"novembro de 2026", items:[
+    "Compartilhe o SOLA: cartão de convite, mensagem editável, WhatsApp, copiar convite, compartilhar o site, instalar e QR Code.",
+    "Meu devocional diário: siga o Canal SOLA no WhatsApp (gratuito) ou ative o lembrete neste celular.",
+    "Link direto para o devocional de cada dia, para enviar no Canal e no WhatsApp.",
+    "Leve o SOLA com você: instalar, compartilhar e QR Code na tela inicial e no site.",
+    "Voz natural do devocional (locutor Macério ou Antônio) tocando como mídia no Bluetooth e no CarPlay."
+  ]},
   { v:"3.2.0", d:"novembro de 2026", items:[
     "Devocionais de dezembro: série “A Luz veio ao mundo”, 31 dias de Advento e Natal.",
     "Catecismo Maior de Westminster em português, com as 196 perguntas e respostas e o original em inglês para consulta.",
@@ -4913,7 +5035,7 @@ function renderConfig(){
   fillVersionSelect($("#cfgVersion"), store.get("version",DEFAULT_VERSION));
   $("#cfgBr").innerHTML=REFORMED.brazil.map(c=>`<option ${c.name===brDefault()?"selected":""}>${esc(c.name)}</option>`).join("");
   $("#cfgAutoTr").checked=Tr.auto; $("#cfgInline").checked=!!Comm.inline; $("#cfgTrEmail").checked=store.get("trEmail",false);
-  $("#cfgTips").checked=store.get("tips",true);
+  $("#cfgTips").checked=store.get("tips",true); $("#cfgCanalAdmin").checked=store.get("canalAdmin",false);
   fillVoices();
   $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
   $("#natHint").textContent = TR_PROXY ? "A voz natural é gerada uma vez por devocional e fica guardada no aparelho." : "A voz natural será ativada quando a ponte do Cloudflare (a mesma do tradutor) for configurada com o serviço de voz da Microsoft. Até lá, o app usa a voz do aparelho.";
@@ -4956,6 +5078,7 @@ $("#cfgNatName").addEventListener("change",e=>{ store.set("ttsVoiceNat",e.target
 $("#cfgVoice").addEventListener("change",e=>{ store.set("ttsVoice",e.target.value); toast("Voz da leitura alterada."); });
 $("#cfgVoiceTest").addEventListener("click",()=>{ if(!("speechSynthesis" in window)) return toast("Este navegador não tem leitura em voz alta.");
   speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance("A minha graça te basta, porque o poder se aperfeiçoa na fraqueza."); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate*0.92; u.pitch=0.95; speechSynthesis.speak(u); });
+$("#cfgCanalAdmin").addEventListener("change",e=>{ store.set("canalAdmin",e.target.checked); toast(e.target.checked?"Modo administrador do Canal ativado.":"Modo administrador desativado."); });
 $("#cfgTipsReset").addEventListener("click",()=>{ store.set("tipsSeen",[]); store.set("tips",true); $("#cfgTips").checked=true; toast("As explicações aparecerão de novo."); });
 function backupKeys(){ const ks=[]; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k.startsWith("cb:") && k!=="cb:trCache") ks.push(k); } }catch(e){} return ks; }
 $("#cfgExport").addEventListener("click",()=>{
@@ -5086,6 +5209,94 @@ document.addEventListener("click",e=>{
 
 /* ---------- Sugestões ---------- */
 /* Para receber as sugestões, preencha um destes canais (o primeiro preenchido é usado). */
+/* =====================================================================
+   COMPARTILHE O SOLA · MEU DEVOCIONAL DIÁRIO (Canal do WhatsApp)
+   >>> Cole em WA_CHANNEL o link do Canal SOLA (ex.: https://whatsapp.com/channel/XXXX) <<<
+   ===================================================================== */
+const WA_CHANNEL = "";
+const SITE_URL = () => APP_URL.replace(/\/$/,"")+"/site/";
+const INSTALL_URL = () => APP_URL+"?instalar";
+const INVITE_DEFAULT = () => `*Conheça o SOLA! 📖*
+
+Uma nova experiência de estudo da Palavra de Deus.
+
+Explore comentários bíblicos, devocionais diários, concordância, reflexões e ferramentas que ajudam você a compreender as Escrituras com mais profundidade.
+
+Tudo em um ambiente moderno, intuitivo e desenvolvido para acompanhar sua caminhada de fé.
+
+📖 Estude. Reflita. Aprofunde-se.
+
+🌐 Acesse o site: ${SITE_URL()}
+
+📱 Instale o aplicativo: ${INSTALL_URL()}
+
+*SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
+function inviteText(){ return store.get("inviteMsg","") || INVITE_DEFAULT(); }
+function renderInvite(){
+  const ta=$("#invMsg"); if(document.activeElement!==ta) ta.value=inviteText();
+  $("#invUrl").textContent=APP_URL.replace(/^https?:\/\//,"").replace(/\/$/,"");
+  $("#invWA").href=waUrl(ta.value);
+}
+$("#invMsg").addEventListener("input",e=>{ const v=e.target.value; store.set("inviteMsg", v.trim()===INVITE_DEFAULT().trim()?"":v); $("#invWA").href=waUrl(v); });
+$("#invReset").addEventListener("click",()=>{ store.set("inviteMsg",""); $("#invMsg").value=INVITE_DEFAULT(); $("#invWA").href=waUrl(INVITE_DEFAULT()); toast("Texto original restaurado."); });
+$("#invCopy").addEventListener("click",()=>copyText($("#invMsg").value,"Convite copiado. Cole no WhatsApp ou onde quiser."));
+$("#invSite").addEventListener("click",async()=>{ const url=SITE_URL(), title="SOLA | Bíblia & Teologia";
+  if(navigator.share){ try{ await navigator.share({ title, text:"Conheça o SOLA | Bíblia & Teologia — Estude. Reflita. Aprofunde-se.", url }); return; }catch(e){ if(e && e.name==="AbortError") return; } }
+  copyText(url,"Endereço do site copiado."); });
+$("#leveInstall").addEventListener("click",()=>$("#invInstall").click());
+$("#invInstall").addEventListener("click",()=>{
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if(standalone){ toast("Você já está usando o SOLA instalado. ✓"); return; }
+  const b=$("#instTop"); if(b && !b.hidden){ b.click(); return; }
+  location.href=INSTALL_URL(); });
+
+/* Link direto do devocional por data: ...?devo=AAAA-MM-DD */
+const devoLink = d => `${APP_URL}?devo=${todayKey(d)}#devocional`;
+(function devoDeepLink(){
+  const m=location.search.match(/[?&]devo=(\d{4}-\d{2}-\d{2})/); if(!m) return;
+  const [y,mo,da]=m[1].split("-").map(Number); const t=new Date(y,mo-1,da), today=new Date(); today.setHours(0,0,0,0);
+  const off=Math.round((t-today)/864e5); if(off<=0 && off>-400) devoOffset=off;    // só datas já publicadas
+  if(!location.hash) history.replaceState(null,"",location.pathname+location.search+"#devocional");
+})();
+function canalPost(dv, ps, d){
+  const resumo=((dv.reflection||"").match(/[^.!?]+[.!?]+/g)||[dv.reflection||""]).slice(0,2).join(" ").trim();
+  return `*SOLA | Devocional Diário 📖*
+
+*${dv.title}*
+
+“${ps.text.trim()}” — ${ps.label}
+
+${resumo}
+
+📖 Leia o devocional completo:
+${devoLink(d)}
+
+SOLA | Bíblia & Teologia — A Palavra no centro de tudo.`;
+}
+async function renderMeuDevo(){
+  const f=$("#mdFollow"), note=$("#mdNote");
+  if(WA_CHANNEL){ f.href=WA_CHANNEL; f.target="_blank"; f.rel="noopener"; f.removeAttribute("aria-disabled"); note.textContent="Gratuito. Abre o WhatsApp no Canal SOLA: toque em “Seguir”."; }
+  else { f.removeAttribute("href"); f.setAttribute("aria-disabled","true"); f.style.opacity=".75";
+    note.textContent="O Canal SOLA está sendo preparado. Enquanto isso, ative o lembrete diário neste celular."; }
+  const box=$("#mdToday"), d=new Date(); await DevoSeries.load(monthKey(d)); const dv=devoFor(d);
+  try{
+    const ps=await getPassage(dv.p);
+    box.innerHTML=`<p class="eyebrow" style="margin:0">Devocional de hoje${dv.series?` · ${esc(dv.series)}`:""}</p>
+      <h3 style="margin:2px 0 0;font-size:20px">${esc(dv.title)}</h3><p class="muted" style="margin:0">${esc(ps.label)}</p>
+      <p style="margin:6px 0 0;color:var(--ink-2)">${esc(dv.reflection)}</p>
+      <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-view="devocional">Ler o devocional completo</button></div>`;
+    const admin=store.get("canalAdmin",false); $("#mdAdmin").hidden=!admin;
+    if(admin){ const post=canalPost(dv,ps,d); $("#mdPost").textContent=post.replace(/\*/g,""); $("#mdPost")._t=post;
+      const o=$("#mdOpen"); if(WA_CHANNEL){ o.href=WA_CHANNEL; o.hidden=false; } else o.hidden=true; $("#mdImg")._dv=dv; }
+  }catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o devocional agora.</p>`; }
+}
+$("#mdFollow").addEventListener("click",e=>{ if(!WA_CHANNEL){ e.preventDefault(); toast("O Canal SOLA ainda está sendo preparado."); } });
+$("#mdCopy").addEventListener("click",()=>copyText($("#mdPost")._t||"","Post copiado. Cole no Canal SOLA."));
+$("#mdImg").addEventListener("click",async()=>{ const dv=$("#mdImg")._dv; if(!dv) return;
+  try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
+    if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f] }); return; }
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="devocional-SOLA.jpg"; a.click(); }catch(e){ if(!(e && e.name==="AbortError")) toast("Não foi possível gerar a imagem."); } });
+
 const FEEDBACK = { email:"", whatsapp:"", github:"https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new" };
 const Suggest = {
   all(){ return store.get("suggestions",[]); },
@@ -5128,11 +5339,11 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","catecismos","notas","config"];
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","catecismos","notas","config","compartilhe","meudevocional"];
 const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
-document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); $("#shareTop")?.click(); } });
+document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
 /* Voltar ao índice das configurações: link em cada seção e botão flutuante */
 document.querySelectorAll("#view-config .cfg-card").forEach(c=>c.insertAdjacentHTML("afterbegin",`<button type="button" class="cfg-back" data-cfgback><span aria-hidden="true">‹</span> Todas as configurações</button>`));
 const cfgToIndex=()=>{   // sem rolagem suave: no iPhone duas rolagens suaves se cancelam
@@ -5147,7 +5358,7 @@ document.addEventListener("click",e=>{
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
 const VIEW_TITLE={ inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
-  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações" };
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
@@ -5169,6 +5380,8 @@ function showView(name, {push=true}={}){
   if(name==="artigos") renderArticles();
   if(name==="catecismos") renderCatHome();
   if(name==="config") renderConfig();
+  if(name==="compartilhe") renderInvite();
+  if(name==="meudevocional") renderMeuDevo();
   if(typeof Speak!=="undefined" && Speak.on && !["devocional","texto"].includes(name)) stopSpeak();
   if(name==="pensadores") renderPensadores();
   if(name==="biblia") openReader({ hi:null, asView:true });

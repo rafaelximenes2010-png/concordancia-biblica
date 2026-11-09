@@ -1,9 +1,9 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "sola-v59";
+const CACHE = "sola-v60";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json", "./docs/index.json",
-  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json"];
+  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
