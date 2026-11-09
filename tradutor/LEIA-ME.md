@@ -23,7 +23,7 @@ Cloudflare: o mesmo trecho nunca é traduzido duas vezes, para nenhum usuário.
 6. Copie o endereço do Worker (ex.: `https://tradutor.SEUNOME.workers.dev`).
 
 ## 3. Ligar no app
-No `index.html`, preencha `const TR_PROXY = "https://tradutor.SEUNOME.workers.dev";`
+No `index.html`, `TR_PROXY` já aponta para `https://tradutor.rafael-ximenes-2010.workers.dev`.
 e publique. A chave fica só no Cloudflare; o app nunca a vê.
 
 ## 4. Voz natural de locutor (devocional em áudio, CarPlay)
