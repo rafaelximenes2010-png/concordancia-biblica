@@ -1940,9 +1940,10 @@ dialog.car-mode[open]{display:flex}
           <option value="pt-BR-MacerioMultilingualNeural">Macério (masculina, mais expressiva) · recomendada</option><option value="pt-BR-AntonioNeural">Antônio (masculina, calorosa)</option><option value="pt-BR-FabioNeural">Fábio (masculina)</option>
           <option value="pt-BR-HumbertoNeural">Humberto (masculina)</option><option value="pt-BR-JulioNeural">Júlio (masculina)</option>
           <option value="pt-BR-NicolauNeural">Nicolau (masculina)</option><option value="pt-BR-ValerioNeural">Valério (masculina)</option><option value="pt-BR-DonatoNeural">Donato (masculina)</option></select></label>
+        <button type="button" class="btn btn-sm btn-primary" id="cfgNatTest">▶ Ouvir o locutor</button>
         <p class="hint" id="natHint"></p>
         <label>Voz do aparelho (quando a voz natural não estiver disponível)<select id="cfgVoice"><option value="">Automática (voz masculina, se houver)</option></select></label>
-        <button type="button" class="btn btn-sm" id="cfgVoiceTest">▶ Testar voz</button>
+        <button type="button" class="btn btn-sm" id="cfgVoiceTest">▶ Testar voz do aparelho</button>
         <p class="hint">No iPhone, para uma voz masculina mais natural: Ajustes › Acessibilidade › Conteúdo Falado › Vozes › Português (Brasil) › baixe <strong>Felipe (Aprimorada)</strong>. Depois escolha-a aqui. Com o celular conectado ao carro (Bluetooth ou CarPlay), o som sai pelos alto-falantes do carro.</p>
         <label class="radio"><input type="checkbox" id="cfgTips"><span>Explicar cada botão na primeira vez que eu tocar nele</span></label>
         <button type="button" class="btn btn-sm" id="cfgTipsReset">Mostrar as explicações de novo</button>
@@ -4718,8 +4719,9 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.4.0";
+const APP_VERSION = "3.4.1";
 const CHANGELOG = [
+  { v:"3.4.1", d:"novembro de 2026", items:["Botão “Ouvir o locutor” testa a voz natural masculina escolhida."] },
   { v:"3.4.0", d:"novembro de 2026", items:["Canal SOLA no Telegram: devocional publicado automaticamente todo dia às 5h."] },
   { v:"3.3.3", d:"novembro de 2026", items:["Post do Canal em um só Colar: o link do devocional mostra a imagem do dia no WhatsApp."] },
   { v:"3.3.2", d:"novembro de 2026", items:["“Postar no Canal agora” abre o WhatsApp direto no Canal SOLA, com imagem e texto prontos para colar."] },
@@ -5106,6 +5108,25 @@ if("speechSynthesis" in window) speechSynthesis.addEventListener?.("voiceschange
 $("#cfgNatVoice").addEventListener("change",e=>store.set("naturalVoice",e.target.checked));
 $("#cfgNatName").addEventListener("change",e=>{ store.set("ttsVoiceNat",e.target.value); toast("Locutor alterado."); });
 $("#cfgVoice").addEventListener("change",e=>{ store.set("ttsVoice",e.target.value); toast("Voz da leitura alterada."); });
+let natTestAudio=null;
+async function natTest(){
+  const btn=$("#cfgNatTest"); const voice=$("#cfgNatName").value||"pt-BR-MacerioMultilingualNeural";
+  if(natTestAudio){ natTestAudio.pause(); natTestAudio.remove(); natTestAudio=null; }
+  try{ speechSynthesis.cancel(); }catch(e){} mediaAudioSession();
+  btn.disabled=true; btn.textContent="Carregando a voz…";
+  try{
+    const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ text:"A minha graça te basta, porque o poder se aperfeiçoa na fraqueza. Bom dia! Este é o SOLA, Bíblia e Teologia.", voice }) });
+    if(!r.ok) throw new Error("tts "+r.status);
+    const a=new Audio(URL.createObjectURL(await r.blob())); a.setAttribute("playsinline",""); a.style.display="none"; document.body.appendChild(a); natTestAudio=a;
+    a.addEventListener("ended",()=>{ btn.textContent="▶ Ouvir o locutor"; });
+    await a.play(); btn.textContent="■ Tocando…";
+    a.addEventListener("pause",()=>{ btn.textContent="▶ Ouvir o locutor"; });
+  }catch(e){ toast("Não foi possível carregar a voz natural agora. Verifique a internet.",3500); btn.textContent="▶ Ouvir o locutor"; }
+  btn.disabled=false;
+}
+$("#cfgNatTest").addEventListener("click",()=>{ if(natTestAudio && !natTestAudio.paused){ natTestAudio.pause(); return; } natTest(); });
+$("#cfgNatName").addEventListener("change",()=>natTest());
 $("#cfgVoiceTest").addEventListener("click",()=>{ if(!("speechSynthesis" in window)) return toast("Este navegador não tem leitura em voz alta.");
   speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance("A minha graça te basta, porque o poder se aperfeiçoa na fraqueza."); u.lang="pt-BR"; const v=ptVoice(); if(v) u.voice=v; u.rate=Speak.rate*0.92; u.pitch=0.95; speechSynthesis.speak(u); });
 $("#cfgCanalAdmin").addEventListener("change",e=>{ store.set("canalAdmin",e.target.checked); toast(e.target.checked?"Modo administrador do Canal ativado.":"Modo administrador desativado."); });
