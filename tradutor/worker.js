@@ -80,6 +80,7 @@ async function azure(texts, from, to, env) {
 
 /* ---------- Voz natural (Azure Speech, voz masculina neural pt-BR) ---------- */
 const VOICES = ["pt-BR-MacerioMultilingualNeural","pt-BR-AntonioNeural","pt-BR-FabioNeural","pt-BR-HumbertoNeural","pt-BR-JulioNeural","pt-BR-NicolauNeural","pt-BR-ValerioNeural","pt-BR-DonatoNeural"];
+const FEMALE = /Francisca|Thalita|Brenda|Elza|Giovanna|Leila|Leticia|Manuela|Yara/;
 const xml = t => t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 /* Leitura de locutor: frases marcadas, pausas de respiração depois de títulos e
    entre parágrafos, ritmo calmo e sem alterar o tom natural da voz. */
@@ -108,14 +109,15 @@ async function tts(request, env, h){
   if (!env.SPEECH_KEY) return json({ error: "config", message: "SPEECH_KEY não configurada" }, 500, h);
   let body; try { body = await request.json(); } catch { return json({ error: "json" }, 400, h); }
   const text = String(body.text || "").slice(0, 9000);
-  const voice = VOICES.includes(body.voice) ? body.voice : (env.SPEECH_VOICE || VOICES[0]);
+  const voice = (VOICES.includes(body.voice) || /^pt-BR-[A-Za-z]+Neural$/.test(body.voice||"")) ? body.voice : (env.SPEECH_VOICE || VOICES[0]);
   const rate = /^-?\d{1,2}%$/.test(body.rate||"") ? body.rate : "-4%";
   if (!text.trim()) return json({ error: "empty" }, 400, h);
   const key = `tts2:${voice}:${rate}:${await sha(text)}`;
   if (env.TR_CACHE) { const hit = await env.TR_CACHE.get(key, "arrayBuffer"); if (hit) return new Response(hit, { headers: { ...h, "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } }); }
   let r = await synth(text, voice, rate, env);
-  // Se a voz escolhida não existir nesta região, usa o Antônio
-  if (!r.ok && r.status !== 429 && r.status !== 403 && voice !== "pt-BR-AntonioNeural") r = await synth(text, "pt-BR-AntonioNeural", rate, env);
+  // Se a voz escolhida não existir nesta região, usa a Francisca (feminina) ou o Antônio (masculina)
+  const reserva = FEMALE.test(voice) ? "pt-BR-FranciscaNeural" : "pt-BR-AntonioNeural";
+  if (!r.ok && r.status !== 429 && r.status !== 403 && voice !== reserva) r = await synth(text, reserva, rate, env);
   if (r.status === 429 || r.status === 403) return json({ error: "quota" }, 429, h);
   if (!r.ok) return json({ error: "upstream", status: r.status }, 502, h);
   const audio = await r.arrayBuffer();

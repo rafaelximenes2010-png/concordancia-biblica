@@ -1935,11 +1935,16 @@ dialog.car-mode[open]{display:flex}
     <section class="cfg-card" id="cfgAjuda" aria-labelledby="cfgAjudaT">
       <h3 id="cfgAjudaT"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>Ajuda e lembretes</h3>
       <div class="cfg-form">
-        <label class="radio"><input type="checkbox" id="cfgNatVoice"><span>Usar voz natural de locutor (masculina, português do Brasil), que toca no CarPlay e com a tela bloqueada</span></label>
-        <label>Locutor da voz natural<select id="cfgNatName">
+        <label class="radio"><input type="checkbox" id="cfgNatVoice"><span>Usar voz natural de locutor (português do Brasil, masculina ou feminina), que toca no CarPlay e com a tela bloqueada</span></label>
+        <label>Locutor da voz natural<select id="cfgNatName"><optgroup label="Vozes masculinas">
           <option value="pt-BR-MacerioMultilingualNeural">Macério (masculina, mais expressiva) · recomendada</option><option value="pt-BR-AntonioNeural">Antônio (masculina, calorosa)</option><option value="pt-BR-FabioNeural">Fábio (masculina)</option>
           <option value="pt-BR-HumbertoNeural">Humberto (masculina)</option><option value="pt-BR-JulioNeural">Júlio (masculina)</option>
-          <option value="pt-BR-NicolauNeural">Nicolau (masculina)</option><option value="pt-BR-ValerioNeural">Valério (masculina)</option><option value="pt-BR-DonatoNeural">Donato (masculina)</option></select></label>
+          <option value="pt-BR-NicolauNeural">Nicolau (masculina)</option><option value="pt-BR-ValerioNeural">Valério (masculina)</option><option value="pt-BR-DonatoNeural">Donato (masculina)</option>
+          </optgroup><optgroup label="Vozes femininas">
+          <option value="pt-BR-ThalitaMultilingualNeural">Thalita (feminina, mais expressiva)</option><option value="pt-BR-FranciscaNeural">Francisca (feminina, clara)</option>
+          <option value="pt-BR-BrendaNeural">Brenda (feminina)</option><option value="pt-BR-ElzaNeural">Elza (feminina)</option><option value="pt-BR-GiovannaNeural">Giovanna (feminina)</option>
+          <option value="pt-BR-LeilaNeural">Leila (feminina)</option><option value="pt-BR-LeticiaNeural">Letícia (feminina)</option><option value="pt-BR-ManuelaNeural">Manuela (feminina)</option>
+          <option value="pt-BR-YaraNeural">Yara (feminina)</option></optgroup></select></label>
         <button type="button" class="btn btn-sm btn-primary" id="cfgNatTest">▶ Ouvir o locutor</button>
         <p class="hint" id="natHint"></p>
         <label>Voz do aparelho (quando a voz natural não estiver disponível)<select id="cfgVoice"><option value="">Automática (voz masculina, se houver)</option></select></label>
@@ -4719,8 +4724,9 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.4.1";
+const APP_VERSION = "3.4.2";
 const CHANGELOG = [
+  { v:"3.4.2", d:"novembro de 2026", items:["Nove vozes femininas naturais para a leitura (Thalita, Francisca, Brenda e outras)."] },
   { v:"3.4.1", d:"novembro de 2026", items:["Botão “Ouvir o locutor” testa a voz natural masculina escolhida."] },
   { v:"3.4.0", d:"novembro de 2026", items:["Canal SOLA no Telegram: devocional publicado automaticamente todo dia às 5h."] },
   { v:"3.3.3", d:"novembro de 2026", items:["Post do Canal em um só Colar: o link do devocional mostra a imagem do dia no WhatsApp."] },
