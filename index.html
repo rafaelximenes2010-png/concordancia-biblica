@@ -1189,6 +1189,9 @@ dialog.car-mode[open]{display:flex}
 .doc-item.da-now{outline:2px solid #e1b553;outline-offset:2px;border-radius:12px}
 .art-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 4px;background:none;border:0;border-top:1px solid var(--border);text-align:left;color:var(--ink);font:inherit;cursor:pointer}
 .art-dot{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent,#2b3a67);font-weight:800;font-size:13px;letter-spacing:.02em}
+.art-old{margin:4px 0 0;border-top:1px solid var(--border)}
+.art-old>summary{cursor:pointer;padding:10px 4px;color:var(--ink-2);font-size:14px;font-weight:600}
+.art-new{color:#1f8a4c;font-weight:700}
 .art-read{max-width:720px;margin:0 auto}
 .art-h{font:600 30px/1.15 var(--font-text);margin:0 0 6px}
 .art-by{color:var(--ink-2);margin:0 0 6px}.art-by small{color:var(--ink-3,#888)}
@@ -4631,11 +4634,14 @@ const ART_COLORS=["#2b3a67","#3f6c99","#4f7a63","#b8862e","#8a5a9e","#d9694c","#
 const Arts = { list:null };
 async function artsLoad(){ if(!Arts.list){ const r=await fetch("artigos/sola.json"); if(!r.ok) throw new Error("arts"); Arts.list=(await r.json()).items; } return Arts.list; }
 function artRow(x){ return `<button type="button" class="art-row" data-art="${x.id}"><span class="art-dot" aria-hidden="true">${esc((w=>w.length>1?w[0][0]+w[w.length-1][0]:(w[0]||"S")[0])(x.author.split(/ \(| e /)[0].split(" ").filter(w=>/^[A-ZÁÉÍÓÚ]/.test(w))))}</span>
-  <span class="st-tx"><b>${esc(x.title)}</b><small>${esc(x.author)} · ${x.min} min · ler ou ouvir</small></span><span class="chev" aria-hidden="true">›</span></button>`; }
-function artCard(title, q, i=0, arts=[]){
+  <span class="st-tx"><b>${esc(x.title)}</b><small>${esc(x.author)} · ${x.min} min${x.mes===monthKey(new Date())?` · <span class="art-new">novo</span>`:` · ${mesLabel(x.mes)}`}</small></span><span class="chev" aria-hidden="true">›</span></button>`; }
+const ART_MAX = 5;   // artigos em destaque por tema; os mais antigos vão para “Edições anteriores”
+const mesLabel = m => { const [y,mm]=String(m||"").split("-"); return mm?`${["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][+mm-1]}/${y}`:""; };
+function artCard(title, q, i=0, all=[]){
+  const arts=all.slice(0,ART_MAX), old=all.slice(ART_MAX);
   return `<details class="st-row"${i<2?" open":""}><summary><span class="st-thumb" style="--c:${ART_COLORS[i%ART_COLORS.length]}" aria-hidden="true"><svg class="icon"><use href="#i-article"/></svg></span>
     <span class="st-tx"><b>${esc(title)}</b><small>${arts.length?`${arts.length} artigos do SOLA · `:""}${esc(arts.map(x=>x.author.split(" (")[0]).join(", ")||"Ministério Fiel, Voltemos ao Evangelho e outros")}</small></span><span class="chev" aria-hidden="true">›</span></summary>
-    <div class="st-body">${arts.map(artRow).join("")}<div class="row-actions">
+    <div class="st-body">${arts.map(artRow).join("")}${old.length?`<details class="art-old"><summary>Edições anteriores (${old.length})</summary>${old.map(artRow).join("")}</details>`:""}<div class="row-actions">
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Mais artigos em português ↗</a>
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_EN))}" target="_blank" rel="noopener noreferrer">Em inglês ↗</a>
     </div></div></details>`;
@@ -4643,7 +4649,8 @@ function artCard(title, q, i=0, arts=[]){
 async function renderArticles(){
   let list=[]; try{ list=await artsLoad(); }catch(e){}
   $("#artReader").hidden=true; $("#artHome").hidden=false;
-  $("#artList").innerHTML = `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length}</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>artCard(t,q,i,list.filter(x=>x.t===i))).join("")}</div></div>`;
+  const mk=monthKey(new Date()); const vis=list.map((x,k)=>({...x,_k:k})).filter(x=>(x.mes||"")<=mk).sort((a,b)=>(b.mes||"").localeCompare(a.mes||"")||a._k-b._k);
+  $("#artList").innerHTML = `<div class="st-group"><h3 class="st-h">Temas <small>${ART_TOPICS.length} · novos artigos todo mês</small></h3><div class="st-list">${ART_TOPICS.map(([t,q],i)=>artCard(t,q,i,vis.filter(x=>x.t===i))).join("")}</div></div>`;
   const dv=devoFor(new Date()); const ref=passageLabel(dv.p);
   $("#artToday").innerHTML = `<div class="bp-note" style="background:var(--gold-soft);border-style:solid;border-color:var(--gold)">
     <strong>Ligado ao devocional de hoje:</strong> ${esc(dv.title)} (${esc(ref)}) —
