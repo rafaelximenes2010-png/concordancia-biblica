@@ -1201,6 +1201,16 @@ dialog.car-mode[open]{display:flex}
 .art-sec .art-from{margin:0 0 6px}
 .art-links{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 10px;padding-top:14px;border-top:1px solid var(--border)}
 .art-links h3{width:100%;margin:0 0 2px;font-size:16px}
+.mini-player{position:fixed;left:10px;right:10px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:16px;background:linear-gradient(135deg,#13213a,#1e3157);color:#f4ead2;box-shadow:0 8px 24px rgba(10,20,40,.3);max-width:560px;margin:0 auto}
+.mini-player[hidden]{display:none}
+body.has-mini{padding-bottom:84px}
+@media (max-width:899px){ .mini-player{bottom:calc(74px + env(safe-area-inset-bottom))} }
+.mp-play{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:#e1b553;display:grid;place-items:center;cursor:pointer}
+.mp-play svg{width:18px;height:18px;fill:#13213a}
+.mp-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;background:none;border:0;color:inherit;text-align:left;font:inherit;cursor:pointer;padding:0}
+.mp-info b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-info small{font-size:12px;color:#aeb9cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-x{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;cursor:pointer}
 .md-follow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .md-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 9px 10px;border-radius:999px;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f4ead2!important;
@@ -1217,6 +1227,11 @@ dialog.car-mode[open]{display:flex}
 </style>
 </head>
 <body>
+<div class="mini-player" id="miniPlayer" hidden role="region" aria-label="Áudio tocando">
+  <button type="button" class="mp-play" id="mpPlay" aria-label="Pausar"></button>
+  <button type="button" class="mp-info" id="mpGo"><b id="mpT"></b><small id="mpS"></small></button>
+  <button type="button" class="mp-x" id="mpStop" aria-label="Parar o áudio">✕</button>
+</div>
 <div id="splash" aria-hidden="true">
   <div class="sp-inner">
     <svg class="sp-art" viewBox="0 40 512 320" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sp-fade" cx="50%" cy="45%" r="55%"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient><mask id="sp-mask"><rect x="0" y="0" width="512" height="512" fill="url(#sp-fade)"/></mask></defs><g mask="url(#sp-mask)"><defs>
@@ -4838,7 +4853,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
       return URL.createObjectURL(blob); })();
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
   player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
-    a.addEventListener("ended",()=>{ if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); } });
+    a.addEventListener("ended",()=>{ if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
     a.addEventListener("play",()=>{ this.playing=true; daPaint(); }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
     this.el=a; return a; },
   media(){ if(!("mediaSession" in navigator)) return; const a=this.el;
@@ -4855,9 +4870,9 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
       if(i+1<d.items.length) this.url(d,i+1).catch(()=>{}); }
     catch(e){ this.loading=false; this.playing=false; daPaint(); toast(e && e.message==="tr" ? "A tradução deste trecho não ficou pronta. Toque em ▶ de novo em instantes." : "Não foi possível carregar a voz agora. Verifique a internet.",3500); } },
   toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
-  stop(){ if(this.el){ this.el.pause(); } this.playing=false; daPaint(); }
+  stop(){ if(this.el){ this.el.pause(); } this.playing=false; this.loading=false; this.doc=null; daPaint(); }
 };
-function daPaint(){
+function daPaint(){ if(typeof paintMini==="function") setTimeout(paintMini,30);
   document.querySelectorAll(".da-bar[data-docid]").forEach(bar=>{ const d=DA_REG[bar.dataset.docid]; if(!d) return; const on=DA.doc && DA.doc.id===d.id;
     bar.classList.toggle("on", on && (DA.playing||DA.loading));
     const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
@@ -4883,8 +4898,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.2";
+const APP_VERSION = "3.6.3";
 const CHANGELOG = [
+  { v:"3.6.3", d:"novembro de 2026", items:["O áudio continua tocando ao voltar ou trocar de seção, com um mini player no rodapé (pausar, parar e voltar ao texto).","Atualizações do app esperam o áudio terminar para não interromper a escuta."] },
   { v:"3.6.2", d:"novembro de 2026", items:["Confissões em inglês agora traduzidas pelo Microsoft Translator, com leitura em voz natural em português.","Áudio mais limpo: o locutor pula referências entre parênteses e notas, e lê títulos em caixa alta com naturalidade."] },
   { v:"3.6.1", d:"novembro de 2026", items:["Mais 16 artigos (Spurgeon, Ryle, Bavinck, Augustus Nicodemus, Hernandes Dias Lopes, Sibbes, Goodwin, Kuyper, Bunyan e outros): agora são 3 por tema.","Enviar pelo WhatsApp manda o artigo completo, com a marca SOLA e o link para ouvir."] },
   { v:"3.6.0", d:"novembro de 2026", items:["32 artigos do SOLA para ler e ouvir, dois por tema, apresentando John Piper, Paul Tripp, J. I. Packer, Tim Keller, R. C. Sproul, Jordan Peterson (com leitura reformada) e outros."] },
@@ -5333,11 +5349,43 @@ async function checkUpdate(manual){
 $("#cfgUpdate").addEventListener("click",()=>checkUpdate(true));
 if("serviceWorker" in navigator){ let reloaded=false; const hadCtl=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener("controllerchange",()=>{ if(reloaded || !hadCtl) return; reloaded=true;
     const busy = $("#noteDialog")?.open || document.activeElement?.matches?.("input,textarea");
+    if(typeof audioBusy==="function" && audioBusy()){ pendingReload=true; return; }   // não interrompe o áudio
     if(busy) toast("Nova versão do SOLA | Bíblia & Teologia instalada. Feche e abra o app para ver.", 5000); else location.reload(); });
   /* Procura versão nova ao abrir e ao voltar para o app */
   navigator.serviceWorker.getRegistration().then(r=>{ if(!r) return; r.update().catch(()=>{});
     document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") r.update().catch(()=>{}); }); }); }
 paintAvatar();
+/* ---------- Mini player: o áudio continua ao voltar ou trocar de seção ---------- */
+const PLAY_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>', PAUSE_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+function audioNow(){
+  if(typeof DA!=="undefined" && DA.doc && DA.el && (DA.el.src || DA.loading) && (DA.playing || DA.loading || (DA.el.currentTime>0 && !DA.el.ended)))
+    return { kind:"da", playing:DA.playing||DA.loading, t:DA.label(DA.doc,DA.i), s: DA.doc.kind==="artigo" ? `${DA.doc.author} · parte ${DA.i+1} de ${DA.doc.items.length}` : DA.doc.kind==="credo" ? "Credo · voz natural" : `${DA.i+1} de ${DA.doc.items.length} · ${DA.doc.title}`, home: DA.doc.kind==="artigo"?"artigos":"catecismos" };
+  if(typeof Narr!=="undefined" && Narr.audio) return { kind:"narr", playing:!Narr.audio.paused, t: Narr.kind==="devo"?"Devocional de hoje":"Texto do dia", s:"SOLA | Bíblia & Teologia", home: Narr.kind==="devo"?"devocional":"texto" };
+  if(typeof Speak!=="undefined" && Speak.on) return { kind:"speak", playing:!Speak.paused, t: Speak.kind==="devo"?"Devocional de hoje":"Leitura em voz alta", s:"Voz do aparelho", home: Speak.kind==="devo"?"devocional":"texto" };
+  return null;
+}
+function audioBusy(){ const a=audioNow(); return !!(a && a.playing); }
+function paintMini(){
+  const mp=$("#miniPlayer"); if(!mp) return; const a=audioNow();
+  const onSource = a && ((a.kind==="da" && document.querySelector(`.da-host[data-docid="${DA.doc.id}"]`)?.offsetParent) || (a.kind!=="da" && currentView===a.home));
+  mp.hidden = !a || !!onSource; document.body.classList.toggle("has-mini",!mp.hidden); if(mp.hidden) return;
+  $("#mpPlay").innerHTML = a.playing ? PAUSE_SVG : PLAY_SVG; $("#mpPlay").setAttribute("aria-label", a.playing?"Pausar":"Continuar");
+  $("#mpT").textContent=a.t; $("#mpS").textContent=a.s; mp._a=a;
+}
+$("#mpPlay").addEventListener("click",()=>{ const a=$("#miniPlayer")._a; if(!a) return;
+  if(a.kind==="da") DA.toggle();
+  else if(a.kind==="narr"){ Narr.audio.paused ? Narr.audio.play() : Narr.audio.pause(); paintListen(); }
+  else { if(Speak.paused){ Speak.paused=false; speechSynthesis.resume(); } else { Speak.paused=true; speechSynthesis.pause(); } paintListen(); }
+  setTimeout(paintMini,60); });
+$("#mpStop").addEventListener("click",()=>{ try{ DA.stop(); }catch(e){} try{ narrStop(); }catch(e){} try{ stopSpeak(); }catch(e){} $("#miniPlayer").hidden=true; applyPendingReload(); });
+$("#mpGo").addEventListener("click",()=>{ const a=$("#miniPlayer")._a; if(!a) return;
+  if(a.kind==="da"){ const d=DA.doc; if(d.kind==="artigo"){ showView("artigos"); setTimeout(()=>openArticle(d.src.id).then(()=>daFocus()),200); } else { showView("catecismos"); setTimeout(()=>{ openDoc(d.id).then(()=>daFocus()); },200); } }
+  else showView(a.home); });
+/* Atualização do app sem interromper o áudio: espera o áudio parar */
+let pendingReload=false;
+function applyPendingReload(){ if(pendingReload && !audioBusy()){ pendingReload=false; location.reload(); } }
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="hidden") applyPendingReload(); });
+setInterval(paintMini,1000);
 /* ---------- Tradução de versículos em outros idiomas (para português ou inglês) ---------- */
 const LANG_PT = { pt:"português", en:"inglês", he:"hebraico", grc:"grego", el:"grego", la:"latim", es:"espanhol", fr:"francês", de:"alemão", nl:"holandês", ru:"russo", zh:"chinês", hu:"húngaro", pl:"polonês", sv:"sueco" };
 function vtrButtons(lang, attr){
@@ -5618,7 +5666,7 @@ function showView(name, {push=true}={}){
   if(name==="config") renderConfig();
   if(name==="compartilhe") renderInvite();
   if(name==="meudevocional") renderMeuDevo();
-  if(typeof Speak!=="undefined" && Speak.on && !["devocional","texto"].includes(name)) stopSpeak();
+  if(typeof paintMini==="function") setTimeout(paintMini,50);
   if(name==="pensadores") renderPensadores();
   if(name==="biblia") openReader({ hi:null, asView:true });
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
@@ -6226,7 +6274,7 @@ function narrStop(){ if(Narr.audio){ Narr.audio.pause(); Narr.audio.remove?.(); 
 const fmtT = t => isFinite(t) ? `${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,"0")}` : "–";
 function stopSpeak(){ Speak.on=false; Speak.paused=false; try{ speechSynthesis.cancel(); }catch(e){} paintListen(); }
 function paintListen(){
-  if(typeof paintCar==="function") paintCar();
+  if(typeof paintCar==="function") paintCar(); if(typeof paintMini==="function") setTimeout(paintMini,30);
   document.querySelectorAll(".listen-bar").forEach(bar=>{
     if(typeof Narr!=="undefined" && Narr.kind===bar.dataset.listen){
       const a=Narr.audio, playing=a && !a.paused;
