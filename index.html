@@ -4874,6 +4874,15 @@ function speechClean(t){
     .replace(/\bcap\.\s*(?=\d)/gi,"capítulo ")
     .replace(/[ \t]{2,}/g," ").replace(/\s+([,.;:])/g,"$1").replace(/([.!?])\.(?!\.)/g,"$1").replace(/\n{3,}/g,"\n\n").trim();
 }
+/* Referências bíblicas para o ouvido: "Gênesis 2:24" → "Gênesis, capítulo 2, versículo 24"; "1 Coríntios" → "Primeira Coríntios" */
+function falaRefs(t){
+  return String(t)
+    .replace(/\b([123])\s+(Coríntios|Tessalonicenses|Timóteo|Pedro|João)\b/g,(m,n,b)=>["","Primeira","Segunda","Terceira"][+n]+" "+b)
+    .replace(/\b([12])\s+(Reis|Samuel|Crônicas)\b/g,(m,n,b)=>["","Primeiro","Segundo"][+n]+" "+b)
+    .replace(/(\d+):(\d+)\s*[–-]\s*(\d+)/g,(m,c,v1,v2)=>`capítulo ${c}, versículos ${v1} a ${v2}`)
+    .replace(/(\d+):(\d+)(?:\s*,\s*(\d+)(?!:))?/g,(m,c,v1,v2)=> v2?`capítulo ${c}, versículos ${v1} e ${v2}`:`capítulo ${c}, versículo ${v1}`)
+    .replace(/([A-Za-zÀ-ú]) capítulo /g,"$1, capítulo ");
+}
 function looksEnglish(t){ const w=(" "+String(t).toLowerCase()+" ").match(/ (the|and|of|which|that|with|is|are|we|our|his|him) /g)||[]; return w.length>6 && w.length/(String(t).split(/\s+/).length||1)>0.08; }
 function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
       <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
@@ -4883,12 +4892,12 @@ function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
     </div>`; }
 const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   label(d,i){ const it=d.items[i]; if(isTrack(d)) return d.title; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
-  async text(d,i){ if(d.speechFn) return d.speechFn().replace(/\n{2,}/g,"\n");
+  async text(d,i){ if(d.speechFn) return falaRefs(d.speechFn()).replace(/\n{2,}/g,"\n");
     const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
     const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
       if(!r || r.trim()===t.trim() || looksEnglish(r)) throw new Error("tr");   // nunca ler inglês com voz brasileira
       return r; };
-    return pronuncia(speechClean(await this.rawText(d,i,tp))).replace(/\n{2,}/g,"\n"); },   // transições curtas entre partes (sem pausas longas)
+    return falaRefs(pronuncia(speechClean(await this.rawText(d,i,tp)))).replace(/\n{2,}/g,"\n"); },   // transições curtas entre partes (sem pausas longas)
   async rawText(d,i,tp){ const it=d.items[i];
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
@@ -4971,8 +4980,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.7.2";
+const APP_VERSION = "3.7.3";
 const CHANGELOG = [
+  { v:"3.7.3", d:"novembro de 2026", items:["Referências bíblicas lidas por extenso na voz: “Gênesis, capítulo 2, versículo 24” e “Primeira Coríntios”."] },
   { v:"3.7.2", d:"novembro de 2026", items:["Preparado o Especial de Natal: de 1º a 25 de dezembro, um artigo novo por dia nos Artigos."] },
   { v:"3.7.1", d:"novembro de 2026", items:["Devocional e Texto do dia com o mesmo tocador dos artigos: um toque toca, outro pausa, -15/+15, mini player e tela bloqueada. Corrigido o problema de duas vozes ao mesmo tempo."] },
   { v:"3.7.0", d:"novembro de 2026", items:["4 temas novos nos Artigos, com 3 artigos cada: homossexualidade e fé cristã, sexualidade e sexo antes do casamento, aborto e a santidade da vida, e conselhos para o casamento."] },
@@ -6263,7 +6273,7 @@ function speakTextFor(kind){
   const ps=box._ps, dv=box._dv; if(!ps) return [];
   const parts=[];
   if(dv) parts.push(dv.title+".");
-  parts.push(ps.label.replace(/(\d+):(\d+)/g,"$1, versículos $2").replace(/–|-/g," a ")+".");
+  parts.push(falaRefs(ps.label)+".");
   parts.push(ps.text);
   if(dv){ parts.push("Em poucas palavras. "+dv.reflection); (dv.story||[]).forEach(t=>parts.push(t)); if(dv.close) parts.push("Para pensar. "+dv.close); parts.push("Aplicação prática. "+dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
   // divide em frases curtas (o iPhone corta textos longos)
@@ -6338,7 +6348,7 @@ function narrText(kind){
   parts.push(ps.text);
   if(dv){ parts.push("Em poucas palavras.", dv.reflection); if(dv.story?.length){ parts.push("A história por trás do texto."); dv.story.forEach(t=>parts.push(t)); }
     if(dv.close) parts.push("Para pensar.", dv.close); parts.push("Aplicação prática.", dv.application); parts.push("Para terminar, que tal ouvir um louvor sobre este tema?"); }
-  return pronuncia(parts.join("\n\n"));
+  return falaRefs(pronuncia(parts.join("\n\n")));
 }
 /* No iPhone, marca o áudio como mídia (igual a música/podcast): toca no
    Bluetooth/CarPlay, com a tela bloqueada e mesmo com a chave de silêncio. */
