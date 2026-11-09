@@ -3842,7 +3842,7 @@ async function dayAction(act, box){
     try{ await navigator.clipboard.writeText(txt); }catch(e){}
     if(navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
         if(navigator.canShare && navigator.canShare({ files:[f] })){ toast("Escolha o WhatsApp. O texto completo também foi copiado: se não aparecer junto, cole na legenda.",5000); await navigator.share({ files:[f], text:txt }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
-    window.open(waUrl(txt),"_blank","noopener"); return;
+    (IS_MOBILE?location.assign(waUrl(txt)):window.open(waUrl(txt),"_blank","noopener")); return;
   }
   if(act==="share"){
     const txt=dayShareText(ps,dv);
@@ -4173,7 +4173,14 @@ const APP_HOME = "https://solabiblia.net.br/";
 const APP_URL = (()=>{ try{ const h=location.hostname;
   if(location.protocol==="https:" && h && !/(^|\.)claude\.ai$|claudeusercontent|localhost/.test(h)) return location.origin + location.pathname.replace(/[^/]*$/,"");
 }catch(e){} return APP_HOME; })();
-const waUrl = text => "https://wa.me/?text=" + encodeURIComponent(text);
+const IS_MOBILE = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
+const waUrl = text => (IS_MOBILE ? "whatsapp://send?text=" : "https://api.whatsapp.com/send?text=") + encodeURIComponent(text);
+/* Ao tocar em qualquer link do WhatsApp: copia o texto (reserva) e abre o app na mesma janela */
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[href^="whatsapp://"],a[href^="https://api.whatsapp.com/send"]'); if(!a) return;
+  try{ const t=decodeURIComponent((a.getAttribute("href").split("text=")[1]||"").replace(/\+/g,"%20")); if(t) navigator.clipboard?.writeText(t).catch(()=>{}); }catch(_){}
+  if(IS_MOBILE){ e.preventDefault(); location.href=a.getAttribute("href"); }
+}, true);
 function verseShareText(v){
   const ver=Repo.version(v.t);
   return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?ver.name:v.t})\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`;
@@ -5273,9 +5280,11 @@ function rangeLabel(nums){ const a=[...nums].sort((x,y)=>x-y), out=[]; let s=a[0
   for(let i=1;i<=a.length;i++){ const n=a[i]; if(n===p+1){ p=n; continue; } out.push(s===p?`${s}`:`${s}-${p}`); s=p=n; } return out.join(","); }
 function multiRef(){ return `${BOOK[rd.b].name} ${rd.c}:${rangeLabel(Multi.set)}`; }
 function multiVerses(){ const ch=Bible.data[rd.t].books[rd.b][rd.c-1]; return [...Multi.set].sort((a,b)=>a-b).map(n=>({ v:n, text:ch[n-1] })); }
+const SUP = n => String(n).replace(/\d/g,d=>"⁰¹²³⁴⁵⁶⁷⁸⁹"[d]);
 function multiText(withNums=true){ const vs=multiVerses(); const ver=Repo.version(rd.t);
-  const body = vs.map(x=>withNums && vs.length>1 ? `${x.v} ${x.text}` : x.text).join(" ");
-  return `“${body}”\n— ${multiRef()} (${ver?ver.name:rd.t})`; }
+  const body = vs.map(x=>withNums && vs.length>1 ? `${SUP(x.v)} ${x.text.trim()}` : x.text.trim()).join("\n");
+  return `*${multiRef()}*\n_${ver?ver.name:rd.t}_\n\n${body}`; }
+const multiShare = () => multiText()+`\n\n📖 Enviado pelo app *SOLA | Bíblia & Teologia*\n${APP_URL}`;
 function startMulti(firstV){ if(firstV){ Multi.set.add(+firstV); } paintMulti(); }
 function endMulti(){ Multi.set.clear(); paintMulti(); }
 function paintMulti(){
@@ -5286,7 +5295,7 @@ function paintMulti(){
   const keys=[...Multi.set].map(x=>`${rd.b}.${rd.c}.${x}`); const cur=Hl.get(keys[0]);
   bar.querySelectorAll("[data-rmc]").forEach(b=>b.classList.toggle("on", !!b.dataset.rmc && keys.every(k=>Hl.get(k)===b.dataset.rmc)));
   bar.querySelector('[data-rmc=""]').hidden = !keys.some(k=>Hl.get(k));
-  $("#rmWA").href = waUrl(multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`);
+  $("#rmWA").href = waUrl(multiShare());
 }
 async function copyText(txt, okMsg){ try{ await navigator.clipboard.writeText(txt); toast(okMsg); }
   catch(e){ const ta=document.createElement("textarea"); ta.value=txt; ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select();
@@ -5301,7 +5310,7 @@ $("#rdMultiBar").addEventListener("click",e=>{
   if(a==="all"){ const n=Bible.data[rd.t].books[rd.b][rd.c-1].length; const full=Multi.set.size===n; Multi.set.clear(); if(!full) for(let i=1;i<=n;i++) Multi.set.add(i); return paintMulti(); }
   if(!Multi.set.size) return;
   if(a==="copy") copyText(multiText(), `Copiado: ${multiRef()}.`);
-  if(a==="share"){ const t=multiText()+`\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`; if(navigator.share) navigator.share({ text:t }).catch(()=>{}); else copyText(t,"Texto copiado para compartilhar."); }
+  if(a==="share"){ const t=multiShare(); if(navigator.share) navigator.share({ text:t }).catch(()=>{}); else copyText(t,"Texto copiado para compartilhar."); }
   if(a==="note") openNoteEditor({ type:"estudo", title:`Estudo de ${multiRef()}`, ref:multiRef(), text:multiText()+"\n\n" });
   if(a==="fav"){ multiVerses().forEach(x=>toggleFav({ t:rd.t, b:rd.b, c:rd.c, v:x.v, text:x.text })); }
   if(a==="com"){ const v1=Math.min(...Multi.set); openComDrawer({ t:rd.t, b:rd.b, c:rd.c, v:v1, text:multiVerses()[0].text }); }
