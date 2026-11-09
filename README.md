@@ -66,7 +66,9 @@ Cada mês tem um arquivo `devocionais/AAAA-MM.json` com um devocional por dia (`
 |---|---|---|
 | **Voz masculina natural** (locutor Antônio, CarPlay/Bluetooth) | **Concluído em 09/11/2026** | Worker `tradutor.rafael-ximenes-2010.workers.dev` com SPEECH_KEY, SPEECH_REGION e KV TR_CACHE. |
 | **App na App Store** (iPhone, inclusive tela no CarPlay) | Não iniciado | Conta Apple Developer (US$ 99/ano), Mac ou compilação na nuvem, empacotamento (política de privacidade e termos já prontos em `site/`) do app, telas e textos da loja. |
-| Tradutor sem limite | Ponte pronta e ligada | Criar o recurso Translator (Free F0) e adicionar AZURE_KEY (Secret) e AZURE_REGION no Worker. |
+| **Tradutor sem limite** (Microsoft Translator F0) | **Concluído em 09/11/2026** | Recurso `sola-tradutor` (Brazil South) com AZURE_KEY e AZURE_REGION no Worker; traduções guardadas no KV. |
+| **Canal no Telegram** (t.me/solabiblia) | **Concluído em 09/11/2026** | Worker posta o devocional às 5h (Cron a cada 8 h, uma postagem por dia); TG_TOKEN e TG_CHANNEL. |
+| **Artigos para ler e ouvir** | **Concluído em 09/11/2026** | 48 artigos (3 por tema) em `artigos/sola.json`; rotação mensal conforme `artigos/REGRAS.md`, tarefa agendada todo dia 20. |
 | Endereço próprio | Site pronto em `site/` | Registrar um domínio (ex.: `solabiblia.com.br` no Registro.br) e apontá-lo para o GitHub Pages. |
 | Tradução revisada das confissões | Breve Catecismo, Heidelberg e Catecismo Maior prontos | Confissão de Westminster, Belga, Dort, Escocesa, Segunda Helvética e Batista de 1689 (hoje em tradução automática no app). |
 | Devocionais de janeiro em diante | Novembro e dezembro prontos; calendário em `devocionais/series.json` | Escrever `devocionais/2027-01.json` (“Recomeços com Deus”) e os meses seguintes. |

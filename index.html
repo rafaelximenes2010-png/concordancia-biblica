@@ -3125,6 +3125,7 @@ const comErr = () => navigator.onLine
 /* Endereço da ponte de tradução no Cloudflare (ex.: "https://tradutor.SEUNOME.workers.dev").
    Vazio = usa o tradutor do aparelho e, na falta dele, o MyMemory. */
 const TR_PROXY = "https://tradutor.rafael-ximenes-2010.workers.dev";
+try{ if(store.get("trVer",1)<2){ store.set("trCache",{}); store.set("trVer",2); } }catch(e){}
 const Tr = {
   autoKey:"comAutoTr",
   get auto(){ return store.get(this.autoKey,true); },
@@ -4799,6 +4800,17 @@ $("#catDoc").addEventListener("click",async e=>{
 
 /* ---------- Ouvir credos, catecismos e confissões (audiolivro) ---------- */
 const DA_REG = {};
+/* Texto pensado para o ouvido: tira referências entre parênteses e notas, ajusta títulos em CAIXA ALTA e abreviações. */
+function speechClean(t){
+  return String(t)
+    .replace(/\s*\[[^\]]{0,80}\]/g,"")
+    .replace(/\s*\((?=[^)]*\d)[^)]{0,160}\)/g,"")
+    .replace(/^([A-ZÁÉÍÓÚÂÊÔÃÕÇ][A-ZÁÉÍÓÚÂÊÔÃÕÇ ,;:'’\-]{10,})\s*$/gm,m=>{ const x=m.trim().toLowerCase(); return x[0].toUpperCase()+x.slice(1)+"."; })
+    .replace(/\bcf\.\s*/gi,"confira ").replace(/\bv\.\s*(?=\d)/g,"versículo ").replace(/\bvv\.\s*(?=\d)/g,"versículos ")
+    .replace(/\bcap\.\s*(?=\d)/gi,"capítulo ")
+    .replace(/[ \t]{2,}/g," ").replace(/\s+([,.;:])/g,"$1").replace(/([.!?])\.(?!\.)/g,"$1").replace(/\n{3,}/g,"\n\n").trim();
+}
+function looksEnglish(t){ const w=(" "+String(t).toLowerCase()+" ").match(/ (the|and|of|which|that|with|is|are|we|our|his|him) /g)||[]; return w.length>6 && w.length/(String(t).split(/\s+/).length||1)>0.08; }
 function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
       <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
       <div class="da-info"><b class="da-t">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":d.kind==="artigo"?"o artigo":"a confissão"}</b><small class="da-s">${d.kind==="credo"?"Leitura em voz natural":d.kind==="artigo"?"Voz natural · ideal para o carro":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
@@ -4807,7 +4819,11 @@ function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
 const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   label(d,i){ const it=d.items[i]; if(d.kind==="artigo") return i===0?d.title:(it.h||`Parte ${i+1}`); return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
   async text(d,i){ const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
-    const tp=async t=>{ if(!en) return t; try{ return await Tr.toPt(t); }catch(e){ return t; } };
+    const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
+      if(!r || r.trim()===t.trim() || looksEnglish(r)) throw new Error("tr");   // nunca ler inglês com voz brasileira
+      return r; };
+    return speechClean(await this.rawText(d,i,tp)); },
+  async rawText(d,i,tp){ const it=d.items[i];
     if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
     if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
     if(d.kind==="artigo") return (i===0?`${d.title}.\n\nUm artigo do SOLA a partir de ${d.author}.\n\n`:`${it.h}.\n\n`)+it.paras.join("\n\n");
@@ -4837,7 +4853,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     const a=this.player();
     try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; this.loading=false; this.media(); await a.play();
       if(i+1<d.items.length) this.url(d,i+1).catch(()=>{}); }
-    catch(e){ this.loading=false; this.playing=false; daPaint(); toast("Não foi possível carregar a voz agora. Verifique a internet.",3500); } },
+    catch(e){ this.loading=false; this.playing=false; daPaint(); toast(e && e.message==="tr" ? "A tradução deste trecho não ficou pronta. Toque em ▶ de novo em instantes." : "Não foi possível carregar a voz agora. Verifique a internet.",3500); } },
   toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
   stop(){ if(this.el){ this.el.pause(); } this.playing=false; daPaint(); }
 };
@@ -4867,8 +4883,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.1";
+const APP_VERSION = "3.6.2";
 const CHANGELOG = [
+  { v:"3.6.2", d:"novembro de 2026", items:["Confissões em inglês agora traduzidas pelo Microsoft Translator, com leitura em voz natural em português.","Áudio mais limpo: o locutor pula referências entre parênteses e notas, e lê títulos em caixa alta com naturalidade."] },
   { v:"3.6.1", d:"novembro de 2026", items:["Mais 16 artigos (Spurgeon, Ryle, Bavinck, Augustus Nicodemus, Hernandes Dias Lopes, Sibbes, Goodwin, Kuyper, Bunyan e outros): agora são 3 por tema.","Enviar pelo WhatsApp manda o artigo completo, com a marca SOLA e o link para ouvir."] },
   { v:"3.6.0", d:"novembro de 2026", items:["32 artigos do SOLA para ler e ouvir, dois por tema, apresentando John Piper, Paul Tripp, J. I. Packer, Tim Keller, R. C. Sproul, Jordan Peterson (com leitura reformada) e outros."] },
   { v:"3.5.0", d:"novembro de 2026", items:["Ouça os credos, catecismos e confissões em voz natural, pergunta por pergunta, com avançar e voltar pelo carro e pela tela bloqueada. O app lembra onde você parou."] },
