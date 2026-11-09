@@ -3663,7 +3663,7 @@ async function renderVotd(){
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
         <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
-        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar com imagem</button>
+        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
         <button type="button" class="btn btn-sm" data-day="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
@@ -3695,7 +3695,7 @@ async function renderDevo(){
         ${devoOffset===0?doneBtn():""}
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar passagem</button>
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps,dv)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+        <button type="button" class="btn btn-sm btn-wa" data-day="wa"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp com imagem</button>
         <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
@@ -3713,9 +3713,16 @@ async function dayAction(act, box){
   if(act==="done"){ Streak.mark(); toast("Muito bem! Estudo de hoje registrado."); return; }
   if(act==="ctx") return openContext(first);
   if(act==="fav"){ toggleFav(first); return; }
+  if(act==="wa" && dv){
+    const txt=dayShareText(ps,dv);
+    try{ await navigator.clipboard.writeText(txt); }catch(e){}
+    if(navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
+        if(navigator.canShare && navigator.canShare({ files:[f] })){ toast("Escolha o WhatsApp. O texto completo também foi copiado: se não aparecer junto, cole na legenda.",5000); await navigator.share({ files:[f], text:txt }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
+    window.open(waUrl(txt),"_blank","noopener"); return;
+  }
   if(act==="share"){
     const txt=dayShareText(ps,dv);
-    if(dv && navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.png",{type:"image/png"});
+    if(dv && navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
         if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], text:txt, title:dv.title }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
     return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`, txt);
   }
@@ -5348,15 +5355,25 @@ function devoArt(title){
   return `<svg class="devo-art-svg" viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustração: ${esc(title)}">${f(id)}</svg>`;
 }
 /* Converte a arte em imagem PNG (para compartilhar junto com o texto) */
+let MARK_SVG=null;
 async function devoArtPng(dv){
-  const svg=devoArt(dv.title).replace('<svg class="devo-art-svg"','<svg width="1280" height="600"');
-  const card=`<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760"><rect width="1280" height="760" fill="#132447"/>${svg.replace('<svg width="1280" height="600"','<svg x="0" y="0" width="1280" height="600"')}
-    <text x="640" y="672" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#f4ead2">${esc(dv.title)}</text>
-    <text x="640" y="726" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="24" letter-spacing="5" fill="#e1b553">SOLA · BÍBLIA &amp; TEOLOGIA</text></svg>`;
+  if(!MARK_SVG){ try{ MARK_SVG=(await fetch("icons/mark.svg?v=3").then(r=>r.text())).replace(/<\?xml[^>]*>/,""); }catch(e){ MARK_SVG=""; } }
+  const art=devoArt(dv.title).replace('<svg class="devo-art-svg" viewBox="0 0 640 300"','<svg x="0" y="0" width="1280" height="600" viewBox="0 0 640 300"');
+  const mark=MARK_SVG ? MARK_SVG.replace('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">','<svg x="44" y="38" width="88" height="88" viewBox="0 0 512 512">') : "";
+  const W=1280,H=720;
+  const card=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs><linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#132447" stop-opacity="0"/><stop offset="1" stop-color="#132447" stop-opacity=".95"/></linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="#132447"/>${art}
+    <rect x="0" y="430" width="${W}" height="290" fill="url(#shade)"/>
+    <rect x="28" y="24" width="380" height="116" rx="24" fill="#132447" opacity=".86"/>${mark}
+    <text x="150" y="88" font-family="Helvetica, Arial, sans-serif" font-weight="800" font-size="48" letter-spacing="8" fill="#ffffff">SOLA</text>
+    <text x="152" y="120" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="17" letter-spacing="3.5" fill="#e1b553">BÍBLIA &amp; TEOLOGIA</text>
+    <text x="640" y="650" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="48" fill="#f4ead2">${esc(dv.title)}</text>
+    <text x="640" y="694" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="700" font-size="20" letter-spacing="4" fill="#e1b553">DEVOCIONAL DO DIA</text></svg>`;
   const img=new Image(); img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(card);
   await img.decode();
-  const cv=document.createElement("canvas"); cv.width=1280; cv.height=760; cv.getContext("2d").drawImage(img,0,0);
-  return await new Promise(r=>cv.toBlob(r,"image/png"));
+  const cv=document.createElement("canvas"); cv.width=W; cv.height=H; cv.getContext("2d").drawImage(img,0,0);
+  return await new Promise(r=>cv.toBlob(r,"image/jpeg",0.9));
 }
 /* =====================================================================
    OUVIR (leitura em voz alta, no próprio aparelho)
