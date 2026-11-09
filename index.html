@@ -4651,7 +4651,9 @@ const ART_TOPICS = [
   ["Igreja e culto","igreja culto reformado"],["Batismo e Santa Ceia","batismo ceia do Senhor"],
   ["Evangelismo e missões","evangelismo missões"],["As Escrituras","inerrância suficiência das Escrituras"],
   ["Trindade","doutrina da Trindade"],["Pessoa de Cristo","cristologia pessoa de Cristo"],
-  ["Espírito Santo","obra do Espírito Santo"],["Últimas coisas","escatologia volta de Cristo"]
+  ["Espírito Santo","obra do Espírito Santo"],["Últimas coisas","escatologia volta de Cristo"],
+  ["Homossexualidade e fé cristã","homossexualidade Bíblia fé cristã"],["Sexualidade e sexo antes do casamento","sexo antes do casamento pureza sexual"],
+  ["Aborto e a santidade da vida","aborto santidade da vida"],["Conselhos para o casamento","conselhos para o casamento cristão"]
 ];
 const artSearch = (q, sites) => "https://www.google.com/search?q="+encodeURIComponent(`${q} (${sites.map(x=>"site:"+x).join(" OR ")})`);
 const ART_COLORS=["#2b3a67","#3f6c99","#4f7a63","#b8862e","#8a5a9e","#d9694c","#2f6b3a","#7a3550"];
@@ -4846,7 +4848,10 @@ const PRONUNCIA = [
   [/\bThomas Watson\b/g,"Tômas Uótson"],[/\bWatson\b/g,"Uótson"],[/\bThomas Goodwin\b/g,"Tômas Gúduin"],[/\bGoodwin\b/g,"Gúduin"],
   [/\bRichard Sibbes\b/g,"Rítchard Síbs"],[/\bSibbes\b/g,"Síbs"],
   [/\bAbraham Kuyper\b/g,"Abraão Cáiper"],[/\bKuyper\b/g,"Cáiper"],[/\bHerman Bavinck\b/g,"Hérman Bávink"],[/\bBavinck\b/g,"Bávink"],
-  [/\bTimothy Lane\b/g,"Tímoti Lêin"],[/\bLuella\b/g,"Luéla"],[/\bTim\b/g,"Tim"],
+  [/\bTimothy Lane\b/g,"Tímoti Lêin"],[/\bRosaria Butterfield\b/g,"Rozária Bâterfild"],[/\bButterfield\b/g,"Bâterfild"],[/\bKen Smith\b/g,"Kén Smit"],
+  [/\bSam Allberry\b/g,"Sém Ólberi"],[/\bAllberry\b/g,"Ólberi"],[/\bJustin Taylor\b/g,"Djâstin Têilor"],[/\bC\. ?S\. Lewis\b/g,"Ci És Lúis"],[/\bLewis\b/g,"Lúis"],
+  [/\bFrancis Schaeffer\b/g,"Frâncis Xêifer"],[/\bSchaeffer\b/g,"Xêifer"],[/\bC\. Everett Koop\b/g,"Ci Évret Kúp"],[/\bKoop\b/g,"Kúp"],[/\bL[’']Abri\b/g,"Labrí"],
+  [/\bDave Harvey\b/g,"Dêiv Hárvi"],[/\bHarvey\b/g,"Hárvi"],[/\bGary Thomas\b/g,"Gári Tômas"],[/\bSovereign Grace\b/g,"Sóvren Grêis"],[/\bCambridge\b/g,"Kêimbridj"],[/\bLuella\b/g,"Luéla"],[/\bTim\b/g,"Tim"],
   [/\bDesiring God\b/g,"Dizáiring Gód"],[/\bLigonier\b/g,"Ligonír"],[/\bWestminster\b/g,"Uéstminster"],[/\bHeidelberg\b/g,"Ráidelberg"],
   [/\bMinneapolis\b/g,"Mineápolis"],[/\bLondres\b/g,"Londres"],[/\bOxford\b/g,"Ócsford"],[/\bLiverpool\b/g,"Líverpul"]
 ];
@@ -4955,8 +4960,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.6.9";
+const APP_VERSION = "3.7.0";
 const CHANGELOG = [
+  { v:"3.7.0", d:"novembro de 2026", items:["4 temas novos nos Artigos, com 3 artigos cada: homossexualidade e fé cristã, sexualidade e sexo antes do casamento, aborto e a santidade da vida, e conselhos para o casamento."] },
   { v:"3.6.9", d:"novembro de 2026", items:["Pronúncia correta dos nomes na voz: John Piper, Paul Tripp, J. I. Packer, Tim Keller, Spurgeon, Westminster e outros."] },
   { v:"3.6.8", d:"novembro de 2026", items:["Leitura em voz mais fluida: transições curtas entre títulos, parágrafos e perguntas, sem pausas longas."] },
   { v:"3.6.7", d:"novembro de 2026", items:["Artigos voltam a ser lidos na velocidade natural, do começo ao fim."] },
