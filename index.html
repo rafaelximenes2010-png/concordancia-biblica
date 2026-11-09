@@ -1177,6 +1177,16 @@ dialog.car-mode[open]{display:flex}
 .devo-art{margin:-4px -4px 6px;border-radius:14px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.12);line-height:0}
 .devo-art-svg{width:100%;height:auto;display:block}
 .inv-big.md-done{background:#6b7d6e !important}
+.da-bar{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px 12px;border-radius:16px;background:linear-gradient(135deg,#13213a,#1e3157);color:#f4ead2;position:sticky;top:8px;z-index:5;box-shadow:0 6px 18px rgba(10,20,40,.18)}
+.da-play{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:#e1b553;display:grid;place-items:center;cursor:pointer}
+.da-play svg{width:22px;height:22px;fill:#13213a}
+.da-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.da-info b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.da-info small{font-size:12.5px;color:#aeb9cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.da-btn{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;font-size:15px;cursor:pointer}
+.da-spin{width:20px;height:20px;border-radius:50%;border:3px solid rgba(19,33,58,.25);border-top-color:#13213a;animation:daspin .8s linear infinite}
+@keyframes daspin{to{transform:rotate(360deg)}}
+.doc-item.da-now{outline:2px solid #e1b553;outline-offset:2px;border-radius:12px}
 .md-follow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .md-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 9px 10px;border-radius:999px;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f4ead2!important;
@@ -4678,10 +4688,16 @@ function renderDoc(){
             ${ptDoc ? (it.aEn?`<button type="button" class="btn btn-sm btn-ghost" data-dact="en" data-i="${i}">Ver original em inglês</button>`:"") : `<button type="button" class="btn btn-sm btn-primary" data-dact="tr" data-i="${i}">Traduzir para o português</button>`}
             <a class="btn btn-sm btn-wa" href="${esc(waUrl(`*${d.title}${d.kind==="catecismo"?`, pergunta ${it.n}`:""}*\n\n${d.kind==="catecismo"?`*P.* ${it.q}\n*R.* ${it.a}`:docItemText(d,it)}\n\nVia app SOLA | Bíblia & Teologia: ${APP_URL}`))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
             <button type="button" class="btn btn-sm" data-dact="note" data-i="${i}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
+            <button type="button" class="btn btn-sm btn-ghost" data-da="from" data-i="${i}">▶ Ouvir daqui</button>
           </div></article>`; }).join("");
   box.innerHTML = `<button type="button" class="btn btn-sm" data-dback>‹ Todos os credos e catecismos</button>
     <div class="doc-head" style="margin-top:12px"><div><h3>${esc(d.title)}</h3>
       <p class="muted" style="margin:2px 0 0">${esc(KIND_LABEL[d.kind])} · ${esc(d.year)} · ${esc(d.group)} · ${esc(d.license)}${d.lang==="en"?` · original: <em>${esc(d.titleEn)}</em>`:""}</p></div></div>
+    <div class="da-bar" id="daBar">
+      <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
+      <div class="da-info"><b id="daTitle">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":"a confissão"}</b><small id="daSub">${d.kind==="credo"?"Leitura em voz natural":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
+      ${d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
+    </div>
     ${d.kind!=="credo"?`<div class="doc-tools"><label class="sr-only" for="docQ">Procurar no documento</label><input id="docQ" type="search" placeholder="${d.lang==="pt"?"Procurar neste documento (ex.: graça, fé, Cristo)":"Procurar neste documento (busca no original em inglês)"}" value="${esc($("#docQ")?.value||"")}">
       ${d.lang==="pt"?"":`<label class="radio" style="margin:0"><input type="checkbox" id="docAutoTr" ${store.get("docTr",true)?"checked":""}><span>Mostrar em português</span></label>`}
       <span class="muted">${items.length} ${d.kind==="catecismo"?"perguntas":"seções"}</span></div>`:""}
@@ -4692,6 +4708,7 @@ function renderDoc(){
   const qi=$("#docQ"); if(qi){ qi.addEventListener("input",()=>{ docPage=1; const pos=qi.selectionStart; renderDoc(); const n=$("#docQ"); n.focus(); n.setSelectionRange(pos,pos); }); }
   const at=$("#docAutoTr"); if(at) at.addEventListener("change",()=>{ store.set("docTr",at.checked); renderDoc(); });
   if(d.lang!=="pt" && store.get("docTr",true) && d.kind!=="credo") box.querySelectorAll("[data-dact='tr']").forEach(b=>translateDocItem(b));
+  daPaint();
 }
 function translateDocItem(btn){
   const i=+btn.dataset.i, it=curDoc.items[i], art=btn.closest(".doc-item");
@@ -4707,6 +4724,12 @@ function translateDocItem(btn){
   });
 }
 $("#catDoc").addEventListener("click",async e=>{
+  const da=e.target.closest("[data-da]"); if(da){ const k=da.dataset.da;
+    if(k==="play") return DA.doc===curDoc ? DA.toggle() : DA.start(curDoc, store.get("daPos:"+curDoc.id,0));
+    if(k==="from") return DA.start(curDoc, +da.dataset.i);
+    if(k==="next") return DA.doc===curDoc ? DA.go(DA.i+1) : DA.start(curDoc, store.get("daPos:"+curDoc.id,0)+1);
+    if(k==="prev") return DA.doc===curDoc ? DA.go(DA.i-1) : DA.start(curDoc, Math.max(0,store.get("daPos:"+curDoc.id,0)-1));
+  }
   if(e.target.closest("[data-dback]")) return renderCatHome();
   const r=e.target.closest("[data-dref]"); if(r){ const [b,c,v]=r.dataset.dref.split("."); const t=await dailyVersion(b);
     const vv=(await Repo.getChapter(t,b,+c)).find(x=>x.v===+v); return openContext(vv||{ t, b, c:+c, v:+v, text:"" }); }
@@ -4721,11 +4744,61 @@ $("#catDoc").addEventListener("click",async e=>{
     ref: (it.r&&it.r[0]) ? refLabel(...it.r[0]) : "", text: `${docItemText(curDoc,it)}\n\nMinhas anotações:\n` });
 });
 
+/* ---------- Ouvir credos, catecismos e confissões (audiolivro) ---------- */
+const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
+  label(d,i){ const it=d.items[i]; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
+  async text(d,i){ const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
+    const tp=async t=>{ if(!en) return t; try{ return await Tr.toPt(t); }catch(e){ return t; } };
+    if(d.kind==="catecismo"){ const [q,a]=await Promise.all([tp(it.q),tp(it.a)]); return `Pergunta ${it.n}.\n\n${q}\n\nResposta.\n\n${a}`; }
+    if(d.kind==="credo") return `${d.title}.\n\n${it.t}`;
+    const head = it.n ? `Capítulo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}. Seção ${it.n}.` : `Artigo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}.`;
+    return `${head}\n\n${await tp(it.t)}`; },
+  async url(d,i){ const k=d.id+":"+i; if(this.urls[k]) return this.urls[k];
+    const p=(async()=>{ const text=await this.text(d,i); const voice=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
+      const ck="/__doc/"+encodeURIComponent(d.id+":"+i+":"+voice+":"+Tr.key(text)); const cache=await caches.open("sola-audio-v1").catch(()=>null);
+      let blob=null; const hit=cache && await cache.match(ck); if(hit) blob=await hit.blob();
+      if(!blob){ const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice }) });
+        if(!r.ok) throw new Error("tts "+r.status); blob=await r.blob(); try{ cache && await cache.put(ck,new Response(blob,{ headers:{ "Content-Type":"audio/mpeg" } })); }catch(e){} }
+      return URL.createObjectURL(blob); })();
+    this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
+  player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
+    a.addEventListener("ended",()=>{ if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),500); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); } });
+    a.addEventListener("play",()=>{ this.playing=true; daPaint(); }); a.addEventListener("pause",()=>{ if(!a.ended){ this.playing=false; daPaint(); } });
+    this.el=a; return a; },
+  media(){ if(!("mediaSession" in navigator)) return; const a=this.el;
+    try{ navigator.mediaSession.metadata=new MediaMetadata({ title:this.label(this.doc,this.i), artist:"SOLA | Bíblia & Teologia", album:this.doc.title,
+        artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" },{ src:"icons/icon-mac-512.png?v=3", sizes:"512x512", type:"image/png" }] });
+      navigator.mediaSession.setActionHandler("play",()=>a.play()); navigator.mediaSession.setActionHandler("pause",()=>a.pause());
+      navigator.mediaSession.setActionHandler("nexttrack",()=>this.go(this.i+1)); navigator.mediaSession.setActionHandler("previoustrack",()=>this.go(this.i-1));
+      navigator.mediaSession.setActionHandler("seekbackward",()=>{ a.currentTime=Math.max(0,a.currentTime-15); });
+      navigator.mediaSession.setActionHandler("seekforward",()=>{ a.currentTime=Math.min(a.duration||0,a.currentTime+15); }); }catch(e){} },
+  start(d,i){ try{ narrStop(); stopSpeak(); }catch(e){} mediaAudioSession(); this.doc=d; this.player(); this.go(Math.min(Math.max(0,i||0),d.items.length-1)); },
+  async go(i){ const d=this.doc; if(!d || i<0 || i>=d.items.length) return; this.i=i; this.loading=true; store.set("daPos:"+d.id,i); daPaint(); daFocus();
+    const a=this.player();
+    try{ const u=await this.url(d,i); if(this.i!==i || this.doc!==d) return; a.src=u; this.loading=false; this.media(); await a.play();
+      if(i+1<d.items.length) this.url(d,i+1).catch(()=>{}); }
+    catch(e){ this.loading=false; this.playing=false; daPaint(); toast("Não foi possível carregar a voz agora. Verifique a internet.",3500); } },
+  toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
+  stop(){ if(this.el){ this.el.pause(); } this.playing=false; daPaint(); }
+};
+function daPaint(){ const bar=$("#daBar"); if(!bar || !curDoc) return; const on=DA.doc===curDoc;
+  bar.classList.toggle("on", on && (DA.playing||DA.loading));
+  const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+  pb.setAttribute("aria-label", on && DA.playing ? "Pausar" : "Ouvir");
+  const pos = on ? DA.i : store.get("daPos:"+curDoc.id,0);
+  if(on || pos>0){ $("#daTitle").textContent = (on && (DA.playing||DA.loading) ? "Ouvindo · " : pos>0 ? "Continuar · " : "") + DA.label(curDoc,pos);
+    $("#daSub").textContent = curDoc.kind==="credo" ? curDoc.title : `${pos+1} de ${curDoc.items.length} · ${curDoc.title}`; }
+  document.querySelectorAll("#catDoc .doc-item").forEach(x=>x.classList.toggle("da-now", on && +x.dataset.i===DA.i && (DA.playing||DA.loading)));
+}
+function daFocus(){ if(DA.doc!==curDoc || $("#catDoc").hidden) return; const need=Math.ceil((DA.i+1)/40); if(need>docPage && !($("#docQ")?.value)){ docPage=need; renderDoc(); }
+  const el=document.querySelector(`#catDoc .doc-item[data-i="${DA.i}"]`); if(el) el.scrollIntoView({ behavior:"smooth", block:"center" }); }
+
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.4.2";
+const APP_VERSION = "3.5.0";
 const CHANGELOG = [
+  { v:"3.5.0", d:"novembro de 2026", items:["Ouça os credos, catecismos e confissões em voz natural, pergunta por pergunta, com avançar e voltar pelo carro e pela tela bloqueada. O app lembra onde você parou."] },
   { v:"3.4.2", d:"novembro de 2026", items:["Nove vozes femininas naturais para a leitura (Thalita, Francisca, Brenda e outras)."] },
   { v:"3.4.1", d:"novembro de 2026", items:["Botão “Ouvir o locutor” testa a voz natural masculina escolhida."] },
   { v:"3.4.0", d:"novembro de 2026", items:["Canal SOLA no Telegram: devocional publicado automaticamente todo dia às 5h."] },
@@ -6024,7 +6097,7 @@ function narrText(kind){
    Bluetooth/CarPlay, com a tela bloqueada e mesmo com a chave de silêncio. */
 function mediaAudioSession(){ try{ if(navigator.audioSession) navigator.audioSession.type="playback"; }catch(e){} }
 async function narrPlay(kind){
-  mediaAudioSession();
+  mediaAudioSession(); try{ DA.stop(); }catch(e){}
   const box = kind==="devo" ? $("#devoBody") : $("#votdBody");
   if(Narr.audio && Narr.kind===kind){ if(Narr.audio.paused) Narr.audio.play(); else Narr.audio.pause(); return paintListen(); }
   narrStop(); Narr.kind=kind; Narr.loading=true; paintListen();
