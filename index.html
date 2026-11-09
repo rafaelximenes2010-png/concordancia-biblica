@@ -1843,9 +1843,9 @@ dialog.car-mode[open]{display:flex}
     <h3 style="margin:0">Postar o devocional de hoje no Canal</h3>
     <button type="button" class="btn inv-big inv-wa" id="mdPostNow"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Postar no Canal agora</button>
     <ol class="md-steps">
-      <li><b>Toque no botão verde.</b> A imagem e o texto do dia são copiados e o WhatsApp abre direto no Canal SOLA.</li>
-      <li><b>Toque e segure no campo de mensagem</b> e escolha <b>Colar</b>. A imagem do dia aparece pronta.</li>
-      <li><b>Envie.</b> Se o texto não vier como legenda, toque e segure na legenda › <b>Colar</b>.</li>
+      <li><b>Toque no botão verde.</b> O post do dia é copiado e o WhatsApp abre direto no Canal SOLA.</li>
+      <li><b>Toque e segure no campo de mensagem</b> e escolha <b>Colar</b>. Espere 2 segundos: a imagem do dia aparece sozinha em cima do texto.</li>
+      <li><b>Envie.</b> Pronto: imagem e texto num único post.</li>
     </ol>
     <details class="md-more"><summary>Ver o texto do post</summary>
       <pre class="share-preview" id="mdPost"></pre>
@@ -4709,8 +4709,9 @@ $("#catDoc").addEventListener("click",async e=>{
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.3.2";
+const APP_VERSION = "3.3.3";
 const CHANGELOG = [
+  { v:"3.3.3", d:"novembro de 2026", items:["Post do Canal em um só Colar: o link do devocional mostra a imagem do dia no WhatsApp."] },
   { v:"3.3.2", d:"novembro de 2026", items:["“Postar no Canal agora” abre o WhatsApp direto no Canal SOLA, com imagem e texto prontos para colar."] },
   { v:"3.3.1", d:"novembro de 2026", items:["Postar o devocional no Canal SOLA ficou em um toque: botão “Postar no Canal agora” com passo a passo."] },
   { v:"3.3.0", d:"novembro de 2026", items:[
@@ -5273,6 +5274,7 @@ $("#invInstall").addEventListener("click",()=>{
   location.href=INSTALL_URL(); });
 
 /* Link direto do devocional por data: ...?devo=AAAA-MM-DD */
+const devoPage = d => `https://solabiblia.net.br/d/${todayKey(d)}.html`;
 const devoLink = d => `${APP_URL}?devo=${todayKey(d)}#devocional`;
 (function devoDeepLink(){
   const m=location.search.match(/[?&]devo=(\d{4}-\d{2}-\d{2})/); if(!m) return;
@@ -5291,7 +5293,7 @@ function canalPost(dv, ps, d){
 ${resumo}
 
 📖 Leia o devocional completo:
-${devoLink(d)}
+${devoPage(d)}
 
 SOLA | Bíblia & Teologia — A Palavra no centro de tudo.`;
 }
@@ -5310,8 +5312,7 @@ async function renderMeuDevo(){
       <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-view="devocional">Ler o devocional completo</button></div>`;
     const admin=store.get("canalAdmin",false); $("#mdAdmin").hidden=!admin;
     if(admin){ const post=canalPost(dv,ps,d); $("#mdPost").textContent=post.replace(/\*/g,""); $("#mdPost")._t=post;
-      const o=$("#mdOpen"); if(WA_CHANNEL){ o.href=WA_CHANNEL; o.hidden=false; } else o.hidden=true; $("#mdImg")._dv=dv;
-      mdPrepPng(dv); }
+      const o=$("#mdOpen"); if(WA_CHANNEL){ o.href=WA_CHANNEL; o.hidden=false; } else o.hidden=true; $("#mdImg")._dv=dv; }
     $("#mdAdmToggle").checked=admin; mdPostState(); if(admin) $("#mdToday").before($("#mdAdmin"));
   }catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o devocional agora.</p>`; }
 }
@@ -5325,21 +5326,11 @@ $("#mdPostNow").addEventListener("click",()=>{
   const btn=$("#mdPostNow"), txt=$("#mdPost")._t||"";
   if(store.get("canalPosted","")===todayKey(new Date()) && !confirm("O devocional de hoje já foi postado. Postar de novo?")) return;
   if(!WA_CHANNEL){ toast("Canal ainda não configurado."); return; }
-  let ok=false;
-  try{
-    if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write && btn._png){
-      navigator.clipboard.write([new ClipboardItem({ "image/png": btn._png, "text/plain": new Blob([txt],{type:"text/plain"}) })]).catch(()=>navigator.clipboard.writeText(txt).catch(()=>{}));
-      ok=true;
-    } else if(navigator.clipboard){ navigator.clipboard.writeText(txt).catch(()=>{}); }
-  }catch(e){ try{ navigator.clipboard.writeText(txt); }catch(_){} }
+  let ok=true; try{ navigator.clipboard.writeText(txt).catch(()=>{}); }catch(e){ ok=false; }
   window.open(WA_CHANNEL,"_blank");
   mdMarkPosted();
-  toast(ok?"Abrindo o Canal SOLA: toque no campo de mensagem › Colar › Enviar.":"Texto copiado. No Canal, toque no campo › Colar › Enviar.");
+  toast("Abrindo o Canal SOLA: toque e segure no campo › Colar › Enviar.");
 });
-async function mdPrepPng(dv){ const btn=$("#mdPostNow"); btn._png=null;
-  try{ const jpg=await devoArtPng(dv); const bmp=await createImageBitmap(jpg); const c=document.createElement("canvas");
-    c.width=bmp.width; c.height=bmp.height; c.getContext("2d").drawImage(bmp,0,0);
-    btn._png=await new Promise(r=>c.toBlob(r,"image/png")); }catch(e){} }
 
 const FEEDBACK = { email:"", whatsapp:"", github:"https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new" };
 const Suggest = {
