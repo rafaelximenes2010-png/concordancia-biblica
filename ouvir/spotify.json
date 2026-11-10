@@ -1,15 +1,21 @@
 {
   "nota": "Lista curada do SOLA. Para incluir: cole o link do Spotify em 'url' (playlist, álbum, podcast, episódio ou faixa).",
   "grupos": [
-    { "titulo": "Hinos e salmos", "itens": [] },
-    { "titulo": "Podcasts e pregações", "itens": [] }
+    { "titulo": "Louvor", "itens": [] },
+    { "titulo": "Pregações", "itens": [
+      { "nome": "Hernandes Dias Lopes", "desc": "Podcast · pregações e reflexões", "url": "https://open.spotify.com/show/1Z94gxLF4pIGbtcgGnvn7I" }
+    ] },
+    { "titulo": "Entrevistas com pastores e professores", "itens": [
+      { "nome": "Seminário Martin Bucer", "desc": "Podcast · Franklin Ferreira e professores do seminário", "url": "https://open.spotify.com/show/47NGCC3ppnZu8DTmVy8xAZ" },
+      { "nome": "Consciência Cristã", "desc": "Podcast · conversas com Franklin Ferreira e outros pregadores", "url": "https://open.spotify.com/show/67zS0FndctuxUQwO6lvSO5" },
+      { "nome": "Ensino Fiel", "desc": "Podcast · Ministério Fiel: Augustus Nicodemus, Joel Beeke e outros", "url": "https://open.spotify.com/show/1lDyzb749cb50XYyn7swPv" }
+    ] }
   ],
   "buscas": [
     { "nome": "Hinos reformados", "q": "hinos reformados" },
     { "nome": "Salmos cantados", "q": "salmos cantados" },
     { "nome": "Hinário Novo Cântico", "q": "Novo Cântico hinos" },
     { "nome": "Hinos instrumentais", "q": "hinos instrumentais piano" },
-    { "nome": "Ensino Fiel", "q": "Ensino Fiel" },
     { "nome": "John Piper Responde", "q": "John Piper Responde" },
     { "nome": "Devocional Promessas Preciosas", "q": "Devocional Diário Promessas Preciosas" }
   ]
