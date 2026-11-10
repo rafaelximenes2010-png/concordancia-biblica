@@ -1259,7 +1259,9 @@ body.has-mini{padding-bottom:84px}
 .sp-frame{width:100%;border:0;border-radius:12px;display:block;background:var(--surface-2)}
 .sp-g{margin:16px 0 6px;font-size:15px}
 .sp-it{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px}
-.sp-it .sp-ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.sp-it .sp-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--gc,var(--accent));color:#fff;flex:none;box-shadow:0 2px 5px rgba(0,0,0,.15)}
+.sp-it .sp-ic .icon{width:22px;height:22px;stroke:#fff}
+.sp-g{display:flex;align-items:center;gap:8px}.sp-gi{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--gc);flex:none}.sp-gi .icon{width:15px;height:15px;stroke:#fff}
 .sp-it .sp-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}.sp-it .sp-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sp-it .sp-t small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--ink-2);font-size:12px;line-height:1.35}
 .sp-it.on{border-color:var(--accent)}
@@ -1513,6 +1515,10 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
   <symbol id="t-vida" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/><path d="M12 15v-4M12 11c0-2 1.5-3 3-3 0 2-1.5 3-3 3zM12 12c0-1.6-1.2-2.4-2.4-2.4 0 1.6 1.2 2.4 2.4 2.4z"/></symbol>
   <symbol id="t-conselhos" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 13s-3-1.7-3-3.6a1.5 1.5 0 0 1 3-.5 1.5 1.5 0 0 1 3 .5c0 1.9-3 3.6-3 3.6z"/></symbol>
   <symbol id="t-natal" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/><path d="M12 20v2"/></symbol>
+  <symbol id="g-louvor" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
+  <symbol id="g-pregacao" viewBox="0 0 24 24"><path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v7c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v7M12 13v6M8 21h8"/></symbol>
+  <symbol id="g-entrevista" viewBox="0 0 24 24"><path d="M3 5h11v8H7l-4 3z"/><path d="M10 16h7l4 3v-9h-4"/></symbol>
+  <symbol id="g-minhas" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-10.2A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8 2.8C20 15.4 12 20 12 20z"/></symbol>
   <symbol id="i-article" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></symbol>
   <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
   <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></symbol>
@@ -4975,16 +4981,18 @@ function spParse(u){ u=String(u||"").trim();
 const SP_TIPO={ playlist:"Playlist", album:"Álbum", track:"Faixa", show:"Podcast", episode:"Episódio", artist:"Artista" };
 function spUser(){ return store.get("spUser",[]); }
 async function spLoad(){ if(!SP.data){ try{ SP.data=await fetch("ouvir/spotify.json?v="+APP_VERSION).then(r=>r.json()); }catch(e){ SP.data={ grupos:[], buscas:[] }; } } return SP.data; }
-function spItemHtml(it,mine){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id;
-  return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic"><svg class="icon"><use href="#i-${p.type==="show"||p.type==="episode"?"mic":"music"}"/></svg></span>
+function spItemHtml(it,mine,g){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id; const ic=(g&&g.icone)||(mine?"g-minhas":p.type==="show"||p.type==="episode"?"g-pregacao":"g-louvor"), co=(g&&g.cor)||(mine?"#a8455e":"var(--accent)");
+  return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic" style="--gc:${co}"><svg class="icon"><use href="#${ic}"/></svg></span>
   <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
   <button type="button" class="btn btn-sm btn-primary" data-spplay="${esc(k)}" data-spnome="${esc(it.nome||SP_TIPO[p.type])}">▶ Tocar</button>${mine?`<button type="button" class="sp-x" data-spdel="${esc(it.url)}" aria-label="Remover">×</button>`:""}</div>`; }
 async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""; $("#spLogin").hidden=!!store.get("spLogged",0);
-  if(u.length) h+=`<h3 class="sp-g">Minhas listas</h3>`+u.map(it=>spItemHtml(it,true)).join("");
-  (D.grupos||[]).forEach(g=>{ const it=(g.itens||[]).map(x=>spItemHtml(x,false)).join(""); if(it) h+=`<h3 class="sp-g">${esc(g.titulo)}</h3>`+it; });
+  const gh=g=>`<h3 class="sp-g"><span class="sp-gi" style="--gc:${g.cor}"><svg class="icon"><use href="#${g.icone}"/></svg></span>${esc(g.titulo)}</h3>`;
+  const mineG={ titulo:"Minhas listas", icone:"g-minhas", cor:"#a8455e" };
+  if(u.length) h+=gh(mineG)+u.map(it=>spItemHtml(it,true,mineG)).join("");
+  (D.grupos||[]).forEach(g=>{ g.icone=g.icone||"g-louvor"; g.cor=g.cor||"#2b3a67"; const it=(g.itens||[]).map(x=>spItemHtml(x,false,g)).join(""); if(it) h+=gh(g)+it; });
   if(!h) h=`<div class="notice info">Ainda não há listas aqui. Cole abaixo o link de uma playlist ou podcast do Spotify, ou comece por uma das buscas sugeridas.</div>`;
   $("#spList").innerHTML=h;
-  $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g">Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
+  $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g"><span class="sp-gi" style="--gc:#1DB954"><svg class="icon"><use href="#i-search"/></svg></span>Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
   spPaintNow(); }
 function spPaintNow(){ const box=$("#spNow"); if(!SP.cur){ box.hidden=true; return; } box.hidden=false;
   if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div><p class="sp-login">Só 30 segundos? Toque em <b>Entrar</b> dentro do tocador, ou <a href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">entre no Spotify</a>.</p>`; }
@@ -5535,7 +5543,7 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.10.3";
+const APP_VERSION = "3.10.4";
 const CHANGELOG = [
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
   { v:"3.10.1", d:"novembro de 2026", items:["Artigos: cada tema ganhou uma figurinha com símbolo próprio.","Ouvir: pregações de Hernandes Dias Lopes e entrevistas (Seminário Martin Bucer, Consciência Cristã, Ensino Fiel)."] },
