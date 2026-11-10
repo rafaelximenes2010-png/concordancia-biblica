@@ -4918,8 +4918,8 @@ async function renderMapas(){
       .filter(({k,o})=>(MP.per==="Todos"||o.periodo===MP.per) && match(`${o.nome} ${o.livro} ${(o.pessoas||[]).join(" ")} ${o.resumo}`, k==="j"?o.etapas.map(e=>e.ref):[]));
     const groups=MP_PER.slice(1).map(p=>[p,items.filter(x=>x.o.periodo===p)]).filter(([,a])=>a.length);
     html = groups.map(([p,a])=>`<div class="st-group"><h3 class="st-h">${esc(p)} <small>${a.length}</small></h3><div class="st-list">${a.map(({k,o})=>`
-      <button type="button" class="mp-row" data-mpopen="${k}:${o.id}"><span class="mp-sw" style="--c:${o.cor||"#5e6b85"}">${k==="j"?o.etapas.length:"▦"}</span>
-      <span class="st-tx"><b>${esc(o.nome)}</b><small>${esc(k==="j"?`${o.livro} · ${o.data}`:`${o.livro} · mapa temático`)}</small></span><span class="chev" aria-hidden="true">›</span></button>`).join("")}</div></div>`).join("");
+      <button type="button" class="mp-row" data-mpopen="${k}:${o.id}"><span class="mp-sw" style="--c:${o.cor||"#5e6b85"}">${k==="j"?o.etapas.length:'<svg class="icon" aria-hidden="true" style="width:24px;height:24px;color:#fff"><use href="#i-map"/></svg>'}</span>
+      <span class="st-tx"><b>${esc(o.nome)}</b><small>${esc(k==="j"?`${o.etapas.length} etapas · ${o.livro} · ${o.data}`:`Mapa temático · ${o.livro}`)}</small></span><span class="chev" aria-hidden="true">›</span></button>`).join("")}</div></div>`).join("");
   } else if(MP.tab==="pessoas"){
     const a=D.perfis.filter(f=>match(`${f.nome} ${f.papel} ${f.resumo}`, f.secoes.flatMap(s=>s.itens.map(i=>i.ref))));
     html=`<div class="st-group"><h3 class="st-h">Apóstolos e missionários <small>${a.length}</small></h3><div class="st-list">${a.map(f=>`
@@ -5384,8 +5384,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.9.0";
+const APP_VERSION = "3.9.1";
 const CHANGELOG = [
+  { v:"3.9.1", d:"novembro de 2026", items:["Mapas: ícone de mapa nos mapas temáticos e número de etapas nas jornadas."] },
   { v:"3.9.0", d:"novembro de 2026", items:["Nova seção Mapas e Jornadas Bíblicas em Estudos: atlas do AT e NT, viagens de Paulo e dos apóstolos, perfis com fontes (Bíblia, história, tradição, hipótese), mapa interativo com zoom, tela cheia, linha do tempo e “Percorrer a jornada”."] },
   { v:"3.8.0", d:"novembro de 2026", items:["App instalado no computador agora avisa quando há versão nova, com o botão “Atualizar agora”, e procura atualizações sozinho a cada 15 minutos."] },
   { v:"3.7.9", d:"novembro de 2026", items:["Credos e catecismos: se o servidor principal falhar, o documento é buscado numa segunda fonte."] },
