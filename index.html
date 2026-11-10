@@ -1271,6 +1271,7 @@ body.has-mini{padding-bottom:84px}
 .sp-lg-t{display:flex;gap:10px;align-items:center}.sp-lg-t small{display:block;color:var(--ink-2);font-size:13px}
 .sp-lg-ic svg{width:40px;height:40px;display:block}
 .sp-lg-btn{display:block;text-align:center;background:#1DB954;color:#000;font-weight:800;border-radius:999px;padding:13px 16px;text-decoration:none;font-size:16px}
+.sp-app{margin:10px 0 0}
 .sp-lg-ok{background:none;border:0;color:var(--ink-2);font-size:13px;cursor:pointer;justify-self:center}
 .sp-add{margin-top:14px}.sp-row{display:flex;gap:8px}.sp-row input{flex:1;min-width:0}
 .sp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
@@ -1937,8 +1938,8 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <p>Hinos, salmos cantados, podcasts e pregações do Spotify, tocando aqui dentro do SOLA.</p></div></div>
   <div id="spLogin" class="card sp-lg" hidden>
     <div class="sp-lg-t"><span class="sp-lg-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M6.5 9.3c3.8-1.1 8-.8 11.2 1M7.2 12.4c3.1-.9 6.6-.6 9.3.9M7.8 15.3c2.5-.7 5.2-.5 7.4.7" stroke="#fff" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg></span>
-      <div><b>Ouça as músicas inteiras</b><small>Entre uma vez com sua conta do Spotify (pode ser a grátis).</small></div></div>
-    <a class="sp-lg-btn" id="spLoginBtn" href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">Entrar no Spotify</a>
+      <div><b>Ouça as músicas inteiras</b><small>Entre uma vez com sua conta do Spotify (pode ser a grátis). Na tela do Spotify, toque em <b>Continuar com a Apple</b>: o iPhone confirma com Face ID, sem digitar senha.</small></div></div>
+    <a class="sp-lg-btn" id="spLoginBtn" href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener"> Entrar com Face ID</a>
     <button type="button" class="sp-lg-ok" id="spLoginOk">Já entrei ✓</button>
   </div>
   <div id="spNow" class="sp-now" hidden></div>
@@ -4980,6 +4981,11 @@ function spParse(u){ u=String(u||"").trim();
   m=u.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?(?:embed\/)?(playlist|album|track|show|episode|artist)\/([A-Za-z0-9]{10,40})/); return m?{ type:m[1], id:m[2] }:null; }
 const SP_TIPO={ playlist:"Playlist", album:"Álbum", track:"Faixa", show:"Podcast", episode:"Episódio", artist:"Artista" };
 function spUser(){ return store.get("spUser",[]); }
+const SP_IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+// abre direto no app do Spotify (já logado); se o app não abrir, cai no site
+function spOpenApp(){ if(!SP.cur) return; const {type,id}=SP.cur; const web=`https://open.spotify.com/${type}/${id}`; let left=false;
+  const off=()=>{ left=true; }; document.addEventListener("visibilitychange",off,{once:true});
+  location.href=`spotify:${type}:${id}`; setTimeout(()=>{ if(!left && !document.hidden) window.open(web,"_blank","noopener"); },1500); }
 async function spLoad(){ if(!SP.data){ try{ SP.data=await fetch("ouvir/spotify.json?v="+APP_VERSION).then(r=>r.json()); }catch(e){ SP.data={ grupos:[], buscas:[] }; } } return SP.data; }
 function spItemHtml(it,mine,g){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id; const ic=(g&&g.icone)||(mine?"g-minhas":p.type==="show"||p.type==="episode"?"g-pregacao":"g-louvor"), co=(g&&g.cor)||(mine?"#a8455e":"var(--accent)");
   return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic" style="--gc:${co}"><svg class="icon"><use href="#${ic}"/></svg></span>
@@ -4995,7 +5001,7 @@ async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""
   $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g"><span class="sp-gi" style="--gc:#1DB954"><svg class="icon"><use href="#i-search"/></svg></span>Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
   spPaintNow(); }
 function spPaintNow(){ const box=$("#spNow"); if(!SP.cur){ box.hidden=true; return; } box.hidden=false;
-  if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div><p class="sp-login">Só 30 segundos? Toque em <b>Entrar</b> dentro do tocador, ou <a href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">entre no Spotify</a>.</p>`; }
+  if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div>${SP_IOS?`<a class="sp-lg-btn sp-app" id="spApp" href="#">▶ Ouvir completo no app Spotify</a><p class="sp-login">No iPhone a prévia tem 30 segundos: a Apple não deixa o login do Spotify entrar no tocador de outro app. O app do Spotify já abre logado, com Face ID.</p>`:`<p class="sp-login">Só 30 segundos? Toque em <b>Entrar</b> dentro do tocador, ou <a href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">entre no Spotify</a> (com <b>Continuar com a Apple</b> ou Google, sem senha).</p>`}`; }
   $("#spNowT").textContent=SP.cur.nome; $("#spOpen").href=`https://open.spotify.com/${SP.cur.type}/${SP.cur.id}`; }
 function spApi(){ if(SP.api) return Promise.resolve(SP.api); if(SP.apiP) return SP.apiP;
   SP.apiP=new Promise((res,rej)=>{ window.onSpotifyIframeApiReady=api=>{ SP.api=api; res(api); };
@@ -5024,6 +5030,7 @@ document.addEventListener("play",e=>{ if(e.target && e.target.tagName==="AUDIO")
 $("#view-ouvir").addEventListener("click",e=>{ const t=e.target;
   const pb=t.closest("[data-spplay]"); if(pb) return spPlay(pb.dataset.spplay,pb.dataset.spnome);
   const db=t.closest("[data-spdel]"); if(db){ store.set("spUser",spUser().filter(x=>x.url!==db.dataset.spdel)); renderOuvir(); toast("Removido."); return; }
+  if(t.closest("#spApp")){ e.preventDefault(); spPauseAll(); return spOpenApp(); }
   if(t.closest("#spClose")) return spClose(); });
 function spAdd(){ const inp=$("#spUrl"); const v=inp.value.trim(); const p=spParse(v);
   if(!p){ toast("Cole um link do Spotify (playlist, álbum, podcast, episódio ou faixa)."); return; }
@@ -5543,9 +5550,10 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.10.4";
+const APP_VERSION = "3.10.5";
 const CHANGELOG = [
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
+  { v:"3.10.5", d:"novembro de 2026", items:["Ouvir: entrar no Spotify com Face ID (Continuar com a Apple) e, no iPhone, botão para ouvir a lista completa no app do Spotify, que já abre logado."] },
   { v:"3.10.1", d:"novembro de 2026", items:["Artigos: cada tema ganhou uma figurinha com símbolo próprio.","Ouvir: pregações de Hernandes Dias Lopes e entrevistas (Seminário Martin Bucer, Consciência Cristã, Ensino Fiel)."] },
   { v:"3.10.0", d:"novembro de 2026", items:["Nova seção Ouvir em Estudos: tocador do Spotify dentro do SOLA para hinos, salmos, podcasts e pregações. Cole o link de qualquer playlist ou podcast; o áudio do SOLA e o Spotify não tocam ao mesmo tempo."] },
   { v:"3.9.1", d:"novembro de 2026", items:["Mapas: ícone de mapa nos mapas temáticos e número de etapas nas jornadas."] },
