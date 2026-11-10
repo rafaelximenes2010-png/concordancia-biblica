@@ -1248,6 +1248,67 @@ body.has-mini{padding-bottom:84px}
 .mp-info small{font-size:12px;color:#aeb9cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mp-skip{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;font-size:12px;font-weight:700;cursor:pointer}
 .mp-x{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;cursor:pointer}
+/* ---------- Mapas e Jornadas ---------- */
+.mp-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.mp-tabs button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:8px 14px;font:600 14px var(--font-ui,system-ui);cursor:pointer}
+.mp-tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.mp-row{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;background:none;border:0;border-top:1px solid var(--border);text-align:left;color:var(--ink);font:inherit;cursor:pointer;min-height:64px}
+.mp-row:first-child{border-top:0}
+.mp-sw{flex:none;width:44px;height:44px;border-radius:12px;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+.mp-sw.round{border-radius:50%}.mp-sw.big{width:56px;height:56px;font-size:24px;font-family:var(--font-text)}
+.mp-badge{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:var(--c);border-radius:6px;padding:2px 6px;vertical-align:1px}
+.mp-ref{border:1px solid var(--border);background:var(--surface);color:var(--accent);border-radius:8px;padding:2px 8px;font-size:13px;font-weight:600;cursor:pointer;margin:2px 2px 0 0}
+.mp-ref.off{color:var(--ink-2);cursor:default}
+.mpv-head{display:flex;align-items:center;gap:10px;margin:8px 0}
+.mpv-t{flex:1;min-width:0;display:flex;flex-direction:column}.mpv-t b{font:600 20px/1.2 var(--font-text)}.mpv-t small{color:var(--ink-2)}
+.mp-ic{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:#b8862e;font-size:19px;cursor:pointer}
+.mpv-filters .chip i,.mp-chipsl .chip i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:0}
+.mpv-filters{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:4px}.mpv-filters .chip{flex:none}
+.mpv-grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:900px){ .mpv-grid{grid-template-columns:minmax(0,1fr) 360px} .mpv-side{max-height:72vh;overflow:auto} .mp-stage{height:72vh!important} }
+.mp-stage{position:relative;height:58vh;min-height:340px;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#cfe0ea;touch-action:none}
+.mp-stage.mp-full,.mp-stage:fullscreen{position:fixed;inset:0;z-index:80;height:auto!important;border-radius:0;border:0}
+body.mp-lock{overflow:hidden}
+.mp-svg{width:100%;height:100%;display:block;user-select:none;-webkit-user-select:none}
+.mp-seab{fill:#cfe0ea}.mp-land{fill:#efe6d2;stroke:#b9a888}.mp-lake{fill:#cfe0ea}.mp-riv{fill:none;stroke:#7fa8c0;stroke-linecap:round;stroke-linejoin:round}
+.mp-sea{fill:#5d7d93;font-style:italic;letter-spacing:.08em}.mp-river{fill:#4f7d98;font-style:italic}
+.mp-lbl{fill:#1d2433;paint-order:stroke;stroke:#f7f2e7;stroke-width:.25em;stroke-linejoin:round;font-weight:600;font-family:var(--font-ui,system-ui)}
+.mp-region{fill:#8a6a35;font-weight:800;letter-spacing:.1em;opacity:.8;paint-order:stroke;stroke:#efe6d2;stroke-width:.2em}
+.mp-region.imperio{fill:#8c2f39}.mp-region.reino{fill:#2b3a67}.mp-region.tribo{fill:#5e4a72;letter-spacing:.04em}
+.mp-ctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mp-ctl button{width:40px;height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.92);font-size:20px;font-weight:700;color:#13213a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.mp-legend{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:#1d2433;background:rgba(255,255,255,.85);border-radius:10px;padding:5px 9px;max-width:calc(100% - 70px)}
+.mp-legend i{display:inline-block;width:22px;height:0;border-top:3px solid #13213a;margin-right:5px;vertical-align:3px}
+.mp-legend .lg-sea{border-top-style:dotted}.mp-legend .lg-dash{border-top-style:dashed}.mp-legend .lg-unc{width:10px;height:10px;border:2px dashed #13213a;border-radius:50%;vertical-align:-1px}
+.mp-step{position:absolute;left:10px;top:10px;right:60px;display:flex;align-items:center;gap:10px;background:rgba(19,33,58,.92);color:#f4ead2;border-radius:12px;padding:8px 12px;max-width:440px}
+.mp-step div{display:flex;flex-direction:column}.mp-step small{color:#cfd7e6}
+.mp-n{flex:none;display:inline-grid;place-items:center;min-width:26px;height:26px;border-radius:50%;background:var(--c);color:#fff;font-weight:800;font-size:13px;padding:0 4px}
+.mp-n.sm{min-width:20px;height:20px;font-size:11px}
+.mp-panel{position:absolute;left:8px;right:8px;bottom:8px;max-height:55%;overflow:auto;background:var(--surface);color:var(--ink);border-radius:14px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:3}
+@media (min-width:900px){ .mp-panel{left:auto;width:340px;top:60px;bottom:auto;max-height:calc(100% - 120px)} }
+.mp-ph{display:flex;align-items:flex-start;gap:8px}.mp-ph div{flex:1;display:flex;flex-direction:column}.mp-ph b{font:600 19px/1.2 var(--font-text)}.mp-ph small{color:var(--ink-2)}
+.mp-panel h4{margin:10px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2)}
+.mp-panel p{margin:6px 0}
+.mp-cert{font-size:12.5px;font-weight:700}.mp-cert.certo{color:#2f7d4a}.mp-cert.provável{color:#9a6d1f}.mp-cert.incerto{color:#7a7a7a}
+.mp-ev{list-style:none;padding:0;margin:0;display:grid;gap:6px}.mp-ev small{display:block;color:var(--ink-2)}
+.mp-chipsl{display:flex;flex-wrap:wrap;gap:6px}
+.mpv-play{display:flex;gap:8px;align-items:center;margin-bottom:8px}.mpv-play[hidden]{display:none}
+.mpv-play .btn-primary{flex:1;justify-content:center}
+.mp-resumo{margin:0 0 6px}.mp-nota{font-size:13px;color:#8a6a35;background:rgba(184,134,46,.1);border-radius:10px;padding:8px 10px}
+.mp-tl{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:2px}
+.mp-tl li{display:flex;gap:10px;padding:8px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+.mp-tl li:hover{background:var(--surface-2)}.mp-tl li.hit{border-color:var(--gold,#b8862e)}.mp-tl li.now{background:rgba(184,134,46,.14);border-color:#b8862e}
+.mp-tl-nota{display:block;color:var(--ink-2);margin-top:2px}
+.mp-aprox{font-size:11px;color:var(--ink-2);font-style:italic}
+.mp-prof-h{display:flex;align-items:center;gap:12px;margin:12px 0 6px}.mp-prof-h h2{margin:0;font:600 24px/1.2 var(--font-text)}.mp-prof-h div{flex:1}
+.mp-sec{border-top:1px solid var(--border);padding-top:8px;margin-top:10px}.mp-sec h3{font-size:15px;margin:0 0 6px;color:var(--accent)}
+.mp-sec ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.mp-legenda{font-size:12.5px;color:var(--ink-2);margin-top:14px}
+.mp-pend{margin-top:14px;border:1px solid var(--border);border-radius:12px;padding:10px 14px;background:var(--surface)}
+.mp-pend summary{cursor:pointer;font-weight:700}
+html[data-theme="dark"] .mp-seab,html[data-theme="dark"] .mp-lake{fill:#1c2b40}html[data-theme="dark"] .mp-stage{background:#1c2b40}
+html[data-theme="dark"] .mp-land{fill:#2e3646;stroke:#4a5568}html[data-theme="dark"] .mp-lbl{fill:#f1ead8;stroke:#2e3646}
+html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-sea{fill:#8fb0c6}
 .md-follow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .md-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px 9px 10px;border-radius:999px;
   background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#f4ead2!important;
@@ -1413,7 +1474,8 @@ body.has-mini{padding-bottom:84px}
   <symbol id="i-marker" viewBox="0 0 24 24"><path d="m15 4 5 5-9 9H6v-5z"/><path d="M4 21h8"/></symbol>
   <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
   <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 19h14"/></symbol>
   <symbol id="i-ios-share" viewBox="0 0 24 24"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M7 10H5v11h14V10h-2"/></symbol>
   <symbol id="i-plus-sq" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/></symbol>
@@ -1766,6 +1828,7 @@ body.has-mini{padding-bottom:84px}
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-lamp"/></svg>
@@ -1788,6 +1851,7 @@ body.has-mini{padding-bottom:84px}
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-film"/></svg>
@@ -1806,6 +1870,43 @@ body.has-mini{padding-bottom:84px}
   <p class="bp-note" style="margin-top:14px"><strong>Nota para estudo reformado:</strong> o BibleProject é muito usado pelo panorama literário que oferece. Alguns autores reformados criticam a forma como certos vídeos tratam doutrinas como a expiação, em especial a propiciação. Vale assistir com a Escritura aberta e comparar com os comentários do app.</p>
 </section>
 
+<!-- ===================== MAPAS E JORNADAS ===================== -->
+<section class="view" id="view-mapas" hidden aria-labelledby="mpTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+  </nav>
+  <div id="mpHome">
+    <div class="view-head"><div><p class="eyebrow">Estudos · geografia bíblica</p><h2 id="mpTitle">Mapas e Jornadas Bíblicas</h2>
+      <p>Atlas do Antigo e do Novo Testamento, viagens de Paulo e dos apóstolos, com linha do tempo e passagens ligadas. Cada informação traz a sua fonte: Bíblia, história, tradição ou hipótese.</p></div></div>
+    <div class="mp-tabs" id="mpTabs" role="tablist"><button type="button" role="tab" data-mptab="atlas">🗺️ Atlas</button><button type="button" role="tab" data-mptab="pessoas">👣 Apóstolos e missionários</button><button type="button" role="tab" data-mptab="lugares">📍 Lugares</button><button type="button" role="tab" data-mptab="favs">★ Favoritos</button></div>
+    <label class="picker-search" style="margin:10px 0"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Procurar</span><input id="mpQ" type="search" placeholder="Procurar cidade, personagem ou passagem (ex.: Filipos, Barnabé, At 16)" autocomplete="off"></label>
+    <div class="hl-filter" id="mpChips" role="group" aria-label="Período"></div>
+    <div id="mpList"></div>
+    <details class="mp-pend"><summary>Fontes, legenda e conteúdos pendentes</summary><div id="mpPend"></div></details>
+  </div>
+  <div id="mpProfile" hidden></div>
+  <div id="mpViewer" hidden>
+    <div class="mpv-head"><button type="button" class="btn btn-sm" data-mpback>‹ Voltar</button><div class="mpv-t"><b id="mpvTitle"></b><small id="mpvSub"></small></div><button type="button" class="mp-ic" id="mpvFav" aria-label="Favoritar">☆</button></div>
+    <div class="hl-filter mpv-filters" id="mpvFilters"></div>
+    <div class="mpv-grid">
+      <div class="mp-stage" id="mpStage">
+        <svg id="mpSvg" class="mp-svg" role="img" aria-label="Mapa"></svg>
+        <div class="mp-ctl"><button type="button" id="mpZin" aria-label="Aproximar">+</button><button type="button" id="mpZout" aria-label="Afastar">−</button><button type="button" id="mpZfit" aria-label="Enquadrar">⤢</button><button type="button" id="mpFull" aria-label="Tela cheia">⛶</button></div>
+        <div class="mp-step" id="mpStep" hidden></div>
+        <div class="mp-legend"><span><i class="lg-solid"></i>trajeto citado</span><span><i class="lg-sea"></i>por mar</span><span><i class="lg-dash"></i>aproximado</span><span><i class="lg-unc"></i>local incerto</span><span id="mpScale"></span></div>
+        <div class="mp-panel" id="mpPanel" hidden></div>
+      </div>
+      <aside class="mpv-side">
+        <div class="mpv-play" id="mpvNav"><button type="button" class="btn btn-sm" id="mpvPrev" aria-label="Etapa anterior">⏮</button><button type="button" class="btn btn-primary" id="mpvPlay">▶ Percorrer a jornada</button><button type="button" class="btn btn-sm" id="mpvNext" aria-label="Próxima etapa">⏭</button></div>
+        <div id="mpvSide"></div>
+      </aside>
+    </div>
+  </div>
+</section>
 <!-- ===================== ARTIGOS ===================== -->
 <section class="view" id="view-pensadores" hidden aria-labelledby="penTitle">
   <nav class="sub-tabs" aria-label="Estudos">
@@ -1813,6 +1914,7 @@ body.has-mini{padding-bottom:84px}
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · cosmovisão reformada</p><h2 id="penTitle">Pensadores</h2>
     <p>Filósofos, estudiosos da psicologia e da alma e pensadores da política e da sociedade, segundo a fé reformada. Toque no nome para saber quem é.</p></div></div>
@@ -1829,6 +1931,7 @@ body.has-mini{padding-bottom:84px}
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
   </nav>
   <div id="artReader" hidden></div>
   <div id="artHome">
@@ -4777,6 +4880,247 @@ $("#artForm").addEventListener("submit",e=>{ e.preventDefault(); const q=$("#art
   window.open(artSearch(q,ART_SITES_PT),"_blank","noopener") || (location.href=artSearch(q,ART_SITES_PT)); });
 
 /* =====================================================================
+   MAPAS E JORNADAS BÍBLICAS
+   ---------------------------------------------------------------------
+   Mapa-base próprio (Natural Earth, domínio público) em SVG, sem
+   serviços externos: funciona offline. Dados em /mapas/dados.json.
+   Selos de fonte: B = relato bíblico · H = evidência histórica ·
+   T = tradição cristã · Hp = hipótese/reconstrução.
+   ===================================================================== */
+const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null };
+const MP_PER = ["Todos","Patriarcas","Êxodo e conquista","Reinos, exílio e retorno","Vida de Jesus","Igreja primitiva"];
+const MP_FONTE = { B:["Bíblia","#2f7d4a"], H:["História","#2e6da4"], T:["Tradição","#b8862e"], Hp:["Hipótese","#7a7a7a"] };
+const mpBadge = f => { const x=MP_FONTE[f]||MP_FONTE.Hp; return `<span class="mp-badge" style="--c:${x[1]}" title="${esc(MP.data?.fontes?.[f]||x[0])}">${x[0]}</span>`; };
+async function mpLoad(){
+  if(!MP.data){ const [b,d]=await Promise.all([fetch("mapas/base.json").then(r=>r.json()), fetch("mapas/dados.json?v="+APP_VERSION).then(r=>r.json())]); MP.base=b; MP.data=d; }
+  return MP.data;
+}
+const mpXY = (lat,lon) => { const b=MP.base; return [ (lon-b.b.x0)*b.c*b.k, (b.b.y1-lat)*b.k ]; };
+const mpPlace = id => MP.data.lugares[id];
+function mpRefParse(r){ const s=String(r||"").split(";")[0].trim().replace(/^(\S+\s+\d+)[–-]\d+$/,"$1:1"); try{ return parseReference(s); }catch(e){ return null; } }
+function mpRefBtn(r){ if(!r || r==="—") return ""; const p=mpRefParse(r); return p&&!p.error ? `<button type="button" class="mp-ref" data-mpref="${esc(r)}">${esc(r)}</button>` : `<span class="mp-ref off">${esc(r)}</span>`; }
+function mpFavs(){ return store.get("mapFav",[]); }
+function mpIsFav(k){ return mpFavs().includes(k); }
+function mpToggleFav(k){ const f=mpFavs(); const i=f.indexOf(k); if(i>=0) f.splice(i,1); else f.unshift(k); store.set("mapFav",f.slice(0,200)); toast(i>=0?"Removido dos favoritos.":"Salvo nos favoritos."); }
+
+/* ---------- Lista (atlas, apóstolos, lugares, favoritos) ---------- */
+async function renderMapas(){
+  const box=$("#mpList"); $("#mpViewer").hidden=true; $("#mpHome").hidden=false; mpStop();
+  try{ await mpLoad(); }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar os mapas. ${navigator.onLine?"Tente de novo.":"Conecte-se uma vez para baixá-los."}</div>`; return; }
+  document.querySelectorAll("#mpTabs [data-mptab]").forEach(b=>b.setAttribute("aria-selected", b.dataset.mptab===MP.tab?"true":"false"));
+  $("#mpChips").innerHTML = MP.tab==="atlas" ? MP_PER.map(p=>`<button type="button" class="chip${p===MP.per?" on":""}" data-mpper="${esc(p)}">${esc(p)}</button>`).join("") : "";
+  const q=norm(MP.q.trim()); const ref=q?mpRefParse(MP.q):null; const D=MP.data;
+  const refHit = refs => ref && !ref.error && refs.some(r=>{ const p=mpRefParse(r); return p && p.b===ref.b && p.c===ref.c; });
+  const match = (txt,refs=[]) => !q || norm(txt).includes(q) || refHit(refs);
+  let html="";
+  if(MP.tab==="atlas"){
+    const items=[...D.jornadas.map(j=>({k:"j",o:j})),...D.mapas.map(m=>({k:"m",o:m}))]
+      .filter(({k,o})=>(MP.per==="Todos"||o.periodo===MP.per) && match(`${o.nome} ${o.livro} ${(o.pessoas||[]).join(" ")} ${o.resumo}`, k==="j"?o.etapas.map(e=>e.ref):[]));
+    const groups=MP_PER.slice(1).map(p=>[p,items.filter(x=>x.o.periodo===p)]).filter(([,a])=>a.length);
+    html = groups.map(([p,a])=>`<div class="st-group"><h3 class="st-h">${esc(p)} <small>${a.length}</small></h3><div class="st-list">${a.map(({k,o})=>`
+      <button type="button" class="mp-row" data-mpopen="${k}:${o.id}"><span class="mp-sw" style="--c:${o.cor||"#5e6b85"}">${k==="j"?o.etapas.length:"▦"}</span>
+      <span class="st-tx"><b>${esc(o.nome)}</b><small>${esc(k==="j"?`${o.livro} · ${o.data}`:`${o.livro} · mapa temático`)}</small></span><span class="chev" aria-hidden="true">›</span></button>`).join("")}</div></div>`).join("");
+  } else if(MP.tab==="pessoas"){
+    const a=D.perfis.filter(f=>match(`${f.nome} ${f.papel} ${f.resumo}`, f.secoes.flatMap(s=>s.itens.map(i=>i.ref))));
+    html=`<div class="st-group"><h3 class="st-h">Apóstolos e missionários <small>${a.length}</small></h3><div class="st-list">${a.map(f=>`
+      <button type="button" class="mp-row" data-mpopen="p:${f.id}"><span class="mp-sw round" style="--c:${f.cor}">${esc(f.nome.charAt(0))}</span>
+      <span class="st-tx"><b>${esc(f.nome)}</b><small>${esc(f.papel)}${f.jornadas.length?` · ${f.jornadas.length} jornada${f.jornadas.length>1?"s":""} no mapa`:""}</small></span><span class="chev" aria-hidden="true">›</span></button>`).join("")}</div></div>`;
+  } else if(MP.tab==="lugares"){
+    const a=Object.entries(D.lugares).filter(([id,l])=>match(`${l.n} ${l.m} ${l.d}`, l.r)).sort((x,y)=>x[1].n.localeCompare(y[1].n,"pt"));
+    html=`<div class="st-group"><h3 class="st-h">Cidades e lugares <small>${a.length}</small></h3><div class="st-list">${a.map(([id,l])=>`
+      <button type="button" class="mp-row" data-mpplace="${id}"><span class="mp-sw round" style="--c:${l.c==="certo"?"#2f7d4a":l.c==="provável"?"#b8862e":"#7a7a7a"}">📍</span>
+      <span class="st-tx"><b>${esc(l.n)}</b><small>${esc(l.m)} · ${l.c==="certo"?"local identificado":l.c==="provável"?"localização provável":"localização incerta"}</small></span><span class="chev" aria-hidden="true">›</span></button>`).join("")}</div></div>`;
+  } else {
+    const f=mpFavs(); const rows=f.map(k=>{ const [t,id]=k.split(":"); const o = t==="l"?D.lugares[id]:t==="j"?D.jornadas.find(x=>x.id===id):t==="m"?D.mapas.find(x=>x.id===id):D.perfis.find(x=>x.id===id); if(!o) return "";
+      return t==="l" ? `<button type="button" class="mp-row" data-mpplace="${id}"><span class="mp-sw round" style="--c:#b8862e">★</span><span class="st-tx"><b>${esc(o.n)}</b><small>${esc(o.m)}</small></span><span class="chev">›</span></button>`
+        : `<button type="button" class="mp-row" data-mpopen="${t}:${id}"><span class="mp-sw round" style="--c:#b8862e">★</span><span class="st-tx"><b>${esc(o.nome)}</b><small>${t==="p"?"Perfil":t==="j"?"Jornada":"Mapa"}</small></span><span class="chev">›</span></button>`; }).join("");
+    html = rows ? `<div class="st-group"><h3 class="st-h">Meus favoritos</h3><div class="st-list">${rows}</div></div>` : `<p class="muted">Toque na estrela ☆ de um mapa, jornada, perfil ou cidade para guardá-lo aqui.</p>`;
+  }
+  box.innerHTML = html || `<p class="muted">Nada encontrado${MP.q?` para “${esc(MP.q)}”`:""}. Tente o nome de uma cidade, de um personagem ou uma passagem (ex.: At 16).</p>`;
+}
+$("#mpTabs").addEventListener("click",e=>{ const b=e.target.closest("[data-mptab]"); if(b){ MP.tab=b.dataset.mptab; renderMapas(); } });
+$("#mpChips").addEventListener("click",e=>{ const b=e.target.closest("[data-mpper]"); if(b){ MP.per=b.dataset.mpper; renderMapas(); } });
+$("#mpQ").addEventListener("input",()=>{ MP.q=$("#mpQ").value; clearTimeout(MP._qt); MP._qt=setTimeout(renderMapas,180); });
+$("#mpList").addEventListener("click",e=>{ const o=e.target.closest("[data-mpopen]"); if(o){ const [t,id]=o.dataset.mpopen.split(":"); return t==="p"?mpOpenProfile(id):mpOpen(t,id); }
+  const p=e.target.closest("[data-mpplace]"); if(p) mpOpen("l",p.dataset.mpplace); });
+
+/* ---------- Visualizador ---------- */
+function mpOpen(kind,id){
+  const D=MP.data; mpStop(); MP.sel=null; MP.stage=-1;
+  if(kind==="l"){ const l=D.lugares[id]; MP.cur={ kind:"l", id, nome:l.n, lugares:[id], etapas:[] }; }
+  else if(kind==="j"){ const j=D.jornadas.find(x=>x.id===id); MP.cur={ kind:"j", id, nome:j.nome, obj:j, lugares:[...new Set(j.etapas.map(e=>e.p))], etapas:j.etapas }; }
+  else { const m=D.mapas.find(x=>x.id===id); MP.cur={ kind:"m", id, nome:m.nome, obj:m, lugares:m.lugares, etapas:[] }; }
+  MP.cur.extra=[];   // jornadas extras sobrepostas (filtros)
+  $("#mpStep").hidden=true; $("#mpPanel").hidden=true;
+  $("#mpHome").hidden=true; $("#mpProfile").hidden=true; $("#mpViewer").hidden=false; window.scrollTo({top:0});
+  mpRenderViewer(); mpFit(); if(kind==="l") mpSelect(id);
+}
+function mpRenderViewer(){
+  const c=MP.cur, o=c.obj, favK=(c.kind==="l"?"l:":c.kind==="j"?"j:":"m:")+c.id;
+  $("#mpvTitle").textContent=c.nome;
+  $("#mpvSub").innerHTML = c.kind==="j" ? `${esc(o.livro)} · ${esc(o.data)}` : c.kind==="m" ? `${esc(o.livro)} · mapa temático` : esc(mpPlace(c.id).m);
+  $("#mpvFav").textContent = mpIsFav(favK) ? "★" : "☆"; $("#mpvFav").dataset.k=favK;
+  $("#mpvPlay").hidden = c.kind!=="j"; $("#mpvNav").hidden = c.kind!=="j";
+  // filtros: no mapa de Paulo, permite sobrepor as outras viagens
+  const rel = c.kind==="j" && /^paulo/.test(c.id) ? MP.data.jornadas.filter(j=>/^paulo/.test(j.id)) : [];
+  $("#mpvFilters").innerHTML = rel.length ? rel.map(j=>`<button type="button" class="chip${j.id===c.id||c.extra.includes(j.id)?" on":""}" style="--c:${j.cor}" data-mpj="${j.id}"><i style="background:${j.cor}"></i>${esc(j.nome.replace("Paulo: ",""))}</button>`).join("") : "";
+  const side=$("#mpvSide");
+  if(c.kind==="j"){
+    side.innerHTML=`<p class="mp-resumo">${esc(o.resumo)}</p>${o.nota?`<p class="mp-nota">⚠︎ ${esc(o.nota)}</p>`:""}
+      <ol class="mp-tl">${o.etapas.map((e,i)=>{ const l=mpPlace(e.p); return `<li data-mpst="${i}"><span class="mp-n" style="--c:${o.cor}">${i+1}</span><div><b>${esc(l.n)}</b> — ${esc(e.t)} ${mpBadge(e.f)}${e.rota==="aprox"?` <span class="mp-aprox">trajeto aproximado</span>`:e.rota==="mar"?` <span class="mp-aprox">por mar</span>`:""}
+        <div class="mp-tl-ref">${mpRefBtn(e.ref)}</div>${e.nota?`<small class="mp-tl-nota">${esc(e.nota)}</small>`:""}</div></li>`; }).join("")}</ol>
+      ${o.pessoas?.length?`<p class="muted" style="margin-top:8px"><b>Personagens:</b> ${o.pessoas.map(esc).join(", ")}</p>`:""}`;
+  } else if(c.kind==="m"){
+    side.innerHTML=`<p class="mp-resumo">${esc(o.resumo)}</p>${o.nota?`<p class="mp-nota">⚠︎ ${esc(o.nota)}</p>`:""}<div class="mp-chipsl">${o.lugares.map(id=>`<button type="button" class="chip" data-mpsel="${id}">${esc(mpPlace(id).n)}</button>`).join("")}</div>`;
+  } else side.innerHTML="";
+  mpDraw();
+}
+function mpJourneysShown(){ const c=MP.cur; if(c.kind!=="j") return []; return [c.obj, ...c.extra.map(id=>MP.data.jornadas.find(j=>j.id===id))]; }
+function mpBounds(ids){ let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9; ids.forEach(id=>{ const l=mpPlace(id); if(!l) return; const [x,y]=mpXY(l.lat,l.lon); x0=Math.min(x0,x); y0=Math.min(y0,y); x1=Math.max(x1,x); y1=Math.max(y1,y); }); return [x0,y0,x1,y1]; }
+function mpFit(ids, pad=0.18, minW=26){
+  ids = ids || [...MP.cur.lugares, ...MP.cur.extra.flatMap(id=>MP.data.jornadas.find(j=>j.id===id).etapas.map(e=>e.p))];
+  if(MP.cur.kind==="m") (MP.cur.obj.labels||[]).forEach(()=>{});
+  let [x0,y0,x1,y1]=mpBounds(ids); if(MP.cur.kind==="m"){ MP.cur.obj.labels.forEach(l=>{ const [x,y]=mpXY(l.lat,l.lon); x0=Math.min(x0,x); y0=Math.min(y0,y); x1=Math.max(x1,x); y1=Math.max(y1,y); }); }
+  const el=$("#mpSvg"), ar=(el.clientWidth||600)/(el.clientHeight||400);
+  let w=Math.max(x1-x0,minW), h=Math.max(y1-y0,minW/ar); w*=1+pad*2; h*=1+pad*2;
+  if(w/h<ar) w=h*ar; else h=w/ar; const cx=(x0+x1)/2, cy=(y0+y1)/2;
+  mpSetView({ x:cx-w/2, y:cy-h/2, w, h });
+}
+function mpSetView(v, anim){ const b=MP.base; v.w=Math.min(Math.max(v.w,6),b.w*1.4); v.h=v.w*((MP.view&&MP.view.h/MP.view.w)||v.h/v.w); MP.view=v; mpDraw(); }
+function mpDraw(){
+  const svg=$("#mpSvg"); if(!svg || !MP.view || $("#mpViewer").hidden) return; const v=MP.view, b=MP.base;
+  const W=svg.clientWidth||600; const k=v.w/W;   // unidades por pixel: marcadores com tamanho constante na tela
+  const ar=(svg.clientHeight||400)/W; v.h=v.w*ar;
+  svg.setAttribute("viewBox",`${v.x} ${v.y} ${v.w} ${v.h}`);
+  const c=MP.cur, js=mpJourneysShown(), sel=MP.sel;
+  let routes="", defs="";
+  js.forEach((j,ji)=>{ defs+=`<marker id="mpa-${j.id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="${j.cor}"/></marker>`;
+    for(let i=1;i<j.etapas.length;i++){ const a=mpPlace(j.etapas[i-1].p), z=mpPlace(j.etapas[i].p); if(!a||!z||a===z) continue;
+      const [x1,y1]=mpXY(a.lat,a.lon), [x2,y2]=mpXY(z.lat,z.lon); const mx=(x1+x2)/2, my=(y1+y2)/2, dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy)||1;
+      const off=Math.min(L*0.12, 22*k)*(i%2?1:-1); const qx=mx-dy/L*off, qy=my+dx/L*off; const r=j.etapas[i].rota;
+      const act = j===c.obj && MP.stage===i;
+      const dash = r==="aprox" ? `stroke-dasharray="${7*k} ${5*k}"` : r==="mar" ? `stroke-dasharray="${1.5*k} ${4*k}" stroke-linecap="round"` : "";
+      routes+=`<path d="M${x1} ${y1}Q${qx} ${qy} ${x2} ${y2}" fill="none" stroke="${j.cor}" stroke-width="${(act?5:ji?2.2:3)*k}" ${dash} opacity="${ji?0.75:(MP.stage>=0&&!act?0.45:0.95)}" marker-end="url(#mpa-${j.id})"/>`; } });
+  // marcadores
+  const ids = new Set([...c.lugares, ...c.extra.flatMap(id=>MP.data.jornadas.find(j=>j.id===id).etapas.map(e=>e.p))]);
+  const nums={}; if(c.kind==="j") c.obj.etapas.forEach((e,i)=>{ (nums[e.p]=nums[e.p]||[]).push(i+1); });
+  let marks=""; const placed=[];
+  if(c.kind==="m") c.obj.labels.forEach(L=>{ const [x,y]=mpXY(L.lat,L.lon); const fs=(L.k==="imperio"?17:L.k==="reino"?13:11.5)*k; const w=L.t.length*fs*0.62; placed.push([x-w/2,y-fs,w,fs*1.2]); }); const ends = c.kind==="j" ? [c.obj.etapas[c.obj.etapas.length-1].p, c.obj.etapas[0].p] : [];
+  const prio = id => (id===sel?4:0) + (ends.includes(id)?2:0) + (nums[id]?1:0);
+  const order=[...ids].sort((a,b)=>prio(b)-prio(a));
+  const fits=(x,y,w,h)=>{ if(placed.some(p=>x<p[0]+p[2]&&x+w>p[0]&&y<p[1]+p[3]&&y+h>p[1])) return false; placed.push([x,y,w,h]); return true; };
+  order.forEach(id=>{ const l=mpPlace(id); if(!l) return; const [x,y]=mpXY(l.lat,l.lon); const n=nums[id]; const unc=l.c!=="certo"; const isSel=sel===id;
+    const r=(n?9:5.5)*k*(isSel?1.25:1); const col = c.kind==="j" && n ? c.obj.cor : "#13213a";
+    const curSt = c.kind==="j" && MP.stage>=0 && c.obj.etapas[MP.stage].p===id;
+    marks+=`<g class="mp-mk" data-mpsel="${id}" style="cursor:pointer">${curSt?`<circle cx="${x}" cy="${y}" r="${r*1.9}" fill="${col}" opacity=".22"><animate attributeName="r" values="${r*1.3};${r*2.1};${r*1.3}" dur="1.6s" repeatCount="indefinite"/></circle>`:""}
+      <circle cx="${x}" cy="${y}" r="${r}" fill="${n?col:"#fff"}" stroke="${n?"#fff":col}" stroke-width="${1.6*k}" ${unc?`stroke-dasharray="${2.2*k} ${1.6*k}"`:""}/>
+      ${n?`<text x="${x}" y="${y+3.3*k}" text-anchor="middle" font-size="${(n.length>1?7.5:9.5)*k}" font-weight="800" fill="#fff">${n.length>2?n[0]+"+":n.join("·")}</text>`:""}
+      ${(()=>{ const tw=(l.n.length+1)*6.6*k, th=13*k, lx=x+r+3*k, ly=y-9*k; return (isSel||curSt||fits(lx,ly,tw,th)) ? `<text class="mp-lbl" x="${lx}" y="${y+4*k}" font-size="${12*k}" ${isSel?'font-weight="800"':""}>${esc(l.n)}${l.c==="incerto"?"?":""}</text>` : ""; })()}</g>`; });
+  // rótulos de regiões (mapas temáticos)
+  const labs = c.kind==="m" ? c.obj.labels.map(L=>{ const [x,y]=mpXY(L.lat,L.lon); return `<text class="mp-region ${L.k}" x="${x}" y="${y}" text-anchor="middle" font-size="${(L.k==="imperio"?17:L.k==="reino"?13:11.5)*k}">${esc(L.t)}</text>`; }).join("") : "";
+  const seas = b.seaLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-sea" x="${x}" y="${y}" text-anchor="middle" font-size="${11*k}">${esc(s.t)}</text>`; }).join("")
+    + b.riverLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-river" x="${x}" y="${y}" font-size="${9.5*k}">${esc(s.t)}</text>`; }).join("");
+  svg.innerHTML=`<defs>${defs}</defs><rect class="mp-seab" x="-500" y="-500" width="${b.w+1000}" height="${b.h+1000}"/>
+    <path class="mp-land" d="${b.land}" stroke-width="${0.7*k}"/><path class="mp-lake" d="${b.lakes}"/><path class="mp-riv" d="${b.rivers}" stroke-width="${1.6*k}"/>
+    ${seas}${labs}${routes}${marks}`;
+  $("#mpScale").textContent = `${Math.round(v.w/b.k*111*b.c)} km de largura`;
+}
+/* Painel do lugar */
+function mpSelect(id){
+  MP.sel=id; mpDraw(); const l=mpPlace(id), c=MP.cur, D=MP.data;
+  const here = c.kind==="j" ? c.obj.etapas.map((e,i)=>({e,i})).filter(x=>x.e.p===id) : [];
+  const outras = D.jornadas.filter(j=>j.etapas.some(e=>e.p===id) && !(c.kind==="j"&&j.id===c.id));
+  const perfis = D.perfis.filter(f=>f.lugares.includes(id)||f.jornadas.some(jid=>D.jornadas.find(j=>j.id===jid)?.etapas.some(e=>e.p===id)));
+  document.querySelectorAll("#mpvSide .mp-tl li").forEach(li=>li.classList.toggle("hit", here.some(h=>h.i===+li.dataset.mpst)));
+  const p=$("#mpPanel"); p.hidden=false;
+  p.innerHTML=`<div class="mp-ph"><div><b>${esc(l.n)}</b><small>Hoje: ${esc(l.m)}</small></div>
+      <button type="button" class="mp-ic" data-mpfavl="${id}" aria-label="Favoritar">${mpIsFav("l:"+id)?"★":"☆"}</button><button type="button" class="mp-ic" data-mpclose aria-label="Fechar">✕</button></div>
+    <p class="mp-cert ${l.c}">${l.c==="certo"?"Local identificado":l.c==="provável"?"Localização provável":"Localização incerta"}${l.c!=="certo"?" · marcador tracejado no mapa":""}</p>
+    <p>${esc(l.d)}</p>
+    ${here.length?`<h4>Nesta jornada</h4><ul class="mp-ev">${here.map(({e,i})=>`<li><span class="mp-n sm" style="--c:${c.obj.cor}">${i+1}</span> ${esc(e.t)} ${mpBadge(e.f)} ${mpRefBtn(e.ref)}${e.nota?`<small>${esc(e.nota)}</small>`:""}</li>`).join("")}</ul>`:""}
+    ${l.r.length?`<h4>Passagens</h4><div class="mp-refs">${l.r.map(mpRefBtn).join("")}</div>`:""}
+    ${outras.length?`<h4>Também em</h4><div class="mp-chipsl">${outras.map(j=>`<button type="button" class="chip" data-mpopenj="${j.id}"><i style="background:${j.cor}"></i>${esc(j.nome)}</button>`).join("")}</div>`:""}
+    ${perfis.length?`<h4>Personagens</h4><div class="mp-chipsl">${perfis.map(f=>`<button type="button" class="chip" data-mpprof="${f.id}">${esc(f.nome)}</button>`).join("")}</div>`:""}
+    <div class="row-actions"><button type="button" class="btn btn-sm" data-mpnote="${id}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button></div>`;
+}
+/* Interações do visualizador */
+$("#mpViewer").addEventListener("click",e=>{
+  const t=e.target;
+  if(t.closest("[data-mpback]")) return MP.fromProfile ? mpOpenProfile(MP.fromProfile) : renderMapas();
+  const r=t.closest("[data-mpref]"); if(r){ const p=mpRefParse(r.dataset.mpref); if(p) openReader({ b:p.b, c:p.c, hi:p.v1, asView:false }); return; }
+  const s=t.closest("[data-mpsel]"); if(s) return mpSelect(s.dataset.mpsel);
+  const st=t.closest("[data-mpst]"); if(st && !t.closest("button")){ mpStop(); return mpGoStage(+st.dataset.mpst); }
+  if(t.closest("[data-mpclose]")){ MP.sel=null; $("#mpPanel").hidden=true; document.querySelectorAll("#mpvSide .mp-tl li.hit").forEach(li=>li.classList.remove("hit")); return mpDraw(); }
+  const fl=t.closest("[data-mpfavl]"); if(fl){ mpToggleFav("l:"+fl.dataset.mpfavl); fl.textContent=mpIsFav("l:"+fl.dataset.mpfavl)?"★":"☆"; return; }
+  const oj=t.closest("[data-mpopenj]"); if(oj) return mpOpen("j",oj.dataset.mpopenj);
+  const pf=t.closest("[data-mpprof]"); if(pf) return mpOpenProfile(pf.dataset.mpprof);
+  const nt=t.closest("[data-mpnote]"); if(nt){ const l=mpPlace(nt.dataset.mpnote); return openNoteEditor({ type:"estudo", title:`Mapa: ${l.n}`, ref:l.r[0]||"", text:`${l.n} (hoje: ${l.m})\n${l.d}\n\nMinhas anotações:\n` }); }
+  const fj=t.closest("[data-mpj]"); if(fj){ const id=fj.dataset.mpj, c=MP.cur; if(id===c.id) return; const i=c.extra.indexOf(id); if(i>=0) c.extra.splice(i,1); else c.extra.push(id); mpRenderViewer(); return mpFit(); }
+  if(t.closest("#mpvFav")){ const k=$("#mpvFav").dataset.k; mpToggleFav(k); $("#mpvFav").textContent=mpIsFav(k)?"★":"☆"; return; }
+  if(t.closest("#mpvPlay")) return MP.play ? mpStop() : mpPlay();
+  if(t.closest("#mpvPrev")){ mpStop(); return mpGoStage(Math.max(0,MP.stage-1)); }
+  if(t.closest("#mpvNext")){ mpStop(); return mpGoStage(Math.min(MP.cur.etapas.length-1,MP.stage+1)); }
+  if(t.closest("#mpZin")) return mpZoom(0.6); if(t.closest("#mpZout")) return mpZoom(1.6); if(t.closest("#mpZfit")){ MP.stage=-1; return mpFit(); }
+  if(t.closest("#mpFull")) return mpFullscreen();
+});
+function mpZoom(f, cx, cy){ const v=MP.view; cx=cx??v.x+v.w/2; cy=cy??v.y+v.h/2; mpSetView({ x:cx-(cx-v.x)*f, y:cy-(cy-v.y)*f, w:v.w*f, h:v.h*f }); }
+function mpGoStage(i){
+  const c=MP.cur; if(c.kind!=="j" || i<0 || i>=c.etapas.length) return; MP.stage=i;
+  const ids=[c.etapas[i].p]; if(i>0) ids.push(c.etapas[i-1].p); mpFit(ids, 0.45, 90);
+  if(MP.play){ MP.sel=c.etapas[i].p; $("#mpPanel").hidden=true; mpDraw(); } else mpSelect(c.etapas[i].p);
+  const li=document.querySelector(`#mpvSide [data-mpst="${i}"]`); document.querySelectorAll("#mpvSide .mp-tl li.now").forEach(x=>x.classList.remove("now")); if(li){ li.classList.add("now"); li.scrollIntoView({ block:"nearest", behavior:"smooth" }); }
+  const e=c.etapas[i]; $("#mpStep").hidden=false; $("#mpStep").innerHTML=`<span class="mp-n" style="--c:${c.obj.cor}">${i+1}</span><div><b>${esc(mpPlace(e.p).n)}</b><small>${esc(e.t)} · ${esc(e.ref)}</small></div>`;
+}
+function mpPlay(){ const c=MP.cur; if(c.kind!=="j") return; let i = MP.stage>=0 && MP.stage<c.etapas.length-1 ? MP.stage+1 : 0;
+  $("#mpvPlay").innerHTML="❚❚ Pausar"; mpGoStage(i);
+  MP.play=setInterval(()=>{ i++; if(i>=c.etapas.length){ mpStop(); toast("Fim da jornada."); return; } mpGoStage(i); }, 3600); }
+function mpStop(){ if(MP.play){ clearInterval(MP.play); MP.play=null; } const b=$("#mpvPlay"); if(b) b.innerHTML="▶ Percorrer a jornada"; }
+function mpFullscreen(){ const el=$("#mpStage"); const on=document.fullscreenElement||el.classList.contains("mp-full");
+  if(on){ if(document.fullscreenElement) document.exitFullscreen?.(); el.classList.remove("mp-full"); document.body.classList.remove("mp-lock"); }
+  else if(el.requestFullscreen && !/iPhone|iPad/.test(navigator.userAgent)) el.requestFullscreen().catch(()=>{ el.classList.add("mp-full"); document.body.classList.add("mp-lock"); });
+  else { el.classList.add("mp-full"); document.body.classList.add("mp-lock"); }
+  setTimeout(()=>{ mpDraw(); },120); }
+document.addEventListener("fullscreenchange",()=>setTimeout(mpDraw,120));
+addEventListener("resize",()=>{ if(!$("#mpViewer").hidden) mpDraw(); });
+/* Arrastar, roda do mouse e pinça */
+(function(){
+  const svg=$("#mpSvg"); const pts=new Map(); let start=null;
+  const toMap=(cx,cy)=>{ const r=svg.getBoundingClientRect(), v=MP.view; return [v.x+(cx-r.left)/r.width*v.w, v.y+(cy-r.top)/r.height*v.h]; };
+  svg.addEventListener("pointerdown",e=>{ svg.setPointerCapture?.(e.pointerId); pts.set(e.pointerId,[e.clientX,e.clientY]); start={ v:{...MP.view}, pts:new Map(pts), moved:false }; });
+  svg.addEventListener("pointermove",e=>{ if(!pts.has(e.pointerId)||!start) return; pts.set(e.pointerId,[e.clientX,e.clientY]); const r=svg.getBoundingClientRect(), v0=start.v;
+    if(pts.size===1){ const [x0,y0]=start.pts.get(e.pointerId)||[e.clientX,e.clientY]; const dx=(e.clientX-x0)/r.width*v0.w, dy=(e.clientY-y0)/r.height*v0.h; if(Math.abs(e.clientX-x0)+Math.abs(e.clientY-y0)>4) start.moved=true;
+      MP.view={ ...v0, x:v0.x-dx, y:v0.y-dy }; mpDraw(); }
+    else if(pts.size===2 && start.pts.size===2){ const [a,b]=[...pts.values()], [a0,b0]=[...start.pts.values()]; const d=Math.hypot(a[0]-b[0],a[1]-b[1]), d0=Math.hypot(a0[0]-b0[0],a0[1]-b0[1])||1;
+      const f=d0/d; const mx=(a0[0]+b0[0])/2, my=(a0[1]+b0[1])/2; const cx=v0.x+(mx-r.left)/r.width*v0.w, cy=v0.y+(my-r.top)/r.height*v0.h; start.moved=true;
+      MP.view={ x:cx-(cx-v0.x)*f, y:cy-(cy-v0.y)*f, w:Math.max(6,v0.w*f), h:v0.h*f }; mpDraw(); } });
+  const up=e=>{ pts.delete(e.pointerId); if(!pts.size){ if(start && !start.moved){ const g=document.elementFromPoint(e.clientX,e.clientY)?.closest("[data-mpsel]"); if(g) mpSelect(g.dataset.mpsel); } start=null; } else start={ v:{...MP.view}, pts:new Map(pts), moved:true }; };
+  svg.addEventListener("pointerup",up); svg.addEventListener("pointercancel",up);
+  svg.addEventListener("wheel",e=>{ e.preventDefault(); const [cx,cy]=toMap(e.clientX,e.clientY); mpZoom(e.deltaY>0?1.18:0.85, cx, cy); },{ passive:false });
+})();
+/* ---------- Perfis ---------- */
+function mpOpenProfile(id){
+  const f=MP.data.perfis.find(x=>x.id===id); if(!f) return; mpStop(); MP.fromProfile=null;
+  $("#mpHome").hidden=true; $("#mpViewer").hidden=true; const box=$("#mpProfile"); box.hidden=false; window.scrollTo({top:0});
+  box.innerHTML=`<button type="button" class="btn btn-sm" data-mppback>‹ Apóstolos e missionários</button>
+    <div class="mp-prof-h" style="--c:${f.cor}"><span class="mp-sw round big" style="--c:${f.cor}">${esc(f.nome.charAt(0))}</span>
+      <div><h2>${esc(f.nome)}</h2><p class="muted">${esc(f.papel)}</p></div><button type="button" class="mp-ic" data-mpfavp="${f.id}">${mpIsFav("p:"+f.id)?"★":"☆"}</button></div>
+    <p>${esc(f.resumo)}</p>
+    ${f.jornadas.length?`<div class="mp-chipsl" style="margin:10px 0">${f.jornadas.map(jid=>{ const j=MP.data.jornadas.find(x=>x.id===jid); return `<button type="button" class="btn btn-sm btn-primary" data-mpopenj2="${jid}">🗺️ ${esc(j.nome)}</button>`; }).join("")}</div>`:""}
+    ${f.lugares.length?`<div class="mp-chipsl">${f.lugares.map(l=>`<button type="button" class="chip" data-mpplace2="${l}">📍 ${esc(mpPlace(l).n)}</button>`).join("")}</div>`:""}
+    ${f.secoes.map(s=>`<section class="mp-sec"><h3>${esc(s.t)}</h3><ul>${s.itens.map(i=>`<li>${mpBadge(i.f)} ${esc(i.x)} ${mpRefBtn(i.ref)}</li>`).join("")}</ul></section>`).join("")}
+    <p class="mp-legenda">${Object.keys(MP_FONTE).map(k=>`${mpBadge(k)} ${esc(MP.data.fontes[k])}`).join(" · ")}</p>`;
+}
+$("#mpProfile").addEventListener("click",e=>{ const t=e.target;
+  if(t.closest("[data-mppback]")){ MP.tab="pessoas"; return renderMapas(); }
+  const r=t.closest("[data-mpref]"); if(r){ const p=mpRefParse(r.dataset.mpref); if(p) openReader({ b:p.b, c:p.c, hi:p.v1, asView:false }); return; }
+  const j=t.closest("[data-mpopenj2]"); if(j){ const pid=$("#mpProfile [data-mpfavp]")?.dataset.mpfavp; mpOpen("j",j.dataset.mpopenj2); MP.fromProfile=pid; return; }
+  const l=t.closest("[data-mpplace2]"); if(l){ const pid=$("#mpProfile [data-mpfavp]")?.dataset.mpfavp; mpOpen("l",l.dataset.mpplace2); MP.fromProfile=pid; return; }
+  const fv=t.closest("[data-mpfavp]"); if(fv){ mpToggleFav("p:"+fv.dataset.mpfavp); fv.textContent=mpIsFav("p:"+fv.dataset.mpfavp)?"★":"☆"; }
+});
+
+function mpPendencias(){ const D=MP.data; if(!D) return; $("#mpPend").innerHTML=`<p>${Object.keys(MP_FONTE).map(k=>`${mpBadge(k)} ${esc(D.fontes[k])}`).join(" · ")}</p>
+  <p class="muted">${esc(D.creditos)}</p><h4>Pendentes de pesquisa ou autorização</h4><ul>${D.pendencias.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`; }
+/* =====================================================================
    CREDOS E CATECISMOS
    ---------------------------------------------------------------------
    Textos em domínio público em /docs (fonte: projeto Creeds.json,
@@ -5040,8 +5384,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.8.0";
+const APP_VERSION = "3.9.0";
 const CHANGELOG = [
+  { v:"3.9.0", d:"novembro de 2026", items:["Nova seção Mapas e Jornadas Bíblicas em Estudos: atlas do AT e NT, viagens de Paulo e dos apóstolos, perfis com fontes (Bíblia, história, tradição, hipótese), mapa interativo com zoom, tela cheia, linha do tempo e “Percorrer a jornada”."] },
   { v:"3.8.0", d:"novembro de 2026", items:["App instalado no computador agora avisa quando há versão nova, com o botão “Atualizar agora”, e procura atualizações sozinho a cada 15 minutos."] },
   { v:"3.7.9", d:"novembro de 2026", items:["Credos e catecismos: se o servidor principal falhar, o documento é buscado numa segunda fonte."] },
   { v:"3.7.8", d:"novembro de 2026", items:["Credos e catecismos: abertura mais robusta no computador (busca sempre a versão atual dos documentos e mostra aviso claro se algo falhar)."] },
@@ -5846,8 +6191,8 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","catecismos","notas","config","compartilhe","meudevocional"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","mapas","catecismos","notas","config","compartilhe","meudevocional"];
+const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", mapas:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
@@ -5864,7 +6209,7 @@ document.addEventListener("click",e=>{
   const go=()=>{ const t=document.getElementById(a.dataset.cfg); if(!t) return; t.scrollIntoView({ behavior:"smooth", block:"start" }); t.classList.add("cfg-flash"); setTimeout(()=>t.classList.remove("cfg-flash"),1400); };
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
-const VIEW_TITLE={ inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
+const VIEW_TITLE={ mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
   estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
@@ -5891,6 +6236,7 @@ function showView(name, {push=true}={}){
   if(name==="meudevocional") renderMeuDevo();
   if(typeof paintMini==="function") setTimeout(paintMini,50);
   if(name==="pensadores") renderPensadores();
+  if(name==="mapas") renderMapas().then(mpPendencias);
   if(name==="biblia") openReader({ hi:null, asView:true });
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }
@@ -5904,6 +6250,7 @@ function goBack(){
   if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
   if(currentView==="catecismos" && !$("#catDoc").hidden){ catBackToList(); return; }
   if(currentView==="artigos" && !$("#artReader").hidden){ artBackToList(); return; }
+  if(currentView==="mapas" && $("#mpHome").hidden){ if(document.querySelector("#mpStage.mp-full")){ mpFullscreen(); return; } if(!$("#mpViewer").hidden && MP.fromProfile){ mpOpenProfile(MP.fromProfile); return; } renderMapas(); return; }
   if(currentView==="config" && $("#cfgTop") && !$("#cfgTop").hidden){ cfgToIndex(); return; }
   if(navStack.length){ try{ history.back(); return; }catch(e){} const prev=navStack.pop(); showView(prev,{push:false}); try{ history.replaceState(null,"","#"+prev); }catch(e){} return; }
   showView("inicio");
