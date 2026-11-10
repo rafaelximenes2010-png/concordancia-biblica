@@ -1249,6 +1249,21 @@ body.has-mini{padding-bottom:84px}
 .mp-info small{font-size:12px;color:#aeb9cf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mp-skip{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;font-size:12px;font-weight:700;cursor:pointer}
 .mp-x{flex:none;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#f4ead2;cursor:pointer}
+/* ---------- Ouvir (Spotify) ---------- */
+.sp-now{position:sticky;top:6px;z-index:5;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:8px;margin-bottom:14px}
+.sp-now-h{display:flex;align-items:center;gap:8px;margin:0 2px 6px;font-size:13px}
+.sp-now-h b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-frame{width:100%;border:0;border-radius:12px;display:block;background:var(--surface-2)}
+.sp-g{margin:16px 0 6px;font-size:15px}
+.sp-it{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:8px}
+.sp-it .sp-ic{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.sp-it .sp-t{flex:1;min-width:0}.sp-it .sp-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-it .sp-t small{display:block;color:var(--ink-2);font-size:12px}
+.sp-it.on{border-color:var(--accent)}
+.sp-x{background:none;border:0;color:var(--ink-2);font-size:18px;padding:4px 6px;cursor:pointer}
+.sp-add{margin-top:14px}.sp-row{display:flex;gap:8px}.sp-row input{flex:1;min-width:0}
+.sp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sp-chips a{font-size:13px;padding:6px 11px;border:1px solid var(--border);border-radius:999px;color:var(--ink);text-decoration:none;background:var(--surface)}
 /* ---------- Mapas e Jornadas ---------- */
 .mp-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
 .mp-tabs button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:8px 14px;font:600 14px var(--font-ui,system-ui);cursor:pointer}
@@ -1830,6 +1845,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-lamp"/></svg>
@@ -1853,6 +1869,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div class="view-head">
     <svg class="ill" aria-hidden="true"><use href="#ill-film"/></svg>
@@ -1871,6 +1888,29 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
   <p class="bp-note" style="margin-top:14px"><strong>Nota para estudo reformado:</strong> o BibleProject é muito usado pelo panorama literário que oferece. Alguns autores reformados criticam a forma como certos vídeos tratam doutrinas como a expiação, em especial a propiciação. Vale assistir com a Escritura aberta e comparar com os comentários do app.</p>
 </section>
 
+<!-- ===================== OUVIR (SPOTIFY) ===================== -->
+<section class="view narrow" id="view-ouvir" hidden aria-labelledby="spTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
+  </nav>
+  <div class="view-head"><div><p class="eyebrow">Estudos · música e podcasts</p><h2 id="spTitle">Ouvir</h2>
+    <p>Hinos, salmos cantados, podcasts e pregações do Spotify, tocando aqui dentro do SOLA.</p></div></div>
+  <div id="spNow" class="sp-now" hidden></div>
+  <div id="spList"></div>
+  <div class="card sp-add">
+    <b>Adicionar do Spotify</b>
+    <p class="muted" style="margin:4px 0 8px">No Spotify, toque em <b>⋯ › Compartilhar › Copiar link</b> de uma playlist, álbum, podcast ou episódio e cole aqui.</p>
+    <div class="sp-row"><input id="spUrl" type="url" inputmode="url" placeholder="https://open.spotify.com/playlist/…" autocomplete="off"><button type="button" class="btn btn-primary" id="spAddBtn">Adicionar</button></div>
+  </div>
+  <div id="spSearch"></div>
+  <p class="bp-note" style="margin-top:14px"><strong>Como funciona:</strong> quem está conectado ao Spotify neste navegador ouve as faixas inteiras, mesmo na conta grátis; sem conexão, o Spotify toca prévias de 30 segundos. No carro ou com a tela bloqueada, use <b>Abrir no Spotify</b>. O SOLA não é afiliado ao Spotify.</p>
+</section>
+
 <!-- ===================== MAPAS E JORNADAS ===================== -->
 <section class="view" id="view-mapas" hidden aria-labelledby="mpTitle">
   <nav class="sub-tabs" aria-label="Estudos">
@@ -1879,6 +1919,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div id="mpHome">
     <div class="view-head"><div><p class="eyebrow">Estudos · geografia bíblica</p><h2 id="mpTitle">Mapas e Jornadas Bíblicas</h2>
@@ -1916,6 +1957,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · cosmovisão reformada</p><h2 id="penTitle">Pensadores</h2>
     <p>Filósofos, estudiosos da psicologia e da alma e pensadores da política e da sociedade, segundo a fé reformada. Toque no nome para saber quem é.</p></div></div>
@@ -1933,6 +1975,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div id="artReader" hidden></div>
   <div id="artHome">
@@ -4884,6 +4927,69 @@ $("#artReader").addEventListener("click",e=>{
 $("#artForm").addEventListener("submit",e=>{ e.preventDefault(); const q=$("#artQ").value.trim(); if(!q){ toast("Digite um tema ou uma referência."); return; }
   window.open(artSearch(q,ART_SITES_PT),"_blank","noopener") || (location.href=artSearch(q,ART_SITES_PT)); });
 
+/* ---------- Ouvir (Spotify) ----------
+   Tocador oficial do Spotify (iFrame API) dentro do SOLA. Lista curada em /ouvir/spotify.json
+   + itens que o usuário cola (salvos neste aparelho). Um tocador por vez: se o Spotify toca,
+   o áudio do SOLA pausa, e vice-versa. */
+const SP={ data:null, cur:null, ctl:null, api:null, apiP:null };
+function spParse(u){ u=String(u||"").trim();
+  let m=u.match(/^spotify:(playlist|album|track|show|episode|artist):([A-Za-z0-9]{10,40})$/); if(m) return { type:m[1], id:m[2] };
+  m=u.match(/open\.spotify\.com\/(?:intl-[a-z-]+\/)?(?:embed\/)?(playlist|album|track|show|episode|artist)\/([A-Za-z0-9]{10,40})/); return m?{ type:m[1], id:m[2] }:null; }
+const SP_TIPO={ playlist:"Playlist", album:"Álbum", track:"Faixa", show:"Podcast", episode:"Episódio", artist:"Artista" };
+function spUser(){ return store.get("spUser",[]); }
+async function spLoad(){ if(!SP.data){ try{ SP.data=await fetch("ouvir/spotify.json?v="+APP_VERSION).then(r=>r.json()); }catch(e){ SP.data={ grupos:[], buscas:[] }; } } return SP.data; }
+function spItemHtml(it,mine){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id;
+  return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic"><svg class="icon"><use href="#i-${p.type==="show"||p.type==="episode"?"mic":"music"}"/></svg></span>
+  <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
+  <button type="button" class="btn btn-sm btn-primary" data-spplay="${esc(k)}" data-spnome="${esc(it.nome||SP_TIPO[p.type])}">▶ Tocar</button>${mine?`<button type="button" class="sp-x" data-spdel="${esc(it.url)}" aria-label="Remover">×</button>`:""}</div>`; }
+async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h="";
+  if(u.length) h+=`<h3 class="sp-g">Minhas listas</h3>`+u.map(it=>spItemHtml(it,true)).join("");
+  (D.grupos||[]).forEach(g=>{ const it=(g.itens||[]).map(x=>spItemHtml(x,false)).join(""); if(it) h+=`<h3 class="sp-g">${esc(g.titulo)}</h3>`+it; });
+  if(!h) h=`<div class="notice info">Ainda não há listas aqui. Cole abaixo o link de uma playlist ou podcast do Spotify, ou comece por uma das buscas sugeridas.</div>`;
+  $("#spList").innerHTML=h;
+  $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g">Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
+  spPaintNow(); }
+function spPaintNow(){ const box=$("#spNow"); if(!SP.cur){ box.hidden=true; return; } box.hidden=false;
+  if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div>`; }
+  $("#spNowT").textContent=SP.cur.nome; $("#spOpen").href=`https://open.spotify.com/${SP.cur.type}/${SP.cur.id}`; }
+function spApi(){ if(SP.api) return Promise.resolve(SP.api); if(SP.apiP) return SP.apiP;
+  SP.apiP=new Promise((res,rej)=>{ window.onSpotifyIframeApiReady=api=>{ SP.api=api; res(api); };
+    const s=document.createElement("script"); s.src="https://open.spotify.com/embed/iframe-api/v1"; s.async=true; s.onerror=()=>{ SP.apiP=null; rej(new Error("api")); }; document.head.appendChild(s);
+    setTimeout(()=>{ if(!SP.api){ SP.apiP=null; rej(new Error("timeout")); } },8000); });
+  return SP.apiP; }
+function spHeight(t){ return t==="track"||t==="episode"?152:380; }
+async function spPlay(k,nome){ const [type,id]=k.split(":"); SP.cur={ k, type, id, nome }; spPaintNow();
+  document.querySelectorAll(".sp-it").forEach(c=>c.classList.toggle("on",!!c.querySelector(`[data-spplay="${k}"]`)));
+  try{ DA.el && DA.el.pause(); }catch(e){} try{ stopSpeak(); }catch(e){}
+  const uri=`spotify:${type}:${id}`; const host=$("#spFrameHost");
+  try{ const api=await spApi();
+    if(SP.ctl){ SP.ctl.loadUri(uri); SP.ctl.play(); }
+    else { host.innerHTML='<div id="spEmbed"></div>';
+      api.createController($("#spEmbed"),{ uri, width:"100%", height:spHeight(type) },c=>{ SP.ctl=c;
+        c.addListener("ready",()=>{ try{ c.play(); }catch(e){} });
+        c.addListener("playback_update",e=>{ if(e && e.data && !e.data.isPaused){ try{ DA.el && !DA.el.paused && DA.el.pause(); }catch(x){} } }); }); }
+    const f=host.querySelector("iframe"); if(f){ f.classList.add("sp-frame"); f.height=spHeight(type); f.setAttribute("allow","autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"); }
+  }catch(e){ SP.ctl=null;   // sem a API: tocador simples
+    host.innerHTML=`<iframe class="sp-frame" src="https://open.spotify.com/embed/${type}/${id}?utm_source=sola" height="${spHeight(type)}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" title="Spotify: ${esc(nome)}"></iframe>`; }
+  $("#spNow").scrollIntoView({ behavior:"smooth", block:"start" }); }
+function spPauseAll(){ try{ SP.ctl && SP.ctl.pause(); }catch(e){} }
+function spClose(){ spPauseAll(); try{ SP.ctl && SP.ctl.destroy(); }catch(e){} SP.ctl=null; SP.cur=null; $("#spNow").innerHTML=""; spPaintNow(); document.querySelectorAll(".sp-it.on").forEach(c=>c.classList.remove("on")); }
+// quando qualquer áudio do SOLA começa, o Spotify pausa
+document.addEventListener("play",e=>{ if(e.target && e.target.tagName==="AUDIO") spPauseAll(); },true);
+$("#view-ouvir").addEventListener("click",e=>{ const t=e.target;
+  const pb=t.closest("[data-spplay]"); if(pb) return spPlay(pb.dataset.spplay,pb.dataset.spnome);
+  const db=t.closest("[data-spdel]"); if(db){ store.set("spUser",spUser().filter(x=>x.url!==db.dataset.spdel)); renderOuvir(); toast("Removido."); return; }
+  if(t.closest("#spClose")) return spClose(); });
+function spAdd(){ const inp=$("#spUrl"); const v=inp.value.trim(); const p=spParse(v);
+  if(!p){ toast("Cole um link do Spotify (playlist, álbum, podcast, episódio ou faixa)."); return; }
+  const url=`https://open.spotify.com/${p.type}/${p.id}`; const u=spUser();
+  if(u.some(x=>x.url===url)){ toast("Já está na sua lista."); return; }
+  const nome=prompt("Nome para esta lista:",SP_TIPO[p.type]); if(nome===null) return;
+  u.unshift({ url, nome:(nome.trim()||SP_TIPO[p.type]).slice(0,60), desc:SP_TIPO[p.type] }); store.set("spUser",u.slice(0,40)); inp.value=""; renderOuvir();
+  spPlay(p.type+":"+p.id,u[0].nome); }
+$("#spAddBtn").addEventListener("click",spAdd);
+$("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); spAdd(); } });
+
 /* =====================================================================
    MAPAS E JORNADAS BÍBLICAS
    ---------------------------------------------------------------------
@@ -5389,9 +5495,10 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.9.2";
+const APP_VERSION = "3.10.0";
 const CHANGELOG = [
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
+  { v:"3.10.0", d:"novembro de 2026", items:["Nova seção Ouvir em Estudos: tocador do Spotify dentro do SOLA para hinos, salmos, podcasts e pregações. Cole o link de qualquer playlist ou podcast; o áudio do SOLA e o Spotify não tocam ao mesmo tempo."] },
   { v:"3.9.1", d:"novembro de 2026", items:["Mapas: ícone de mapa nos mapas temáticos e número de etapas nas jornadas."] },
   { v:"3.9.0", d:"novembro de 2026", items:["Nova seção Mapas e Jornadas Bíblicas em Estudos: atlas do AT e NT, viagens de Paulo e dos apóstolos, perfis com fontes (Bíblia, história, tradição, hipótese), mapa interativo com zoom, tela cheia, linha do tempo e “Percorrer a jornada”."] },
   { v:"3.8.0", d:"novembro de 2026", items:["App instalado no computador agora avisa quando há versão nova, com o botão “Atualizar agora”, e procura atualizações sozinho a cada 15 minutos."] },
@@ -6203,8 +6310,8 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","mapas","catecismos","notas","config","compartilhe","meudevocional"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", mapas:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","mapas","ouvir","catecismos","notas","config","compartilhe","meudevocional"];
+const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", mapas:"estudos", ouvir:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
@@ -6221,7 +6328,7 @@ document.addEventListener("click",e=>{
   const go=()=>{ const t=document.getElementById(a.dataset.cfg); if(!t) return; t.scrollIntoView({ behavior:"smooth", block:"start" }); t.classList.add("cfg-flash"); setTimeout(()=>t.classList.remove("cfg-flash"),1400); };
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
-const VIEW_TITLE={ mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
+const VIEW_TITLE={ ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
   estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
@@ -6249,6 +6356,7 @@ function showView(name, {push=true}={}){
   if(typeof paintMini==="function") setTimeout(paintMini,50);
   if(name==="pensadores") renderPensadores();
   if(name==="mapas") renderMapas().then(mpPendencias);
+  if(name==="ouvir") renderOuvir();
   if(name==="biblia") openReader({ hi:null, asView:true });
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }

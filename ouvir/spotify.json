@@ -1,0 +1,16 @@
+{
+  "nota": "Lista curada do SOLA. Para incluir: cole o link do Spotify em 'url' (playlist, álbum, podcast, episódio ou faixa).",
+  "grupos": [
+    { "titulo": "Hinos e salmos", "itens": [] },
+    { "titulo": "Podcasts e pregações", "itens": [] }
+  ],
+  "buscas": [
+    { "nome": "Hinos reformados", "q": "hinos reformados" },
+    { "nome": "Salmos cantados", "q": "salmos cantados" },
+    { "nome": "Hinário Novo Cântico", "q": "Novo Cântico hinos" },
+    { "nome": "Hinos instrumentais", "q": "hinos instrumentais piano" },
+    { "nome": "Ensino Fiel", "q": "Ensino Fiel" },
+    { "nome": "John Piper Responde", "q": "John Piper Responde" },
+    { "nome": "Devocional Promessas Preciosas", "q": "Devocional Diário Promessas Preciosas" }
+  ]
+}
