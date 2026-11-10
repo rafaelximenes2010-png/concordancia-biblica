@@ -1265,6 +1265,11 @@ body.has-mini{padding-bottom:84px}
 .sp-it.on{border-color:var(--accent)}
 .sp-x{background:none;border:0;color:var(--ink-2);font-size:18px;padding:4px 6px;cursor:pointer}
 .sp-login{font-size:12px;color:var(--ink-2);margin:6px 4px 0}.sp-login a{color:var(--accent);font-weight:600}
+.sp-lg{margin-bottom:14px;display:grid;gap:10px;border-color:#1DB954}
+.sp-lg-t{display:flex;gap:10px;align-items:center}.sp-lg-t small{display:block;color:var(--ink-2);font-size:13px}
+.sp-lg-ic svg{width:40px;height:40px;display:block}
+.sp-lg-btn{display:block;text-align:center;background:#1DB954;color:#000;font-weight:800;border-radius:999px;padding:13px 16px;text-decoration:none;font-size:16px}
+.sp-lg-ok{background:none;border:0;color:var(--ink-2);font-size:13px;cursor:pointer;justify-self:center}
 .sp-add{margin-top:14px}.sp-row{display:flex;gap:8px}.sp-row input{flex:1;min-width:0}
 .sp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .sp-chips a{font-size:13px;padding:6px 11px;border:1px solid var(--border);border-radius:999px;color:var(--ink);text-decoration:none;background:var(--surface)}
@@ -1924,6 +1929,12 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · música e podcasts</p><h2 id="spTitle">Ouvir</h2>
     <p>Hinos, salmos cantados, podcasts e pregações do Spotify, tocando aqui dentro do SOLA.</p></div></div>
+  <div id="spLogin" class="card sp-lg" hidden>
+    <div class="sp-lg-t"><span class="sp-lg-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M6.5 9.3c3.8-1.1 8-.8 11.2 1M7.2 12.4c3.1-.9 6.6-.6 9.3.9M7.8 15.3c2.5-.7 5.2-.5 7.4.7" stroke="#fff" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg></span>
+      <div><b>Ouça as músicas inteiras</b><small>Entre uma vez com sua conta do Spotify (pode ser a grátis).</small></div></div>
+    <a class="sp-lg-btn" id="spLoginBtn" href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">Entrar no Spotify</a>
+    <button type="button" class="sp-lg-ok" id="spLoginOk">Já entrei ✓</button>
+  </div>
   <div id="spNow" class="sp-now" hidden></div>
   <div id="spList"></div>
   <div class="card sp-add">
@@ -1932,7 +1943,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <div class="sp-row"><input id="spUrl" type="url" inputmode="url" placeholder="https://open.spotify.com/playlist/…" autocomplete="off"><button type="button" class="btn btn-primary" id="spAddBtn">Adicionar</button></div>
   </div>
   <div id="spSearch"></div>
-  <p class="bp-note" style="margin-top:14px"><strong>Como funciona:</strong> quem está conectado ao Spotify neste navegador ouve as faixas inteiras, mesmo na conta grátis; sem conexão, o Spotify toca prévias de 30 segundos. No carro ou com a tela bloqueada, use <b>Abrir no Spotify</b>. O SOLA não é afiliado ao Spotify.</p>
+  <p class="bp-note" style="margin-top:14px"><strong>Como funciona:</strong> quem está conectado ao Spotify neste navegador ouve as faixas inteiras, mesmo na conta grátis; sem conexão, o Spotify toca prévias de 30 segundos. No carro ou com a tela bloqueada, use <b>Abrir no Spotify</b>. <a href="#" id="spLoginAgain">Entrar no Spotify de novo</a>. O SOLA não é afiliado ao Spotify.</p>
 </section>
 
 <!-- ===================== MAPAS E JORNADAS ===================== -->
@@ -4968,7 +4979,7 @@ function spItemHtml(it,mine){ const p=spParse(it.url); if(!p) return ""; const k
   return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic"><svg class="icon"><use href="#i-${p.type==="show"||p.type==="episode"?"mic":"music"}"/></svg></span>
   <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
   <button type="button" class="btn btn-sm btn-primary" data-spplay="${esc(k)}" data-spnome="${esc(it.nome||SP_TIPO[p.type])}">▶ Tocar</button>${mine?`<button type="button" class="sp-x" data-spdel="${esc(it.url)}" aria-label="Remover">×</button>`:""}</div>`; }
-async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h="";
+async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""; $("#spLogin").hidden=!!store.get("spLogged",0);
   if(u.length) h+=`<h3 class="sp-g">Minhas listas</h3>`+u.map(it=>spItemHtml(it,true)).join("");
   (D.grupos||[]).forEach(g=>{ const it=(g.itens||[]).map(x=>spItemHtml(x,false)).join(""); if(it) h+=`<h3 class="sp-g">${esc(g.titulo)}</h3>`+it; });
   if(!h) h=`<div class="notice info">Ainda não há listas aqui. Cole abaixo o link de uma playlist ou podcast do Spotify, ou comece por uma das buscas sugeridas.</div>`;
@@ -4976,7 +4987,7 @@ async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""
   $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g">Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
   spPaintNow(); }
 function spPaintNow(){ const box=$("#spNow"); if(!SP.cur){ box.hidden=true; return; } box.hidden=false;
-  if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div><p class="sp-login">Tocando só 30 segundos? <a href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">Entre no Spotify</a> uma vez neste aparelho e volte: as faixas tocam inteiras.</p>`; }
+  if(!box.querySelector("#spFrameHost")){ box.innerHTML=`<div class="sp-now-h"><svg class="icon"><use href="#i-music"/></svg><b id="spNowT"></b><a class="btn btn-sm" id="spOpen" target="_blank" rel="noopener">Abrir no Spotify ↗</a><button type="button" class="sp-x" id="spClose" aria-label="Fechar tocador">×</button></div><div id="spFrameHost"></div><p class="sp-login">Só 30 segundos? Toque em <b>Entrar</b> dentro do tocador, ou <a href="https://accounts.spotify.com/login?continue=https%3A%2F%2Fopen.spotify.com%2F" target="_blank" rel="noopener">entre no Spotify</a>.</p>`; }
   $("#spNowT").textContent=SP.cur.nome; $("#spOpen").href=`https://open.spotify.com/${SP.cur.type}/${SP.cur.id}`; }
 function spApi(){ if(SP.api) return Promise.resolve(SP.api); if(SP.apiP) return SP.apiP;
   SP.apiP=new Promise((res,rej)=>{ window.onSpotifyIframeApiReady=api=>{ SP.api=api; res(api); };
@@ -5013,6 +5024,9 @@ function spAdd(){ const inp=$("#spUrl"); const v=inp.value.trim(); const p=spPar
   const nome=prompt("Nome para esta lista:",SP_TIPO[p.type]); if(nome===null) return;
   u.unshift({ url, nome:(nome.trim()||SP_TIPO[p.type]).slice(0,60), desc:SP_TIPO[p.type] }); store.set("spUser",u.slice(0,40)); inp.value=""; renderOuvir();
   spPlay(p.type+":"+p.id,u[0].nome); }
+$("#spLoginBtn").addEventListener("click",()=>{ store.set("spLoginAt",Date.now()); setTimeout(()=>{ $("#spLoginOk").textContent="Já entrei, voltar a ouvir ✓"; },800); });
+$("#spLoginOk").addEventListener("click",()=>{ store.set("spLogged",1); $("#spLogin").hidden=true; toast("Pronto! Toque em ▶ Tocar."); if(SP.cur){ const k=SP.cur.k,n=SP.cur.nome; spClose(); spPlay(k,n); } });
+$("#spLoginAgain").addEventListener("click",e=>{ e.preventDefault(); store.set("spLogged",0); $("#spLogin").hidden=false; window.scrollTo({top:0,behavior:"smooth"}); });
 $("#spAddBtn").addEventListener("click",spAdd);
 $("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); spAdd(); } });
 
@@ -5521,7 +5535,7 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.10.2";
+const APP_VERSION = "3.10.3";
 const CHANGELOG = [
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
   { v:"3.10.1", d:"novembro de 2026", items:["Artigos: cada tema ganhou uma figurinha com símbolo próprio.","Ouvir: pregações de Hernandes Dias Lopes e entrevistas (Seminário Martin Bucer, Consciência Cristã, Ensino Fiel)."] },
