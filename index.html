@@ -708,6 +708,7 @@ mark.hl{color:inherit}
 i.hl-dot{width:14px;height:14px;vertical-align:-2px;margin-right:4px;border-width:1px}
 .hl-pop,.sel-bar{position:fixed;z-index:1000;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:8px 10px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
 .hl-pop[hidden],.sel-bar[hidden]{display:none!important}
+.sel-bar{max-width:calc(100vw - 16px);flex-wrap:wrap;justify-content:center}
 .hl-pop-t{font-size:13px;color:var(--ink-2);margin-right:2px}
 .rd-verse .rd-tr,.v-tr{display:block;font-size:.88em;color:var(--ink-2);border-left:3px solid var(--gold);padding:2px 0 2px 8px;margin:4px 0 2px}
 .v-tr{margin:6px 0}
@@ -2235,7 +2236,8 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     </div>
     <div class="cd-body" id="cdBody"></div>
     <div class="cd-foot h-scroll" id="cdFoot">
-      <button type="button" class="btn btn-sm" data-cd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
+      <button type="button" class="btn btn-sm" data-cd="share"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Compartilhar comentário</button>
+      <button type="button" class="btn btn-sm" data-cd="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar versículo</button>
       <button type="button" class="btn btn-sm" data-cd="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
       <button type="button" class="btn btn-sm" data-cd="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
       <button type="button" class="btn btn-sm" data-cd="multi"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Marcar vários</button>
@@ -3328,8 +3330,8 @@ const Tr = {
         const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),25000);
         const r=await fetch(TR_PROXY,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, from, to }), signal:ctl.signal });
         clearTimeout(tm); const d=await r.json().catch(()=>({}));
-        if(r.ok && typeof d.text==="string" && d.text) out=d.text;
-      }catch(e){ out=null; }
+        if(r.ok && typeof d.text==="string" && d.text) out=d.text; else this.lastProxy=`${r.status}${d.error?" "+d.error:""}${d.message?" ("+d.message+")":""}`;
+      }catch(e){ out=null; this.lastProxy=e.name==="AbortError"?"tempo esgotado":(e.message||"sem conexão"); }
     }
     // 3) MyMemory (reserva), em pedaços de até ~450 caracteres
     if(!out){
@@ -3352,7 +3354,10 @@ const Tr = {
   }
 };
 /* Mostra a tradução dentro de um bloco; guarda o original para alternar */
+function openWa(txt){ try{ navigator.clipboard?.writeText(txt).catch(()=>{}); }catch(e){} if(IS_MOBILE) location.assign(waUrl(txt)); else window.open(waUrl(txt),"_blank","noopener"); }
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-trretry]"); if(!b) return; const box=b.closest(".tr-box"); if(!box) return; b.closest(".notice")?.remove(); const btn=box.parentElement?.querySelector("#cdTr")||null; box.dataset.state="en"; translateBlock(box, box._src||box.innerText, btn); });
 async function translateBlock(box, text, btn){
+  box._src = box._src || text;
   if(box.dataset.state==="pt"){ box.innerHTML=box._orig; box.dataset.state="en"; if(btn) btn.textContent="Traduzir para o português"; applyTextMarks(box); return; }
   box._orig = box._orig || box.innerHTML;
   if(btn){ btn.disabled=true; btn.textContent="Traduzindo…"; }
@@ -3361,7 +3366,7 @@ async function translateBlock(box, text, btn){
     box.innerHTML = `<p class="tr-tag">Tradução automática para o português · pode conter imprecisões</p>${comParas(pt)}`;
     box.dataset.state="pt"; box._pt=pt; if(btn) btn.textContent="Ver original em inglês"; applyTextMarks(box);
   }catch(e){
-    box.insertAdjacentHTML("afterbegin",`<p class="notice" style="font-size:13px">Não foi possível traduzir aqui ${e.message==="quota"?"(limite diário do tradutor gratuito atingido)":"(sem conexão ou serviço indisponível)"}. ${extA("Abrir no Google Tradutor", translateUrl(text))}${e.message==="quota"&&!trEmailParam()?` · <button type="button" class="link-btn" data-view="config">Aumentar o limite (10×) com seu e-mail</button>`:""}</p>`);
+    box.insertAdjacentHTML("afterbegin",`<p class="notice" style="font-size:13px">Não foi possível traduzir aqui ${e.message==="quota"?"(limite diário do tradutor gratuito atingido)":"(sem conexão ou serviço indisponível)"}.${Tr.lastProxy?` <small>Tradutor SOLA: ${esc(Tr.lastProxy)}.</small>`:""} <button type="button" class="link-btn" data-trretry>Tentar de novo</button> · ${extA("Abrir no Google Tradutor", translateUrl(text))}${e.message==="quota"&&!trEmailParam()?` · <button type="button" class="link-btn" data-view="config">Aumentar o limite (10×) com seu e-mail</button>`:""}</p>`);
     if(btn) btn.textContent="Traduzir para o português";
   }finally{ if(btn) btn.disabled=false; }
 }
@@ -5384,8 +5389,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.9.1";
+const APP_VERSION = "3.9.2";
 const CHANGELOG = [
+  { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
   { v:"3.9.1", d:"novembro de 2026", items:["Mapas: ícone de mapa nos mapas temáticos e número de etapas nas jornadas."] },
   { v:"3.9.0", d:"novembro de 2026", items:["Nova seção Mapas e Jornadas Bíblicas em Estudos: atlas do AT e NT, viagens de Paulo e dos apóstolos, perfis com fontes (Bíblia, história, tradição, hipótese), mapa interativo com zoom, tela cheia, linha do tempo e “Percorrer a jornada”."] },
   { v:"3.8.0", d:"novembro de 2026", items:["App instalado no computador agora avisa quando há versão nova, com o botão “Atualizar agora”, e procura atualizações sozinho a cada 15 minutos."] },
@@ -5558,12 +5564,16 @@ function applyTextMarks(box){
 }
 const selBar=$("#selBar"); let selInfo=null, selTimer=null;
 selBar.innerHTML = HL_COLORS.map(([c,n])=>`<button type="button" class="hl-dot hl-${c}" data-sc="${c}" aria-label="Grifar em ${n}" title="${n}"></button>`).join("")
-  + `<button type="button" class="btn btn-sm" data-sc="copy">Copiar</button>`;
+  + `<button type="button" class="btn btn-sm" data-sc="copy">Copiar</button><button type="button" class="btn btn-sm" data-sc="share">Compartilhar</button><button type="button" class="btn btn-sm" data-sc="note">Anotar</button>`;
 selBar.addEventListener("pointerdown",e=>e.preventDefault());   // mantém a seleção
 selBar.addEventListener("click",e=>{
   const b=e.target.closest("[data-sc]"); if(!b || !selInfo) return;
   const { box, text } = selInfo;
+  const [bk0,c0,v0]=(box.dataset.ref||"..").split("."); const refTxt = bk0&&BOOK[bk0] ? refLabel(bk0,+c0,+v0) : "";
+  const shareTxt = `📖 *SOLA | Bíblia & Teologia*\n\n*${refTxt}* — ${box.dataset.author||"Comentário"}\n\n“${text.trim()}”\n\n${APP_URL}\n*SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`;
   if(b.dataset.sc==="copy"){ navigator.clipboard?.writeText(text).then(()=>toast("Trecho copiado.")).catch(()=>{}); }
+  else if(b.dataset.sc==="share"){ openWa(shareTxt); }
+  else if(b.dataset.sc==="note"){ const dlg=box.closest("dialog"); try{ if(dlg && dlg.id==="comDrawer") closeComDrawer(); }catch(e){} openNoteEditor({ type:"estudo", title:`${refTxt} — ${box.dataset.author||"Comentário"}`, ref:refTxt, text:`“${text.trim()}”\n\n` }); }
   else {
     const [bk,c,v]=box.dataset.ref.split(".");
     TextMarks.add({ ref:box.dataset.ref, b:bk, c:+c, v:+v, author:box.dataset.author||"Comentário", text, color:b.dataset.sc, lang: box.dataset.state==="pt"||box._lang==="pt" ? "pt":"en" });
@@ -5580,6 +5590,7 @@ document.addEventListener("selectionchange",()=>{
     const box=elx?.closest(".tr-box[data-ref], .card-com[data-ref]"); const text=r.toString().trim();
     if(!box || text.length<3 || elx.closest(".muted,.hint,.tr-tag")){ selBar.hidden=true; selInfo=null; return; }
     selInfo={ box, text: r.toString() };
+    const host=box.closest("dialog[open]")||document.body; if(selBar.parentElement!==host) host.appendChild(selBar);   // acima do painel do comentário
     const rect=r.getBoundingClientRect(); selBar.hidden=false;
     const w=selBar.offsetWidth, h=selBar.offsetHeight;
     selBar.style.left=Math.max(8,Math.min(innerWidth-w-8, rect.left+rect.width/2-w/2))+"px";
@@ -6384,6 +6395,10 @@ drw.addEventListener("click",e=>{ if(e.target===drw) closeComDrawer(); });      
 drw.addEventListener("cancel",e=>{ e.preventDefault(); closeComDrawer(); });
 $("#cdFoot").addEventListener("click",e=>{ const b=e.target.closest("[data-cd]"); if(!b) return; const v=Drawer.v;
   if(b.dataset.cd==="hl") openHlPop(b,[`${v.b}.${v.c}.${v.v}`]);
+  if(b.dataset.cd==="share"){ const box=$("#cdText"); if(!box){ toast("Escolha um comentário clássico para compartilhar."); return; }
+    const txt=(box.dataset.state==="pt"&&box._pt) ? box._pt : box.innerText.replace(/^Tradução automática.*\n/,"");
+    const corpo = txt.length>3500 ? txt.slice(0,3500).replace(/\s+\S*$/,"")+"…" : txt;
+    openWa(`📖 *SOLA | Bíblia & Teologia*\n_Comentário bíblico_\n\n*${refLabel(v.b,v.c,v.v)}* — ${box.dataset.author}\n\n${corpo.trim()}\n\n━━━━━━━━━━\nLeia o comentário completo no app: ${APP_URL}\n*SOLA | Bíblia & Teologia — A Palavra no centro de tudo.*`); }
   if(b.dataset.cd==="copy") copyVerse({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) });
   if(b.dataset.cd==="note") { closeComDrawer(); startNote({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) }); }
   if(b.dataset.cd==="all"){ closeComDrawer(); if(el.dlg.open) closeReader(); showView("busca"); setFocus({ ...v, t:v.t||store.get("version",DEFAULT_VERSION) }); selectTab("com"); openStudyOnMobile(); }
