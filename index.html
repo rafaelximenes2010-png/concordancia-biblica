@@ -1273,6 +1273,13 @@ body.has-mini{padding-bottom:84px}
 .sp-lg-btn{display:block;text-align:center;background:#1DB954;color:#000;font-weight:800;border-radius:999px;padding:13px 16px;text-decoration:none;font-size:16px}
 .sp-app{margin:10px 0 0}
 .sp-lg-ok{background:none;border:0;color:var(--ink-2);font-size:13px;cursor:pointer;justify-self:center}
+.sp-full{font-size:11px;font-weight:700;color:#fff;background:#1f8a4c;border-radius:999px;padding:2px 8px;margin-left:4px}
+.sp-hinos{padding:8px 8px 10px}.sp-hl{list-style:none;margin:6px 0 0;padding:0}
+.sp-h{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--border);padding:9px 6px;text-align:left;color:var(--ink);cursor:pointer;font:inherit}
+.sp-h .sp-hn{width:22px;text-align:center;color:var(--ink-3);font-size:13px;flex:none}.sp-h .sp-ht{flex:1;min-width:0;display:flex;flex-direction:column}
+.sp-h .sp-ht small{color:var(--ink-2);font-size:12px}.sp-h .icon{color:var(--ink-3);fill:currentColor;stroke:none;width:16px;height:16px}
+.sp-h.on{color:var(--accent)}.sp-h.on b{color:var(--accent)}.sp-h.on .icon{color:var(--accent)}
+.sp-hnote{font-size:12px;margin:8px 6px 0}
 .sp-add{margin-top:14px}.sp-row{display:flex;gap:8px}.sp-row input{flex:1;min-width:0}
 .sp-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .sp-chips a{font-size:13px;padding:6px 11px;border:1px solid var(--border);border-radius:999px;color:var(--ink);text-decoration:none;background:var(--surface)}
@@ -1516,6 +1523,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
   <symbol id="t-vida" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/><path d="M12 15v-4M12 11c0-2 1.5-3 3-3 0 2-1.5 3-3 3zM12 12c0-1.6-1.2-2.4-2.4-2.4 0 1.6 1.2 2.4 2.4 2.4z"/></symbol>
   <symbol id="t-conselhos" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M12 13s-3-1.7-3-3.6a1.5 1.5 0 0 1 3-.5 1.5 1.5 0 0 1 3 .5c0 1.9-3 3.6-3 3.6z"/></symbol>
   <symbol id="t-natal" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/><path d="M12 20v2"/></symbol>
+  <symbol id="g-orgao" viewBox="0 0 24 24"><path d="M3 21V11M7 21V7M11 21V4M15 21V7M19 21V11"/><path d="M2 21h20"/></symbol>
   <symbol id="g-louvor" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/></symbol>
   <symbol id="g-pregacao" viewBox="0 0 24 24"><path d="M3 5c3-1 6-1 9 1 3-2 6-2 9-1v7c-3-1-6-1-9 1-3-2-6-2-9-1z"/><path d="M12 6v7M12 13v6M8 21h8"/></symbol>
   <symbol id="g-entrevista" viewBox="0 0 24 24"><path d="M3 5h11v8H7l-4 3z"/><path d="M10 16h7l4 3v-9h-4"/></symbol>
@@ -1935,7 +1943,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · música e podcasts</p><h2 id="spTitle">Ouvir</h2>
-    <p>Hinos, salmos cantados, podcasts e pregações do Spotify, tocando aqui dentro do SOLA.</p></div></div>
+    <p>Hinos que tocam inteiros no SOLA, mais louvor, pregações e entrevistas do Spotify.</p></div></div>
   <div id="spLogin" class="card sp-lg" hidden>
     <div class="sp-lg-t"><span class="sp-lg-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#1DB954"/><path d="M6.5 9.3c3.8-1.1 8-.8 11.2 1M7.2 12.4c3.1-.9 6.6-.6 9.3.9M7.8 15.3c2.5-.7 5.2-.5 7.4.7" stroke="#fff" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg></span>
       <div><b>Ouça as músicas inteiras</b><small>Entre uma vez com sua conta do Spotify (pode ser a grátis). Na tela do Spotify, toque em <b>Continuar com a Apple</b>: o iPhone confirma com Face ID, sem digitar senha.</small></div></div>
@@ -4991,13 +4999,20 @@ function spItemHtml(it,mine,g){ const p=spParse(it.url); if(!p) return ""; const
   return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic" style="--gc:${co}"><svg class="icon"><use href="#${ic}"/></svg></span>
   <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
   <button type="button" class="btn btn-sm btn-primary" data-spplay="${esc(k)}" data-spnome="${esc(it.nome||SP_TIPO[p.type])}">▶ Tocar</button>${mine?`<button type="button" class="sp-x" data-spdel="${esc(it.url)}" aria-label="Remover">×</button>`:""}</div>`; }
+const SP_HINOS = [{"id": "castelo-forte", "t": "Castelo Forte", "s": "Ein feste Burg · Lutero"}, {"id": "salmo-42", "t": "Salmo 42 de Genebra", "s": "Saltério de Genebra · Freu dich sehr"}, {"id": "so-a-deus", "t": "Só a Deus nas alturas", "s": "Allein Gott in der Höh'"}, {"id": "bendize-alma", "t": "Bendize, ó minha alma", "s": "Nun lob', mein' Seel', den Herren"}, {"id": "nun-danket", "t": "Damos graças a Deus", "s": "Nun danket alle Gott"}, {"id": "jesus-minha-alegria", "t": "Jesus, minha alegria", "s": "Jesu, meine Freude"}, {"id": "jesus-confianca", "t": "Jesus, minha confiança", "s": "Jesus, meine Zuversicht"}, {"id": "o-fronte", "t": "Ó fronte ensanguentada", "s": "O Haupt voll Blut und Wunden"}, {"id": "despertai", "t": "Despertai!", "s": "Wachet auf"}, {"id": "in-dulci-jubilo", "t": "In dulci jubilo", "s": "Hino de Natal"}];
+const SP_HDOC = { id:"hinos-sola", kind:"hino", title:"Hinos do SOLA", items:SP_HINOS.map(h=>({ t:h.t, s:h.s, src:"ouvir/hinos/"+h.id+".mp3" })) };
+function spHinosHtml(){ DA_REG[SP_HDOC.id]=SP_HDOC; const on=DA.doc&&DA.doc.id===SP_HDOC.id;
+  return `<h3 class="sp-g"><span class="sp-gi" style="--gc:#6b4f2a"><svg class="icon"><use href="#g-orgao"/></svg></span>Hinos do SOLA <small class="sp-full">tocam inteiros</small></h3>
+  <div class="card sp-hinos da-host" data-docid="${SP_HDOC.id}">${daBarHtml(SP_HDOC)}
+  <ol class="sp-hl">${SP_HDOC.items.map((h,i)=>`<li><button type="button" class="sp-h${on&&DA.i===i?" on":""}" data-da="from" data-i="${i}"><span class="sp-hn">${i+1}</span><span class="sp-ht"><b>${esc(h.t)}</b><small>${esc(h.s)}</small></span><svg class="icon"><use href="#i-playfill"/></svg></button></li>`).join("")}</ol>
+  <p class="muted sp-hnote">Órgão do SOLA sobre harmonizações de J. S. Bach (domínio público). Tocam inteiros aqui, com a tela bloqueada e no carro.</p></div>`; }
 async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""; $("#spLogin").hidden=!!store.get("spLogged",0);
   const gh=g=>`<h3 class="sp-g"><span class="sp-gi" style="--gc:${g.cor}"><svg class="icon"><use href="#${g.icone}"/></svg></span>${esc(g.titulo)}</h3>`;
   const mineG={ titulo:"Minhas listas", icone:"g-minhas", cor:"#a8455e" };
   if(u.length) h+=gh(mineG)+u.map(it=>spItemHtml(it,true,mineG)).join("");
   (D.grupos||[]).forEach(g=>{ g.icone=g.icone||"g-louvor"; g.cor=g.cor||"#2b3a67"; const it=(g.itens||[]).map(x=>spItemHtml(x,false,g)).join(""); if(it) h+=gh(g)+it; });
   if(!h) h=`<div class="notice info">Ainda não há listas aqui. Cole abaixo o link de uma playlist ou podcast do Spotify, ou comece por uma das buscas sugeridas.</div>`;
-  $("#spList").innerHTML=h;
+  $("#spList").innerHTML=spHinosHtml()+h;
   $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g"><span class="sp-gi" style="--gc:#1DB954"><svg class="icon"><use href="#i-search"/></svg></span>Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
   spPaintNow(); }
 function spPaintNow(){ const box=$("#spNow"); if(!SP.cur){ box.hidden=true; return; } box.hidden=false;
@@ -5456,12 +5471,12 @@ function falaRefs(t){
 function looksEnglish(t){ const w=(" "+String(t).toLowerCase()+" ").match(/ (the|and|of|which|that|with|is|are|we|our|his|him) /g)||[]; return w.length>6 && w.length/(String(t).split(/\s+/).length||1)>0.08; }
 function daBarHtml(d){ return `<div class="da-bar" data-docid="${d.id}">
       <button type="button" class="da-play" data-da="play" aria-label="Ouvir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></button>
-      <div class="da-info"><b class="da-t">Ouvir ${d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":d.kind==="artigo"?"o artigo":d.kind==="devo"?"o devocional":d.kind==="votd"?"o texto do dia":"a confissão"}</b><small class="da-s">${d.kind==="credo"?"Leitura em voz natural":isTrack(d)?"Voz natural · toca no carro e com a tela bloqueada":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
+      <div class="da-info"><b class="da-t">Ouvir ${d.kind==="hino"?"os hinos":d.kind==="credo"?"o credo":d.kind==="catecismo"?"o catecismo":d.kind==="artigo"?"o artigo":d.kind==="devo"?"o devocional":d.kind==="votd"?"o texto do dia":"a confissão"}</b><small class="da-s">${d.kind==="hino"?`${d.items.length} hinos · órgão`:d.kind==="credo"?"Leitura em voz natural":isTrack(d)?"Voz natural · toca no carro e com a tela bloqueada":`${d.items.length} ${d.kind==="catecismo"?"perguntas":"seções"} · ideal para o carro`}</small></div>
       ${isTrack(d)?`<button type="button" class="da-btn" data-da="back15" aria-label="Voltar 15 segundos">-15</button><button type="button" class="da-btn" data-da="fwd15" aria-label="Avançar 15 segundos">+15</button>`
         : d.kind!=="credo"?`<button type="button" class="da-btn" data-da="prev" aria-label="Anterior">⏮</button><button type="button" class="da-btn" data-da="next" aria-label="Próxima">⏭</button>`:""}
     </div>`; }
 const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
-  label(d,i){ const it=d.items[i]; if(isTrack(d)) return d.title; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
+  label(d,i){ const it=d.items[i]; if(d.kind==="hino") return it.t; if(isTrack(d)) return d.title; return d.kind==="catecismo"?`Pergunta ${it.n}`:d.kind==="credo"?d.title:(it.n?`Capítulo ${it.c}, seção ${it.n}`:`Artigo ${it.c}`); },
   async text(d,i){ if(d.speechFn) return falaRefs(d.speechFn()).replace(/\n{2,}/g,"\n");
     const it=d.items[i]; const en=d.lang!=="pt" && d.kind!=="credo";
     const tp=async t=>{ if(!en || !t) return t||""; let r=""; try{ r=await Tr.toPt(t); }catch(e){}
@@ -5474,7 +5489,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     if(d.kind==="artigo") return `${d.title}.\n\nUm artigo do SOLA a partir de ${d.author}.\n\n` + d.secs.map((sc,k)=>(k>0&&sc.h?`${sc.h}.\n\n`:"")+sc.paras.join("\n\n")).join("\n\n");
     const head = it.n ? `Capítulo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}. Seção ${it.n}.` : `Artigo ${it.c}${it.ct?`. ${await tp(it.ct)}`:""}.`;
     return `${head}\n\n${await tp(it.t)}`; },
-  async url(d,i){ const k=d.id+":"+i; if(this.urls[k]) return this.urls[k];
+  async url(d,i){ if(d.kind==="hino") return d.items[i].src; const k=d.id+":"+i; if(this.urls[k]) return this.urls[k];
     const p=(async()=>{ const text=await this.text(d,i); const voice=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
       const ck="/__doc/"+encodeURIComponent(d.id+":"+i+":"+voice+":"+Tr.key(text)); const cache=await caches.open("sola-audio-v1").catch(()=>null);
       let blob=null; const hit=cache && await cache.match(ck); if(hit) blob=await hit.blob();
@@ -5483,7 +5498,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
       return URL.createObjectURL(blob); })();
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
   player(){ if(this.el) return this.el; const a=document.createElement("audio"); a.setAttribute("playsinline",""); a.setAttribute("x-webkit-airplay","allow"); a.style.display="none"; document.body.appendChild(a);
-    a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),120); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
+    a.addEventListener("ended",()=>{ if(this.doc && this.doc.kind==="artigo") store.set("daT:"+this.doc.id,0); if(this.i < this.doc.items.length-1) setTimeout(()=>this.go(this.i+1),120); else if(this.doc.kind==="hino") setTimeout(()=>this.go(0),400); else { this.playing=false; toast("Fim da leitura. Soli Deo gloria!"); store.set("daPos:"+this.doc.id,0); daPaint(); setTimeout(()=>{ if(typeof applyPendingReload==="function") applyPendingReload(); },1500); } });
     a.addEventListener("play",()=>{ this.playing=true; daPaint(); try{ navigator.mediaSession.playbackState="playing"; }catch(e){} this.pos(); });
     a.addEventListener("pause",()=>{ try{ navigator.mediaSession.playbackState="paused"; }catch(e){} this.pos(); });
     a.addEventListener("loadedmetadata",()=>{ a.preservesPitch=true; a.webkitPreservesPitch=true;
@@ -5495,7 +5510,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     this.el=a; return a; },
   media(){ if(!("mediaSession" in navigator)) return; const a=this.el, d=this.doc, ms=navigator.mediaSession; const abs=u=>new URL(u,location.href).href;
     try{ ms.metadata=new MediaMetadata({ title: isTrack(d) ? d.title : this.label(d,this.i), artist:"SOLA | Bíblia & Teologia",
-        album: d.kind==="artigo" ? `Artigos · ${d.author}` : d.kind==="devo" ? "Devocional diário" : d.kind==="votd" ? "Texto do dia" : d.title,
+        album: d.kind==="hino" ? "Hinos do SOLA" : d.kind==="artigo" ? `Artigos · ${d.author}` : d.kind==="devo" ? "Devocional diário" : d.kind==="votd" ? "Texto do dia" : d.title,
         artwork:[120,180,512].map(n=>({ src:abs(n===512?"icons/icon-512.png?v=3":`icons/apple-touch-${n}.png?v=3`), sizes:`${n}x${n}`, type:"image/png" })) });
       const set=(k,f)=>{ try{ ms.setActionHandler(k,f); }catch(e){} };
       set("play",()=>a.play()); set("pause",()=>a.pause()); set("stop",()=>this.stop());
@@ -5520,7 +5535,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
   toggle(){ const a=this.player(); if(this.loading) return; if(a.paused){ if(a.src) a.play(); else this.go(this.i); } else a.pause(); },
   stop(){ if(this.el){ this.el.pause(); } this.playing=false; this.loading=false; this.doc=null; daPaint(); }
 };
-function daPaint(){ if(typeof paintMini==="function") setTimeout(paintMini,30);
+function daPaint(){ if(typeof paintMini==="function") setTimeout(paintMini,30); document.querySelectorAll(".sp-h").forEach(b=>b.classList.toggle("on",!!(DA.doc&&DA.doc.id==="hinos-sola"&&DA.i===+b.dataset.i)));
   document.querySelectorAll(".da-bar[data-docid]").forEach(bar=>{ const d=DA_REG[bar.dataset.docid]; if(!d) return; const on=DA.doc && DA.doc.id===d.id;
     bar.classList.toggle("on", on && (DA.playing||DA.loading));
     const pb=bar.querySelector('[data-da="play"]'); pb.innerHTML = on && DA.loading ? '<span class="da-spin"></span>' : on && DA.playing ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
@@ -5550,9 +5565,10 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.10.5";
+const APP_VERSION = "3.11.0";
 const CHANGELOG = [
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
+  { v:"3.11.0", d:"novembro de 2026", items:["Ouvir: Hinos do SOLA tocam inteiros dentro do app, com tela bloqueada e no carro (órgão sobre harmonizações de Bach, domínio público).","Novas pregações: Augustus Nicodemus e Teologia da Reforma."] },
   { v:"3.10.5", d:"novembro de 2026", items:["Ouvir: entrar no Spotify com Face ID (Continuar com a Apple) e, no iPhone, botão para ouvir a lista completa no app do Spotify, que já abre logado."] },
   { v:"3.10.1", d:"novembro de 2026", items:["Artigos: cada tema ganhou uma figurinha com símbolo próprio.","Ouvir: pregações de Hernandes Dias Lopes e entrevistas (Seminário Martin Bucer, Consciência Cristã, Ensino Fiel)."] },
   { v:"3.10.0", d:"novembro de 2026", items:["Nova seção Ouvir em Estudos: tocador do Spotify dentro do SOLA para hinos, salmos, podcasts e pregações. Cole o link de qualquer playlist ou podcast; o áudio do SOLA e o Spotify não tocam ao mesmo tempo."] },
