@@ -203,6 +203,7 @@ function vHoje(){const f=D.farol;const nG=f.filter(x=>x[1]>=100).length,nY=f.fil
   <div class="card kpi" data-m="proj"><div class="l">Projeção do mês <span class="est">estimativa</span></div><div class="v">${mi(M.proj)}</div><div class="s">${pct(M.proj/M.metaOrc*100)} da orçada · ${pct(M.proj/M.metaBI*100)} BI</div></div>
  </div>
  <div class="card load" style="margin-top:12px"><div class="ic">⇪</div><div><b>Edição de ${d1.data}</b><small>${D.meta.modo==="api"?"Power BI ao vivo":D.meta.modo==="equipe"?"publicada para a equipe":"lida do PDF neste aparelho"}</small></div><button class="btn" data-pdf>Carregar PDF</button></div>
+ <button class="btn" data-pacote style="width:100%;margin-top:10px;background:#25d366">📲 Pacote do dia para o WhatsApp · revista + cartão + texto</button>
  ${D.avisos&&D.avisos.length?`<div class="av">⚠ ${D.avisos.join(" ")}</div>`:""}
  <h2>🦺 Segurança em primeiro lugar</h2>
  ${D.dds?`<div class="card dds" id="ddsCard" style="cursor:pointer"><div><div class="k">DDS do dia</div><b class="t">${D.dds.titulo}</b><p>${D.dds.texto}</p><p style="margin-top:8px;font-weight:700">— ${D.dds.autor}</p></div></div>`:`<div class="card">Sem mensagem de segurança nesta edição.</div>`}
@@ -388,7 +389,7 @@ async function lerPDF(file){const lib=await pdfjs();const doc=await lib.getDocum
   for(const it of c.items){const y=Math.round(it.transform[5]);if(y0!==null&&Math.abs(y-y0)>2)out+="\n";else if(out&&!out.endsWith(" "))out+=" ";out+=it.str;y0=y;}pages.push(out);}
  return FarolPDF.parse(pages);}
 $("#pdfIn").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;toastMsg("Lendo o PDF…");
- try{const Dx=await lerPDF(f);guardar(Dx);D=Dx;compute();paintHead();show("hoje");toastMsg("Edição de "+Dx.d1.data+" carregada.");if(LS.get("farolGh",null)) pubOffer();}
+ try{const Dx=await lerPDF(f);guardar(Dx);D=Dx;compute();paintHead();show("hoje");toastMsg("Edição de "+Dx.d1.data+" carregada.");pubOffer();}
  catch(err){openSheet(`<div class="sh"><b>Não consegui ler o PDF</b><button id="xS">×</button></div><div class="card">${err.message}</div><p class="note">Use o PDF da revista Morning Operational News gerado no dia.</p>`);}});
 /* --- publicar para a equipe no GitHub (criptografado com a senha da equipe) --- */
 const enc=new TextEncoder(),dec=new TextDecoder();const b64=u=>btoa(String.fromCharCode(...u)),ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
@@ -413,8 +414,10 @@ async function publicar(){const cfg=LS.get("farolGh",null);if(!cfg||!cfg.repo||!
  toastMsg("Publicando para a equipe…");try{const c=await cifrar(D,cfg.senha);const iso=isoOf(d1.data);
   const pf=cfg.pasta||"";await ghPut(cfg,pf+"data/edicoes/"+iso+".enc",c,"Farol: edição "+d1.data);await ghPut(cfg,pf+"data/ultimo.enc",c,"Farol: última edição "+d1.data);
   toastMsg("Publicado! A equipe já vê a edição de "+d1.data+".");}catch(e){toastMsg("Falhou: "+e.message);}}
-function pubOffer(){openSheet(`<div class="sh"><b>Publicar para a equipe?</b><button id="xS">×</button></div><div class="card">A edição de ${d1.data} foi lida. Publicar no app da equipe (criptografada com a senha da equipe)?</div>
- <div style="display:flex;gap:8px;margin-top:10px"><button class="btn" id="pOk" style="flex:1">Publicar agora</button><button class="btn sec2" id="xS2">Depois</button></div>`);
+function pubOffer(){const gh=LS.get("farolGh",null);openSheet(`<div class="sh"><b>Edição de ${d1.data} pronta</b><button id="xS">×</button></div><div class="card">O PDF foi lido. O que fazer agora?</div>
+ <div style="display:grid;gap:8px;margin-top:10px"><button class="btn" data-pacote style="background:#25d366">📲 Gerar pacote do WhatsApp (revista + cartão + texto)</button>
+ <button class="btn" id="pOk" ${gh&&gh.token?"":"disabled title='Configure o token em ⚙︎'"}>☁︎ Publicar no app da equipe</button><button class="btn sec2" id="xS2">Só ver no app</button></div>
+ ${gh&&gh.token?"":`<p class="note">Para publicar para a equipe, configure o token do GitHub em ⚙︎ Configurações.</p>`}`);
  $("#pOk").onclick=()=>{document.querySelector(".sheet").remove();publicar();};$("#xS2").onclick=()=>document.querySelector(".sheet").remove();}
 function toastMsg(t){const d=document.createElement("div");d.textContent=t;d.style.cssText="position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:#14213d;color:#fff;padding:10px 14px;border-radius:12px;font-size:13px;z-index:40;max-width:90%;text-align:center";document.body.appendChild(d);setTimeout(()=>d.remove(),3500);}
 function cfgSheet(){const g=LS.get("farolGh",{repo:"rafaelximenes2010-png/concordancia-biblica",pasta:"farol/",branch:"main",token:"",senha:""});
@@ -450,18 +453,17 @@ function paintHead(){if(!D){$("#updT").textContent="Nenhuma edição carregada";
  const ks=Object.keys(edicoes()).sort().reverse();$("#dSel").innerHTML=ks.map(k=>`<option value="${k}" ${k===isoOf(d1.data)?"selected":""}>${k.slice(8)}/${k.slice(5,7)}</option>`).join("");}
 function vazio(){return `<div class="card empty"><img src="icons/logo-los.png" alt="Grupo LOS" style="width:220px;max-width:70%;margin-bottom:6px"><div class="ic">📄</div><b>Carregue a revista do dia</b><p class="note">Enquanto a API do Power BI não é liberada, o app é alimentado pelo PDF da Morning Operational News.</p><button class="btn" data-pdf style="margin-top:8px">Carregar PDF</button></div>`;}
 document.querySelector("nav.tabs").onclick=e=>{const b=e.target.closest("button");if(b) show(b.dataset.t);};
-document.addEventListener("click",e=>{if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
+document.addEventListener("click",e=>{if(e.target.closest("[data-pacote]")){document.querySelector(".sheet")?.remove();FarolPacote.abrir();return;}if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
 $("#main").addEventListener("click",e=>{if(e.target.closest("[data-pdf]"))return;if(e.target.closest("#ddsCard")) return ddsSheet();const m=e.target.closest("[data-m]");if(m) return mSheet(m.dataset.m);const r=e.target.closest("[data-reg]");if(r) regSheet(r.dataset.reg);});
 $("#bAl").onclick=()=>D?alertsSheet():toastMsg("Carregue uma edição primeiro.");$("#bCfg").onclick=cfgSheet;$("#bInst").onclick=doInstall;
 $("#dSel").onchange=()=>{const e=edicoes()[$("#dSel").value];if(e){D=e;LS.set("farolAtual",$("#dSel").value);compute();paintHead();show(cur);}};
-$("#bSh").onclick=()=>{if(!D)return;const f=D.farol.map(([n,p])=>`${p>=100?"🟢":p>=90?"🟡":"🔴"} ${n} ${pct(p)}`).join("\n");
- const t=`*Farol Operacional · CT LOS*\nD-1: ${d1.data}\n\nFaturamento: ${brl(d1.fat)} (${pct(atD1)} da meta)\nAcumulado do mês: ${mi(M.acum)} (${pct(atAcO)} da orçada)\nProjeção: ${mi(M.proj)} (estimativa)\n\n${f}\n\nCarro parado é prejuízo. Vamos pra cima!`;
- window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");};
+$("#bSh").onclick=()=>FarolPacote.abrir();
 (()=>{const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=navigator.standalone||matchMedia("(display-mode: standalone)").matches;
  if(ios&&!st&&!LS.get("farolIosHint",0)){const d=document.createElement("div");d.style.cssText="position:fixed;left:12px;right:12px;bottom:84px;background:#0f2350;color:#fff;border-radius:16px;padding:12px 14px;z-index:30;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.3)";
   d.innerHTML='<b>Instale o Farol no iPhone</b><br>Toque em Compartilhar ⬆︎ e depois em "Adicionar à Tela de Início". <a href="instalar.html" style="color:#9fd0ff">Ver passo a passo</a> <button style="float:right;background:none;border:0;color:#fff;font-size:18px">×</button>';
   d.querySelector("button").onclick=()=>{d.remove();LS.set("farolIosHint",1);};document.body.appendChild(d);}})();
 (async()=>{D=await loadData();if(D)compute();paintHead();show("hoje");})();
 </script>
+<script src="pacote.js"></script>
 </body>
 </html>
