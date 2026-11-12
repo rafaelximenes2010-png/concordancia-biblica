@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f2350">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-180.png">
+<link rel="icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Farol LOS">
 <title>Farol Operacional · CT LOS</title>
@@ -128,8 +129,8 @@ nav.tabs button.on{color:var(--navy2);background:rgba(27,58,122,.08)}
 <input type="file" id="pdfIn" accept="application/pdf" hidden>
 <header>
   <div class="hrow">
-    <div class="logo"><b>LOS</b></div>
-    <div class="ht"><b>Farol Operacional</b><small>CT LOS · Grupo LOS consolidado</small></div>
+    <div class="logo"><img src="icons/simbolo-los.png" alt="Grupo LOS" style="width:28px;height:28px"></div>
+    <div class="ht"><b>Farol Operacional</b><small>CT LOS · Grupo LOS</small></div>
     <button class="inst" id="bInst">Instalar</button><button class="hbtn" id="bAl" aria-label="Alertas">🔔<i></i></button><button class="hbtn" id="bCfg" aria-label="Configurações">⚙︎</button>
   </div>
   <div class="upd"><span class="dot"></span><span id="updT">Carregando…</span>
@@ -447,7 +448,7 @@ function paintHead(){if(!D){$("#updT").textContent="Nenhuma edição carregada";
  $("#updT").textContent=(D.meta.modo==="api"?"Power BI ao vivo · "+D.meta.atualizado:D.meta.modo==="equipe"?"Edição da equipe":"PDF do dia")+" · D-1: "+d1.dia.slice(0,3)+", "+d1.data;
  $("#proto").style.display=D.meta.modo==="api"?"none":"block";
  const ks=Object.keys(edicoes()).sort().reverse();$("#dSel").innerHTML=ks.map(k=>`<option value="${k}" ${k===isoOf(d1.data)?"selected":""}>${k.slice(8)}/${k.slice(5,7)}</option>`).join("");}
-function vazio(){return `<div class="card empty"><div class="ic">📄</div><b>Carregue a revista do dia</b><p class="note">Enquanto a API do Power BI não é liberada, o app é alimentado pelo PDF da Morning Operational News.</p><button class="btn" data-pdf style="margin-top:8px">Carregar PDF</button></div>`;}
+function vazio(){return `<div class="card empty"><img src="icons/logo-los.png" alt="Grupo LOS" style="width:220px;max-width:70%;margin-bottom:6px"><div class="ic">📄</div><b>Carregue a revista do dia</b><p class="note">Enquanto a API do Power BI não é liberada, o app é alimentado pelo PDF da Morning Operational News.</p><button class="btn" data-pdf style="margin-top:8px">Carregar PDF</button></div>`;}
 document.querySelector("nav.tabs").onclick=e=>{const b=e.target.closest("button");if(b) show(b.dataset.t);};
 document.addEventListener("click",e=>{if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
 $("#main").addEventListener("click",e=>{if(e.target.closest("[data-pdf]"))return;if(e.target.closest("#ddsCard")) return ddsSheet();const m=e.target.closest("[data-m]");if(m) return mSheet(m.dataset.m);const r=e.target.closest("[data-reg]");if(r) regSheet(r.dataset.reg);});

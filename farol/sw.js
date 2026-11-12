@@ -1,5 +1,5 @@
 // Farol Operacional — service worker: abre offline com o app e os últimos dados
-const CACHE="farol-v4"; const APP=["./","index.html","instalar.html","icons/qr-instalar.svg","parser.js","vendor/pdf.min.mjs","vendor/pdf.worker.min.mjs","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png"];
+const CACHE="farol-v5"; const APP=["./","index.html","instalar.html","icons/qr-instalar.svg","parser.js","vendor/pdf.min.mjs","vendor/pdf.worker.min.mjs","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/apple-touch-180.png","icons/logo-los.png","icons/simbolo-los.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(APP)));self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==CACHE).map(x=>caches.delete(x)))));self.clients.claim();});
 self.addEventListener("fetch",e=>{const u=new URL(e.request.url);if(e.request.method!=="GET")return;
