@@ -110,7 +110,8 @@ nav.tabs button.on{color:var(--navy2);background:rgba(27,58,122,.08)}
 .dds .k{font-size:10px;font-weight:800;letter-spacing:.12em;color:#8a6a00;text-transform:uppercase}
 .dds b.t{display:block;font-size:16px;margin:4px 0 6px}.dds p{margin:0;font-size:14px;line-height:1.5}
 .res p{margin:0 0 10px;font-size:15px;line-height:1.6}.res p:last-child{margin:0}
-.res a{color:var(--navy2);font-weight:700;text-decoration:none;border-bottom:1.5px dotted currentColor;cursor:pointer}
+.res a{color:inherit;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(27,58,122,.25);cursor:pointer}.res a:active{background:rgba(27,58,122,.08)}
+.res p{font-size:14.5px!important;line-height:1.65!important}.res .lead{font-size:16px!important;font-weight:600}
 @media (prefers-color-scheme:dark){.res a{color:#9fb6ff}}
 .res .dn2{color:var(--r)}.frase{font-style:italic;font-weight:700;font-size:15px;line-height:1.5}
 .load{display:flex;align-items:center;gap:12px;border:2px dashed #9fb3dd;background:linear-gradient(135deg,rgba(27,58,122,.06),rgba(27,58,122,.02))}
@@ -121,17 +122,37 @@ nav.tabs button.on{color:var(--navy2);background:rgba(27,58,122,.08)}
 .empty{text-align:center;padding:40px 20px}.empty .ic{font-size:44px}.empty b{display:block;font-size:18px;margin:10px 0 6px}
 .av{background:var(--ys);color:#7a5200;border-radius:12px;padding:10px 12px;font-size:12px;margin-top:10px}
 @media (prefers-color-scheme:dark){.av{color:#f5d38a}}
+
+#splash{position:fixed;inset:0;z-index:100;background:radial-gradient(circle at 50% 38%,#1f3f86,#0b1a3f 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .45s}
+#splash.out{opacity:0;pointer-events:none}
+.tl{width:74px;padding:12px 0;border-radius:22px;background:linear-gradient(#1b1f2b,#0d1018);box-shadow:0 18px 40px rgba(0,0,0,.45),inset 0 0 0 2px rgba(255,255,255,.06);display:flex;flex-direction:column;align-items:center;gap:10px}
+.tl i{width:44px;height:44px;border-radius:50%;background:#2a2f3c;box-shadow:inset 0 -4px 8px rgba(0,0,0,.5);transition:background .15s,box-shadow .15s}
+.tl i.r.on{background:#ff3b30;box-shadow:0 0 28px 8px rgba(255,59,48,.7),inset 0 -4px 8px rgba(0,0,0,.3)}
+.tl i.y.on{background:#ffb800;box-shadow:0 0 28px 8px rgba(255,184,0,.7),inset 0 -4px 8px rgba(0,0,0,.3)}
+.tl i.g.on{background:#2fd16b;box-shadow:0 0 34px 12px rgba(47,209,107,.75),inset 0 -4px 8px rgba(0,0,0,.3)}
+.sp-brand{margin-top:26px;text-align:center;opacity:0;transform:translateY(8px);transition:all .5s}.sp-brand.on{opacity:1;transform:none}
+.sp-brand .lg{background:#fff;border-radius:16px;padding:10px 18px;display:inline-block}.sp-brand .lg img{height:54px;display:block}
+.sp-brand b{display:block;color:#fff;font-size:22px;margin-top:14px;letter-spacing:.3px}.sp-brand small{color:rgba(255,255,255,.7);font-size:13px}
+.welcome{background:linear-gradient(135deg,#e9f6ee,#f3fbf6);border:1px solid #cbe9d6;color:#14532d;border-radius:14px;padding:12px 14px;margin-top:12px;font-size:14px;display:flex;gap:10px;align-items:center}
+@media (prefers-color-scheme:dark){.welcome{background:#123524;border-color:#1e5a3a;color:#c9f2d8}}
+.menu .mi{display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;margin-bottom:8px}.menu .mi .ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:18px;flex:none;background:var(--bg)}
+.menu .mi b{display:block;font-size:15px}.menu .mi small{color:var(--ink2);font-size:12px}
+.st{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.st:last-child{border:0}.st .d{width:12px;height:12px;border-radius:50%;margin-top:4px;flex:none}
+.st b{display:block;font-size:14px}.st small{color:var(--ink2);font-size:12px;line-height:1.45}
+.pol h4{margin:14px 0 4px;font-size:14px}.pol p,.pol li{font-size:13.5px;line-height:1.55;color:var(--ink)}.pol ul{padding-left:18px;margin:4px 0}
+.cfg select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--card);color:var(--ink)}
 .proto{background:#fff3cd;color:#6b4e00;text-align:center;font-size:11px;padding:5px;font-weight:600}
 </style>
 </head>
 <body>
-<div class="proto" id="proto">ALIMENTADO PELO PDF · a API do Power BI entra quando a TI liberar</div>
+<div id="splash"><div class="tl"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+<div class="sp-brand"><div class="lg"><img src="icons/logo-los.png" alt="Grupo LOS"></div><b>Farol Operacional</b><small>CT LOS · indicadores do dia</small></div></div>
 <input type="file" id="pdfIn" accept="application/pdf" hidden>
 <header>
   <div class="hrow">
     <div class="logo"><img src="icons/simbolo-los.png" alt="Grupo LOS" style="width:28px;height:28px"></div>
-    <div class="ht"><b>Farol Operacional</b><small>CT LOS · Grupo LOS</small></div>
-    <button class="inst" id="bInst">Instalar</button><button class="hbtn" id="bAl" aria-label="Alertas">🔔<i></i></button><button class="hbtn" id="bCfg" aria-label="Configurações">⚙︎</button>
+    <div class="ht"><b>Farol Operacional</b><small id="hSub">CT LOS · Grupo LOS</small></div>
+    <button class="inst" id="bInst">Instalar</button><button class="hbtn" id="bAl" aria-label="Alertas">🔔<i></i></button><button class="hbtn" id="bCfg" aria-label="Menu">☰</button>
   </div>
   <div class="upd"><span class="dot"></span><span id="updT">Carregando…</span>
     <span class="datebar"><select id="dSel" aria-label="Escolher dia"></select></span></div>
@@ -182,13 +203,17 @@ const C={g:"#1e8e4e",y:"#d08a0e",r:"#c62828"};
 /* ===== telas ===== */
 const regByName=n=>D.reg.find(r=>r[0]===n);
 function resumoHtml(){const f=D.farol,g=f.filter(x=>x[1]>=100),y=f.filter(x=>x[1]>=90&&x[1]<100),r=f.filter(x=>x[1]<90);
- const ag=D.reg.filter(x=>x[3]<100);const best=f.reduce((m,x)=>x[1]>m[1]?x:m);const lst=a=>a.map(x=>`<a data-reg="${x[0]}">${x[0]} (${pct(x[1])})</a>`).join(", ");
- const L=(id,t)=>`<a data-m="${id}">${t}</a>`;
- return `<p>A ${d1.dia}, ${d1.data}, terminou com ${L("fatD1",brl(d1.fat))} faturados pelo Grupo LOS, ${L("atD1",pct(atD1)+" da meta do dia")} (${sg(d1.fat-d1.meta)}). Na comparação com o dia anterior, o faturamento variou ${L("fatD1",(d1.vsD2>0?"+":"")+pct(d1.vsD2,2))}.</p>
- <p>No farol, ${g.length} de ${f.length} regionais fecharam no verde${g.length?": "+lst(g):""}.${y.length?` No amarelo: ${lst(y)}.`:""}${r.length?` Pedem atenção imediata: <span class="dn2">${lst(r)}</span>.`:""} Melhor desempenho: ${lst([best])}.</p>
- <p>No mês, são ${L("acum",brl(M.acum))}, ${L("atAc",pct(atAcO)+" da meta orçada proporcional")} (${L("desvio",sg(M.acum-M.metaAcOrc))}) e ${L("atAc",pct(atAcB,1)+" na régua do Power BI")}. Foram ${L("dias",M.diasMeta+" de "+M.diasTot+" dias")} com meta batida.</p>
- <p>Faltam ${L("falta",brl(falta))} para a meta orçada em ${L("du",M.duRest+" dias úteis")}: ${L("necDU",brl(necDU)+" por dia útil")}, contra a média realizada de ${L("mediaDU",brl(M.mediaDU))}. As projeções apontam fechamento entre ${L("proj",mi(Math.min(...D.proj3.map(x=>x[1]))*1e6)+" e "+mi(Math.max(...D.proj3.map(x=>x[1]))*1e6))} (estimativa).</p>
- ${ag.length?`<p>Abaixo da meta proporcional do mês: ${ag.map(x=>`<a data-reg="${x[0]}">${x[0]} (${pct(x[3])})</a>`).join(", ")}, devendo ${L("desvio",brl(-ag.reduce((s,x)=>s+Math.min(0,x[6]),0)))} até o D-1.</p>`:""}`;}
+ const ag=D.reg.filter(x=>x[3]<100);const best=f.reduce((m,x)=>x[1]>m[1]?x:m);const nm=a=>a.map(x=>`<a data-reg="${x[0]}">${tit(x[0])}</a> (${pct(x[1])})`);
+ const lista=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" e "+a[a.length-1];const L=(id,t)=>`<a data-m="${id}">${t}</a>`;
+ const proj=D.proj3.map(x=>x[1]);const pmin=Math.min(...proj),pmax=Math.max(...proj);
+ const tom=atD1>=100?"superou a":"ficou abaixo da";
+ let h=`<p class="lead">O Grupo LOS faturou ${L("fatD1",brl(d1.fat))} em ${d1.data.slice(0,5)} e ${tom} meta diária, com ${L("atD1",pct(atD1)+" de atingimento")} (${sg(d1.fat-d1.meta)}).</p>`;
+ h+=`<p><b>Regionais.</b> ${g.length} de ${f.length} fecharam o dia acima da meta, com destaque para ${nm([best])[0]}.`+(y.length?` ${lista(nm(y))} ${y.length>1?"ficaram":"ficou"} próximo${y.length>1?"s":""} da meta.`:"")+(r.length?` ${lista(nm(r))} ${r.length>1?"exigem":"exige"} plano de recuperação imediato.`:"")+`</p>`;
+ h+=`<p><b>Mês.</b> O acumulado soma ${L("acum",brl(M.acum))}, equivalente a ${L("atAc",pct(atAcO)+" da meta orçada proporcional")} (${L("desvio",sg(M.acum-M.metaAcOrc))}) e ${L("atAc",pct(atAcB,1)+" da meta Power BI")}. A meta diária foi atingida em ${L("dias",M.diasMeta+" de "+M.diasTot+" dias")}.</p>`;
+ h+=`<p><b>Ritmo.</b> Para cumprir a meta orçada, faltam ${L("falta",mi(falta))} em ${L("du",M.duRest+" dias úteis")}, ou ${L("necDU",mi(necDU)+" por dia útil")}, abaixo da média realizada de ${L("mediaDU",mi(M.mediaDU))}. As projeções indicam fechamento entre ${L("proj","R$ "+pmin.toLocaleString("pt-BR",{minimumFractionDigits:1})+" e "+pmax.toLocaleString("pt-BR",{minimumFractionDigits:1})+" mi")}.</p>`;
+ if(ag.length) h+=`<p><b>Prioridade.</b> ${lista(ag.map(x=>`<a data-reg="${x[0]}">${tit(x[0])}</a>`))} ${ag.length>1?"estão":"está"} abaixo da meta proporcional do mês, com ${L("desvio",brl(-ag.reduce((s,x)=>s+Math.min(0,x[6]),0)))} a recuperar até o D-1.</p>`;
+ return h;}
+const tit=n=>n.toLowerCase().replace(/(^|[\s\/-])(\S)/g,(m,a,b)=>a+b.toUpperCase()).replace(/\bLosx\b/,"LOSX");
 function ddsSheet(){openSheet(`<div class="sh"><b>Segurança em primeiro lugar</b><button id="xS">×</button></div>
  <div class="card dds"><div><div class="k">DDS do dia · ${d1.data}</div><b class="t">🦺 ${D.dds.titulo}</b><p>${D.dds.texto}</p><p style="margin-top:8px;font-weight:700">— ${D.dds.autor}</p></div></div>
  ${D.frase?`<div class="sec">Para o dia</div><div class="card frase">“${D.frase.texto}”<div style="font-size:13px;margin-top:6px;font-style:normal">— ${D.frase.autor}</div></div>`:""}
@@ -203,8 +228,8 @@ function vHoje(){const f=D.farol;const nG=f.filter(x=>x[1]>=100).length,nY=f.fil
   <div class="card kpi" data-m="proj"><div class="l">Projeção do mês <span class="est">estimativa</span></div><div class="v">${mi(M.proj)}</div><div class="s">${pct(M.proj/M.metaOrc*100)} da orçada · ${pct(M.proj/M.metaBI*100)} BI</div></div>
  </div>
  <div class="card load" style="margin-top:12px"><div class="ic">⇪</div><div><b>Edição de ${d1.data}</b><small>${D.meta.modo==="api"?"Power BI ao vivo":D.meta.modo==="equipe"?"publicada para a equipe":"lida do PDF neste aparelho"}</small></div><button class="btn" data-pdf>Carregar PDF</button></div>
- <button class="btn" data-pacote style="width:100%;margin-top:10px;background:#25d366">📲 Pacote do dia para o WhatsApp · revista + cartão + texto</button>
- ${D.avisos&&D.avisos.length?`<div class="av">⚠ ${D.avisos.join(" ")}</div>`:""}
+ <button class="btn" data-pacote style="width:100%;margin-top:10px;background:#25d366">📲 Pacote do dia · WhatsApp</button>
+ ${D.avisos&&D.avisos.length?`<p class="note" style="margin:8px 4px 0">Nota de conferência: ${D.avisos.join(" ")}</p>`:""}
  <h2>🦺 Segurança em primeiro lugar</h2>
  ${D.dds?`<div class="card dds" id="ddsCard" style="cursor:pointer"><div><div class="k">DDS do dia</div><b class="t">${D.dds.titulo}</b><p>${D.dds.texto}</p><p style="margin-top:8px;font-weight:700">— ${D.dds.autor}</p></div></div>`:`<div class="card">Sem mensagem de segurança nesta edição.</div>`}
  ${D.editorial?`<h2>Mensagem do dia</h2><div class="card edit"><div class="k">Editorial</div><p>${D.editorial.texto}</p><div class="note" style="text-align:right;margin:8px 0 0;font-style:italic">— ${D.editorial.autor}</div></div>`:""}
@@ -389,7 +414,7 @@ async function lerPDF(file){const lib=await pdfjs();const doc=await lib.getDocum
   for(const it of c.items){const y=Math.round(it.transform[5]);if(y0!==null&&Math.abs(y-y0)>2)out+="\n";else if(out&&!out.endsWith(" "))out+=" ";out+=it.str;y0=y;}pages.push(out);}
  return FarolPDF.parse(pages);}
 $("#pdfIn").addEventListener("change",async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;toastMsg("Lendo o PDF…");
- try{const Dx=await lerPDF(f);guardar(Dx);D=Dx;compute();paintHead();show("hoje");toastMsg("Edição de "+Dx.d1.data+" carregada.");pubOffer();}
+ try{const Dx=await lerPDF(f);guardar(Dx);logEv("carregado");D=Dx;compute();paintHead();show("hoje");toastMsg("Edição de "+Dx.d1.data+" carregada.");pubOffer();}
  catch(err){openSheet(`<div class="sh"><b>Não consegui ler o PDF</b><button id="xS">×</button></div><div class="card">${err.message}</div><p class="note">Use o PDF da revista Morning Operational News gerado no dia.</p>`);}});
 /* --- publicar para a equipe no GitHub (criptografado com a senha da equipe) --- */
 const enc=new TextEncoder(),dec=new TextDecoder();const b64=u=>btoa(String.fromCharCode(...u)),ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
@@ -413,7 +438,7 @@ async function ghPut(cfg,path,content,msg){const url=`https://api.github.com/rep
 async function publicar(){const cfg=LS.get("farolGh",null);if(!cfg||!cfg.repo||!cfg.token||!cfg.senha){cfgSheet();return;}
  toastMsg("Publicando para a equipe…");try{const c=await cifrar(D,cfg.senha);const iso=isoOf(d1.data);
   const pf=cfg.pasta||"";await ghPut(cfg,pf+"data/edicoes/"+iso+".enc",c,"Farol: edição "+d1.data);await ghPut(cfg,pf+"data/ultimo.enc",c,"Farol: última edição "+d1.data);
-  toastMsg("Publicado! A equipe já vê a edição de "+d1.data+".");}catch(e){toastMsg("Falhou: "+e.message);}}
+  logEv("publicado");toastMsg("Publicado! A equipe já vê a edição de "+d1.data+".");}catch(e){toastMsg("Falhou: "+e.message);}}
 function pubOffer(){const gh=LS.get("farolGh",null);openSheet(`<div class="sh"><b>Edição de ${d1.data} pronta</b><button id="xS">×</button></div><div class="card">O PDF foi lido. O que fazer agora?</div>
  <div style="display:grid;gap:8px;margin-top:10px"><button class="btn" data-pacote style="background:#25d366">📲 Gerar pacote do WhatsApp (revista + cartão + texto)</button>
  <button class="btn" id="pOk" ${gh&&gh.token?"":"disabled title='Configure o token em ⚙︎'"}>☁︎ Publicar no app da equipe</button><button class="btn sec2" id="xS2">Só ver no app</button></div>
@@ -443,26 +468,94 @@ let deferredInstall=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;$("#bInst").style.display="inline-block";});
 async function doInstall(){if(!deferredInstall){cfgSheet();return;}deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;$("#bInst").style.display="none";}
 if("serviceWorker" in navigator && location.protocol.startsWith("http")) navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+/* ===== ABERTURA (farol: vermelho → amarelo → verde) ===== */
+function splash(){return new Promise(res=>{const sp=$("#splash");if(!sp)return res();const L=sp.querySelectorAll(".tl i");const on=i=>L.forEach((x,k)=>x.classList.toggle("on",k===i));
+ const seq=[[0,0],[1,420],[2,840]];seq.forEach(([i,t])=>setTimeout(()=>on(i),t));
+ setTimeout(()=>sp.querySelector(".sp-brand").classList.add("on"),900);
+ setTimeout(()=>{sp.classList.add("out");setTimeout(()=>{sp.remove();res();},450);},2300);});}
+/* ===== CADASTRO DO USUÁRIO E BOAS-VINDAS ===== */
+const REGIONAIS=["Diretoria / Corporativo","CT LOS","CEARA/NORTE","CENTRO-OESTE","LOSX","NORDESTE","NORDESTE 2","POSTO AVANCADO","SUL/SUDESTE","SUZANO","KLABIN"];
+function perfil(){return LS.get("farolPerfil",null);}
+function cadastro(editar){return new Promise(res=>{const u=perfil()||{};
+ openSheet(`<div class="sh"><b>${editar?"Meu perfil":"Bem-vindo ao Farol"}</b>${editar?'<button id="xS">×</button>':""}</div>
+ <div class="card cfg"><p class="note" style="margin:0">${editar?"Atualize seus dados.":"Faça seu cadastro para acessar os indicadores do CT LOS."}</p>
+ <label>Nome</label><input id="uN" value="${u.nome||""}" autocomplete="name">
+ <label>E-mail corporativo</label><input id="uE" type="email" value="${u.email||""}" autocomplete="email" placeholder="nome@grupolos.com.br">
+ <label>Cargo</label><input id="uC" value="${u.cargo||""}" placeholder="Ex.: Gerente Regional">
+ <label>Regional</label><select id="uR">${REGIONAIS.map(r=>`<option ${u.regional===r?"selected":""}>${r}</option>`).join("")}</select>
+ <label style="display:flex;gap:8px;align-items:flex-start;font-weight:500;margin-top:12px"><input type="checkbox" id="uA" style="width:auto;margin-top:3px" ${u.aceite?"checked":""}> <span>Li e concordo com a <a href="#" id="uPol">Política de dados e segurança</a>. As informações são confidenciais e de uso interno do Grupo LOS.</span></label>
+ <button class="btn" id="uOk" style="margin-top:12px;width:100%">${editar?"Salvar":"Cadastrar e entrar"}</button><p class="note" id="uMsg"></p></div>`);
+ $("#uPol").onclick=e=>{e.preventDefault();politica();};
+ $("#uOk").onclick=()=>{const v={nome:$("#uN").value.trim(),email:$("#uE").value.trim(),cargo:$("#uC").value.trim(),regional:$("#uR").value,aceite:$("#uA").checked,desde:u.desde||new Date().toISOString()};
+  if(!v.nome||!/.+@.+\..+/.test(v.email)){$("#uMsg").textContent="Preencha nome e e-mail.";return;}if(!v.aceite){$("#uMsg").textContent="É preciso aceitar a política de dados.";return;}
+  LS.set("farolPerfil",v);document.querySelectorAll(".sheet").forEach(x=>x.remove());res(v);};});}
+function primeiroNome(){const u=perfil();return u&&u.nome?u.nome.split(" ")[0]:"";}
+function boasVindas(){const n=primeiroNome();if(!n)return;const vez=LS.get("farolVisitas",0)+1;LS.set("farolVisitas",vez);
+ const h=new Date().getHours(),sd=h<12?"Bom dia":h<18?"Boa tarde":"Boa noite";
+ const el=document.createElement("div");el.className="welcome";el.innerHTML=`<span style="font-size:22px">👋</span><div><b>${vez>1?`Olá, ${n}, seja bem-vindo de volta!`:`${sd}, ${n}! Seja bem-vindo ao Farol.`}</b><br><small>${D?`Edição de ${d1.data} pronta para você.`:"Carregue a edição do dia para começar."}</small></div>`;
+ $("#main").prepend(el);setTimeout(()=>{el.style.transition="opacity .6s";el.style.opacity="0";setTimeout(()=>el.remove(),650);},6000);}
+/* ===== POLÍTICA DE DADOS E SEGURANÇA ===== */
+function politica(){openSheet(`<div class="sh"><b>Política de dados e segurança</b><button id="xS">×</button></div><div class="card pol">
+ <p><b>Farol Operacional · CT LOS · Grupo LOS</b><br><span class="note">Versão de 11/11/2026</span></p>
+ <h4>1. Finalidade</h4><p>O Farol reúne indicadores operacionais do Grupo LOS (faturamento, metas, atingimento, projeções e orçamento) para apoiar a gestão diária. Uso exclusivo de colaboradores autorizados.</p>
+ <h4>2. Confidencialidade</h4><p>Os números são informação interna e confidencial. É proibido compartilhar prints, PDFs ou senhas com pessoas de fora do Grupo LOS, inclusive clientes e fornecedores.</p>
+ <h4>3. Como os dados são protegidos</h4><ul><li>As edições ficam guardadas <b>criptografadas (AES-256)</b>; só abrem com a senha da equipe.</li><li>A senha nunca é enviada a servidores: a abertura é feita no próprio aparelho.</li><li>O código do app é público, mas não contém números da empresa.</li><li>Na fase com API, o acesso será pelo login corporativo Microsoft, com perfis por função.</li></ul>
+ <h4>4. Dados pessoais</h4><p>O cadastro (nome, e-mail, cargo e regional) fica salvo neste aparelho e serve para personalizar o app. Não usamos rastreamento nem publicidade. Você pode apagar seus dados em Meu perfil › Sair e apagar dados.</p>
+ <h4>5. Fontes e precisão</h4><p>Os números vêm do Power BI e da planilha de orçamento. Projeções são estimativas. Divergências aparecem como nota de conferência.</p>
+ <h4>6. Boas práticas</h4><ul><li>Use bloqueio de tela no celular.</li><li>Não salve a senha em aparelhos compartilhados.</li><li>Em caso de perda do aparelho ou suspeita de vazamento, avise o administrador para troca da senha.</li></ul>
+ <h4>7. Responsável</h4><p>Gerência Nacional de Operações · CT LOS.</p></div>`);}
+/* ===== CENTRAL DE AUTOMAÇÃO ===== */
+function logEv(k){const l=LS.get("farolLog",{});l[k]=new Date().toISOString();LS.set("farolLog",l);}
+const quando=iso=>iso?new Date(iso).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}):"—";
+const hojeISO=()=>new Date().toISOString().slice(0,10);
+function central(){const l=LS.get("farolLog",{}),gh=LS.get("farolGh",null),fez=k=>l[k]&&l[k].slice(0,10)===hojeISO();
+ const st=(ok,t,s,warn)=>`<div class="st"><span class="d" style="background:${ok?"#1e8e4e":warn?"#d08a0e":"#9aa3b5"}"></span><div><b>${t}</b><small>${s}</small></div></div>`;
+ openSheet(`<div class="sh"><b>Central de Automação</b><button id="xS">×</button></div>
+ <div class="sec">Rotina do dia</div><div class="card">
+ ${st(fez("carregado"),"1. Carregar a revista do dia (PDF)",fez("carregado")?"Feito hoje às "+quando(l.carregado).slice(-5):"Pendente · última: "+quando(l.carregado),!fez("carregado"))}
+ ${st(fez("pacote"),"2. Gerar o pacote do WhatsApp",fez("pacote")?"Feito hoje às "+quando(l.pacote).slice(-5):"Pendente",!fez("pacote"))}
+ ${st(fez("publicado"),"3. Publicar no app da equipe",fez("publicado")?"Feito hoje às "+quando(l.publicado).slice(-5):gh&&gh.token?"Pendente":"Configure o token do GitHub para publicar",!fez("publicado"))}
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px"><button class="btn" data-pdf style="font-size:12px;padding:10px 6px">Carregar PDF</button><button class="btn" data-pacote style="font-size:12px;padding:10px 6px;background:#25d366">Pacote</button><button class="btn" id="cPub" style="font-size:12px;padding:10px 6px">Publicar</button></div></div>
+ <div class="sec">Fontes de dados</div><div class="card">
+ ${st(true,"Revista Morning Operational News (PDF)","Ativa · leitura automática dos números, DDS, editorial e frase")}
+ ${st(!!API.base,"API do Power BI",API.base?"Conectada: "+API.base:"Aguardando liberação da TI · coleta automática às 06h30",!API.base)}
+ ${st(false,"Orçamento (SharePoint)","Lido hoje pelo PDF · entra direto pela API Microsoft Graph",true)}</div>
+ <div class="sec">Situação</div><div class="card">
+ ${st(!!D,"Edição em uso",D?`${d1.data} · ${D.meta.fonte}`:"Nenhuma")}
+ ${st(Object.keys(edicoes()).length>0,"Histórico neste aparelho",Object.keys(edicoes()).length+" edição(ões)")}
+ ${st(!!(gh&&gh.token),"Publicação para a equipe",gh&&gh.token?"Configurada · "+gh.repo:"Não configurada",!(gh&&gh.token))}</div>
+ <button class="btn sec2" id="cCfg" style="width:100%;margin-top:10px">Configurações avançadas</button>`);
+ $("#cPub").onclick=()=>{document.querySelector(".sheet").remove();publicar();};$("#cCfg").onclick=()=>{document.querySelector(".sheet").remove();cfgSheet();};}
+/* ===== MENU ===== */
+function menu(){const u=perfil();openSheet(`<div class="sh"><b>Menu</b><button id="xS">×</button></div><div class="menu">
+ <div class="card mi" id="mPerf"><span class="ic">👤</span><div><b>${u?u.nome:"Meu perfil"}</b><small>${u?(u.cargo||"")+" · "+u.regional:"Cadastre-se"}</small></div></div>
+ <div class="card mi" id="mCen"><span class="ic">⚙️</span><div><b>Central de Automação</b><small>Rotina do dia, fontes de dados e publicação</small></div></div>
+ <div class="card mi" id="mPol"><span class="ic">🔒</span><div><b>Política de dados e segurança</b><small>Confidencialidade e proteção das informações</small></div></div>
+ <div class="card mi" id="mIns"><span class="ic">📲</span><div><b>Instalar e convidar</b><small>iPhone, Android, computador e WhatsApp</small></div></div>
+ <div class="card mi" id="mOut"><span class="ic">🚪</span><div><b>Sair e apagar dados deste aparelho</b><small>Remove cadastro, senha e edições salvas</small></div></div></div>`);
+ const go=f=>()=>{document.querySelector(".sheet").remove();f();};
+ $("#mPerf").onclick=go(()=>cadastro(true).then(()=>show(cur)));$("#mCen").onclick=go(central);$("#mPol").onclick=go(politica);$("#mIns").onclick=go(cfgSheet);
+ $("#mOut").onclick=()=>{["farolPerfil","farolSenha","farolEdicoes","farolAtual","farolVisitas","farolLog","farolGh"].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});location.reload();};}
 /* ===== navegação ===== */
 const V={hoje:vHoje,mes:vMes,reg:vReg,proj:vProj,orc:vOrc};let cur="hoje";
 function show(t){cur=t;$("#main").innerHTML=D?V[t]():vazio();document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));window.scrollTo(0,0);
  const seg=$("#ccSeg");if(seg) seg.onclick=e=>{const b=e.target.closest("button");if(!b)return;seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));};}
 function paintHead(){if(!D){$("#updT").textContent="Nenhuma edição carregada";$("#dSel").innerHTML="";return;}
  $("#updT").textContent=(D.meta.modo==="api"?"Power BI ao vivo · "+D.meta.atualizado:D.meta.modo==="equipe"?"Edição da equipe":"PDF do dia")+" · D-1: "+d1.dia.slice(0,3)+", "+d1.data;
- $("#proto").style.display=D.meta.modo==="api"?"none":"block";
  const ks=Object.keys(edicoes()).sort().reverse();$("#dSel").innerHTML=ks.map(k=>`<option value="${k}" ${k===isoOf(d1.data)?"selected":""}>${k.slice(8)}/${k.slice(5,7)}</option>`).join("");}
 function vazio(){return `<div class="card empty"><img src="icons/logo-los.png" alt="Grupo LOS" style="width:220px;max-width:70%;margin-bottom:6px"><div class="ic">📄</div><b>Carregue a revista do dia</b><p class="note">Enquanto a API do Power BI não é liberada, o app é alimentado pelo PDF da Morning Operational News.</p><button class="btn" data-pdf style="margin-top:8px">Carregar PDF</button></div>`;}
 document.querySelector("nav.tabs").onclick=e=>{const b=e.target.closest("button");if(b) show(b.dataset.t);};
 document.addEventListener("click",e=>{if(e.target.closest("[data-pacote]")){document.querySelector(".sheet")?.remove();FarolPacote.abrir();return;}if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
 $("#main").addEventListener("click",e=>{if(e.target.closest("[data-pdf]"))return;if(e.target.closest("#ddsCard")) return ddsSheet();const m=e.target.closest("[data-m]");if(m) return mSheet(m.dataset.m);const r=e.target.closest("[data-reg]");if(r) regSheet(r.dataset.reg);});
-$("#bAl").onclick=()=>D?alertsSheet():toastMsg("Carregue uma edição primeiro.");$("#bCfg").onclick=cfgSheet;$("#bInst").onclick=doInstall;
+$("#bAl").onclick=()=>D?alertsSheet():toastMsg("Carregue uma edição primeiro.");$("#bCfg").onclick=menu;$("#bInst").onclick=doInstall;
 $("#dSel").onchange=()=>{const e=edicoes()[$("#dSel").value];if(e){D=e;LS.set("farolAtual",$("#dSel").value);compute();paintHead();show(cur);}};
 $("#bSh").onclick=()=>FarolPacote.abrir();
-(()=>{const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=navigator.standalone||matchMedia("(display-mode: standalone)").matches;
- if(ios&&!st&&!LS.get("farolIosHint",0)){const d=document.createElement("div");d.style.cssText="position:fixed;left:12px;right:12px;bottom:84px;background:#0f2350;color:#fff;border-radius:16px;padding:12px 14px;z-index:30;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.3)";
+function iosHint(){(()=>{const ios=/iPhone|iPad|iPod/.test(navigator.userAgent),st=navigator.standalone||matchMedia("(display-mode: standalone)").matches;
+ if(ios&&!st&&!LS.get("farolIosHint",0)){const d=document.createElement("div");d.style.cssText="position:fixed;left:12px;right:12px;bottom:84px;background:#0f2350;color:#fff;border-radius:16px;padding:12px 14px;z-index:15;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.3)";
   d.innerHTML='<b>Instale o Farol no iPhone</b><br>Toque em Compartilhar ⬆︎ e depois em "Adicionar à Tela de Início". <a href="instalar.html" style="color:#9fd0ff">Ver passo a passo</a> <button style="float:right;background:none;border:0;color:#fff;font-size:18px">×</button>';
-  d.querySelector("button").onclick=()=>{d.remove();LS.set("farolIosHint",1);};document.body.appendChild(d);}})();
-(async()=>{D=await loadData();if(D)compute();paintHead();show("hoje");})();
+  d.querySelector("button").onclick=()=>{d.remove();LS.set("farolIosHint",1);};document.body.appendChild(d);}})();}
+(async()=>{await splash();if(!perfil()) await cadastro(false);D=await loadData();if(D)compute();paintHead();show("hoje");boasVindas();setTimeout(iosHint,4000);})();
 </script>
 <script src="pacote.js"></script>
 </body>

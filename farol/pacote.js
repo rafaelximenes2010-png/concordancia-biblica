@@ -130,7 +130,7 @@ ${D.avisos && D.avisos.length ? `<p style="margin-top:12px;font-size:10px;color:
     catch (e) { document.getElementById("pkPrev").textContent = "Não consegui gerar o cartão: " + e.message; }
     try { pdf = await revistaPDF(); document.getElementById("pkPdf").disabled = false; }
     catch (e) { toastMsg("Não consegui gerar a revista: " + e.message); }
-    document.getElementById("pkSend").disabled = false;
+    document.getElementById("pkSend").disabled = false; try { logEv("pacote"); } catch (e) {}
     const baixar = (blob, nome) => { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
     document.getElementById("pkPdf").onclick = () => pdf && baixar(pdf, nomeBase() + ".pdf");
     document.getElementById("pkSend").onclick = async () => {
