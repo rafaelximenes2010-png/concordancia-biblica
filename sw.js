@@ -1,6 +1,6 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "sola-v103";
+const CACHE = "sola-v104";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json", "./docs/index.json",
   "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg", "./artigos/sola.json", "./ouvir/spotify.json"];
@@ -21,6 +21,7 @@ self.addEventListener("fetch", e => {
     return;
   }
   if (url.origin !== location.origin) return; // outros links externos passam direto
+  if (url.pathname.startsWith("/farol/")) return; // app Farol Operacional tem service worker próprio
   const isBible = /\/biblias\/(?!index\.json)[^/]+\.json$/.test(url.pathname);
   if (isBible) {
     // Bíblias: usa a cópia guardada; se não houver, baixa e guarda
