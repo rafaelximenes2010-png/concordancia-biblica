@@ -404,8 +404,8 @@ async function carregarPublicada(){if(!location.protocol.startsWith("http"))retu
   try{const Dx=await decifrar(txt,senha);LS.set("farolSenha",senha);Dx.meta=Object.assign(Dx.meta||{},{modo:"equipe"});guardar(Dx);return Dx;}catch(e){senha="";LS.set("farolSenha","");}}
  return null;}
 function pedirSenha(erro){return new Promise(res=>{openSheet(`<div class="sh"><b>Acesso da equipe</b></div><div class="card cfg"><p class="note" style="margin:0">Digite a senha da equipe CT LOS para ver os indicadores.${erro?` <b style="color:var(--r)">Senha incorreta.</b>`:""}</p>
- <label for="sP">Senha</label><input id="sP" type="password" autocomplete="current-password"><button class="btn" id="sOk" style="margin-top:10px;width:100%">Entrar</button></div>`);
- const ok=()=>{const v=$("#sP").value;document.querySelector(".sheet").remove();res(v);};$("#sOk").onclick=ok;$("#sP").onkeydown=e=>{if(e.key==="Enter")ok();};$("#sP").focus();});}
+ <label for="sP">Senha</label><input id="sP" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><label style="display:flex;gap:6px;align-items:center;font-weight:500;margin-top:8px"><input type="checkbox" id="sShow" style="width:auto"> Mostrar senha</label><button class="btn" id="sOk" style="margin-top:10px;width:100%">Entrar</button></div>`);
+ const ok=()=>{const v=$("#sP").value.trim();document.querySelector(".sheet").remove();res(v);};$("#sShow").onchange=e=>{$("#sP").type=e.target.checked?"text":"password";};$("#sOk").onclick=ok;$("#sP").onkeydown=e=>{if(e.key==="Enter")ok();};$("#sP").focus();});}
 async function ghPut(cfg,path,content,msg){const url=`https://api.github.com/repos/${cfg.repo}/contents/${path}`;const h={Authorization:"Bearer "+cfg.token,Accept:"application/vnd.github+json"};
  let sha;const g=await fetch(url+"?ref="+(cfg.branch||"main"),{headers:h});if(g.ok) sha=(await g.json()).sha;
  const r=await fetch(url,{method:"PUT",headers:h,body:JSON.stringify({message:msg,content:btoa(unescape(encodeURIComponent(content))),branch:cfg.branch||"main",sha})});
