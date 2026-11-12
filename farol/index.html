@@ -228,7 +228,7 @@ function vHoje(){const f=D.farol;const nG=f.filter(x=>x[1]>=100).length,nY=f.fil
   <div class="card kpi" data-m="proj"><div class="l">Projeção do mês <span class="est">estimativa</span></div><div class="v">${mi(M.proj)}</div><div class="s">${pct(M.proj/M.metaOrc*100)} da orçada · ${pct(M.proj/M.metaBI*100)} BI</div></div>
  </div>
  <div class="card load" style="margin-top:12px"><div class="ic">⇪</div><div><b>Edição de ${d1.data}</b><small>${D.meta.modo==="api"?"Power BI ao vivo":D.meta.modo==="equipe"?"publicada para a equipe":"lida do PDF neste aparelho"}</small></div><button class="btn" data-pdf>Carregar PDF</button></div>
- <button class="btn" data-pacote style="width:100%;margin-top:10px;background:#25d366">📲 Pacote do dia · WhatsApp</button>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><button class="btn" data-revista style="background:#b0263a">📰 Gerar revista</button><button class="btn" data-pacote style="background:#25d366">📲 Pacote WhatsApp</button></div>
  ${D.avisos&&D.avisos.length?`<p class="note" style="margin:8px 4px 0">Nota de conferência: ${D.avisos.join(" ")}</p>`:""}
  <h2>🦺 Segurança em primeiro lugar</h2>
  ${D.dds?`<div class="card dds" id="ddsCard" style="cursor:pointer"><div><div class="k">DDS do dia</div><b class="t">${D.dds.titulo}</b><p>${D.dds.texto}</p><p style="margin-top:8px;font-weight:700">— ${D.dds.autor}</p></div></div>`:`<div class="card">Sem mensagem de segurança nesta edição.</div>`}
@@ -440,7 +440,8 @@ async function publicar(){const cfg=LS.get("farolGh",null);if(!cfg||!cfg.repo||!
   const pf=cfg.pasta||"";await ghPut(cfg,pf+"data/edicoes/"+iso+".enc",c,"Farol: edição "+d1.data);await ghPut(cfg,pf+"data/ultimo.enc",c,"Farol: última edição "+d1.data);
   logEv("publicado");toastMsg("Publicado! A equipe já vê a edição de "+d1.data+".");}catch(e){toastMsg("Falhou: "+e.message);}}
 function pubOffer(){const gh=LS.get("farolGh",null);openSheet(`<div class="sh"><b>Edição de ${d1.data} pronta</b><button id="xS">×</button></div><div class="card">O PDF foi lido. O que fazer agora?</div>
- <div style="display:grid;gap:8px;margin-top:10px"><button class="btn" data-pacote style="background:#25d366">📲 Gerar pacote do WhatsApp (revista + cartão + texto)</button>
+ <div style="display:grid;gap:8px;margin-top:10px"><button class="btn" data-revista style="background:#b0263a">📰 Gerar revista (PDF)</button>
+ <button class="btn" data-pacote style="background:#25d366">📲 Gerar pacote do WhatsApp (revista + cartão + texto)</button>
  <button class="btn" id="pOk" ${gh&&gh.token?"":"disabled title='Configure o token em ⚙︎'"}>☁︎ Publicar no app da equipe</button><button class="btn sec2" id="xS2">Só ver no app</button></div>
  ${gh&&gh.token?"":`<p class="note">Para publicar para a equipe, configure o token do GitHub em ⚙︎ Configurações.</p>`}`);
  $("#pOk").onclick=()=>{document.querySelector(".sheet").remove();publicar();};$("#xS2").onclick=()=>document.querySelector(".sheet").remove();}
@@ -516,7 +517,7 @@ function central(){const l=LS.get("farolLog",{}),gh=LS.get("farolGh",null),fez=k
  ${st(fez("carregado"),"1. Carregar a revista do dia (PDF)",fez("carregado")?"Feito hoje às "+quando(l.carregado).slice(-5):"Pendente · última: "+quando(l.carregado),!fez("carregado"))}
  ${st(fez("pacote"),"2. Gerar o pacote do WhatsApp",fez("pacote")?"Feito hoje às "+quando(l.pacote).slice(-5):"Pendente",!fez("pacote"))}
  ${st(fez("publicado"),"3. Publicar no app da equipe",fez("publicado")?"Feito hoje às "+quando(l.publicado).slice(-5):gh&&gh.token?"Pendente":"Configure o token do GitHub para publicar",!fez("publicado"))}
- <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:10px"><button class="btn" data-pdf style="font-size:12px;padding:10px 6px">Carregar PDF</button><button class="btn" data-pacote style="font-size:12px;padding:10px 6px;background:#25d366">Pacote</button><button class="btn" id="cPub" style="font-size:12px;padding:10px 6px">Publicar</button></div></div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px"><button class="btn" data-pdf style="font-size:12px;padding:10px 6px">Carregar PDF</button><button class="btn" data-revista style="font-size:12px;padding:10px 6px;background:#b0263a">Gerar revista</button><button class="btn" data-pacote style="font-size:12px;padding:10px 6px;background:#25d366">Pacote</button><button class="btn" id="cPub" style="font-size:12px;padding:10px 6px">Publicar</button></div></div>
  <div class="sec">Fontes de dados</div><div class="card">
  ${st(true,"Revista Morning Operational News (PDF)","Ativa · leitura automática dos números, DDS, editorial e frase")}
  ${st(!!API.base,"API do Power BI",API.base?"Conectada: "+API.base:"Aguardando liberação da TI · coleta automática às 06h30",!API.base)}
@@ -546,7 +547,7 @@ function paintHead(){if(!D){$("#updT").textContent="Nenhuma edição carregada";
  const ks=Object.keys(edicoes()).sort().reverse();$("#dSel").innerHTML=ks.map(k=>`<option value="${k}" ${k===isoOf(d1.data)?"selected":""}>${k.slice(8)}/${k.slice(5,7)}</option>`).join("");}
 function vazio(){return `<div class="card empty"><img src="icons/logo-los.png" alt="Grupo LOS" style="width:220px;max-width:70%;margin-bottom:6px"><div class="ic">📄</div><b>Carregue a revista do dia</b><p class="note">Enquanto a API do Power BI não é liberada, o app é alimentado pelo PDF da Morning Operational News.</p><button class="btn" data-pdf style="margin-top:8px">Carregar PDF</button></div>`;}
 document.querySelector("nav.tabs").onclick=e=>{const b=e.target.closest("button");if(b) show(b.dataset.t);};
-document.addEventListener("click",e=>{if(e.target.closest("[data-pacote]")){document.querySelector(".sheet")?.remove();FarolPacote.abrir();return;}if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
+document.addEventListener("click",e=>{if(e.target.closest("[data-revista]")){document.querySelector(".sheet")?.remove();FarolPacote.gerarRevista();return;}if(e.target.closest("[data-pacote]")){document.querySelector(".sheet")?.remove();FarolPacote.abrir();return;}if(e.target.closest("[data-pdf]")){document.querySelector(".sheet")?.remove();$("#pdfIn").click();}});
 $("#main").addEventListener("click",e=>{if(e.target.closest("[data-pdf]"))return;if(e.target.closest("#ddsCard")) return ddsSheet();const m=e.target.closest("[data-m]");if(m) return mSheet(m.dataset.m);const r=e.target.closest("[data-reg]");if(r) regSheet(r.dataset.reg);});
 $("#bAl").onclick=()=>D?alertsSheet():toastMsg("Carregue uma edição primeiro.");$("#bCfg").onclick=menu;$("#bInst").onclick=doInstall;
 $("#dSel").onchange=()=>{const e=edicoes()[$("#dSel").value];if(e){D=e;LS.set("farolAtual",$("#dSel").value);compute();paintHead();show(cur);}};

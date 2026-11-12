@@ -139,5 +139,12 @@ ${D.avisos && D.avisos.length ? `<p style="margin-top:12px;font-size:10px;color:
       files.forEach(f => baixar(f, f.name)); window.open("https://wa.me/?text=" + encodeURIComponent(t), "_blank");
     };
   }
-  window.FarolPacote = { abrir, texto, cartao, revistaPDF };
+  async function gerarRevista() {
+    if (!D) { toastMsg("Carregue o PDF do dia primeiro."); return; }
+    toastMsg("Gerando a revista…");
+    try { const pdf = await revistaPDF(); const f = new File([pdf], nomeBase() + ".pdf", { type: "application/pdf" });
+      try { if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f], title: "Morning Operational News · " + d1.data }); return; } } catch (e) { if (e.name === "AbortError") return; }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(pdf); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); toastMsg("Revista gerada: " + f.name);
+    } catch (e) { toastMsg("Não consegui gerar a revista: " + e.message); } }
+  window.FarolPacote = { abrir, texto, cartao, revistaPDF, gerarRevista };
 })();
