@@ -4598,7 +4598,8 @@ const Push = {
   async subscription(create){
     const reg=await this.reg(); let sub=await reg.pushManager.getSubscription();
     if(!sub && create){
-      const { key }=await fetch(PUSH_CONFIG.serverUrl+"/key").then(r=>r.json());
+      let key; try{ key=(await fetch(PUSH_CONFIG.serverUrl+"/key").then(r=>r.json())).key; }catch(e){ throw new Error("rede"); }
+      if(!key) throw new Error("servidor");   // Worker antigo: ainda sem as rotas /push
       const raw=atob(key.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((key.length+3)%4));
       sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:Uint8Array.from(raw,c=>c.charCodeAt(0)) });
     }
@@ -4694,7 +4695,7 @@ async function pushAction(e){
   if(a==="toggle" && e.type==="change"){
     if(t.checked){ toast("Ativando notificações…");
       try{ await Push.enable(); toast("Notificações ligadas neste aparelho."); }
-      catch(err){ toast(err.message==="perm"?"Permissão não concedida — notificações desligadas.":err.message==="unsupported"?"Este navegador não oferece notificações push.":"Não foi possível ligar agora. Verifique a internet e tente de novo.",4000); }
+      catch(err){ toast(err.message==="perm"?"Permissão não concedida — notificações desligadas.":err.message==="unsupported"?"Este navegador não oferece notificações push.":err.message==="servidor"?"O servidor de notificações ainda não foi atualizado no Cloudflare (cole o worker.js novo).":err.message==="rede"?"Sem conexão com o servidor de notificações. Verifique a internet.":"Não foi possível ligar agora ("+err.message+").",4000); }
     } else { await Push.disable(); toast("Notificações desligadas."); }
     Reminders.schedule(); renderReminders(); return;
   }
@@ -5705,8 +5706,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.12.0";
+const APP_VERSION = "3.12.1";
 const CHANGELOG = [
+  { v:"3.12.1", d:"novembro de 2026", items:["Notificações: mensagem clara quando o servidor ainda não está pronto ou quando falta internet."] },
   { v:"3.12.0", d:"novembro de 2026", items:["Notificações na tela do celular, mesmo com o app fechado: devocional do dia no seu horário, aviso de versão nova e novidades do SOLA.","Sininho no alto do app com a central de notificações e o número de avisos não lidos."] },
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
   { v:"3.11.0", d:"novembro de 2026", items:["Ouvir: Hinos do SOLA tocam inteiros dentro do app, com tela bloqueada e no carro (órgão sobre harmonizações de Bach, domínio público).","Novas pregações: Augustus Nicodemus e Teologia da Reforma."] },
