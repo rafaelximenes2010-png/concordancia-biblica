@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Enviar aviso · SOLA | Bíblia &amp; Teologia</title>
+<link rel="icon" href="../icons/favicon-64.png">
+<style>
+  :root{--ink:#1c2747;--ink2:#56607a;--gold:#c99a3b;--bg:#f6f1e7;--card:#fff;--line:#e6dcc8}
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}
+  header{background:#0f1b33;color:#f4ead2;padding:18px 20px;display:flex;gap:12px;align-items:center}
+  header img{width:40px;height:40px;border-radius:10px}
+  header h1{margin:0;font-size:18px;letter-spacing:.02em}
+  header small{display:block;color:var(--gold);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+  main{max-width:560px;margin:0 auto;padding:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+  label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+  input,textarea,select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fffdf8;color:var(--ink)}
+  textarea{min-height:90px;resize:vertical}
+  .count{font-size:12px;color:var(--ink2);text-align:right}
+  button{font:600 15px/1 inherit;font-family:inherit;padding:12px 18px;border-radius:12px;border:0;background:#1c2747;color:#fff;cursor:pointer}
+  button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .preview{display:flex;gap:10px;align-items:flex-start;background:#eef0f4;border-radius:14px;padding:12px}
+  .preview img{width:36px;height:36px;border-radius:9px}
+  .preview b{display:block}
+  .preview span{font-size:14px;color:#333}
+  #msg{margin-top:12px;font-weight:600}
+  .ok{color:#2f6b45}.err{color:#a23b2b}
+  p.hint{font-size:13px;color:var(--ink2);margin:6px 0 0}
+</style>
+</head>
+<body>
+<header><img src="../icons/apple-touch-180.png?v=3" alt=""><div><small>Administrador</small><h1>Enviar aviso aos celulares</h1></div></header>
+<main>
+  <div class="card">
+    <label for="k">Senha de administrador</label>
+    <input id="k" type="password" autocomplete="current-password" placeholder="PUSH_ADMIN (ou os 6 últimos caracteres do TG_TOKEN)">
+    <p class="hint" id="stat">Digite a senha para ver quantos aparelhos estão inscritos.</p>
+  </div>
+  <div class="card">
+    <label for="t">Título</label>
+    <input id="t" maxlength="80" placeholder="Ex.: Especial de Natal começou">
+    <label for="b">Mensagem</label>
+    <textarea id="b" maxlength="240" placeholder="Ex.: Um artigo novo por dia até o Natal. Toque para ler o de hoje."></textarea>
+    <div class="count"><span id="n">0</span>/240</div>
+    <label for="u">Ao tocar, abrir</label>
+    <select id="u">
+      <option value="./index.html#inicio">Início</option>
+      <option value="./index.html#devocional">Devocional</option>
+      <option value="./index.html#texto">Texto do dia</option>
+      <option value="./index.html#artigos">Artigos</option>
+      <option value="./index.html#biblia">Bíblia</option>
+      <option value="./index.html#catecismos">Credos e Catecismos</option>
+      <option value="./index.html#config">Configurações (novidades da versão)</option>
+    </select>
+    <label for="c">Tipo</label>
+    <select id="c">
+      <option value="aviso">Aviso / novidade (vai para quem marcou “Avisos e novidades”)</option>
+      <option value="versao">Versão nova (vai para quem marcou “Novas versões”)</option>
+    </select>
+    <label style="margin-top:16px">Prévia</label>
+    <div class="preview"><img src="../icons/apple-touch-180.png?v=3" alt=""><div><b id="pt">Título</b><span id="pb">Mensagem</span></div></div>
+    <div class="row"><button id="send">Enviar para todos</button><button class="sec" id="stats">Atualizar contagem</button></div>
+    <div id="msg" role="status"></div>
+    <p class="hint">O aviso também aparece no sininho (central de notificações) do app. Versões novas e o devocional diário são enviados sozinhos; use esta página só para avisos especiais.</p>
+  </div>
+</main>
+<script>
+const API = "https://tradutor.rafael-ximenes-2010.workers.dev/push";
+const $ = s => document.querySelector(s);
+try { $("#k").value = localStorage.getItem("sola:pushAdmin") || ""; } catch (e) {}
+function prev(){ $("#pt").textContent = $("#t").value || "Título"; $("#pb").textContent = $("#b").value || "Mensagem"; $("#n").textContent = $("#b").value.length; }
+["#t", "#b"].forEach(s => $(s).addEventListener("input", prev));
+async function stats(){
+  const k = $("#k").value.trim(); if (!k) return;
+  try { const r = await fetch(`${API}/status?k=${encodeURIComponent(k)}`); const j = await r.json();
+    if (!r.ok) { $("#stat").textContent = "Senha incorreta."; return; }
+    try { localStorage.setItem("sola:pushAdmin", k); } catch (e) {}
+    $("#stat").textContent = `${j.inscritos} aparelho(s) inscrito(s) · ${j.devocional} com devocional diário · versão registrada: ${j.versao || "—"}${j.fila ? ` · ${j.fila} envio(s) na fila` : ""}`;
+  } catch (e) { $("#stat").textContent = "Não foi possível falar com o servidor."; }
+}
+$("#k").addEventListener("change", stats); $("#stats").addEventListener("click", stats);
+$("#send").addEventListener("click", async () => {
+  const k = $("#k").value.trim(), title = $("#t").value.trim(), body = $("#b").value.trim();
+  const m = $("#msg"); m.className = "";
+  if (!k || !title) { m.className = "err"; m.textContent = "Preencha a senha e o título."; return; }
+  if (!confirm(`Enviar “${title}” para todos os inscritos?`)) return;
+  $("#send").disabled = true; m.textContent = "Enviando…";
+  try {
+    const r = await fetch(`${API}/send`, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ k, title, body, url: $("#u").value, topic: $("#c").value }) });
+    const j = await r.json();
+    if (!r.ok) { m.className = "err"; m.textContent = j.error === "auth" ? "Senha incorreta." : "Erro: " + (j.error || r.status); }
+    else { m.className = "ok"; m.textContent = `Enviado para ${j.sent} de ${j.total} aparelho(s)` + (j.rest ? `; os outros ${j.rest} recebem nos próximos 15 minutos.` : ".") + (j.gone ? ` (${j.gone} inscrição(ões) expirada(s) removida(s))` : ""); stats(); }
+  } catch (e) { m.className = "err"; m.textContent = "Não foi possível falar com o servidor."; }
+  $("#send").disabled = false;
+});
+prev(); stats();
+</script>
+</body>
+</html>

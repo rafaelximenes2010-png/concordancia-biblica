@@ -35,3 +35,25 @@ e publique. A chave fica só no Cloudflare; o app nunca a vê.
 4. Cole de novo o `worker.js` atualizado e clique em **Deploy**.
 
 A voz padrão é `pt-BR-AntonioNeural` (masculina). Cada devocional é gerado uma única vez e fica guardado no Cloudflare e no celular.
+
+## 5. Notificações push (tela do celular, com o app fechado)
+O mesmo Worker envia as notificações do SOLA: devocional no horário que cada pessoa
+escolheu, aviso de versão nova (sozinho, ao publicar) e avisos especiais.
+
+1. **Edit code**: cole o `worker.js` atualizado › **Deploy**.
+2. **Settings › Triggers › Cron Triggers**: troque `0 8 * * *` por `0,15,30,45 * * * *`
+   (a cada 15 minutos). O Telegram continua com uma postagem por dia, a partir das 5h.
+3. O KV `TR_CACHE` precisa estar ligado (já está). As chaves de push (VAPID) são
+   criadas sozinhas na primeira vez — não há nada para copiar.
+4. Opcional: **Variables and Secrets** › `PUSH_ADMIN` (Secret) com uma senha para a
+   página de avisos. Sem ela, a senha é a mesma do teste do Telegram (6 últimos
+   caracteres do `TG_TOKEN`).
+
+Enviar um aviso: https://solabiblia.net.br/site/enviar-aviso.html
+
+Como funciona a versão nova: a cada 15 minutos o Worker lê o `sw.js` publicado; se o
+`CACHE` mudou, lê `APP_VERSION` e o primeiro item do `CHANGELOG` no `index.html` e avisa
+quem marcou “Novas versões”. Só avisa quando o número da versão muda.
+
+Limite do plano gratuito: até 40 envios por rodada; o restante segue na fila e sai nas
+rodadas seguintes (a cada 15 minutos).

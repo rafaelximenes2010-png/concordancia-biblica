@@ -493,6 +493,22 @@ dialog.note-dlg{max-width:620px}
 .switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
 .switch input{width:20px;height:20px;accent-color:var(--accent)}
 .rem-status{font-size:13px;color:var(--ink-2);margin:0}
+.push-box{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:0 0 10px;background:var(--bg)}
+.push-box .switch{font-size:15px}
+.push-topics{display:grid;gap:6px;margin-top:8px}
+.push-topics input[type=time]{border:1px solid var(--border);background:var(--surface);border-radius:8px;padding:3px 6px;color:var(--ink);margin-left:4px}
+.bell-top{position:relative}
+.bell-n{position:absolute;top:1px;right:1px;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:#c0392b;color:#fff;font:700 10px/16px system-ui,sans-serif;text-align:center;box-shadow:0 0 0 2px var(--surface)}
+.inbox-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.inbox-list li button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.inbox-list li.new button{border-color:var(--gold);background:var(--gold-soft)}
+.inbox-list .ib-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff}
+.inbox-list .ib-ic .icon{width:18px;height:18px}
+.inbox-list b{display:block;font-size:15px}
+.inbox-list span.ib-tx{font-size:13px;color:var(--ink-2)}
+.inbox-list time{display:block;font-size:11px;color:var(--ink-2);margin-top:2px}
+.inbox-cta{margin-top:12px;padding:12px;border-radius:12px;background:var(--gold-soft);border:1px solid var(--gold)}
+.inbox-cta p{margin:0 0 8px}
 .rem-banner{display:flex;gap:10px;align-items:center;background:var(--gold-soft);border:1px solid var(--gold);border-radius:14px;padding:10px 14px;margin:12px 0}
 .rem-banner p{margin:0;flex:1}
 
@@ -1564,6 +1580,7 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
       <button type="button" class="btn btn-icon now-top" id="nowTop" hidden aria-label="Abrir o tocador" title="Tocando agora"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+      <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
       <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
       <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
@@ -2337,6 +2354,13 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
       <button type="button" class="btn btn-sm" data-cd="all">Mais recursos</button>
     </div>
   </div>
+</dialog>
+<dialog id="inboxDialog" class="note-dlg inbox-dlg" aria-labelledby="inboxTitle">
+  <div class="dlg-head">
+    <h2 id="inboxTitle"><svg class="icon" aria-hidden="true" style="color:var(--gold)"><use href="#i-bell"/></svg> Notificações</h2>
+    <button type="button" class="btn btn-icon btn-ghost" id="inboxClose" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="dlg-body" id="inboxBody"></div>
 </dialog>
 <dialog id="installDialog" class="note-dlg inst-dlg" aria-labelledby="instTitle">
   <div class="dlg-head">
@@ -4560,11 +4584,41 @@ function startNote(v){
    Funciona agora: (1) aviso local no horário escolhido enquanto o app
    está aberto ou em segundo plano, com permissão do usuário; (2) evento
    diário no calendário (.ics), que avisa mesmo com o app fechado.
-   Avisos push com o app fechado exigem um servidor — NÃO configurado.
-   >>> Para ativar push: preencha PUSH_CONFIG e implemente subscribePush(). <<<
+   (3) notificações push com o app FECHADO (devocional no horário escolhido,
+   versões novas e avisos), pelo Worker do Cloudflare (rotas /push/*).
    ===================================================================== */
-const PUSH_CONFIG = { serverUrl:null, vapidPublicKey:null };   // ainda não existe servidor
-async function subscribePush(){ if(!PUSH_CONFIG.serverUrl || !PUSH_CONFIG.vapidPublicKey) return { ok:false, reason:"Servidor de notificações push não configurado." }; }
+const PUSH_CONFIG = { serverUrl: TR_PROXY + "/push" };
+const Push = {
+  get(){ return store.get("push",{ on:false, topics:{ devo:true, versao:true, aviso:true }, synced:"" }); },
+  set(x){ store.set("push",x); },
+  supported(){ return "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && window.isSecureContext; },
+  iosNeedsInstall(){ return /iPhone|iPad|iPod/.test(navigator.userAgent) && !(matchMedia("(display-mode: standalone)").matches || navigator.standalone); },
+  async reg(){ return navigator.serviceWorker.ready; },
+  async post(path, body){ const r=await fetch(PUSH_CONFIG.serverUrl+path,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(body) }); if(!r.ok) throw new Error("servidor "+r.status); return r.json(); },
+  async subscription(create){
+    const reg=await this.reg(); let sub=await reg.pushManager.getSubscription();
+    if(!sub && create){
+      const { key }=await fetch(PUSH_CONFIG.serverUrl+"/key").then(r=>r.json());
+      const raw=atob(key.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((key.length+3)%4));
+      sub=await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:Uint8Array.from(raw,c=>c.charCodeAt(0)) });
+    }
+    return sub;
+  },
+  async sync(create){ const x=this.get(); const sub=await this.subscription(create); if(!sub) return false;
+    await this.post("/subscribe",{ sub:sub.toJSON(), time:Reminders.get().time, topics:x.topics }); x.synced=todayKey(); this.set(x); return true; },
+  async enable(){
+    if(!this.supported()) throw new Error("unsupported");
+    const perm = Notification.permission==="granted" ? "granted" : await Notification.requestPermission();
+    if(perm!=="granted") throw new Error("perm");
+    await this.sync(true); const x=this.get(); x.on=true; this.set(x);
+  },
+  async disable(){ const x=this.get(); x.on=false; this.set(x);
+    try{ const sub=await this.subscription(false); if(sub){ this.post("/unsubscribe",{ endpoint:sub.endpoint }).catch(()=>{}); await sub.unsubscribe(); } }catch(e){} },
+  async test(){ const sub=await this.subscription(false); if(!sub) throw new Error("sem inscrição"); return this.post("/test",{ endpoint:sub.endpoint }); },
+  /* Ao abrir o app: renova a inscrição uma vez por dia (o celular pode trocá-la) */
+  async refresh(){ const x=this.get(); if(!x.on || !this.supported() || Notification.permission!=="granted" || x.synced===todayKey()) return; try{ await this.sync(true); }catch(e){} }
+};
+async function subscribePush(){ try{ await Push.enable(); return { ok:true }; }catch(e){ return { ok:false, reason:e.message }; } }
 const Reminders = {
   get(){ return store.get("reminder",{ on:false, time:"07:30", lastFired:"" }); },
   set(r){ store.set("reminder",r); },
@@ -4572,6 +4626,7 @@ const Reminders = {
   supported(){ return "Notification" in window; },
   schedule(){
     clearTimeout(this.timer); const r=this.get(); if(!r.on || !this.supported() || Notification.permission!=="granted") return;
+    const px=Push.get(); if(px.on && px.topics.devo) return;   // o push já avisa no horário, mesmo com o app fechado
     const [hh,mm]=r.time.split(":").map(Number); const now=new Date(); const at=new Date(); at.setHours(hh,mm,0,0);
     if(at<=now) at.setDate(at.getDate()+1);
     this.timer=setTimeout(()=>{ this.fire(); this.schedule(); }, Math.min(at-now, 2147483000));
@@ -4585,20 +4640,36 @@ const Reminders = {
   }
 };
 function reminderCardHtml(){
-  const r=Reminders.get(), perm=Reminders.supported()?Notification.permission:"unsupported";
+  const r=Reminders.get(), perm=Reminders.supported()?Notification.permission:"unsupported", px=Push.get();
+  const pushOn = px.on && perm==="granted";
+  const pushBlock = Push.supported() && !Push.iosNeedsInstall()
+    ? `<div class="push-box">
+      <label class="switch"><input type="checkbox" data-push="toggle" ${pushOn?"checked":""}> <strong>Notificações na tela do celular</strong></label>
+      <p class="rem-status">${pushOn?"Ligadas: chegam mesmo com o app fechado.":perm==="denied"?"Bloqueadas nas configurações do celular/navegador. Libere as notificações do SOLA lá e tente de novo.":"Desligadas. A permissão só é pedida quando você ligar."}</p>
+      <div class="push-topics" ${pushOn?"":"hidden"}>
+        <label class="radio"><input type="checkbox" data-push="devo" ${px.topics.devo?"checked":""}><span>Devocional do dia, às <input type="time" data-rem="time" value="${esc(r.time)}"></span></label>
+        <label class="radio"><input type="checkbox" data-push="versao" ${px.topics.versao?"checked":""}><span>Novas versões do app (com o que mudou)</span></label>
+        <label class="radio"><input type="checkbox" data-push="aviso" ${px.topics.aviso?"checked":""}><span>Avisos e novidades do SOLA (artigos, séries, Natal)</span></label>
+        <div class="row-actions"><button type="button" class="btn btn-sm" data-push="test">Testar notificação</button><button type="button" class="btn btn-sm" data-inbox="open">Ver central de notificações</button></div>
+      </div></div>`
+    : Push.iosNeedsInstall()
+    ? `<div class="push-box"><p class="rem-status"><strong>Notificações no iPhone:</strong> primeiro instale o SOLA na tela de início (Safari › Compartilhar › Adicionar à Tela de Início) e abra pelo ícone. Depois, ligue aqui as notificações.</p><button type="button" class="btn btn-sm btn-primary" data-rem="install">Como instalar</button></div>`
+    : "";
   const status = !Reminders.supported() ? "Este navegador não oferece notificações. Use o lembrete pelo calendário."
     : perm==="denied" ? "As notificações foram bloqueadas nas configurações do navegador/celular. Libere-as lá ou use o calendário."
     : r.on && perm==="granted" ? `Ativo: aviso às ${r.time} enquanto o app estiver aberto ou em segundo plano.`
     : "Desligado. A permissão só é pedida quando você ativar.";
-  return `<h3><svg class="icon" aria-hidden="true" style="width:26px;height:26px;color:var(--gold)"><use href="#i-bell"/></svg>Lembrete diário (opcional)</h3>
+  const localBlock = pushOn ? "" : `
     <div class="rem-row">
-      <label class="switch"><input type="checkbox" data-rem="toggle" ${r.on&&perm==="granted"?"checked":""}> Lembrar do texto e do devocional</label>
+      <label class="switch"><input type="checkbox" data-rem="toggle" ${r.on&&perm==="granted"?"checked":""}> Lembrete só com o app aberto</label>
       <label class="switch" style="font-weight:400">às <input type="time" data-rem="time" value="${esc(r.time)}"></label>
       ${r.on&&perm==="granted"?`<button type="button" class="btn btn-sm" data-rem="test">Testar aviso</button>`:""}
-      <button type="button" class="btn btn-sm" data-rem="ics"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Adicionar ao calendário</button>
     </div>
-    <p class="rem-status">${esc(status)}</p>
-    <p class="rem-status muted" style="font-size:12px">Avisos com o app <strong>fechado</strong> (notificações push) dependem de um servidor que ainda não existe neste app. Enquanto isso, o evento diário no calendário do celular é a forma mais confiável de lembrar. No iPhone, notificações de apps web só funcionam com o app instalado na tela inicial (iOS 16.4 ou superior).</p>`;
+    <p class="rem-status">${esc(status)}</p>`;
+  return `<h3><svg class="icon" aria-hidden="true" style="width:26px;height:26px;color:var(--gold)"><use href="#i-bell"/></svg>Notificações e lembrete diário</h3>
+    ${pushBlock}${localBlock}
+    <div class="rem-row"><button type="button" class="btn btn-sm" data-rem="ics"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Adicionar ao calendário</button></div>
+    <p class="rem-status muted" style="font-size:12px">No iPhone, notificações de apps web funcionam com o app instalado na tela inicial (iOS 16.4 ou superior). O evento no calendário é uma alternativa que funciona em qualquer celular.</p>`;
 }
 function renderReminders(){ ["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b) b.innerHTML=reminderCardHtml(); }); }
 async function reminderAction(e){
@@ -4611,13 +4682,82 @@ async function reminderAction(e){
     } else { r.on=false; Reminders.set(r); toast("Lembrete desligado."); }
     Reminders.schedule(); renderReminders();
   }
-  if(a==="time" && e.type==="change"){ r.time=t.value||"07:30"; Reminders.set(r); Reminders.schedule(); renderReminders(); toast(`Horário: ${r.time}.`); }
+  if(a==="time" && e.type==="change"){ r.time=t.value||"07:30"; Reminders.set(r); Reminders.schedule(); if(Push.get().on) Push.sync(false).catch(()=>{}); renderReminders(); toast(`Horário: ${r.time}.`); }
+  if(a==="install" && e.type==="click"){ $("#instTop")?.click(); }
   if(a==="test" && e.type==="click"){ const x=Reminders.get(); x.lastFired=""; Reminders.set(x);
     try{ const reg=await navigator.serviceWorker?.getRegistration(); const opt={ body:"Assim será o seu lembrete diário.", icon:"icons/icon-192.png" };
       if(reg) await reg.showNotification("SOLA | Bíblia & Teologia",opt); else new Notification("SOLA | Bíblia & Teologia",opt); }catch(err){ toast("Não foi possível mostrar o aviso neste navegador."); } }
   if(a==="ics" && e.type==="click") downloadIcs(r.time);
 }
-["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); } });
+async function pushAction(e){
+  const t=e.target.closest("[data-push]"); if(!t) return; const a=t.dataset.push, x=Push.get();
+  if(a==="toggle" && e.type==="change"){
+    if(t.checked){ toast("Ativando notificações…");
+      try{ await Push.enable(); toast("Notificações ligadas neste aparelho."); }
+      catch(err){ toast(err.message==="perm"?"Permissão não concedida — notificações desligadas.":err.message==="unsupported"?"Este navegador não oferece notificações push.":"Não foi possível ligar agora. Verifique a internet e tente de novo.",4000); }
+    } else { await Push.disable(); toast("Notificações desligadas."); }
+    Reminders.schedule(); renderReminders(); return;
+  }
+  if(["devo","versao","aviso"].includes(a) && e.type==="change"){ x.topics[a]=t.checked; Push.set(x); Reminders.schedule();
+    try{ await Push.sync(false); toast("Preferência salva."); }catch(err){ toast("Salvo neste aparelho; o servidor será avisado quando houver internet."); x.synced=""; Push.set(x); } return; }
+  if(a==="test" && e.type==="click"){ try{ const r=await Push.test(); toast(r.ok?"Enviada! Ela aparece em alguns segundos.":"O servidor não conseguiu entregar. Desligue e ligue de novo.",4000); }catch(err){ toast("Não foi possível testar agora.",3500); } }
+}
+["#remindersCard","#remindersCard2"].forEach(s=>{ const b=$(s); if(b){ b.addEventListener("change",reminderAction); b.addEventListener("click",reminderAction); b.addEventListener("change",pushAction); b.addEventListener("click",pushAction); } });
+/* ---------- Central de notificações (sininho no alto) ----------
+   Junta: devocional de hoje, avisos e versões enviados pelo servidor (/push/feed),
+   notificações recebidas por push (guardadas pelo sw.js) e a versão instalada. */
+const Inbox = {
+  feed:[], loaded:0,
+  seen(){ return store.get("inboxSeen",""); },
+  async received(){ try{ const c=await caches.open("sola-inbox"); const r=await c.match("inbox"); return r?await r.json():[]; }catch(e){ return []; } },
+  async load(force){
+    if(force || Date.now()-this.loaded>10*60*1000){
+      try{ const j=await fetch(PUSH_CONFIG.serverUrl+"/feed").then(r=>r.json()); this.feed=j.items||[]; this.loaded=Date.now(); }catch(e){}
+    }
+    const items=[], add=it=>{ if(!items.some(x=>(x.id && x.id===it.id) || (x.title===it.title && x.body===it.body))) items.push(it); };
+    const now=new Date(), [hh,mm]=Reminders.get().time.split(":").map(Number), at=new Date(); at.setHours(hh||0,mm||0,0,0);
+    try{ const dv=devoFor(now); add({ id:"devo-"+todayKey(), kind:"devo", title:"Devocional de hoje", body:dv.title, url:"./index.html#devocional", date:(now>=at?at:new Date(now.getFullYear(),now.getMonth(),now.getDate(),0,0)).toISOString() }); }catch(e){}
+    (await this.received()).filter(x=>x.kind!=="devo").forEach(add);
+    this.feed.forEach(add);
+    const cur=CHANGELOG.find(c=>c.v===APP_VERSION);
+    if(cur) add({ id:"v"+APP_VERSION, kind:"versao", title:`SOLA ${APP_VERSION} instalado`, body:cur.items[0], url:"./index.html#config", date:store.get("verSeenAt",new Date().toISOString()) });
+    return items.sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,30);
+  },
+  unread(items){ const s=this.seen(); return items.filter(x=>!s || String(x.date)>s).length; },
+  async paint(force){ const items=await this.load(force), n=this.unread(items), b=$("#bellN"); if(!b) return items;
+    b.hidden=!n; b.textContent=n>9?"9+":n; return items; },
+  when(d){ const t=new Date(d), diff=(Date.now()-t)/60000; if(isNaN(t)) return "";
+    if(diff<1) return "agora"; if(diff<60) return `há ${Math.round(diff)} min`; if(diff<1440 && t.getDate()===new Date().getDate()) return "hoje, "+t.toTimeString().slice(0,5);
+    if(diff<2880) return "ontem"; return t.toLocaleDateString("pt-BR",{ day:"2-digit", month:"short" }); },
+  async open(){
+    const items=await this.load(true), s=this.seen(), px=Push.get();
+    const ic={ devo:["i-lamp","#8a5a2b"], versao:["i-download","#2e5e8c"], aviso:["i-bell","#4f7a63"] };
+    $("#inboxBody").innerHTML = (items.length ? `<ul class="inbox-list">${items.map((x,i)=>{ const [sym,col]=ic[x.kind]||ic.aviso;
+      return `<li class="${!s||String(x.date)>s?"new":""}"><button type="button" data-ib="${i}"><span class="ib-ic" style="background:${col}"><svg class="icon" aria-hidden="true"><use href="#${sym}"/></svg></span><span><b>${esc(x.title)}</b><span class="ib-tx">${esc(x.body||"")}</span><time>${esc(this.when(x.date))}</time></span></button></li>`; }).join("")}</ul>` : `<p class="muted">Nenhuma notificação por enquanto.</p>`)
+      + (px.on && Notification.permission==="granted" ? `<p class="hint" style="margin-top:12px">Notificações ligadas neste aparelho. <a href="#devocional" data-ib-cfg>Ajustar</a></p>`
+         : `<div class="inbox-cta"><p><strong>Receba na tela do celular</strong>, mesmo com o app fechado: devocional do dia, versões novas e avisos do SOLA.</p><button type="button" class="btn btn-sm btn-primary" data-ib-cfg>Ligar notificações</button></div>`);
+    $("#inboxBody").onclick=e=>{
+      if(e.target.closest("[data-ib-cfg]")){ e.preventDefault(); $("#inboxDialog").close(); showView("devocional"); setTimeout(()=>$("#remindersCard2")?.scrollIntoView({ behavior:"smooth", block:"center" }),250); return; }
+      const b=e.target.closest("[data-ib]"); if(!b) return; const it=items[+b.dataset.ib]; $("#inboxDialog").close();
+      const h=(String(it.url||"").split("#")[1])||"inicio"; showView(h);
+    };
+    openDialog($("#inboxDialog"));
+    store.set("inboxSeen",new Date().toISOString()); $("#bellN").hidden=true;
+    try{ navigator.clearAppBadge && navigator.clearAppBadge(); }catch(e){}
+    try{ const c=await caches.open("sola-inbox"); await c.put("inbox",new Response("[]")); }catch(e){}
+    // guarda as recebidas como lidas (somem do cache do sw, ficam no histórico local)
+    const keep=items.filter(x=>x.kind!=="devo").slice(0,20); store.set("inboxKeep",keep);
+  }
+};
+/* histórico local das recebidas (o sw.js limpa a lista dele ao abrir a central) */
+const _ibRecv=Inbox.received.bind(Inbox); Inbox.received=async()=>[...await _ibRecv(), ...store.get("inboxKeep",[])];
+document.addEventListener("click",e=>{ if(e.target.closest("[data-inbox='open']")){ e.preventDefault(); Inbox.open(); } });
+$("#inboxClose")?.addEventListener("click",()=>$("#inboxDialog").close());
+navigator.serviceWorker?.addEventListener("message",e=>{ if(e.data?.type==="push"){ Inbox.paint(); if(e.data.item?.title) toast("🔔 "+e.data.item.title,3500); } });
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") Inbox.paint(); });
+setTimeout(()=>{
+  if(store.get("verSeenFor","")!==APP_VERSION){ store.set("verSeenAt",new Date().toISOString()); store.set("verSeenFor",APP_VERSION); }
+  Inbox.paint(); Push.refresh(); },2500);
 function downloadIcs(time){
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
   if(framed){ toast("Nesta página de pré-visualização os downloads são bloqueados. No app instalado, este botão gera o lembrete do calendário."); return; }
@@ -5565,8 +5705,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.11.0";
+const APP_VERSION = "3.12.0";
 const CHANGELOG = [
+  { v:"3.12.0", d:"novembro de 2026", items:["Notificações na tela do celular, mesmo com o app fechado: devocional do dia no seu horário, aviso de versão nova e novidades do SOLA.","Sininho no alto do app com a central de notificações e o número de avisos não lidos."] },
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
   { v:"3.11.0", d:"novembro de 2026", items:["Ouvir: Hinos do SOLA tocam inteiros dentro do app, com tela bloqueada e no carro (órgão sobre harmonizações de Bach, domínio público).","Novas pregações: Augustus Nicodemus e Teologia da Reforma."] },
   { v:"3.10.5", d:"novembro de 2026", items:["Ouvir: entrar no Spotify com Face ID (Continuar com a Apple) e, no iPhone, botão para ouvir a lista completa no app do Spotify, que já abre logado."] },
@@ -6378,7 +6519,7 @@ const ANALYTICS = { goatcounter:"" };
 })();
 /* Aviso de novidades no Início após uma atualização */
 function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VERSION) return "";
-  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Bem-vindo ao SOLA | Bíblia &amp; Teologia ${APP_VERSION}:</strong> novo nome, comentários editoriais, vários versículos de uma vez e a seção Pensadores.</span><button type="button" class="btn btn-sm" data-view="config">Ver</button></div>`; }
+  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novo no SOLA ${APP_VERSION}:</strong> notificações na tela do celular (devocional do dia, versões novas e avisos) e o sininho com a central de notificações.</span><button type="button" class="btn btn-sm" data-inbox="open">Ver</button></div>`; }
 
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)

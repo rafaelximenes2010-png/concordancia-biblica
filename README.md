@@ -14,7 +14,6 @@ Aplicativo (PWA) de estudo bíblico para celular e computador.
 - **Minhas notas** — anotações de cultos e estudos salvas no aparelho (`NotesStore`, preparado para sincronização via `SyncAdapter`).
 
 ## O que depende de integração futura
-- Notificações push com o app fechado: preencher `PUSH_CONFIG` e implementar `subscribePush()` com um servidor.
 - Sincronização de notas entre aparelhos: implementar `SyncAdapter` com conta e banco de dados.
 - Versões bíblicas com direitos autorais (ARA, NVI etc.): exigem licença.
 
@@ -50,6 +49,12 @@ Versões como ARA, ARC, NVI, NAA e NTLH têm direitos autorais e só podem ser i
 ## Como adicionar uma versão
 Gere `biblias/CODIGO.json` no formato `{ code, name, lang, dir, license, books: { GEN: [[v1, v2, …], …] } }` e acrescente a entrada em `biblias/index.json`.
 Ao publicar uma nova versão do app, altere `CACHE` em `sw.js`.
+
+## Notificações (push)
+- No app: Estudos › Devocional › “Notificações e lembrete diário” (devocional no horário escolhido, versões novas, avisos). Sininho no alto = central de notificações.
+- Servidor: rotas `/push/*` no Worker (`tradutor/worker.js`); configuração em `tradutor/LEIA-ME.md`, item 5.
+- Versão nova é avisada sozinha ao mudar `APP_VERSION` (e `CACHE` no `sw.js`); o 1º item do `CHANGELOG` vira o texto da notificação.
+- Aviso especial: `site/enviar-aviso.html`.
 
 ## Site, privacidade e termos
 
