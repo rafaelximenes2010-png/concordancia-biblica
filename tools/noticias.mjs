@@ -24,8 +24,8 @@ const TRADUTOR = process.env.SOLA_TRADUTOR || "https://tradutor.rafael-ximenes-2
 const DIAS = 21, POR_FONTE = 6, MAX = 90;
 
 const gn = (q, lang) => lang === "pt"
-  ? `https://news.google.com/rss/search?q=${encodeURIComponent(q)}+when:14d&hl=pt-BR&gl=BR&ceid=BR:pt-419`
-  : `https://news.google.com/rss/search?q=${encodeURIComponent(q)}+when:14d&hl=en-US&gl=US&ceid=US:en`;
+  ? `https://news.google.com/rss/search?q=${encodeURIComponent(q)}+when:30d&hl=pt-BR&gl=BR&ceid=BR:pt-419`
+  : `https://news.google.com/rss/search?q=${encodeURIComponent(q)}+when:30d&hl=en-US&gl=US&ceid=US:en`;
 
 /* cat: sem = seminários reformados · mis = missões · per = igreja perseguida · igr = igreja no mundo
    urls: tenta em ordem; a primeira que responder com itens vale */
@@ -43,8 +43,9 @@ const FONTES = [
   { nome: "Union School of Theology", pais: "Reino Unido", cat: "sem", urls: ["https://ust.ac.uk/feed/"] },
   { nome: "Theologische Universiteit Kampen", pais: "Holanda", cat: "sem", urls: ["https://www.tukampen.nl/feed/", "https://www.tukampen.nl/nieuws/feed/"] },
   { nome: "Mukhanyo Theological College", pais: "África do Sul", cat: "sem", urls: ["https://mukhanyo.ac.za/feed/"] },
-  { nome: "Seminários reformados (Google Notícias)", cat: "sem", lang: "en", gnews: true, urls: [gn('"Reformed seminary" OR "Reformed Theological Seminary" OR "Westminster Seminary"', "en")] },
-  { nome: "Seminários no Brasil (Google Notícias)", cat: "sem", lang: "pt", gnews: true, urls: [gn('"seminário presbiteriano" OR "Andrew Jumper" OR "seminário teológico" reformado', "pt")] },
+  { nome: "Seminários reformados (Google Notícias)", cat: "sem", lang: "en", gnews: true, urls: [gn("site:wts.edu OR site:rts.edu OR site:prts.edu OR site:wscal.edu OR site:covenantseminary.edu OR site:sbts.edu OR site:calvinseminary.edu OR site:midamerica.edu", "en"), gn("Reformed seminary", "en")] },
+  { nome: "Seminários (Google News)", cat: "sem", lang: "en", gnews: true, urls: [gn("seminary Presbyterian OR Reformed theology professor", "en")] },
+  { nome: "Seminários no Brasil (Google Notícias)", cat: "sem", lang: "pt", gnews: true, urls: [gn("seminário presbiteriano", "pt"), gn("seminário teológico reformado", "pt")] },
   // Igreja reformada / evangélica no mundo
   { nome: "The Gospel Coalition", pais: "EUA", cat: "igr", urls: ["https://www.thegospelcoalition.org/feed/"] },
   { nome: "Christianity Today", pais: "EUA", cat: "igr", urls: ["https://www.christianitytoday.com/feed/", "https://www.christianitytoday.com/ct/rss.xml"] },
@@ -114,10 +115,32 @@ function classificar(f, titulo, texto){
 const paisDe = s => { for (const [pt, en] of PAISES) if (new RegExp(`\\b(${pt}|${en})\\b`, "i").test(s)) return pt; return ""; };
 const normT = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim().slice(0, 70);
 
-async function traduzir(texto){
+const espera = ms => new Promise(r => setTimeout(r, ms));
+async function viaWorker(texto){
   const r = await fetch(TRADUTOR, { method: "POST", headers: { "Content-Type": "application/json", "Origin": "https://solabiblia.net.br" },
     body: JSON.stringify({ text: texto, from: "en", to: "pt" }) });
-  const j = await r.json(); if (!r.ok || typeof j.text !== "string") throw new Error(j.error || r.status); return j.text;
+  const j = await r.json().catch(() => ({})); if (!r.ok || typeof j.text !== "string") throw new Error(j.error || r.status); return j.text;
+}
+/* Reserva gratuita: MyMemory (até 500 caracteres por pedido) */
+async function viaMyMemory(texto){
+  const u = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto.slice(0, 480))}&langpair=en|pt-BR&de=contato@solabiblia.net.br`;
+  const j = await (await fetch(u)).json();
+  const t = j?.responseData?.translatedText; if (!t || j.responseStatus !== 200 || /MYMEMORY WARNING|QUERY LENGTH/i.test(t)) throw new Error("mymemory " + (j.responseStatus || "")); return t;
+}
+let workerOk = true;
+async function traduzir1(texto){
+  if (workerOk) {
+    for (let k = 0; k < 2; k++) {
+      try { const t = await viaWorker(texto); await espera(1200); return t; }
+      catch (e) { if (e.message === "quota" && k === 0) { await espera(25000); continue; } workerOk = false; break; }
+    }
+  }
+  const t = await viaMyMemory(texto); await espera(400); return t;
+}
+async function traduzir(texto){
+  const [tt, rr] = texto.split("\n\n§§§\n\n");
+  const a = await traduzir1(tt); const b = rr ? await traduzir1(rr) : "";
+  return a + (rr ? "\n\n§§§\n\n" + b : "");
 }
 
 const anterior = (() => { try { return JSON.parse(fs.readFileSync(OUT, "utf8")); } catch { return { itens: [] }; } })();
