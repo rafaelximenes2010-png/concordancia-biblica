@@ -1439,6 +1439,7 @@ details.cd-cite[open] summary::after{content:" ▴"}
 html,body{overscroll-behavior:none}
 body.reading,body.scroll-lock{overflow:hidden!important;overscroll-behavior:none}
 dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.cfg-mail{margin:10px 0 4px;font-size:14px;color:var(--ink-2)} .cfg-mail a{font-weight:700;color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
@@ -2370,10 +2371,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <h3 id="cfgSgT"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Sugestões</h3>
       <p class="muted">Sugira um comentarista, uma versão, uma correção ou uma ideia. Sua opinião ajuda a melhorar o app.</p>
       <form id="sgForm" class="cfg-form">
-        <label>Tipo<select id="sgKind"><option>Ideia ou melhoria</option><option>Comentarista ou obra</option><option>Correção de texto</option><option>Problema no app</option><option>Outro</option></select></label>
+        <label>Tipo<select id="sgKind"><option>Ideia ou melhoria</option><option>Comentarista ou obra</option><option>Correção de texto</option><option>Problema no app</option><option>Contato ou parceria</option><option>Outro</option></select></label>
         <label>Sua sugestão<textarea id="sgText" rows="4" placeholder="Escreva aqui…"></textarea></label>
         <button type="submit" class="btn btn-primary">Enviar sugestão</button>
       </form>
+      <p class="cfg-mail">Ou escreva direto para <a href="mailto:contato@solabiblia.net.br?subject=Contato%20%E2%80%94%20SOLA%20%7C%20B%C3%ADblia%20%26%20Teologia">contato@solabiblia.net.br</a></p>
       <div id="sgList"></div>
     </section>
     <section class="cfg-card" aria-labelledby="cfgComuT">
@@ -2388,6 +2390,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
         <a class="btn btn-sm" href="site/privacidade.html" target="_blank" rel="noopener">Política de privacidade ↗</a>
         <a class="btn btn-sm" href="site/termos.html" target="_blank" rel="noopener">Termos de uso ↗</a>
         <a class="btn btn-sm" href="site/" target="_blank" rel="noopener">Site do SOLA | Bíblia &amp; Teologia ↗</a>
+        <a class="btn btn-sm" href="mailto:contato@solabiblia.net.br">Fale conosco: contato@solabiblia.net.br</a>
       </div>
     </section>
     <section class="cfg-card" id="cfgSobre" aria-labelledby="cfgSobreT">
@@ -5793,8 +5796,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.13.1";
+const APP_VERSION = "3.13.2";
 const CHANGELOG = [
+  { v:"3.13.2", d:"novembro de 2026", items:["Novo e-mail oficial: contato@solabiblia.net.br (em Configurações › Sugestões e em Privacidade e termos). As sugestões agora vão por e-mail."] },
   { v:"3.13.1", d:"novembro de 2026", items:["Tela firme: o fundo não desce mais ao puxar a Bíblia ou os comentários"] },
   { v:"3.13.0", d:"novembro de 2026", items:["Leitor da Bíblia mais limpo: livro, versão e Aa numa linha só; letra, comparar e outras versões ficam no botão Aa; setas discretas para mudar de capítulo","Comparar sem poluição: quando a versão não tem o livro, aparece um aviso só","Comentários em abas (Clássicos, Brasileiros, Pensadores) em vez de três fileiras"] },
   { v:"3.12.3", d:"novembro de 2026", items:["Devocional pelo WhatsApp abre dentro do app, para a agenda e os VIPs ficarem sempre guardados no mesmo lugar."] },
@@ -6575,7 +6579,7 @@ $("#mdPostNow").addEventListener("click",()=>{
   toast("Abrindo o Canal SOLA: toque e segure no campo › Colar › Enviar.");
 });
 
-const FEEDBACK = { email:"", whatsapp:"", github:"https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new" };
+const FEEDBACK = { email:"contato@solabiblia.net.br", whatsapp:"", github:"https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new" };
 const Suggest = {
   all(){ return store.get("suggestions",[]); },
   add(x){ const a=this.all(); a.unshift({ id:"g"+Date.now().toString(36), at:Date.now(), ...x }); store.set("suggestions",a.slice(0,100)); }
@@ -6594,7 +6598,7 @@ $("#sgForm").addEventListener("submit",e=>{ e.preventDefault();
   const text=$("#sgText").value.trim(); if(text.length<5){ toast("Escreva sua sugestão."); return; }
   const x={ kind:$("#sgKind").value, text }; Suggest.add(x); $("#sgText").value="";
   window.open(suggestUrl(x),"_blank","noopener"); renderSuggestions();
-  toast("Obrigado! Sua sugestão foi guardada e aberta para envio.");
+  toast("Obrigado! Sua sugestão foi guardada e aberta no seu e-mail para envio.");
 });
 
 
