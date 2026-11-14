@@ -31,6 +31,9 @@
   .vbox{margin-top:10px;border:1px solid #e6dcc8;border-radius:12px;padding:10px 12px}
   .vbox summary{font-weight:600;cursor:pointer}
   .vbox textarea{width:100%;box-sizing:border-box;margin-top:8px;font:inherit;padding:10px;border:1px solid #e6dcc8;border-radius:10px}
+  .vlist.pick{max-height:360px;overflow:auto}
+  .vlist.pick li{cursor:pointer}
+  .vlist.pick input{width:20px;height:20px;flex:none}
   .step{margin-top:12px;padding:14px;border-radius:12px;background:#fff7e3;border:1px solid #c99a3b}
   .step a.btn{display:block;text-align:center;margin-top:10px}
 </style>
@@ -72,8 +75,17 @@
       </div>
     </details>
     <p class="hint" id="vMsg"></p>
+    <div id="vPickBox" class="vbox" hidden>
+      <b id="vPickTitle">Escolha quem será VIP</b>
+      <input id="vBusca" type="search" placeholder="Buscar nome ou número" style="width:100%;box-sizing:border-box;margin-top:8px">
+      <ul id="vPickList" class="vlist pick"></ul>
+      <div class="row">
+        <button id="vPickOk">Adicionar selecionados</button>
+        <button id="vPickCancel" class="sec2">Cancelar</button>
+      </div>
+    </div>
     <ul id="vList" class="vlist"></ul>
-    <p class="hint" style="margin:6px 0 0"><a href="#" id="vShare">Levar esta lista para outro aparelho</a></p>
+    <p class="hint" style="margin:6px 0 0"><a href="#" id="vShare">Levar esta lista para outro aparelho</a> · <a href="#" id="vClear" style="color:#a23b2b">Limpar lista</a></p>
     <div class="row">
       <button id="vSend" class="big">📤 Mandar devocional para VIPs agora</button>
     </div>
@@ -119,7 +131,9 @@ carregar($("#dia").value);
 const VK = "sola:vips";
 const vips = () => { try { return JSON.parse(localStorage.getItem(VK) || "[]"); } catch (e) { return []; } };
 const salvar = l => { try { localStorage.setItem(VK, JSON.stringify(l)); } catch (e) {} };
-const soNum = f => { let n = String(f).replace(/\D/g, ""); if (n.startsWith("0")) n = n.slice(1); if (n.length <= 11) n = "55" + n; return n; };
+const soNum = f => { let n = String(f).replace(/\D/g, "");
+  if (n.startsWith("0")) { n = n.slice(1); if (n.length >= 12 && !n.startsWith("55")) n = n.slice(2); }   // 0 + operadora (015, 021…)
+  if (n.length <= 11) n = "55" + n; return n; };
 const enviadosHoje = () => { try { const j = JSON.parse(localStorage.getItem("sola:vipsEnv") || "{}"); return j.dia === document.body.dataset.dia ? j.nums : []; } catch (e) { return []; } };
 function marcar(num){ const nums = enviadosHoje(); if (!nums.includes(num)) nums.push(num); localStorage.setItem("sola:vipsEnv", JSON.stringify({ dia: document.body.dataset.dia, nums })); }
 function pintar(){
@@ -138,6 +152,32 @@ function addMany(items){
   $("#vMsg").textContent = `${novos} VIP(s) adicionado(s)` + (ruins ? ` · ${ruins} sem número válido (precisa ter DDD)` : "") + ".";
   return novos;
 }
+/* Importações grandes passam por uma lista de seleção (nada vem marcado) */
+let candidatos = [];
+function escolher(itens){
+  const l = vips(), vistos = new Set(l.map(v => v.n));
+  candidatos = [];
+  for (const it of itens) { const n = soNum(it.fone || ""); if (n.length < 12 || n.length > 13 || vistos.has(n)) continue; vistos.add(n); candidatos.push({ nome: (it.nome || "").trim() || "+" + n, n, sel: false }); }
+  candidatos.sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+  if (!candidatos.length) { $("#vMsg").textContent = "Nenhum contato novo com número de celular válido."; return; }
+  $("#vBusca").value = ""; $("#vPickBox").hidden = false; pintarPick(); $("#vPickBox").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function pintarPick(){
+  const q = $("#vBusca").value.trim().toLowerCase(), qn = /[a-zà-ú]/i.test(q) ? "" : q.replace(/\D/g, "");
+  const vis = candidatos.map((c, i) => ({ c, i })).filter(({ c }) => !q || c.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) || (qn.length >= 3 && c.n.includes(qn))).slice(0, 300);
+  $("#vPickList").innerHTML = vis.map(({ c, i }) => `<li data-i="${i}" class="${c.sel ? "ok" : ""}"><input type="checkbox" ${c.sel ? "checked" : ""} tabindex="-1"><span>${c.nome.replace(/</g, "&lt;")} <small>+${c.n}</small></span></li>`).join("")
+    + (vis.length === 300 ? `<li><span class="hint">Mostrando 300 — use a busca para achar os outros.</span></li>` : "");
+  const n = candidatos.filter(c => c.sel).length;
+  $("#vPickTitle").textContent = `Escolha quem será VIP (${candidatos.length} contatos)`;
+  $("#vPickOk").textContent = n ? `Adicionar ${n} selecionado${n > 1 ? "s" : ""}` : "Marque os contatos";
+  $("#vPickOk").disabled = !n;
+}
+$("#vBusca").addEventListener("input", pintarPick);
+$("#vPickList").addEventListener("click", e => { const li = e.target.closest("[data-i]"); if (!li) return; const c = candidatos[+li.dataset.i]; c.sel = !c.sel; pintarPick(); });
+$("#vPickOk").addEventListener("click", () => { addMany(candidatos.filter(c => c.sel).map(c => ({ nome: c.nome, fone: c.n }))); candidatos = []; $("#vPickBox").hidden = true; });
+$("#vPickCancel").addEventListener("click", () => { candidatos = []; $("#vPickBox").hidden = true; });
+$("#vClear").addEventListener("click", e => { e.preventDefault(); const n = vips().length; if (!n) return;
+  if (confirm(`Remover todos os ${n} contatos da lista VIP?`)) { salvar([]); localStorage.removeItem("sola:vipsEnv"); pintar(); $("#vMsg").textContent = "Lista VIP apagada."; } });
 /* Linha livre: pega o número (com ou sem +55, parênteses, traços) e usa o resto como nome */
 function lerLinha(linha){
   const m = linha.match(/(\+?\d[\d\s().-]{8,}\d)/); if (!m) return null;
@@ -151,6 +191,7 @@ $("#vFone").addEventListener("keydown", e => { if (e.key === "Enter") $("#vAdd")
 $("#vPasteAdd").addEventListener("click", () => {
   const itens = $("#vPaste").value.split(/\n+/).map(lerLinha).filter(Boolean);
   if (!itens.length) { $("#vMsg").textContent = "Não achei números na lista. Use um por linha, com DDD."; return; }
+  if (itens.length > 10) { escolher(itens); $("#vPaste").value = ""; return; }
   if (addMany(itens)) $("#vPaste").value = "";
 });
 /* Arquivo .vcf (iPhone: Contatos › selecionar › Compartilhar › Salvar em Arquivos) */
@@ -165,14 +206,14 @@ $("#vVcf").addEventListener("change", async e => {
       if (cel) itens.push({ nome: fn.replace(/\\,/g, ",").trim(), fone: cel });
     }
   }
-  addMany(itens); e.target.value = "";
+  escolher(itens); e.target.value = "";
 });
 /* Android (Chrome): escolher direto da agenda */
 if ("contacts" in navigator && "select" in navigator.contacts) {
   $("#vPick").hidden = false;
   $("#vPick").addEventListener("click", async () => {
     try { const cs = await navigator.contacts.select(["name", "tel"], { multiple: true });
-      addMany(cs.flatMap(c => c.tel && c.tel.length ? [{ nome: (c.name || [""])[0], fone: c.tel[0] }] : []));
+      escolher(cs.flatMap(c => c.tel && c.tel.length ? [{ nome: (c.name || [""])[0], fone: c.tel[0] }] : []));
     } catch (err) {}
   });
 }
