@@ -34,6 +34,13 @@
   .vlist.pick{max-height:360px;overflow:auto}
   .vlist.pick li{cursor:pointer}
   .vlist.pick input{width:20px;height:20px;flex:none}
+  .ac{position:relative}
+  .ac input{width:100%;box-sizing:border-box;padding:12px 14px;font-size:16px}
+  .sug{list-style:none;margin:4px 0 0;padding:4px;position:absolute;left:0;right:0;z-index:5;background:#fff;border:1px solid #e6dcc8;border-radius:12px;box-shadow:0 8px 24px rgba(15,27,51,.15);max-height:320px;overflow:auto}
+  .sug li{padding:10px 12px;border-radius:8px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .sug li:hover,.sug li.on{background:#f6f1e7}
+  .sug li small{color:#56607a;margin-left:auto}
+  .sug li.add{color:#1f8f4e;font-weight:600}
   .step{margin-top:12px;padding:14px;border-radius:12px;background:#fff7e3;border:1px solid #c99a3b}
   .step a.btn{display:block;text-align:center;margin-top:10px}
 </style>
@@ -45,6 +52,20 @@
     <label>Dia: <input type="date" id="dia"></label>
     <p class="hint" id="st">Carregando…</p>
   </div>
+  <div class="card" id="vipCard">
+    <h2 style="margin:0 0 6px;font-size:17px">⭐ VIPs <small class="hint" id="vCount"></small></h2>
+    <p class="hint" style="margin-top:0">Quem recebe o devocional. Digite o nome ou o número: as sugestões vêm da sua agenda.</p>
+    <div class="ac">
+      <input id="vBusca" type="search" placeholder="🔎 Buscar na agenda: nome ou número" autocomplete="off" enterkeyhint="search">
+      <ul id="vSug" class="sug" hidden></ul>
+    </div>
+    <p class="hint" id="vMsg"></p>
+    <ul id="vList" class="vlist"></ul>
+    <div class="row">
+      <button id="vSend" class="big">📤 Mandar devocional para VIPs agora</button>
+    </div>
+    <div id="vStep" class="step" hidden></div>
+  </div>
   <div class="card">
     <img id="img" alt="Imagem do devocional" hidden>
     <pre id="msg"></pre>
@@ -54,47 +75,26 @@
     </div>
     <p class="hint">A mensagem já vem com negrito do WhatsApp (*assim*) e o link do devocional, que mostra a imagem na prévia.</p>
   </div>
-  <div class="card" id="vipCard">
-    <h2 style="margin:0 0 6px;font-size:17px">⭐ VIPs</h2>
-    <p class="hint" style="margin-top:0">A lista fica guardada só neste aparelho.</p>
-    <div class="row" style="margin-top:6px">
-      <button id="vPick" class="sec2" hidden>📇 Escolher dos contatos</button>
-      <label class="sec2 btnlike">📎 Importar contatos (.vcf)<input type="file" id="vVcf" accept=".vcf,text/vcard,text/x-vcard" multiple hidden></label>
-    </div>
-    <details class="vbox" open>
-      <summary>Colar vários de uma vez</summary>
-      <textarea id="vPaste" rows="4" placeholder="Um por linha, do jeito que estiver. Ex.:&#10;Maria 85 99999-0000&#10;João (81) 98888-1111&#10;+55 11 97777-2222 Pastor Paulo"></textarea>
-      <div class="row" style="margin-top:8px"><button id="vPasteAdd" class="sec2">Adicionar todos</button></div>
-    </details>
-    <details class="vbox">
-      <summary>Adicionar um por um</summary>
-      <div class="row" style="margin-top:8px">
-        <input id="vNome" placeholder="Nome" style="flex:1;min-width:120px" autocomplete="name">
-        <input id="vFone" placeholder="DDD + número" inputmode="tel" autocomplete="tel" style="flex:1;min-width:140px">
-        <button id="vAdd" class="sec2">Adicionar</button>
-      </div>
-    </details>
-    <p class="hint" id="vMsg"></p>
-    <div id="vPickBox" class="vbox" hidden>
-      <b id="vPickTitle">Escolha quem será VIP</b>
-      <input id="vBusca" type="search" placeholder="Buscar nome ou número" style="width:100%;box-sizing:border-box;margin-top:8px">
-      <ul id="vPickList" class="vlist pick"></ul>
-      <div class="row">
-        <button id="vPickOk">Adicionar selecionados</button>
-        <button id="vPickCancel" class="sec2">Cancelar</button>
-      </div>
-    </div>
-    <ul id="vList" class="vlist"></ul>
-    <p class="hint" style="margin:6px 0 0"><a href="#" id="vShare">Levar esta lista para outro aparelho</a> · <a href="#" id="vClear" style="color:#a23b2b">Limpar lista</a></p>
-    <div class="row">
-      <button id="vSend" class="big">📤 Mandar devocional para VIPs agora</button>
-    </div>
-    <div id="vStep" class="step" hidden></div>
-  </div>
   <div class="card">
     <h2 style="margin:0 0 6px;font-size:17px">📢 Canal do WhatsApp</h2>
     <p class="hint" style="margin-top:0">Copia a mensagem e abre o Canal “SOLA | Bíblia &amp; Teologia”. Lá, toque na caixa de texto, cole e envie.</p>
     <div class="row"><a class="btn wa" id="canal" href="https://whatsapp.com/channel/0029VbE22ry84Om9DmiIaM43" target="_blank" rel="noopener">Copiar e abrir o Canal</a></div>
+  </div>
+  <div class="card" id="cfgCard">
+    <h2 style="margin:0 0 6px;font-size:17px">⚙️ Configurações · Agenda de contatos</h2>
+    <p class="hint" style="margin-top:0" id="aInfo"></p>
+    <div class="row" style="margin-top:6px">
+      <label class="sec2 btnlike">📎 Importar agenda (.vcf)<input type="file" id="aVcf" accept=".vcf,text/vcard,text/x-vcard" multiple hidden></label>
+      <button id="aPick" class="sec2" hidden>📇 Importar da agenda do celular</button>
+    </div>
+    <p class="hint">No iPhone: app Contatos › Listas › toque e segure “Todos os Contatos” › Exportar › Salvar em Arquivos. Depois escolha o arquivo aqui.</p>
+    <details class="vbox">
+      <summary>Colar contatos</summary>
+      <textarea id="aPaste" rows="4" placeholder="Um por linha, do jeito que estiver. Ex.:&#10;Maria 85 99999-0000&#10;João (81) 98888-1111"></textarea>
+      <div class="row" style="margin-top:8px"><button id="aPasteAdd" class="sec2">Adicionar à agenda</button></div>
+    </details>
+    <p class="hint" style="margin:10px 0 0"><a href="#" id="vShare">Levar os VIPs para outro aparelho</a> · <a href="#" id="vClear" style="color:#a23b2b">Limpar VIPs</a> · <a href="#" id="aClear" style="color:#a23b2b">Apagar agenda</a></p>
+    <p class="hint">Tudo fica guardado só neste aparelho. Nada é enviado ao servidor.</p>
   </div>
 </main>
 <script>
@@ -127,75 +127,84 @@ $("#dia").addEventListener("change", () => carregar($("#dia").value));
 $("#copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#msg").textContent); $("#copy").textContent = "Copiada!"; } catch (e) { $("#copy").textContent = "Selecione e copie"; } setTimeout(() => $("#copy").textContent = "Copiar mensagem", 2000); });
 carregar($("#dia").value);
 
-/* ---------- VIPs: envio individual pelo WhatsApp (um toque em "Enviar" por pessoa) ---------- */
-const VK = "sola:vips";
-const vips = () => { try { return JSON.parse(localStorage.getItem(VK) || "[]"); } catch (e) { return []; } };
+/* ---------- Agenda (base de contatos) + VIPs (quem recebe). Tudo em localStorage ---------- */
+const VK = "sola:vips", AK = "sola:agenda";
+const ler = k => { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) { return []; } };
+const vips = () => ler(VK), agenda = () => ler(AK);
 const salvar = l => { try { localStorage.setItem(VK, JSON.stringify(l)); } catch (e) {} };
+const salvarAgenda = l => { try { localStorage.setItem(AK, JSON.stringify(l)); } catch (e) { alert("A agenda é grande demais para este aparelho."); } };
 const soNum = f => { let n = String(f).replace(/\D/g, "");
   if (n.startsWith("0")) { n = n.slice(1); if (n.length >= 12 && !n.startsWith("55")) n = n.slice(2); }   // 0 + operadora (015, 021…)
   if (n.length <= 11) n = "55" + n; return n; };
+const valido = n => n.length >= 12 && n.length <= 13;
+const semAcento = t => String(t).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+const fmt = n => n.startsWith("55") ? `(${n.slice(2, 4)}) ${n.slice(4, -4)}-${n.slice(-4)}` : "+" + n;
+
+/* Migração: quem importou a agenda inteira direto nos VIPs (versão anterior) — vira agenda, VIPs começam vazios */
+if (vips().length > 60 && !agenda().length) {
+  salvarAgenda(vips()); salvar([]);
+  setTimeout(() => { $("#vMsg").textContent = `Os ${agenda().length} contatos importados foram para a Agenda (em Configurações). A lista VIP começou vazia: digite um nome acima para adicionar.`; }, 50);
+}
+
 const enviadosHoje = () => { try { const j = JSON.parse(localStorage.getItem("sola:vipsEnv") || "{}"); return j.dia === document.body.dataset.dia ? j.nums : []; } catch (e) { return []; } };
 function marcar(num){ const nums = enviadosHoje(); if (!nums.includes(num)) nums.push(num); localStorage.setItem("sola:vipsEnv", JSON.stringify({ dia: document.body.dataset.dia, nums })); }
 function pintar(){
   const l = vips(), env = enviadosHoje();
-  $("#vList").innerHTML = l.length ? l.map((v, i) => `<li class="${env.includes(v.n) ? "ok" : ""}"><span>${v.nome.replace(/</g, "&lt;")} <small>+${v.n}</small>${env.includes(v.n) ? " ✓" : ""}</span><button data-del="${i}">Remover</button></li>`).join("") : `<li><span class="hint">Nenhum VIP ainda.</span></li>`;
+  $("#vList").innerHTML = l.length ? l.map((v, i) => `<li class="${env.includes(v.n) ? "ok" : ""}"><span>${v.nome.startsWith("+") ? fmt(v.n) : `${esc(v.nome)} <small>${fmt(v.n)}</small>`}${env.includes(v.n) ? " ✓" : ""}</span><button data-del="${i}">Remover</button></li>`).join("")
+    : `<li><span class="hint">Nenhum VIP ainda. Busque um contato acima.</span></li>`;
+  $("#vCount").textContent = l.length ? `· ${l.length}` : "";
   $("#vSend").textContent = l.length ? `📤 Mandar devocional para ${l.length} VIP${l.length > 1 ? "s" : ""} agora` : "📤 Mandar devocional para VIPs agora";
+  const a = agenda().length;
+  $("#aInfo").textContent = a ? `${a} contatos na agenda do SOLA. Eles só servem para a busca dos VIPs — ninguém recebe nada por estar aqui.` : "Agenda vazia. Importe seus contatos uma vez; depois é só buscar na lista VIP.";
 }
-function addMany(items){
-  const l = vips(); let novos = 0, ruins = 0;
-  for (const it of items) {
-    const n = soNum(it.fone || ""); const nome = (it.nome || "").trim() || ("+" + n);
-    if (n.length < 12 || n.length > 13) { ruins++; continue; }
-    if (!l.some(v => v.n === n)) { l.push({ nome, n }); novos++; }
-  }
-  salvar(l); pintar();
-  $("#vMsg").textContent = `${novos} VIP(s) adicionado(s)` + (ruins ? ` · ${ruins} sem número válido (precisa ter DDD)` : "") + ".";
-  return novos;
+function addVip(c){
+  const l = vips(); if (l.some(v => v.n === c.n)) { $("#vMsg").textContent = `${c.nome} já é VIP.`; return; }
+  l.push({ nome: c.nome, n: c.n }); salvar(l); pintar(); $("#vMsg").textContent = `⭐ ${c.nome} adicionado aos VIPs.`;
 }
-/* Importações grandes passam por uma lista de seleção (nada vem marcado) */
-let candidatos = [];
-function escolher(itens){
-  const l = vips(), vistos = new Set(l.map(v => v.n));
-  candidatos = [];
-  for (const it of itens) { const n = soNum(it.fone || ""); if (n.length < 12 || n.length > 13 || vistos.has(n)) continue; vistos.add(n); candidatos.push({ nome: (it.nome || "").trim() || "+" + n, n, sel: false }); }
-  candidatos.sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
-  if (!candidatos.length) { $("#vMsg").textContent = "Nenhum contato novo com número de celular válido."; return; }
-  $("#vBusca").value = ""; $("#vPickBox").hidden = false; pintarPick(); $("#vPickBox").scrollIntoView({ behavior: "smooth", block: "start" });
+/* Busca com sugestões da agenda */
+let sug = [], selIdx = 0;
+function buscar(){
+  const q = $("#vBusca").value.trim(), box = $("#vSug");
+  if (!q) { box.hidden = true; return; }
+  const qa = semAcento(q), qn = /[a-zà-ú]/i.test(q) ? "" : q.replace(/\D/g, ""), ja = new Set(vips().map(v => v.n));
+  const palavras = qa.split(/\s+/).filter(Boolean);
+  sug = agenda().filter(c => !ja.has(c.n) && ((qn.length >= 3 && c.n.includes(qn)) || (!qn && palavras.every(p => semAcento(c.nome).includes(p)))))
+    .sort((x, y) => semAcento(x.nome).indexOf(palavras[0] || "") - semAcento(y.nome).indexOf(palavras[0] || "") || x.nome.localeCompare(y.nome, "pt")).slice(0, 12);
+  const novo = qn && valido(soNum(qn)) && !ja.has(soNum(qn)) && !sug.some(c => c.n === soNum(qn)) ? { nome: "+" + soNum(qn), n: soNum(qn), novo: true } : null;
+  if (novo) sug.push(novo);
+  selIdx = 0;
+  box.innerHTML = sug.length ? sug.map((c, i) => c.novo ? `<li data-s="${i}" class="add ${i === selIdx ? "on" : ""}">＋ Adicionar o número ${fmt(c.n)}</li>`
+      : `<li data-s="${i}" class="${i === selIdx ? "on" : ""}">${esc(c.nome)} <small>${fmt(c.n)}</small></li>`).join("")
+    : `<li class="hint">${agenda().length ? "Nada encontrado na agenda." : "Agenda vazia — importe em Configurações (abaixo) ou digite o número com DDD."}</li>`;
+  box.hidden = false;
 }
-function pintarPick(){
-  const q = $("#vBusca").value.trim().toLowerCase(), qn = /[a-zà-ú]/i.test(q) ? "" : q.replace(/\D/g, "");
-  const vis = candidatos.map((c, i) => ({ c, i })).filter(({ c }) => !q || c.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(q.normalize("NFD").replace(/[\u0300-\u036f]/g, "")) || (qn.length >= 3 && c.n.includes(qn))).slice(0, 300);
-  $("#vPickList").innerHTML = vis.map(({ c, i }) => `<li data-i="${i}" class="${c.sel ? "ok" : ""}"><input type="checkbox" ${c.sel ? "checked" : ""} tabindex="-1"><span>${c.nome.replace(/</g, "&lt;")} <small>+${c.n}</small></span></li>`).join("")
-    + (vis.length === 300 ? `<li><span class="hint">Mostrando 300 — use a busca para achar os outros.</span></li>` : "");
-  const n = candidatos.filter(c => c.sel).length;
-  $("#vPickTitle").textContent = `Escolha quem será VIP (${candidatos.length} contatos)`;
-  $("#vPickOk").textContent = n ? `Adicionar ${n} selecionado${n > 1 ? "s" : ""}` : "Marque os contatos";
-  $("#vPickOk").disabled = !n;
+function escolherSug(i){ const c = sug[i]; if (!c) return; addVip(c); $("#vBusca").value = ""; $("#vSug").hidden = true; $("#vBusca").focus(); }
+$("#vBusca").addEventListener("input", buscar);
+$("#vBusca").addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); escolherSug(selIdx); }
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); selIdx = Math.max(0, Math.min(sug.length - 1, selIdx + (e.key === "ArrowDown" ? 1 : -1)));
+    [...$("#vSug").children].forEach((li, k) => li.classList.toggle("on", k === selIdx)); }
+});
+$("#vSug").addEventListener("mousedown", e => e.preventDefault());
+$("#vSug").addEventListener("click", e => { const li = e.target.closest("[data-s]"); if (li) escolherSug(+li.dataset.s); });
+document.addEventListener("click", e => { if (!e.target.closest(".ac")) $("#vSug").hidden = true; });
+$("#vList").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (!b) return; const l = vips(); l.splice(+b.dataset.del, 1); salvar(l); pintar(); });
+
+/* Importar para a AGENDA (não para os VIPs) */
+function addAgenda(itens){
+  const l = agenda(), vistos = new Set(l.map(c => c.n)); let novos = 0;
+  for (const it of itens) { const n = soNum(it.fone || ""); if (!valido(n) || vistos.has(n)) continue; vistos.add(n); l.push({ nome: (it.nome || "").trim() || "+" + n, n }); novos++; }
+  l.sort((x, y) => x.nome.localeCompare(y.nome, "pt")); salvarAgenda(l); pintar();
+  alert(`${novos} contato(s) novo(s) na agenda. Agora é só buscar na lista VIP.`);
 }
-$("#vBusca").addEventListener("input", pintarPick);
-$("#vPickList").addEventListener("click", e => { const li = e.target.closest("[data-i]"); if (!li) return; const c = candidatos[+li.dataset.i]; c.sel = !c.sel; pintarPick(); });
-$("#vPickOk").addEventListener("click", () => { addMany(candidatos.filter(c => c.sel).map(c => ({ nome: c.nome, fone: c.n }))); candidatos = []; $("#vPickBox").hidden = true; });
-$("#vPickCancel").addEventListener("click", () => { candidatos = []; $("#vPickBox").hidden = true; });
-$("#vClear").addEventListener("click", e => { e.preventDefault(); const n = vips().length; if (!n) return;
-  if (confirm(`Remover todos os ${n} contatos da lista VIP?`)) { salvar([]); localStorage.removeItem("sola:vipsEnv"); pintar(); $("#vMsg").textContent = "Lista VIP apagada."; } });
-/* Linha livre: pega o número (com ou sem +55, parênteses, traços) e usa o resto como nome */
 function lerLinha(linha){
   const m = linha.match(/(\+?\d[\d\s().-]{8,}\d)/); if (!m) return null;
   const nome = (linha.slice(0, m.index) + " " + linha.slice(m.index + m[0].length)).replace(/[-–:;,|()+]+/g, " ").replace(/\s+/g, " ").trim();
   return { nome, fone: m[1] };
 }
-$("#vAdd").addEventListener("click", () => {
-  if (addMany([{ nome: $("#vNome").value, fone: $("#vFone").value }])) { $("#vNome").value = ""; $("#vFone").value = ""; $("#vNome").focus(); }
-});
-$("#vFone").addEventListener("keydown", e => { if (e.key === "Enter") $("#vAdd").click(); });
-$("#vPasteAdd").addEventListener("click", () => {
-  const itens = $("#vPaste").value.split(/\n+/).map(lerLinha).filter(Boolean);
-  if (!itens.length) { $("#vMsg").textContent = "Não achei números na lista. Use um por linha, com DDD."; return; }
-  if (itens.length > 10) { escolher(itens); $("#vPaste").value = ""; return; }
-  if (addMany(itens)) $("#vPaste").value = "";
-});
-/* Arquivo .vcf (iPhone: Contatos › selecionar › Compartilhar › Salvar em Arquivos) */
-$("#vVcf").addEventListener("change", async e => {
+$("#aPasteAdd").addEventListener("click", () => { const itens = $("#aPaste").value.split(/\n+/).map(lerLinha).filter(Boolean); if (!itens.length) return; addAgenda(itens); $("#aPaste").value = ""; });
+$("#aVcf").addEventListener("change", async e => {
   const itens = [];
   for (const f of e.target.files) {
     const txt = await f.text();
@@ -206,30 +215,31 @@ $("#vVcf").addEventListener("change", async e => {
       if (cel) itens.push({ nome: fn.replace(/\\,/g, ",").trim(), fone: cel });
     }
   }
-  escolher(itens); e.target.value = "";
+  addAgenda(itens); e.target.value = "";
 });
-/* Android (Chrome): escolher direto da agenda */
 if ("contacts" in navigator && "select" in navigator.contacts) {
-  $("#vPick").hidden = false;
-  $("#vPick").addEventListener("click", async () => {
+  $("#aPick").hidden = false;
+  $("#aPick").addEventListener("click", async () => {
     try { const cs = await navigator.contacts.select(["name", "tel"], { multiple: true });
-      escolher(cs.flatMap(c => c.tel && c.tel.length ? [{ nome: (c.name || [""])[0], fone: c.tel[0] }] : []));
-    } catch (err) {}
+      addAgenda(cs.flatMap(c => c.tel && c.tel.length ? [{ nome: (c.name || [""])[0], fone: c.tel[0] }] : [])); } catch (err) {}
   });
 }
-/* Levar a lista para outro aparelho: link com a lista */
+$("#vClear").addEventListener("click", e => { e.preventDefault(); const n = vips().length; if (!n) return;
+  if (confirm(`Tirar todos os ${n} VIPs da lista? (A agenda continua.)`)) { salvar([]); localStorage.removeItem("sola:vipsEnv"); pintar(); } });
+$("#aClear").addEventListener("click", e => { e.preventDefault(); const n = agenda().length; if (!n) return;
+  if (confirm(`Apagar os ${n} contatos da agenda do SOLA? (Os VIPs continuam.)`)) { localStorage.removeItem(AK); pintar(); } });
+/* Levar para outro aparelho: só os VIPs vão no link (a agenda é grande; importe o .vcf lá também) */
 $("#vShare").addEventListener("click", async e => {
-  e.preventDefault(); const l = vips(); if (!l.length) { $("#vMsg").textContent = "A lista está vazia."; return; }
+  e.preventDefault(); const l = vips(); if (!l.length) { alert("A lista VIP está vazia."); return; }
   const url = location.origin + location.pathname + "#vips=" + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(l)))));
-  try { if (navigator.share) await navigator.share({ title: "Lista VIP do SOLA", url }); else { await navigator.clipboard.writeText(url); $("#vMsg").textContent = "Link copiado. Abra no outro aparelho."; } } catch (err) {}
+  try { if (navigator.share) await navigator.share({ title: "Lista VIP do SOLA", url }); else { await navigator.clipboard.writeText(url); alert("Link copiado. Abra no outro aparelho."); } } catch (err) {}
 });
 if (location.hash.startsWith("#vips=")) {
   try { const l = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(location.hash.slice(6))))));
-    if (confirm(`Importar ${l.length} VIP(s) para este aparelho?`)) addMany(l.map(v => ({ nome: v.nome, fone: v.n })));
+    if (confirm(`Importar ${l.length} VIP(s) para este aparelho?`)) { const v = vips(); l.forEach(c => { if (!v.some(x => x.n === c.n)) v.push(c); }); salvar(v); }
   } catch (err) {}
   history.replaceState(null, "", location.pathname + location.search);
 }
-$("#vList").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (!b) return; const l = vips(); l.splice(+b.dataset.del, 1); salvar(l); pintar(); });
 let fila = [];
 function proximo(){
   const box = $("#vStep");
