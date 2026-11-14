@@ -5796,8 +5796,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.13.2";
+const APP_VERSION = "3.13.3";
 const CHANGELOG = [
+  { v:"3.13.3", d:"novembro de 2026", items:["Novidades mostram só as 3 últimas versões; o histórico completo continua guardado."] },
   { v:"3.13.2", d:"novembro de 2026", items:["Novo e-mail oficial: contato@solabiblia.net.br (em Configurações › Sugestões e em Privacidade e termos). As sugestões agora vão por e-mail."] },
   { v:"3.13.1", d:"novembro de 2026", items:["Tela firme: o fundo não desce mais ao puxar a Bíblia ou os comentários"] },
   { v:"3.13.0", d:"novembro de 2026", items:["Leitor da Bíblia mais limpo: livro, versão e Aa numa linha só; letra, comparar e outras versões ficam no botão Aa; setas discretas para mudar de capítulo","Comparar sem poluição: quando a versão não tem o livro, aparece um aviso só","Comentários em abas (Clássicos, Brasileiros, Pensadores) em vez de três fileiras"] },
@@ -6191,7 +6192,7 @@ function renderConfig(){
   $("#cfgNatVoice").checked=store.get("naturalVoice",true); $("#cfgNatName").value=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
   $("#natHint").textContent = TR_PROXY ? "A voz natural é gerada uma vez por devocional e fica guardada no aparelho." : "A voz natural será ativada quando a ponte do Cloudflare (a mesma do tradutor) for configurada com o serviço de voz da Microsoft. Até lá, o app usa a voz do aparelho.";
   $("#cfgVer").textContent=APP_VERSION; $("#ciVer").textContent="v"+APP_VERSION; $("#ciName").textContent=(p.name||"").trim().split(/\s+/)[0]||"Toque para preencher";
-  $("#cfgChangelog").innerHTML=CHANGELOG.map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
+  $("#cfgChangelog").innerHTML=CHANGELOG.slice(0,3).map(c=>`<details class="com-group" ${c.v===APP_VERSION?"open":""}><summary>Versão ${esc(c.v)} · ${esc(c.d)}</summary><ul class="changelog">${c.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></details>`).join("");
   $("#cfgStats").textContent=`${NotesStore.all().length} notas · ${Object.keys(Hl.all()).length} versículos grifados · ${TextMarks.all().length} trechos grifados · ${Saved.all().length} comentários salvos · ${store.get("favorites",[]).length||0} favoritos`;
   Comm.available().then(async list=>{ const def=await Comm.defaultId();
     $("#cfgCom").innerHTML=list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join(""); })
