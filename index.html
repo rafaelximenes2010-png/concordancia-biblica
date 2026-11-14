@@ -493,6 +493,10 @@ dialog.note-dlg{max-width:620px}
 .switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-weight:600}
 .switch input{width:20px;height:20px;accent-color:var(--accent)}
 .rem-status{font-size:13px;color:var(--ink-2);margin:0}
+a.home-card.wa-card{display:flex !important;flex-direction:row !important;text-align:left;align-items:center;gap:12px;text-decoration:none;color:var(--ink);margin-top:12px;padding:14px 16px}
+.wa-card .wa-ic{width:44px;height:44px;border-radius:12px;background:#1f8f4e;color:#fff;display:grid;place-items:center;flex:none}
+.wa-card .wa-tx{flex:1;display:grid;gap:2px}.wa-card .wa-tx b{font-size:16px}.wa-card .wa-tx small{font-size:13px;color:var(--ink-2)}
+.wa-card>.icon{color:var(--ink-2)}
 .push-box{border:1px solid var(--border);border-radius:12px;padding:10px 12px;margin:0 0 10px;background:var(--bg)}
 .push-box .switch{font-size:15px}
 .push-topics{display:grid;gap:6px;margin-top:8px}
@@ -1619,6 +1623,11 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
   <div id="newsBanner"></div>
   <div id="remBanner"></div>
   <div class="streak" id="streakBox" aria-live="polite"></div>
+  <a class="home-card wa-card" href="site/whatsapp.html" target="_blank" rel="noopener">
+    <span class="wa-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span>
+    <span class="wa-tx"><b>Devocional pelo WhatsApp</b><small>Cadastre seus contatos VIP e envie o devocional de hoje para eles e para o Canal</small></span>
+    <svg class="icon" aria-hidden="true"><use href="#i-ext"/></svg>
+  </a>
   <div class="home-grid">
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
     <article class="home-card hc-devo" id="homeDevo"></article>
@@ -1919,6 +1928,11 @@ html[data-theme="dark"] .mp-region{stroke:#2e3646}html[data-theme="dark"] .mp-se
     <button type="button" class="btn" data-devo="1">Próximo ›</button>
   </div>
   <div id="devoMonth"></div>
+  <a class="home-card wa-card wa-card2" href="site/whatsapp.html" target="_blank" rel="noopener">
+    <span class="wa-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span>
+    <span class="wa-tx"><b>Devocional pelo WhatsApp</b><small>Cadastre seus contatos VIP e envie o devocional de hoje para eles e para o Canal</small></span>
+    <svg class="icon" aria-hidden="true"><use href="#i-ext"/></svg>
+  </a>
   <div class="home-card" id="remindersCard2" style="margin-top:6px"></div>
 </section>
 
@@ -5706,8 +5720,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.12.1";
+const APP_VERSION = "3.12.2";
 const CHANGELOG = [
+  { v:"3.12.2", d:"novembro de 2026", items:["Novo atalho “Devocional pelo WhatsApp” no Início e no Devocional: cadastre contatos VIP e envie o devocional do dia para eles e para o Canal."] },
   { v:"3.12.1", d:"novembro de 2026", items:["Notificações: mensagem clara quando o servidor ainda não está pronto ou quando falta internet."] },
   { v:"3.12.0", d:"novembro de 2026", items:["Notificações na tela do celular, mesmo com o app fechado: devocional do dia no seu horário, aviso de versão nova e novidades do SOLA.","Sininho no alto do app com a central de notificações e o número de avisos não lidos."] },
   { v:"3.9.2", d:"novembro de 2026", items:["Comentários: selecione um trecho para grifar, copiar, compartilhar com a marca SOLA ou anotar; botão “Compartilhar comentário”; tradução com “Tentar de novo” e detalhe do erro."] },
