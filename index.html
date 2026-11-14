@@ -1435,6 +1435,10 @@ details.cd-cite[open] summary{margin-bottom:6px}
 details.cd-cite[open] summary::after{content:" ▴"}
 #cdBody .br-links{display:grid!important;grid-template-columns:1fr 1fr;gap:8px}
 #cdBody .br-links .btn{width:100%;justify-content:center;text-align:center;margin:0;min-height:44px;padding:8px 8px;font-size:13.5px;line-height:1.2;white-space:normal}
+/* Tela firme (3.13.1): nada "puxa" nem desce por trás do leitor e das gavetas */
+html,body{overscroll-behavior:none}
+body.reading,body.scroll-lock{overflow:hidden!important;overscroll-behavior:none}
+dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 </style>
 </head>
 <body>
@@ -5789,8 +5793,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.13.0";
+const APP_VERSION = "3.13.1";
 const CHANGELOG = [
+  { v:"3.13.1", d:"novembro de 2026", items:["Tela firme: o fundo não desce mais ao puxar a Bíblia ou os comentários"] },
   { v:"3.13.0", d:"novembro de 2026", items:["Leitor da Bíblia mais limpo: livro, versão e Aa numa linha só; letra, comparar e outras versões ficam no botão Aa; setas discretas para mudar de capítulo","Comparar sem poluição: quando a versão não tem o livro, aparece um aviso só","Comentários em abas (Clássicos, Brasileiros, Pensadores) em vez de três fileiras"] },
   { v:"3.12.3", d:"novembro de 2026", items:["Devocional pelo WhatsApp abre dentro do app, para a agenda e os VIPs ficarem sempre guardados no mesmo lugar."] },
   { v:"3.12.2", d:"novembro de 2026", items:["Novo atalho “Devocional pelo WhatsApp” no Início e no Devocional: cadastre contatos VIP e envie o devocional do dia para eles e para o Canal."] },
@@ -7517,6 +7522,25 @@ renderReminders(); Reminders.schedule();
   if(/[?&]instalar\b/.test(location.search) || /instalar/.test(location.hash)){
     setTimeout(()=>{ if(location.hash.includes("instalar")) history.replaceState(null,"",location.pathname+location.search+"#inicio"); install(); }, 2600);
   }
+})();
+</script>
+<script>
+/* Trava o fundo enquanto a Bíblia ou os comentários estão abertos (iOS ignora overflow:hidden no body) */
+(function(){
+  let y=0, locked=false;
+  function lock(on){
+    if(on===locked) return; locked=on; const b=document.body;
+    if(on){ y=window.scrollY||0; Object.assign(b.style,{position:"fixed",top:"0",left:"0",right:"0",width:"100%"}); /* cabeçalho do app sempre no lugar */ }
+    else { Object.assign(b.style,{position:"",top:"",left:"",right:"",width:""}); window.scrollTo(0,y); }
+  }
+  function check(){ const d=document.getElementById("comDrawer"), r=document.getElementById("ctxDialog");
+    lock(document.body.classList.contains("reading") || !!(d&&d.open) || !!(r&&r.open)); }
+  new MutationObserver(check).observe(document.body,{attributes:true,attributeFilter:["class"]});
+  ["comDrawer","ctxDialog"].forEach(id=>{ const d=document.getElementById(id); if(d) new MutationObserver(check).observe(d,{attributes:true,attributeFilter:["open"]}); });
+  /* Arrastar fora de uma área rolável não move nada */
+  function scroller(el){ while(el && el!==document.body){ const cs=getComputedStyle(el);
+      if(/(auto|scroll)/.test(cs.overflowY+cs.overflowX) && (el.scrollHeight>el.clientHeight+1 || el.scrollWidth>el.clientWidth+1)) return el; el=el.parentElement; } return null; }
+  document.addEventListener("touchmove",e=>{ if(!locked || e.touches.length>1) return; if(!scroller(e.target)) e.preventDefault(); },{passive:false});
 })();
 </script>
 </body>
