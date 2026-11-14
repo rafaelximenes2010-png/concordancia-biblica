@@ -497,6 +497,12 @@ a.home-card.wa-card,button.home-card.wa-card{width:100%;font:inherit;cursor:poin
 .wa-card .wa-ic{width:44px;height:44px;border-radius:12px;background:#1f8f4e;color:#fff;display:grid;place-items:center;flex:none}
 .wa-card .wa-tx{flex:1;display:grid;gap:2px}.wa-card .wa-tx b{font-size:16px}.wa-card .wa-tx small{font-size:13px;color:var(--ink-2)}
 .wa-card>.icon{color:var(--ink-2)}
+div.home-card.rd-card{display:flex;flex-direction:row;align-items:center;gap:12px;text-align:left;margin-top:12px;padding:14px 16px}
+.rd-play{width:44px;height:44px;border-radius:50%;border:0;background:#b0463c;color:#fff;display:grid;place-items:center;flex:none;cursor:pointer;box-shadow:0 3px 10px rgba(176,70,60,.35)}
+.rd-play.loading{opacity:.6;animation:rdpulse 1s infinite}
+@keyframes rdpulse{50%{transform:scale(.92)}}
+.rd-live{color:#b0463c;font-size:12px;font-weight:800;margin-left:4px}
+.rd-badge{font:800 11px/1.1 inherit;font-family:inherit;text-align:center;color:var(--ink-2);border:1.5px solid var(--border);border-radius:8px;padding:5px 6px}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -1672,7 +1678,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
       <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
-      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></span></button>
+      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -1716,8 +1722,13 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <button type="button" class="home-card wa-card nt-card" data-view="noticias">
     <span class="wa-ic" aria-hidden="true" style="background:#2b3a67"><svg class="icon" style="stroke:#fff;width:24px;height:24px"><use href="#i-globe"/></svg></span>
     <span class="wa-tx"><b>Notícias do mundo cristão</b><small id="ntHomeSub">Missões, igreja perseguida e seminários reformados pelo mundo</small></span>
-    <svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>
+    <span class="chev" aria-hidden="true" style="font-size:24px;color:var(--ink-3)">›</span>
   </button>
+  <div class="home-card wa-card rd-card" id="rdCard">
+    <button type="button" class="rd-play" id="rdBtn" aria-label="Tocar a rádio KCBI 90.9 ao vivo"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path id="rdIco" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
+    <span class="wa-tx"><b>Rádio KCBI 90.9 <span class="rd-live" id="rdLive" hidden>● ao vivo</span></b><small id="rdSub">Rádio cristã de Dallas (EUA), música e ensino bíblico em inglês</small></span>
+    <span class="rd-badge" aria-hidden="true">FM<br>90.9</span>
+  </div>
   <div class="home-grid">
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
     <article class="home-card hc-devo" id="homeDevo"></article>
@@ -4931,6 +4942,49 @@ $("#ntChips").addEventListener("click",e=>{ const b=e.target.closest("[data-ntc]
 /* Subtítulo do botão no Início: a manchete de missões do momento */
 setTimeout(async()=>{ try{ const r=await fetch("noticias/feed.json?t="+Math.floor(Date.now()/600000)); if(!r.ok) return; NT.data=await r.json();
   const dest=(NT.data.itens||[]).find(x=>x.id===NT.data.destaque); if(dest && $("#ntHomeSub")) $("#ntHomeSub").textContent="🌍 "+dest.titulo; }catch(e){} },3000);
+
+/* =====================================================================
+   RÁDIO CRISTÃ AO VIVO — KCBI 90.9 FM (Dallas, EUA)
+   Endereço da transmissão: pega o atual no diretório público radio-browser.info;
+   se falhar, tenta os endereços conhecidos do StreamTheWorld; por último abre o site.
+   ===================================================================== */
+const Radio = { audio:null, on:false, site:"https://kcbi.org/" };
+async function radioUrls(){
+  const urls=[];
+  for(const h of ["de1","nl1","at1"]){
+    try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?name=KCBI&limit=10&hidebroken=true`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
+      const list=await r.json();
+      list.filter(x=>/kcbi/i.test(x.name) && !/teach/i.test(x.name)).sort((a,b)=>(b.votes||0)-(a.votes||0))
+        .forEach(x=>[x.url_resolved,x.url].forEach(u=>{ if(u && /^https:/.test(u) && !urls.includes(u)) urls.push(u); }));
+      if(urls.length) break;
+    }catch(e){}
+  }
+  urls.push("https://playerservices.streamtheworld.com/api/livestream-redirect/KCBIFMAAC.aac","https://playerservices.streamtheworld.com/api/livestream-redirect/KCBIFM.mp3");
+  return urls;
+}
+function radioUi(state){ const b=$("#rdBtn"); if(!b) return;
+  b.classList.toggle("loading", state==="loading");
+  $("#rdIco").setAttribute("d", state==="play" ? "M7 5h4v14H7zm6 0h4v14h-4z" : "M8 5v14l11-7z");
+  b.setAttribute("aria-label", state==="play" ? "Pausar a rádio" : "Tocar a rádio KCBI 90.9 ao vivo");
+  $("#rdLive").hidden = state!=="play";
+  $("#rdSub").textContent = state==="loading" ? "Conectando à rádio…" : state==="erro" ? "Não foi possível tocar aqui. Toque de novo para abrir o site da rádio." : "Rádio cristã de Dallas (EUA), música e ensino bíblico em inglês";
+}
+async function radioToggle(){
+  if(Radio.on){ Radio.audio.pause(); Radio.audio.removeAttribute("src"); Radio.audio.load(); Radio.on=false; radioUi("stop"); return; }
+  if(Radio.erro){ Radio.erro=false; window.open(Radio.site,"_blank","noopener"); radioUi("stop"); return; }
+  try{ document.querySelectorAll("audio").forEach(a=>{ if(a!==Radio.audio) a.pause(); }); window.speechSynthesis?.cancel(); }catch(e){}
+  Radio.audio = Radio.audio || new Audio(); Radio.audio.preload="none";
+  radioUi("loading");
+  for(const u of await radioUrls()){
+    try{ Radio.audio.src=u; await Radio.audio.play(); Radio.on=true; radioUi("play");
+      if("mediaSession" in navigator){ navigator.mediaSession.metadata=new MediaMetadata({ title:"KCBI 90.9 FM — ao vivo", artist:"Rádio cristã · Dallas, EUA", album:"SOLA | Bíblia & Teologia", artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" }] });
+        navigator.mediaSession.setActionHandler("pause",()=>radioToggle()); navigator.mediaSession.setActionHandler("play",()=>Radio.audio.play()); }
+      return;
+    }catch(e){}
+  }
+  Radio.erro=true; radioUi("erro");
+}
+document.addEventListener("click",e=>{ if(e.target.closest("#rdBtn")) radioToggle(); });
 function downloadIcs(time){
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
   if(framed){ toast("Nesta página de pré-visualização os downloads são bloqueados. No app instalado, este botão gera o lembrete do calendário."); return; }
@@ -5882,7 +5936,7 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
    ===================================================================== */
 const APP_VERSION = "3.14.0";
 const CHANGELOG = [
-  { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): missões, igreja perseguida e seminários reformados pelo mundo, traduzidas e atualizadas a cada 3 horas, sempre com uma notícia de missões em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu."] },
+  { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): missões, igreja perseguida e seminários reformados pelo mundo, traduzidas e atualizadas a cada 3 horas, sempre com uma notícia de missões em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu.","Rádio cristã ao vivo no Início: KCBI 90.9 FM (Dallas), com controle na tela de bloqueio."] },
   { v:"3.13.3", d:"novembro de 2026", items:["Novidades mostram só as 3 últimas versões; o histórico completo continua guardado."] },
   { v:"3.13.2", d:"novembro de 2026", items:["Novo e-mail oficial: contato@solabiblia.net.br (em Configurações › Sugestões e em Privacidade e termos). As sugestões agora vão por e-mail."] },
   { v:"3.13.1", d:"novembro de 2026", items:["Tela firme: o fundo não desce mais ao puxar a Bíblia ou os comentários"] },
