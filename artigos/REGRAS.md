@@ -19,7 +19,7 @@
 | 7 | Sofrimento e consolo | 15 | Últimas coisas |
 | 16 | (tema retirado: não usar) | 17 | Sexo antes do casamento |
 | 18 | Aborto e a santidade da vida | 19 | Conselhos para o casamento |
-| 20 | Especial de Natal (só em dezembro) | | |
+| 20 | Especial de Natal (só em dezembro) | 21 | Missões contemporâneas (igreja perseguida, povos não alcançados, missão a partir do Sul global) |
 
 ## Formato de cada item (em `artigos/sola.json` › `items`)
 ```json
