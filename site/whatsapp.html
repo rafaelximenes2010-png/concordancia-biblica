@@ -20,6 +20,15 @@
   a.btn.wa{background:#1f8f4e}
   input{font:inherit;padding:8px 10px;border:1px solid #e6dcc8;border-radius:10px}
   p.hint{font-size:13px;color:#56607a}
+  button.sec2{background:#fff;color:#1c2747;border:1px solid #e6dcc8}
+  button.big{width:100%;padding:16px;font-size:16px;background:#1f8f4e}
+  .vlist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+  .vlist li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #e6dcc8;border-radius:10px}
+  .vlist li span{flex:1}.vlist li small{color:#56607a}
+  .vlist li.ok{background:#e7f6e9;border-color:#9fd3ad}
+  .vlist button{padding:6px 10px;font-size:13px;background:#fff;color:#a23b2b;border:1px solid #e6dcc8}
+  .step{margin-top:12px;padding:14px;border-radius:12px;background:#fff7e3;border:1px solid #c99a3b}
+  .step a.btn{display:block;text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -37,6 +46,25 @@
       <a class="btn wa" id="share" href="#" target="_blank" rel="noopener">Abrir no WhatsApp</a>
     </div>
     <p class="hint">A mensagem já vem com negrito do WhatsApp (*assim*) e o link do devocional, que mostra a imagem na prévia.</p>
+  </div>
+  <div class="card" id="vipCard">
+    <h2 style="margin:0 0 6px;font-size:17px">⭐ VIPs</h2>
+    <p class="hint" style="margin-top:0">A lista fica guardada só neste aparelho. Número com DDD, ex.: 85 99999-9999.</p>
+    <div class="row" style="margin-top:6px">
+      <input id="vNome" placeholder="Nome" style="flex:1;min-width:120px">
+      <input id="vFone" placeholder="DDD + número" inputmode="tel" style="flex:1;min-width:140px">
+      <button id="vAdd" class="sec2">Adicionar</button>
+    </div>
+    <ul id="vList" class="vlist"></ul>
+    <div class="row">
+      <button id="vSend" class="big">📤 Mandar devocional para VIPs agora</button>
+    </div>
+    <div id="vStep" class="step" hidden></div>
+  </div>
+  <div class="card">
+    <h2 style="margin:0 0 6px;font-size:17px">📢 Canal do WhatsApp</h2>
+    <p class="hint" style="margin-top:0">Copia a mensagem e abre o Canal “SOLA | Bíblia &amp; Teologia”. Lá, toque na caixa de texto, cole e envie.</p>
+    <div class="row"><a class="btn wa" id="canal" href="https://whatsapp.com/channel/0029VbE22ry84Om9DmiIaM43" target="_blank" rel="noopener">Copiar e abrir o Canal</a></div>
   </div>
 </main>
 <script>
@@ -60,6 +88,7 @@ async function carregar(dia){
     $("#share").href = "https://wa.me/?text=" + encodeURIComponent(txt);
     $("#st").textContent = `${it.title} · ${dia.split("-").reverse().join("/")}`;
     document.body.dataset.ready = "1"; document.body.dataset.dia = dia; document.body.dataset.titulo = it.title;
+    if (typeof pintar === "function") pintar();
   } catch (e) { $("#st").textContent = "Ainda não há devocional publicado para este dia."; document.body.dataset.ready = "0"; }
 }
 const q = new URLSearchParams(location.search).get("d");
@@ -67,6 +96,46 @@ $("#dia").value = /^\d{4}-\d{2}-\d{2}$/.test(q || "") ? q : hojeBR();
 $("#dia").addEventListener("change", () => carregar($("#dia").value));
 $("#copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText($("#msg").textContent); $("#copy").textContent = "Copiada!"; } catch (e) { $("#copy").textContent = "Selecione e copie"; } setTimeout(() => $("#copy").textContent = "Copiar mensagem", 2000); });
 carregar($("#dia").value);
+
+/* ---------- VIPs: envio individual pelo WhatsApp (um toque em "Enviar" por pessoa) ---------- */
+const VK = "sola:vips";
+const vips = () => { try { return JSON.parse(localStorage.getItem(VK) || "[]"); } catch (e) { return []; } };
+const salvar = l => { try { localStorage.setItem(VK, JSON.stringify(l)); } catch (e) {} };
+const soNum = f => { let n = String(f).replace(/\D/g, ""); if (n.startsWith("0")) n = n.slice(1); if (n.length <= 11) n = "55" + n; return n; };
+const enviadosHoje = () => { try { const j = JSON.parse(localStorage.getItem("sola:vipsEnv") || "{}"); return j.dia === document.body.dataset.dia ? j.nums : []; } catch (e) { return []; } };
+function marcar(num){ const nums = enviadosHoje(); if (!nums.includes(num)) nums.push(num); localStorage.setItem("sola:vipsEnv", JSON.stringify({ dia: document.body.dataset.dia, nums })); }
+function pintar(){
+  const l = vips(), env = enviadosHoje();
+  $("#vList").innerHTML = l.length ? l.map((v, i) => `<li class="${env.includes(v.n) ? "ok" : ""}"><span>${v.nome.replace(/</g, "&lt;")} <small>+${v.n}</small>${env.includes(v.n) ? " ✓" : ""}</span><button data-del="${i}">Remover</button></li>`).join("") : `<li><span class="hint">Nenhum VIP ainda.</span></li>`;
+  $("#vSend").textContent = l.length ? `📤 Mandar devocional para ${l.length} VIP${l.length > 1 ? "s" : ""} agora` : "📤 Mandar devocional para VIPs agora";
+}
+$("#vAdd").addEventListener("click", () => {
+  const nome = $("#vNome").value.trim(), n = soNum($("#vFone").value);
+  if (!nome || n.length < 12) { alert("Preencha o nome e o número com DDD."); return; }
+  const l = vips(); if (!l.some(v => v.n === n)) l.push({ nome, n }); salvar(l);
+  $("#vNome").value = ""; $("#vFone").value = ""; pintar();
+});
+$("#vList").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (!b) return; const l = vips(); l.splice(+b.dataset.del, 1); salvar(l); pintar(); });
+let fila = [];
+function proximo(){
+  const box = $("#vStep");
+  if (!fila.length) { box.innerHTML = "<b>Pronto!</b> Devocional enviado para todos os VIPs de hoje."; pintar(); return; }
+  const v = fila[0], txt = $("#msg").textContent;
+  box.hidden = false;
+  box.innerHTML = `<b>${v.nome}</b> (${vips().length - fila.length + 1} de ${vips().length})<br><span class="hint">Toque abaixo, envie no WhatsApp e volte aqui para o próximo.</span>
+    <a class="btn wa" id="vGo" href="https://wa.me/${v.n}?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">Abrir conversa com ${v.nome}</a>`;
+  $("#vGo").addEventListener("click", () => { marcar(v.n); fila.shift(); setTimeout(proximo, 400); });
+}
+$("#vSend").addEventListener("click", () => {
+  if (document.body.dataset.ready !== "1") { alert("O devocional deste dia ainda não carregou."); return; }
+  const env = enviadosHoje(); fila = vips().filter(v => !env.includes(v.n));
+  if (!vips().length) { alert("Adicione pelo menos um VIP."); return; }
+  if (!fila.length && !confirm("Todos já receberam hoje. Enviar de novo?")) return;
+  if (!fila.length) fila = vips();
+  proximo();
+});
+$("#canal").addEventListener("click", () => { try { navigator.clipboard.writeText($("#msg").textContent); } catch (e) {} });
+pintar();
 </script>
 </body>
 </html>
