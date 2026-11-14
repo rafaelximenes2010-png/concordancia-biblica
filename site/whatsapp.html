@@ -27,6 +27,10 @@
   .vlist li span{flex:1}.vlist li small{color:#56607a}
   .vlist li.ok{background:#e7f6e9;border-color:#9fd3ad}
   .vlist button{padding:6px 10px;font-size:13px;background:#fff;color:#a23b2b;border:1px solid #e6dcc8}
+  .btnlike{display:inline-block;font:600 15px/1 system-ui,sans-serif;padding:12px 16px;border-radius:12px;cursor:pointer;background:#fff;color:#1c2747;border:1px solid #e6dcc8}
+  .vbox{margin-top:10px;border:1px solid #e6dcc8;border-radius:12px;padding:10px 12px}
+  .vbox summary{font-weight:600;cursor:pointer}
+  .vbox textarea{width:100%;box-sizing:border-box;margin-top:8px;font:inherit;padding:10px;border:1px solid #e6dcc8;border-radius:10px}
   .step{margin-top:12px;padding:14px;border-radius:12px;background:#fff7e3;border:1px solid #c99a3b}
   .step a.btn{display:block;text-align:center;margin-top:10px}
 </style>
@@ -49,13 +53,27 @@
   </div>
   <div class="card" id="vipCard">
     <h2 style="margin:0 0 6px;font-size:17px">⭐ VIPs</h2>
-    <p class="hint" style="margin-top:0">A lista fica guardada só neste aparelho. Número com DDD, ex.: 85 99999-9999.</p>
+    <p class="hint" style="margin-top:0">A lista fica guardada só neste aparelho.</p>
     <div class="row" style="margin-top:6px">
-      <input id="vNome" placeholder="Nome" style="flex:1;min-width:120px">
-      <input id="vFone" placeholder="DDD + número" inputmode="tel" style="flex:1;min-width:140px">
-      <button id="vAdd" class="sec2">Adicionar</button>
+      <button id="vPick" class="sec2" hidden>📇 Escolher dos contatos</button>
+      <label class="sec2 btnlike">📎 Importar contatos (.vcf)<input type="file" id="vVcf" accept=".vcf,text/vcard,text/x-vcard" multiple hidden></label>
     </div>
+    <details class="vbox" open>
+      <summary>Colar vários de uma vez</summary>
+      <textarea id="vPaste" rows="4" placeholder="Um por linha, do jeito que estiver. Ex.:&#10;Maria 85 99999-0000&#10;João (81) 98888-1111&#10;+55 11 97777-2222 Pastor Paulo"></textarea>
+      <div class="row" style="margin-top:8px"><button id="vPasteAdd" class="sec2">Adicionar todos</button></div>
+    </details>
+    <details class="vbox">
+      <summary>Adicionar um por um</summary>
+      <div class="row" style="margin-top:8px">
+        <input id="vNome" placeholder="Nome" style="flex:1;min-width:120px" autocomplete="name">
+        <input id="vFone" placeholder="DDD + número" inputmode="tel" autocomplete="tel" style="flex:1;min-width:140px">
+        <button id="vAdd" class="sec2">Adicionar</button>
+      </div>
+    </details>
+    <p class="hint" id="vMsg"></p>
     <ul id="vList" class="vlist"></ul>
+    <p class="hint" style="margin:6px 0 0"><a href="#" id="vShare">Levar esta lista para outro aparelho</a></p>
     <div class="row">
       <button id="vSend" class="big">📤 Mandar devocional para VIPs agora</button>
     </div>
@@ -109,12 +127,67 @@ function pintar(){
   $("#vList").innerHTML = l.length ? l.map((v, i) => `<li class="${env.includes(v.n) ? "ok" : ""}"><span>${v.nome.replace(/</g, "&lt;")} <small>+${v.n}</small>${env.includes(v.n) ? " ✓" : ""}</span><button data-del="${i}">Remover</button></li>`).join("") : `<li><span class="hint">Nenhum VIP ainda.</span></li>`;
   $("#vSend").textContent = l.length ? `📤 Mandar devocional para ${l.length} VIP${l.length > 1 ? "s" : ""} agora` : "📤 Mandar devocional para VIPs agora";
 }
+function addMany(items){
+  const l = vips(); let novos = 0, ruins = 0;
+  for (const it of items) {
+    const n = soNum(it.fone || ""); const nome = (it.nome || "").trim() || ("+" + n);
+    if (n.length < 12 || n.length > 13) { ruins++; continue; }
+    if (!l.some(v => v.n === n)) { l.push({ nome, n }); novos++; }
+  }
+  salvar(l); pintar();
+  $("#vMsg").textContent = `${novos} VIP(s) adicionado(s)` + (ruins ? ` · ${ruins} sem número válido (precisa ter DDD)` : "") + ".";
+  return novos;
+}
+/* Linha livre: pega o número (com ou sem +55, parênteses, traços) e usa o resto como nome */
+function lerLinha(linha){
+  const m = linha.match(/(\+?\d[\d\s().-]{8,}\d)/); if (!m) return null;
+  const nome = (linha.slice(0, m.index) + " " + linha.slice(m.index + m[0].length)).replace(/[-–:;,|()+]+/g, " ").replace(/\s+/g, " ").trim();
+  return { nome, fone: m[1] };
+}
 $("#vAdd").addEventListener("click", () => {
-  const nome = $("#vNome").value.trim(), n = soNum($("#vFone").value);
-  if (!nome || n.length < 12) { alert("Preencha o nome e o número com DDD."); return; }
-  const l = vips(); if (!l.some(v => v.n === n)) l.push({ nome, n }); salvar(l);
-  $("#vNome").value = ""; $("#vFone").value = ""; pintar();
+  if (addMany([{ nome: $("#vNome").value, fone: $("#vFone").value }])) { $("#vNome").value = ""; $("#vFone").value = ""; $("#vNome").focus(); }
 });
+$("#vFone").addEventListener("keydown", e => { if (e.key === "Enter") $("#vAdd").click(); });
+$("#vPasteAdd").addEventListener("click", () => {
+  const itens = $("#vPaste").value.split(/\n+/).map(lerLinha).filter(Boolean);
+  if (!itens.length) { $("#vMsg").textContent = "Não achei números na lista. Use um por linha, com DDD."; return; }
+  if (addMany(itens)) $("#vPaste").value = "";
+});
+/* Arquivo .vcf (iPhone: Contatos › selecionar › Compartilhar › Salvar em Arquivos) */
+$("#vVcf").addEventListener("change", async e => {
+  const itens = [];
+  for (const f of e.target.files) {
+    const txt = await f.text();
+    for (const card of txt.split(/END:VCARD/i)) {
+      const fn = (card.match(/^FN[^:]*:(.*)$/mi) || [])[1] || "";
+      const tels = [...card.matchAll(/^(?:item\d+\.)?TEL[^:]*:(.*)$/gmi)].map(m => m[1]);
+      const cel = tels.find(t => { const d = t.replace(/\D/g, ""); return d.length >= 9 && d.slice(-9)[0] === "9"; }) || tels[0];
+      if (cel) itens.push({ nome: fn.replace(/\\,/g, ",").trim(), fone: cel });
+    }
+  }
+  addMany(itens); e.target.value = "";
+});
+/* Android (Chrome): escolher direto da agenda */
+if ("contacts" in navigator && "select" in navigator.contacts) {
+  $("#vPick").hidden = false;
+  $("#vPick").addEventListener("click", async () => {
+    try { const cs = await navigator.contacts.select(["name", "tel"], { multiple: true });
+      addMany(cs.flatMap(c => c.tel && c.tel.length ? [{ nome: (c.name || [""])[0], fone: c.tel[0] }] : []));
+    } catch (err) {}
+  });
+}
+/* Levar a lista para outro aparelho: link com a lista */
+$("#vShare").addEventListener("click", async e => {
+  e.preventDefault(); const l = vips(); if (!l.length) { $("#vMsg").textContent = "A lista está vazia."; return; }
+  const url = location.origin + location.pathname + "#vips=" + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(l)))));
+  try { if (navigator.share) await navigator.share({ title: "Lista VIP do SOLA", url }); else { await navigator.clipboard.writeText(url); $("#vMsg").textContent = "Link copiado. Abra no outro aparelho."; } } catch (err) {}
+});
+if (location.hash.startsWith("#vips=")) {
+  try { const l = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(location.hash.slice(6))))));
+    if (confirm(`Importar ${l.length} VIP(s) para este aparelho?`)) addMany(l.map(v => ({ nome: v.nome, fone: v.n })));
+  } catch (err) {}
+  history.replaceState(null, "", location.pathname + location.search);
+}
 $("#vList").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (!b) return; const l = vips(); l.splice(+b.dataset.del, 1); salvar(l); pintar(); });
 let fila = [];
 function proximo(){
