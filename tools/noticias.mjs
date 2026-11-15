@@ -70,7 +70,7 @@ const FONTES = [
 const PER = /persegu|perseguid|martír|mártir|martyr|persecut|imprison|jailed|preso|prisão|arrested|abducted|sequestr|kidnap|attack|atacad|massacre|killed|mortos|assassin|blasphemy|blasfêmia|church burned|igreja queimada|tortur|refugiad|displaced/i;
 const MIS = /miss(ion|ões|ão|ionár)|unreached|não alcançad|bible translation|tradução da bíblia|church plant|plantação de igrejas|evangeli[sz]|gospel to|tribo|indígena|unengaged|frontier/i;
 /* Países onde a perseguição é mais severa (Lista Mundial da Perseguição, nomes em pt e en) */
-const PAISES = [["Coreia do Norte","North Korea"],["Somália","Somalia"],["Iêmen","Yemen"],["Líbia","Libya"],["Sudão","Sudan"],["Eritreia","Eritrea"],["Nigéria","Nigeria"],["Paquistão","Pakistan"],["Irã","Iran"],["Afeganistão","Afghanistan"],["Índia","India"],["Arábia Saudita","Saudi Arabia"],["Myanmar","Myanmar"],["Mali","Mali"],["China","China"],["Maldivas","Maldives"],["Iraque","Iraq"],["Síria","Syria"],["Argélia","Algeria"],["Burkina Faso","Burkina Faso"],["Laos","Laos"],["Cuba","Cuba"],["Marrocos","Morocco"],["Mauritânia","Mauritania"],["Bangladesh","Bangladesh"],["Uzbequistão","Uzbekistan"],["Vietnã","Vietnam"],["Nicarágua","Nicaragua"],["Egito","Egypt"],["Etiópia","Ethiopia"],["Moçambique","Mozambique"],["Camarões","Cameroon"],["Níger","Niger"],["Turcomenistão","Turkmenistan"],["Tajiquistão","Tajikistan"],["Butão","Bhutan"],["Omã","Oman"],["Catar","Qatar"],["Turquia","Turkey"],["Colômbia","Colombia"],["República Centro-Africana","Central African Republic"],["Congo","Congo"],["Indonésia","Indonesia"]];
+const PAISES = [["Coreia do Norte","North Korea"],["Somália","Somalia"],["Iêmen","Yemen"],["Líbia","Libya"],["Sudão","Sudan"],["Eritreia","Eritrea"],["Nigéria","Nigeria"],["Paquistão","Pakistan"],["Irã","Iran"],["Afeganistão","Afghanistan"],["Índia","India"],["Arábia Saudita","Saudi Arabia"],["Myanmar","Myanmar"],["Mali","Mali"],["China","China"],["Maldivas","Maldives"],["Iraque","Iraq"],["Síria","Syria"],["Argélia","Algeria"],["Burkina Faso","Burkina Faso"],["Laos","Laos"],["Cuba","Cuba"],["Marrocos","Morocco"],["Mauritânia","Mauritania"],["Bangladesh","Bangladesh"],["Uzbequistão","Uzbekistan"],["Vietnã","Vietnam"],["Nicarágua","Nicaragua"],["Egito","Egypt"],["Etiópia","Ethiopia"],["Moçambique","Mozambique"],["Camarões","Cameroon"],["Níger","Niger"],["Turcomenistão","Turkmenistan"],["Tajiquistão","Tajikistan"],["Butão","Bhutan"],["Omã","Oman"],["Catar","Qatar"],["Turquia","Turkey"],["Colômbia","Colombia"],["República Centro-Africana","Central African Republic"],["Congo","Congo"],["Indonésia","Indonesia"],["Jordânia","Jordan"],["Líbano","Lebanon"],["Israel","Israel"],["Gaza","Gaza"],["Cisjordânia","West Bank"],["Ucrânia","Ukraine"],["Rússia","Russia"],["Sudão do Sul","South Sudan"],["Quênia","Kenya"],["Uganda","Uganda"],["Tanzânia","Tanzania"],["Chade","Chad"],["Azerbaijão","Azerbaijan"],["Cazaquistão","Kazakhstan"],["Sri Lanka","Sri Lanka"],["Nepal","Nepal"],["Brasil","Brazil"],["Haiti","Haiti"],["Venezuela","Venezuela"],["México","Mexico"]];
 
 const dec = s => String(s || "")
   .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
@@ -103,16 +103,19 @@ async function baixar(url){
     const buf = Buffer.from(await r.arrayBuffer());
     const head = buf.subarray(0, 300).toString("latin1");
     const cs = ((r.headers.get("content-type") || "").match(/charset=([\w-]+)/i) || head.match(/encoding="([\w-]+)"/i) || [, "utf-8"])[1].toLowerCase();
-    const txt = new TextDecoder(/8859-1|latin1|1252/.test(cs) ? "windows-1252" : "utf-8").decode(buf); if (!/<(rss|feed|rdf)/i.test(txt.slice(0, 2000))) throw new Error("não é feed");
+    let txt = new TextDecoder(/8859-1|latin1|1252/.test(cs) ? "windows-1252" : "utf-8").decode(buf);
+    if (txt.includes("\uFFFD")) txt = new TextDecoder("windows-1252").decode(buf);   // feed que se diz UTF-8 mas vem em latin1
+    if (!/<(rss|feed|rdf)/i.test(txt.slice(0, 2000))) throw new Error("não é feed");
     return txt;
   } finally { clearTimeout(t); }
 }
 
 function classificar(f, titulo, texto){
   const s = titulo + " " + texto;
-  if (f.cat === "per" || PER.test(s)) return "per";
-  if (f.cat === "mis" || MIS.test(s)) return f.cat === "sem" ? "sem" : "mis";
-  return f.cat;
+  if (f.cat === "sem") return "sem";
+  if (PER.test(s) && /christ|crist|church|igreja|pastor|believer|crente|padre|priest|faith|fé/i.test(s)) return "per";
+  if (MIS.test(s)) return "mis";
+  return f.cat === "per" || f.cat === "mis" ? "igr" : f.cat;   // notícia de agência de missões sem tema de missão/perseguição vai para "igreja no mundo"
 }
 const paisDe = s => { for (const [pt, en] of PAISES) if (new RegExp(`\\b(${pt}|${en})\\b`, "i").test(s)) return pt; return ""; };
 const normT = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ").trim().slice(0, 70);
@@ -163,7 +166,7 @@ for (const f of FONTES) {
     const desc = f.gnews ? "" : resumo(x.desc);
     const cat = classificar(f, titulo, desc);
     itens.push({ gnews: !!f.gnews, id: "n" + crypto.createHash("sha1").update(x.link).digest("hex").slice(0, 12), cat, titulo, resumo: desc, url: x.link, fonte, fonteUrl,
-                 pais: paisDe(titulo + " " + desc) || f.pais || "", data: (x.data && !isNaN(x.data) ? x.data : new Date()).toISOString(),
+                 pais: paisDe(titulo + " " + desc) || (f.cat === "sem" || f.cat === "igr" ? f.pais || "" : ""), data: (x.data && !isNaN(x.data) ? x.data : new Date()).toISOString(),
                  lang: f.lang || "en" });
     n++;
   }
@@ -204,7 +207,7 @@ function verificar(lista){
 }
 /* Relevância: só assuntos cristãos; fora anúncios de vagas, eventos internos, lojas e textos curtos demais */
 const CRISTAO = /christ|crist|church|igreja|pastor|bible|bíblia|biblia|gospel|evangel|ministr|mission|missão|missões|missionár|believer|crente|faith|fé\b|seminar|theolog|teolog|reformed|reformad|presbyter|presbiter|baptist|batist|worship|culto|jesus|deus\b|god\b|scripture|escritura|persecut|persegu|pray|ora[çc]/i;
-const LIXO = /\b(job|jobs|hiring|position|vacanc|intern|internship|estagi|vaga|vagas|pulpit supply|substituição no púlpito|bookstore|livraria|giving tuesday|donate|doação|webinar|register now|inscriç|admissions|commencement|gala|golf|calendar|podcast episode|episode \d+)/i;
+const LIXO = /\b(coordinator|coordenador|director of|diretor de|manager|gerente|assistant|assistente|on-site|presencial|full-time|part-time|apply|candidat|job|jobs|hiring|position|vacanc|intern|internship|estagi|vaga|vagas|pulpit supply|substituição no púlpito|bookstore|livraria|giving tuesday|donate|doação|webinar|register now|inscriç|admissions|commencement|gala|golf|calendar|podcast episode|episode \d+)/i;
 const relevante = x => CRISTAO.test(x.titulo + " " + x.resumo) && !LIXO.test(x.titulo) && x.titulo.split(/\s+/).length >= 5;
 const descartados = itens.filter(x => !relevante(x));
 itens.splice(0, itens.length, ...itens.filter(relevante));
