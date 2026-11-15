@@ -6,11 +6,10 @@
    1. Lê os feeds (RSS/Atom) de seminários reformados, ministérios de
       missões e de igreja perseguida, e buscas do Google Notícias.
    2. Classifica: Missões · Igreja perseguida · Seminários · Igreja no mundo.
-   3. Traduz para o português (títulos e resumos em outras línguas) pelo
-      tradutor do SOLA (Worker no Cloudflare), reaproveitando o que já foi
-      traduzido nas rodadas anteriores.
-   4. Grava noticias/feed.json — o app mostra em Estudos › Notícias.
-   Sempre deixa uma notícia de MISSÕES/PERSEGUIÇÃO em destaque.
+   3. Traduz para o português só as escolhidas (tradutor do SOLA no
+      Cloudflare; reserva: MyMemory).
+   4. Todo dia escolhe as 5 matérias mais importantes de cada tipo e grava
+      noticias/feed.json com os últimos 7 dias.
    Só guardamos título, resumo curto (do próprio feed) e o link da fonte.
    Uso local: node tools/noticias.mjs
    ===================================================================== */
@@ -21,7 +20,7 @@ import crypto from "node:crypto";
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const OUT = path.join(ROOT, "noticias", "feed.json");
 const TRADUTOR = process.env.SOLA_TRADUTOR || "https://tradutor.rafael-ximenes-2010.workers.dev/";
-const DIAS = 21, POR_FONTE = 6, MAX = 90;
+const DIAS = 10, POR_FONTE = 12;
 
 const gn = (q, lang) => lang === "pt"
   ? `https://news.google.com/rss/search?q=${encodeURIComponent(q)}+when:30d&hl=pt-BR&gl=BR&ceid=BR:pt-419`
@@ -144,7 +143,6 @@ async function traduzir(texto){
 }
 
 const anterior = (() => { try { return JSON.parse(fs.readFileSync(OUT, "utf8")); } catch { return { itens: [] }; } })();
-const jaTraduzido = new Map((anterior.itens || []).filter(x => x.orig).map(x => [x.url, x]));
 const limite = Date.now() - DIAS * 86400e3;
 const relatorio = [], itens = [], vistos = new Set();
 
@@ -161,7 +159,7 @@ for (const f of FONTES) {
     const k = normT(titulo); if (vistos.has(k)) continue; vistos.add(k);
     const desc = f.gnews ? "" : resumo(x.desc);
     const cat = classificar(f, titulo, desc);
-    itens.push({ id: "n" + crypto.createHash("sha1").update(x.link).digest("hex").slice(0, 12), cat, titulo, resumo: desc, url: x.link, fonte, fonteUrl,
+    itens.push({ gnews: !!f.gnews, id: "n" + crypto.createHash("sha1").update(x.link).digest("hex").slice(0, 12), cat, titulo, resumo: desc, url: x.link, fonte, fonteUrl,
                  pais: paisDe(titulo + " " + desc) || f.pais || "", data: (x.data && !isNaN(x.data) ? x.data : new Date()).toISOString(),
                  lang: f.lang || "en" });
     n++;
@@ -169,36 +167,99 @@ for (const f of FONTES) {
   relatorio.push(`✓ ${f.nome}: ${n} notícia(s)`);
 }
 
-/* Ordem: mais recentes primeiro, limitando a MAX, mas garantindo espaço para missões e perseguição */
-itens.sort((a, b) => b.data.localeCompare(a.data));
-const final = [];
-for (const c of ["per", "mis"]) final.push(...itens.filter(x => x.cat === c).slice(0, 25));
-for (const x of itens) if (final.length < MAX && !final.includes(x)) final.push(x);
-final.sort((a, b) => b.data.localeCompare(a.data));
-
-/* Tradução para o português (reaproveita as anteriores) */
-let traduzidos = 0;
-for (const x of final) {
-  if (x.lang === "pt") continue;
-  const velho = jaTraduzido.get(x.url);
-  if (velho && velho.orig === x.titulo) { x.orig = velho.orig; x.titulo = velho.titulo; x.resumo = velho.resumo; x.lang = "pt"; x.traduzido = true; continue; }
-  try {
-    const sep = "\n\n§§§\n\n";
-    const t = await traduzir(x.titulo + (x.resumo ? sep + x.resumo : ""));
-    const [tt, rr] = t.split(/\s*§§§\s*/);
-    x.orig = x.titulo; x.titulo = (tt || x.titulo).trim(); if (x.resumo) x.resumo = (rr || x.resumo).trim(); x.lang = "pt"; x.traduzido = true; traduzidos++;
-  } catch (e) { relatorio.push(`  (tradução falhou: ${e.message})`); }
+/* =====================================================================
+   SELEÇÃO DO DIA: as 5 matérias mais importantes de CADA TIPO
+   (igreja perseguida, missões, seminários reformados, igreja no mundo),
+   escolhidas uma vez por dia (a partir das 6h de Brasília).
+   Destaque: igreja perseguida, de preferência em país da Lista Mundial.
+   ===================================================================== */
+const FORTE = /killed|mortos|morto|martyr|mártir|arrest|preso|presos|prisão|attack|atacad|sequestr|kidnap|abduct|massacre|burn|queimad|bible translation|tradução da bíblia|unreached|não alcançad|revival|avivamento|baptiz|batiz|first church|primeira igreja|new church|plantad/i;
+const BOAS = /Morning Star|International Christian Concern|Mission Network|IMB|Portas Abertas|Open Doors|Christianity Today|Gospel Coalition|Ultimato|Coalizão|Release International|Barnabas|Mukhanyo|Seminary|Seminário|Presbiteriana|Christian Post|Christian Daily|Religion News|Baptist Press|Evangelical Focus|World Magazine|WORLD|Gospel Herald|Guiame|Comunhão|Lausanne/i;
+/* =====================================================================
+   VERIFICAÇÃO ANTI-FAKE NEWS (antes de publicar)
+   1. Fonte confiável: feeds diretos escolhidos pelo SOLA ou veículos
+      reconhecidos (lista abaixo).
+   2. Sem fonte reconhecida: só entra se a mesma notícia aparecer em outra
+      fonte independente (confirmação cruzada).
+   3. Manchetes sensacionalistas ou caça-clique são descartadas.
+   Toda notícia publicada leva o nome da fonte, o link e o selo da checagem.
+   ===================================================================== */
+const CONFIAVEIS = /Reuters|Associated Press|\bAP News\b|AFP|BBC|CNN|New York Times|Washington Post|Wall Street Journal|Guardian|Financial Times|Al Jazeera|Deutsche Welle|\bDW\b|France 24|Voice of America|\bVOA\b|NPR|PBS|Economist|Time\b|Newsweek|Folha|G1|\bg1\b|Globo|Estadão|Estadao|UOL|CNN Brasil|Gazeta do Povo|Veja|Poder360|Agência Brasil|BBC News Brasil|Christianity Today|Gospel Coalition|Christian Post|Christian Daily|Religion News|Baptist Press|WORLD|World Magazine|Premier Christian|Evangelical Focus|Catholic News Agency|Crux|Vatican News|Fides|Aid to the Church in Need|ACN|Open Doors|Portas Abertas|International Christian Concern|Morning Star News|Mission Network News|IMB|Release International|Barnabas|CSW|Christian Solidarity|Voice of the Martyrs|Lausanne|Ultimato|Coalizão pelo Evangelho|Guiame|Comunhão|Mukhanyo|Seminary|Seminário|Presbyterian|Presbiteriana|Ligonier|Desiring God|9Marks|Evangelical Alliance|World Evangelical Alliance|Wycliffe|SIL|Bible Society|Sociedade Bíblica/i;
+const SENSACIONAL = /!!|\?\?|chocante|urgente|inacreditável|você não vai acreditar|não vai acreditar|bombástic|escândalo|shocking|you won'?t believe|must see|breaking!|exposed|the truth about|profecia|prophecy|end times|fim dos tempos|apocalipse (já|chegou)|illuminati|conspira/i;
+const palavras = t => new Set(normT(t).split(" ").filter(w => w.length > 4));
+function verificar(lista){
+  const ok = [], fora = [];
+  for (const x of lista) {
+    if (SENSACIONAL.test(x.titulo) || (x.titulo.replace(/[^A-Z]/g, "").length > x.titulo.length * 0.6)) { fora.push(`sensacionalista: ${x.titulo}`); continue; }
+    if (!x.gnews || CONFIAVEIS.test(x.fonte)) { x.verif = x.gnews ? "fonte reconhecida" : "fonte acompanhada pelo SOLA"; ok.push(x); continue; }
+    const pw = palavras(x.titulo);
+    const outras = lista.filter(y => y !== x && y.fonte !== x.fonte && [...palavras(y.titulo)].filter(w => pw.has(w)).length >= 3);
+    if (outras.length) { x.verif = `confirmada também por ${outras[0].fonte}`; ok.push(x); }
+    else fora.push(`sem confirmação (${x.fonte}): ${x.titulo}`);
+  }
+  return { ok, fora };
 }
+const chk = verificar(itens);
+relatorio.push(`\nChecagem: ${chk.ok.length} aprovadas, ${chk.fora.length} descartadas`);
+chk.fora.slice(0, 15).forEach(t => relatorio.push("  ✗ " + t));
+itens.length = 0; itens.push(...chk.ok);
 
-/* Destaque: a notícia mais recente de missões ou igreja perseguida (prioriza países de perseguição) */
-const cand = final.filter(x => x.cat === "per" || x.cat === "mis");
-const destaque = cand.find(x => x.cat === "per" && PAISES.some(([pt]) => pt === x.pais)) || cand[0] || null;
+const brAgora = new Date(Date.now() - 3 * 3600e3), HOJE = brAgora.toISOString().slice(0, 10);
+const nota = x => {
+  let n = { per: 6, mis: 5, sem: 4, igr: 3 }[x.cat] || 0;
+  if (PAISES.some(([pt]) => pt === x.pais)) n += 3;
+  if (FORTE.test(x.titulo + " " + x.resumo)) n += 2;
+  if (BOAS.test(x.fonte)) n += 2;
+  const h = (Date.now() - Date.parse(x.data)) / 3600e3; n += h < 36 ? 3 : h < 72 ? 2 : h < 168 ? 1 : 0;
+  if (x.resumo) n += 1;
+  return n;
+};
+itens.forEach(x => x.nota = nota(x));
+const melhor = (lista, evita) => lista.filter(x => !evita.some(y => y === x || (y.pais && y.pais === x.pais && y.cat === x.cat) || normT(y.titulo).slice(0, 40) === normT(x.titulo).slice(0, 40)))
+  .sort((a, b) => b.nota - a.nota || b.data.localeCompare(a.data))[0];
+const POR_TIPO = 5;
+function escolherDia(){
+  const sel = [];
+  for (const c of ["per", "mis", "sem", "igr"]) {
+    const doTipo = [];
+    while (doTipo.length < POR_TIPO) {
+      const x = melhor(itens.filter(y => y.cat === c), [...sel, ...doTipo]) ||
+                itens.filter(y => y.cat === c && !doTipo.includes(y) && !sel.includes(y)).sort((a, b) => b.nota - a.nota)[0];
+      if (!x) break; doTipo.push(x);
+    }
+    sel.push(...doTipo);
+  }
+  return sel;
+}
+const dias = (anterior.dias || []).filter(d => d.dia !== HOJE || !process.env.FORCAR);
+let dHoje = dias.find(d => d.dia === HOJE);
+if (!dHoje && (brAgora.getUTCHours() >= 6 || process.env.FORCAR || !dias.length)) {
+  const picks = escolherDia();
+  /* Tradução só das 5 escolhidas */
+  let traduzidos = 0;
+  for (const x of picks) {
+    if (x.lang === "pt") continue;
+    try {
+      const sep = "\n\n§§§\n\n";
+      const t = await traduzir(x.titulo + (x.resumo ? sep + x.resumo : ""));
+      const [tt, rr] = t.split(/\s*§§§\s*/);
+      x.orig = x.titulo; x.titulo = (tt || x.titulo).trim(); if (x.resumo) x.resumo = (rr || x.resumo).trim(); x.lang = "pt"; x.traduzido = true; traduzidos++;
+    } catch (e) { relatorio.push(`  (tradução falhou: ${e.message})`); }
+  }
+  picks.forEach(x => { delete x.nota; delete x.gnews; });
+  const per = picks.filter(x => x.cat === "per");
+  const dest = per.find(x => PAISES.some(([pt]) => pt === x.pais)) || per[0] || picks[0];
+  dHoje = { dia: HOJE, destaque: dest ? dest.id : null, itens: picks };
+  dias.unshift(dHoje);
+  relatorio.push(`\nSeleção de ${HOJE}: ${picks.length} matérias, 5 por tipo (${traduzidos} traduzidas)`);
+  picks.forEach((x, k) => relatorio.push(`  ${k + 1}. [${x.cat}] ${x.titulo} — ${x.fonte}${x.pais ? " · " + x.pais : ""}`));
+} else relatorio.push(`\nSeleção de hoje mantida (${dHoje ? dHoje.dia : "aguardando 6h"}).`);
+dias.sort((a, b) => b.dia.localeCompare(a.dia));
 
-const saida = { atualizado: new Date().toISOString(), destaque: destaque ? destaque.id : null,
-  categorias: { mis: "Missões", per: "Igreja perseguida", sem: "Seminários reformados", igr: "Igreja no mundo" },
-  fontes: FONTES.map(f => f.nome), itens: final };
 console.log(relatorio.join("\n"));
-if (!final.length) { console.log("Nenhuma notícia obtida; mantendo o arquivo anterior."); process.exit(0); }
+if (!dias.length || !dias[0].itens.length) { console.log("Nenhuma notícia obtida; mantendo o arquivo anterior."); process.exit(0); }
+const saida = { atualizado: new Date().toISOString(),
+  categorias: { mis: "Missões", per: "Igreja perseguida", sem: "Seminários reformados", igr: "Igreja no mundo" },
+  fontes: FONTES.map(f => f.nome), dias: dias.slice(0, 7) };
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify(saida, null, 1));
-console.log(`\n${final.length} notícias · ${traduzidos} traduzidas agora · destaque: ${destaque ? destaque.titulo : "—"}`);
