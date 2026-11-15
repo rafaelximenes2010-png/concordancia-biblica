@@ -211,7 +211,9 @@ function verificar(lista){
 const CRISTAO = /christ|crist|church|igreja|pastor|bible|bíblia|biblia|gospel|evangel|ministr|mission|missão|missões|missionár|believer|crente|faith|fé\b|seminar|theolog|teolog|reformed|reformad|presbyter|presbiter|baptist|batist|worship|culto|jesus|deus\b|god\b|scripture|escritura|persecut|persegu|pray|ora[çc]/i;
 const LIXO = /\b(coordinator|coordenador|director of|diretor de|manager|gerente|assistant|assistente|on-site|presencial|full-time|part-time|apply|candidat|job|jobs|hiring|position|vacanc|intern|internship|estagi|vaga|vagas|pulpit supply|substituição no púlpito|bookstore|livraria|giving tuesday|donate|doação|webinar|register now|inscriç|admissions|commencement|gala|golf|calendar|podcast episode|episode \d+)/i;
 const CATOLICO_MISSAO = /salesian|Agenzia|Vatican|Holy See|CNBB|Canção Nova|ACI Digital|Ecclesia|Aleteia|Paulus|Shalom|Portal A12|redentorist/i;
-const relevante = x => !/\uFFFD|ï¿½/.test(x.titulo + x.resumo) && !(x.cat === "mis" && CATOLICO_MISSAO.test(x.fonte + " " + x.titulo)) && CRISTAO.test(x.titulo + " " + x.resumo) && !LIXO.test(x.titulo) && x.titulo.split(/\s+/).length >= 5;
+const GEOPOL = /nuclear|eleiç|election|tarif|econom|stock|bolsa|inflação|inflation|missile|míssil|ceasefire|cessar-fogo|sanction|sanç|oil|petróleo|war costs|custos da guerra|parliament|parlamento|congress vote/i;
+const TITULO_CRISTAO = /christ|crist|church|igreja|pastor|bible|bíblia|gospel|evangel|mission|miss[ãõ]|believer|crente|faith|fé\b|seminar|theolog|teolog|jesus|deus\b|god\b|padre|priest/i;
+const relevante = x => !(GEOPOL.test(x.titulo) && !TITULO_CRISTAO.test(x.titulo)) && !/\uFFFD|ï¿½/.test(x.titulo + x.resumo) && !(x.cat === "mis" && CATOLICO_MISSAO.test(x.fonte + " " + x.titulo)) && CRISTAO.test(x.titulo + " " + x.resumo) && !LIXO.test(x.titulo) && x.titulo.split(/\s+/).length >= 5;
 const descartados = itens.filter(x => !relevante(x));
 itens.splice(0, itens.length, ...itens.filter(relevante));
 const chk = verificar(itens);

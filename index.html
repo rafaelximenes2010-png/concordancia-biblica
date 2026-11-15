@@ -4937,7 +4937,7 @@ function ntQuando(iso){ const d=new Date(iso), m=(Date.now()-d)/60000; if(isNaN(
   return d.toLocaleDateString("pt-BR",{ day:"2-digit", month:"short" }); }
 function ntItem(x){ const nome=NT.data.categorias[x.cat]||"";
   return `<a class="nt-item" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">
-    <span class="nt-meta"><span class="nt-tag" style="--c:${NT_COR[x.cat]||"#555"}">${esc(nome)}</span>${x.pais?`<span>📍 ${esc(x.pais)}</span>`:""}<span>${esc(x.fonte)}</span><span>· ${esc(ntQuando(x.data))}</span>${x.traduzido?`<span class="nt-tr">· traduzido</span>`:""}</span>
+    <span class="nt-meta"><span class="nt-tag" style="--c:${NT_COR[x.cat]||"#555"}">${esc(nome)}</span>${x.pais?`<span>📍 ${esc(x.pais)}</span>`:""}<span>${esc(ntQuando(x.data))}</span>${x.traduzido?`<span class="nt-tr">· traduzido</span>`:""}</span>
     <b>${esc(x.titulo)}</b>${x.resumo?`<p>${esc(x.resumo)}</p>`:""}
     <span class="nt-fonte">Fonte: <u>${esc(x.fonte)}</u>${x.verif?` · <span class="nt-ok">✓ ${esc(x.verif)}</span>`:""}</span></a>`; }
 async function renderNoticias(force){
