@@ -491,14 +491,14 @@ dialog.note-dlg{max-width:620px}
 .linklike{border:0;background:none;padding:0;color:var(--accent,#2e6da4);text-decoration:underline;font:inherit;cursor:pointer}
 .cfg-check{display:flex;align-items:center;gap:8px;font-weight:700}
 dialog.card-dlg{max-width:440px;width:calc(100% - 20px);max-height:96dvh;padding:12px 14px calc(14px + env(safe-area-inset-bottom));overflow:auto}
-.cd-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
-.cd-fmt{display:flex;gap:4px;padding:3px;border-radius:12px;background:var(--surface-2,rgba(0,0,0,.06));margin-bottom:10px}
-.cd-fmt button{flex:1;border:0;background:none;border-radius:9px;padding:9px;font-weight:800;color:var(--ink);cursor:pointer}
-.cd-fmt button[aria-pressed="true"]{background:#13213a;color:#fff}
-.cd-prev{display:flex;justify-content:center}
-.cd-prev img{display:block;height:min(58dvh,560px);max-width:100%;object-fit:contain;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);background:#2b6cc4}
-.cd-note{font-size:12.5px;color:var(--muted);text-align:center;margin:10px 0}
-.cd-acts{display:flex;gap:8px;flex-wrap:wrap}.cd-acts .btn{flex:1;justify-content:center;min-height:46px}
+.vc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.vc-fmt{display:flex;gap:4px;padding:3px;border-radius:12px;background:var(--surface-2,rgba(0,0,0,.06));margin-bottom:10px}
+.vc-fmt button{flex:1;border:0;background:none;border-radius:9px;padding:9px;font-weight:800;color:var(--ink);cursor:pointer}
+.vc-fmt button[aria-pressed="true"]{background:#13213a;color:#fff}
+.vc-prev{display:flex;justify-content:center}
+.vc-prev img{display:block;height:min(58dvh,560px);max-width:100%;object-fit:contain;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);background:#2b6cc4}
+.vc-note{font-size:12.5px;color:var(--muted);text-align:center;margin:10px 0}
+.vc-acts{display:flex;gap:8px;flex-wrap:wrap}.vc-acts .btn{flex:1;justify-content:center;min-height:46px}
 
 .note-form-grid{display:grid;gap:10px}
 .note-form-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2)}
@@ -1094,7 +1094,8 @@ dialog.picker[open]{display:flex}
 }
 
 /* ===== Gaveta lateral de comentários ===== */
-dialog.drawer{position:fixed;inset:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0;padding:0;border:0;background:transparent;overflow:hidden}
+dialog.drawer{position:fixed;inset:0;width:100vw;height:100dvh;max-width:100vw;max-height:100dvh;margin:0;padding:0;border:0;background:transparent;overflow:hidden;overflow:clip}
+.cd-panel{max-width:100vw;overflow-x:clip}.cd-panel>*{min-width:0;max-width:100%}
 dialog.drawer::backdrop{background:rgba(15,20,35,.45)}
 .cd-panel{position:absolute;top:0;right:0;bottom:0;width:min(520px,92vw);background:var(--bg);color:var(--ink);display:flex;flex-direction:column;
   box-shadow:-12px 0 32px rgba(0,0,0,.25);border-radius:18px 0 0 18px;animation:cdIn .24s cubic-bezier(.2,.8,.2,1);transition:transform .15s}
@@ -2864,11 +2865,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 
 <!-- Cartão do farol para Stories/Feed -->
 <dialog class="card-dlg" id="cardDlg" aria-labelledby="cardDlgT">
-  <div class="cd-head"><b id="cardDlgT">Imagem para compartilhar</b><button type="button" class="btn btn-icon btn-ghost" data-cdk="close" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
-  <div class="cd-fmt" role="radiogroup" aria-label="Formato"><button type="button" data-cdk="story" aria-pressed="true">Stories 9:16</button><button type="button" data-cdk="feed" aria-pressed="false">Feed 4:5</button></div>
-  <div class="cd-prev"><img id="cardImg" alt="Prévia do cartão"></div>
-  <p class="cd-note">Só o texto bíblico selecionado vai na imagem. Suas anotações continuam privadas.</p>
-  <div class="cd-acts"><button type="button" class="btn btn-primary" data-cdk="share" id="cardShareBtn"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Facebook…</button><button type="button" class="btn" data-cdk="dl"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Baixar imagem</button></div>
+  <div class="vc-head"><b id="cardDlgT">Imagem para compartilhar</b><button type="button" class="btn btn-icon btn-ghost" data-cdk="close" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <div class="vc-fmt" role="radiogroup" aria-label="Formato"><button type="button" data-cdk="story" aria-pressed="true">Stories 9:16</button><button type="button" data-cdk="feed" aria-pressed="false">Feed 4:5</button></div>
+  <div class="vc-prev"><img id="cardImg" alt="Prévia do cartão"></div>
+  <p class="vc-note">Só o texto bíblico selecionado vai na imagem. Suas anotações continuam privadas.</p>
+  <div class="vc-acts"><button type="button" class="btn btn-primary" data-cdk="share" id="cardShareBtn"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Facebook…</button><button type="button" class="btn" data-cdk="dl"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Baixar imagem</button></div>
 </dialog>
 
 <!-- Busca por foto (OCR) -->
@@ -6440,8 +6441,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.17.0";
+const APP_VERSION = "3.17.1";
 const CHANGELOG = [
+  { v:"3.17.1", d:"novembro de 2026", items:["Corrigida a gaveta de comentários, que tinha ficado desalinhada (cabeçalho e comentaristas deslocados para o lado)."] },
   { v:"3.17.0", d:"novembro de 2026", items:["Barra de baixo fixa no rodapé em qualquer tela, com espaço reservado no fim das páginas.","Anotações ligadas ao versículo: ícone ao lado do número abre a nota, mesmo trocando de tradução; nas notas, a referência leva à passagem.","Grifos em cores pastel (amarelo suave, verde-menta, azul-claro, lilás e pêssego), legíveis no tema escuro.","Mapas: novas opções Relevo e Satélite, rótulos mais legíveis e indicação de local ou trajeto aproximado.","Imagem do farol para Stories (9:16) e Feed (4:5) com o versículo escolhido.","“Para você”: sugestões de leitura e estudos calculadas no aparelho, sem usar suas anotações; dá para desligar."] },
   { v:"3.16.2", d:"novembro de 2026", items:["A tela não desliza mais para os lados e a barra de baixo fica sempre fixa, com fundo desfocado."] },
   { v:"3.16.1", d:"novembro de 2026", items:["Busca do farol: campo de digitação mais visível, e passagens e livros abrem direto na Bíblia.","Concordância com novo visual: busca em destaque, escolha rápida do tipo (exata, começa com, formas relacionadas) e filtros organizados."] },
@@ -7396,7 +7398,7 @@ function renderDrawerChips(){
   const g=groups.find(x=>x[0]===Drawer.tab);
   $("#cdChips").innerHTML = `<div class="cd-tabs" role="tablist">${groups.map(x=>`<button type="button" role="tab" class="cd-tab${x[0]===Drawer.tab?" on":""}" data-cdtab="${x[0]}" aria-selected="${x[0]===Drawer.tab}">${x[1]}</button>`).join("")}</div>
     <div class="cd-scroll">${g[2]()}</div>`;
-  $("#cdChips .cd-chip.on")?.scrollIntoView({ inline:"center", block:"nearest" });
+  { const box=$("#cdChips .cd-scroll"), on=box?.querySelector(".cd-chip.on"); if(box && on) box.scrollLeft += on.getBoundingClientRect().left - box.getBoundingClientRect().left - (box.clientWidth-on.offsetWidth)/2; drw.scrollLeft=0; drw.querySelector(".cd-panel").scrollLeft=0; }
 }
 document.addEventListener("click",e=>{ const t=e.target.closest("[data-cdtab]"); if(!t) return; Drawer.tab=t.dataset.cdtab; Drawer.tabManual=true; renderDrawerChips(); });
 async function renderDrawerBody(){
