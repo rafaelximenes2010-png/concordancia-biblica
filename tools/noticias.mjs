@@ -100,7 +100,10 @@ async function baixar(url){
   try {
     const r = await fetch(url, { signal: ctl.signal, redirect: "follow", headers: { "User-Agent": "Mozilla/5.0 (compatible; SOLA-Noticias/1.0; +https://solabiblia.net.br)", "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*" } });
     if (!r.ok) throw new Error("HTTP " + r.status);
-    const txt = await r.text(); if (!/<(rss|feed|rdf)/i.test(txt.slice(0, 2000))) throw new Error("não é feed");
+    const buf = Buffer.from(await r.arrayBuffer());
+    const head = buf.subarray(0, 300).toString("latin1");
+    const cs = ((r.headers.get("content-type") || "").match(/charset=([\w-]+)/i) || head.match(/encoding="([\w-]+)"/i) || [, "utf-8"])[1].toLowerCase();
+    const txt = new TextDecoder(/8859-1|latin1|1252/.test(cs) ? "windows-1252" : "utf-8").decode(buf); if (!/<(rss|feed|rdf)/i.test(txt.slice(0, 2000))) throw new Error("não é feed");
     return txt;
   } finally { clearTimeout(t); }
 }
@@ -199,7 +202,14 @@ function verificar(lista){
   }
   return { ok, fora };
 }
+/* Relevância: só assuntos cristãos; fora anúncios de vagas, eventos internos, lojas e textos curtos demais */
+const CRISTAO = /christ|crist|church|igreja|pastor|bible|bíblia|biblia|gospel|evangel|ministr|mission|missão|missões|missionár|believer|crente|faith|fé\b|seminar|theolog|teolog|reformed|reformad|presbyter|presbiter|baptist|batist|worship|culto|jesus|deus\b|god\b|scripture|escritura|persecut|persegu|pray|ora[çc]/i;
+const LIXO = /\b(job|jobs|hiring|position|vacanc|intern|internship|estagi|vaga|vagas|pulpit supply|substituição no púlpito|bookstore|livraria|giving tuesday|donate|doação|webinar|register now|inscriç|admissions|commencement|gala|golf|calendar|podcast episode|episode \d+)/i;
+const relevante = x => CRISTAO.test(x.titulo + " " + x.resumo) && !LIXO.test(x.titulo) && x.titulo.split(/\s+/).length >= 5;
+const descartados = itens.filter(x => !relevante(x));
+itens.splice(0, itens.length, ...itens.filter(relevante));
 const chk = verificar(itens);
+chk.fora.unshift(...descartados.slice(0, 8).map(x => `fora do tema/anúncio: ${x.titulo}`));
 relatorio.push(`\nChecagem: ${chk.ok.length} aprovadas, ${chk.fora.length} descartadas`);
 chk.fora.slice(0, 15).forEach(t => relatorio.push("  ✗ " + t));
 itens.length = 0; itens.push(...chk.ok);
