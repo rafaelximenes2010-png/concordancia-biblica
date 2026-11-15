@@ -898,6 +898,52 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 .sub-tab{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:10px 14px;cursor:pointer;font-weight:600;color:var(--ink-2);border-bottom:2px solid transparent;white-space:nowrap}
 .sub-tab[aria-current="page"]{color:var(--accent);border-bottom-color:var(--gold)}
 .art-card h3{font-family:var(--font-text)}
+.salt-hero{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;cursor:pointer;margin:0 0 16px;padding:16px 18px;border-radius:14px;
+  background:linear-gradient(135deg,#22396a,#132447);color:#fff;box-shadow:0 8px 22px rgba(10,20,45,.22)}
+.salt-hero-ic{flex:none;width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#ffd98a;font-size:24px}
+.salt-hero-t{flex:1;display:flex;flex-direction:column;min-width:0}
+.salt-hero-t small{font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:#ffd98a}
+.salt-hero-t b{font-family:var(--font-text);font-size:22px;line-height:1.2}
+.salt-hero-t em{font-style:normal;font-size:13px;color:#c9d4ea}
+.salt-hero-go{flex:none;background:#f2c14e;color:#13213a;font-weight:800;font-size:13px;border-radius:999px;padding:7px 13px}
+.salt{max-width:760px;margin:0 auto}
+.salt-top{margin-bottom:10px}
+.salt-head{text-align:center;padding:10px 6px 4px}
+.salt-head h2{font-family:var(--font-text);font-size:34px;margin:2px 0}
+.salt-sub{margin:0;color:var(--ink-2);letter-spacing:.08em;text-transform:uppercase;font-size:12.5px;font-weight:700}
+.salt-head blockquote{margin:12px auto 0;max-width:520px;font-family:var(--font-text);font-style:italic;color:var(--ink-2);font-size:15px}
+.salt-search{display:block;margin:14px 0 10px}.salt-search input{width:100%;box-sizing:border-box;padding:11px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-size:16px}
+.salt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.salt-tile{display:flex;align-items:center;gap:12px;text-align:left;cursor:pointer;background:var(--surface);color:var(--ink);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.salt-tile:hover{border-color:var(--gold)}
+.salt-num{flex:none;width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:#13213a;color:#ffd98a;border:1px solid rgba(242,193,78,.35);font-family:var(--font-text);font-size:21px;font-weight:700;line-height:1}
+.salt-num small{font-size:12px;color:#fff;margin-left:1px;align-self:end;margin-bottom:12px}
+.salt-num{grid-auto-flow:column}
+.salt-tt{flex:1;display:flex;flex-direction:column;min-width:0}
+.salt-tt b{font-size:15px}.salt-tt em{font-style:normal;font-size:12.5px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.salt-tt i{font-style:normal;font-size:11.5px;color:var(--gold)}
+.salt-foot{text-align:center;font-size:12px;color:var(--ink-3);margin:18px 0 6px}
+.salt-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;background:var(--bg)}
+.salt-bar .sp{flex:1}
+.salt-fs{display:flex;align-items:center;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface)}
+.salt-fs button{border:0;background:none;color:var(--ink);font-weight:800;font-size:14px;padding:7px 12px;cursor:pointer}
+.salt-fs span{min-width:26px;text-align:center;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.salt-read{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px 20px 18px;margin-top:6px}
+.salt-title{font-family:var(--font-text);font-size:calc(var(--sfs) * 1.35);margin:0;text-align:center}
+.salt-subt{text-align:center;margin:4px 0 0;color:var(--ink-2);font-style:italic;font-family:var(--font-text);font-size:calc(var(--sfs) * .75)}
+.salt-mel{text-align:center;margin:6px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.salt-text{margin-top:18px}
+.salt-st{display:grid;grid-template-columns:2.2em 1fr;gap:4px;margin:0 0 calc(var(--sfs) * .9)}
+.salt-ro{font-family:var(--font-text);font-weight:700;color:var(--gold);font-size:calc(var(--sfs) * .7);padding-top:.35em;text-align:right;padding-right:.5em}
+.salt-st p{margin:0;font-family:var(--font-text);font-size:var(--sfs);line-height:1.55}
+.salt-amen{text-align:center;font-family:var(--font-text);font-style:italic;font-weight:700;color:var(--gold);font-size:var(--sfs);margin:4px 0 0}
+.salt-nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.salt-more{text-align:center;margin-top:8px}
+.salt-culto{position:fixed;inset:0;z-index:9999;background:#0d1426;color:#f6f1e7;overflow:auto;padding:calc(12px + env(safe-area-inset-top)) 4vw 40px}
+.salt-culto .salt-cbar{position:sticky;top:0;display:flex;gap:8px;padding:6px 0 10px;background:#0d1426}
+.salt-culto .salt-cbar .sp{flex:1}
+.salt-culto .salt-cbar button{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:8px 14px;font-weight:800;cursor:pointer}
+.salt-culto .salt-cin{max-width:1100px;margin:0 auto}
+.salt-culto .salt-subt{color:#c9d4ea}.salt-culto .salt-ro,.salt-culto .salt-mel,.salt-culto .salt-amen{color:#f2c14e}
 .cat-group{margin:0 0 18px}
 .cat-group h3{font-family:var(--font-text);font-weight:600;font-size:18px;margin:0 0 8px;color:var(--ink)}
 .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
@@ -2445,6 +2491,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <p>Os credos da Igreja antiga e as confissões e catecismos da Reforma, em texto integral.</p></div></div>
   <div id="catHome">
     <p class="bp-note"><strong>Sobre os textos:</strong> os quatro credos estão em português, em tradução feita para este app. As confissões e catecismos aparecem no <strong>texto original em inglês</strong> (domínio público), com o botão “Traduzir para o português” em cada pergunta ou artigo. As traduções brasileiras consagradas, como a da Cultura Cristã, têm direitos autorais e por isso não são reproduzidas.</p>
+    <button type="button" class="salt-hero" id="saltOpen" aria-label="Abrir o Saltério da Igreja Presbiteriana Reformada em Recife">
+      <span class="salt-hero-ic" aria-hidden="true">♪</span>
+      <span class="salt-hero-t"><small>Para o canto congregacional</small><b>Saltério</b><em>Igreja Presbiteriana Reformada em Recife</em></span>
+      <span class="salt-hero-go" aria-hidden="true">Abrir ›</span>
+    </button>
     <div id="catList"></div>
   </div>
   <div id="catDoc" hidden></div>
@@ -6407,6 +6458,65 @@ async function renderCatHome(){
   }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a lista. ${navigator.onLine?"":"Conecte-se uma vez para baixá-la."}</div>`; }
 }
 $("#catList").addEventListener("click",e=>{ const b=e.target.closest("[data-doc]"); if(b) openDoc(b.dataset.doc); });
+/* ---------- Saltério da Igreja Presbiteriana Reformada em Recife ----------
+   Texto em salterio/ipr-recife.json (extraído do Saltério da igreja). Tamanho de letra ajustável e Modo culto (tela cheia). */
+const SALT = { data:null, q:"", fs:Math.min(40,Math.max(16,+store.get("saltFs",22)||22)) };
+const ROM = n => ["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"][n] || String(n+1);
+async function saltLoad(){ if(!SALT.data){ const r=await fetch("salterio/ipr-recife.json"); if(!r.ok) throw new Error("salterio "+r.status); SALT.data=await r.json(); } return SALT.data; }
+async function openSalterio(id){
+  const box=$("#catDoc"); $("#catHome").hidden=true; box.hidden=false; curDoc=null; box.classList.remove("da-host");
+  box.innerHTML=`<p class="muted">Carregando o Saltério…</p>`;
+  try{ await saltLoad(); }catch(e){ box.innerHTML=`<button type="button" class="btn btn-sm" data-dback>‹ Credos e Catecismos</button><div class="notice error" style="margin-top:12px">Não foi possível abrir o Saltério. ${navigator.onLine?"":"Conecte-se uma vez para baixá-lo."}</div>`; return; }
+  if(id) saltPsalm(id); else saltIndex();
+}
+function saltIndex(){
+  const d=SALT.data, q=norm(SALT.q||"").trim(), box=$("#catDoc");
+  const list=d.salmos.filter(x=>!q || norm(`${x.t} ${x.sub} ${x.e.flat().join(" ")}`).includes(q) || (/^\d+$/.test(q) && String(x.n)===q));
+  box.innerHTML=`<div class="salt">
+    <div class="salt-top"><button type="button" class="btn btn-sm" data-dback>‹ Credos e Catecismos</button></div>
+    <header class="salt-head"><p class="eyebrow">${esc(d.igreja)}</p><h2>${esc(d.titulo)}</h2><p class="salt-sub">${esc(d.sub)}</p><blockquote>${esc(d.lema)}</blockquote></header>
+    <label class="salt-search"><span class="sr-only">Procurar no Saltério</span><input type="search" id="saltQ" placeholder="Procurar: número do salmo ou uma palavra" value="${esc(SALT.q)}"></label>
+    <div class="salt-grid">${list.map(x=>`<button type="button" class="salt-tile" data-salt="${x.id}">
+      <span class="salt-num">${x.n?`${x.n}<small>${esc(x.v)}</small>`:"♪"}</span>
+      <span class="salt-tt"><b>${esc(x.t)}</b><em>${esc(x.sub || x.e[0]?.[0] || "")}</em>${x.mel?`<i>Melodia: ${esc(x.mel)}</i>`:""}</span></button>`).join("") || `<p class="muted">Nada encontrado para “${esc(SALT.q)}”.</p>`}</div>
+    <p class="salt-foot">${d.salmos.length} cânticos · ${esc(d.igreja)}</p></div>`;
+  const qi=$("#saltQ"); qi.addEventListener("input",()=>{ SALT.q=qi.value; const pos=qi.selectionStart; saltIndex(); const n=$("#saltQ"); n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} });
+}
+function saltBody(x){ return `<h2 class="salt-title">${esc(x.t)}</h2>${x.sub?`<p class="salt-subt">${esc(x.sub)}</p>`:""}${x.mel?`<p class="salt-mel">Melodia: ${esc(x.mel)}</p>`:""}
+  <div class="salt-text">${x.e.map((st,i)=>`<div class="salt-st"><span class="salt-ro">${ROM(i)}</span><p>${st.map(esc).join("<br>")}</p></div>`).join("")}${x.amen?`<p class="salt-amen">Amém!</p>`:""}</div>`; }
+function saltPsalm(id){
+  const d=SALT.data, i=d.salmos.findIndex(x=>x.id===id); if(i<0) return saltIndex(); const x=d.salmos[i], prev=d.salmos[i-1], next=d.salmos[i+1];
+  $("#catDoc").innerHTML=`<div class="salt" style="--sfs:${SALT.fs}px">
+    <div class="salt-bar"><button type="button" class="btn btn-sm" data-salt-idx>‹ Saltério</button><span class="sp"></span>
+      <div class="salt-fs" role="group" aria-label="Tamanho da letra"><button type="button" data-salt-fs="-2" aria-label="Diminuir letra">A−</button><span id="saltFsV">${SALT.fs}</span><button type="button" data-salt-fs="2" aria-label="Aumentar letra">A+</button></div>
+      <button type="button" class="btn btn-sm" data-salt-culto title="Letra grande em tela cheia, para projetar ou cantar">⛶ Modo culto</button></div>
+    <article class="salt-read" id="saltRead">${saltBody(x)}</article>
+    <div class="salt-nav">${prev?`<button type="button" class="btn" data-salt="${prev.id}">‹ ${esc(prev.t)}</button>`:"<span></span>"}${next?`<button type="button" class="btn" data-salt="${next.id}">${esc(next.t)} ›</button>`:"<span></span>"}</div>
+    ${x.n?`<div class="salt-more"><button type="button" class="btn btn-sm btn-ghost" data-salt-bib="${x.n}">📖 Ler o Salmo ${x.n} na Bíblia</button></div>`:""}
+    <p class="salt-foot">${esc(d.titulo)} · ${esc(d.igreja)}</p></div>`;
+  window.scrollTo({top:0}); SALT.cur=id;
+}
+function saltCulto(){
+  const x=SALT.data.salmos.find(y=>y.id===SALT.cur); if(!x) return; let fs=Math.max(30,Math.round(SALT.fs*1.5));
+  const o=document.createElement("div"); o.className="salt-culto"; o.style.setProperty("--sfs",fs+"px");
+  o.innerHTML=`<div class="salt-cbar"><button type="button" data-c="-">A−</button><button type="button" data-c="+">A+</button><span class="sp"></span><button type="button" data-c="x" aria-label="Sair do modo culto">✕ Sair</button></div><div class="salt-cin">${saltBody(x)}</div>`;
+  document.body.appendChild(o);
+  const close=()=>{ if(document.fullscreenElement) document.exitFullscreen().catch(()=>{}); o.remove(); };
+  o.addEventListener("click",e=>{ const b=e.target.closest("[data-c]"); if(!b) return; const c=b.dataset.c;
+    if(c==="x") return close(); fs=Math.min(96,Math.max(22,fs+(c==="+"?4:-4))); o.style.setProperty("--sfs",fs+"px"); });
+  document.addEventListener("fullscreenchange",function h(){ if(!document.fullscreenElement && document.body.contains(o)){ o.remove(); } if(!document.body.contains(o)) document.removeEventListener("fullscreenchange",h); });
+  try{ o.requestFullscreen && o.requestFullscreen().catch(()=>{}); }catch(e){}
+}
+$("#saltOpen").addEventListener("click",()=>openSalterio());
+$("#catDoc").addEventListener("click",e=>{
+  const t=e.target.closest("[data-salt]"); if(t) return saltPsalm(t.dataset.salt);
+  if(e.target.closest("[data-salt-idx]")){ saltIndex(); window.scrollTo({top:0}); return; }
+  const f=e.target.closest("[data-salt-fs]"); if(f){ SALT.fs=Math.min(40,Math.max(16,SALT.fs+(+f.dataset.saltFs))); store.set("saltFs",SALT.fs);
+    $("#catDoc .salt").style.setProperty("--sfs",SALT.fs+"px"); $("#saltFsV").textContent=SALT.fs; return; }
+  if(e.target.closest("[data-salt-culto]")) return saltCulto();
+  const b=e.target.closest("[data-salt-bib]"); if(b) return fsBiblia("PSA",+b.dataset.saltBib,1);
+});
+
 const refBtns = r => (r&&r.length) ? `<div class="refs">${r.slice(0,24).map(([b,c,v1,v2])=>`<button type="button" data-dref="${b}.${c}.${v1}">${esc(refLabel(b,c,v1,v2))}</button>`).join("")}</div>` : "";
 let curDoc=null, docPage=1;
 async function openDoc(id){
@@ -6638,8 +6748,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.19.3";
+const APP_VERSION = "3.20.0";
 const CHANGELOG = [
+  { v:"3.20.0", d:"novembro de 2026", items:["Novo em Credos: Saltério da Igreja Presbiteriana Reformada em Recife, com 23 salmos e 1 hino para o canto congregacional, letra ajustável (A− / A+), busca e Modo culto em tela cheia."] },
   { v:"3.19.3", d:"novembro de 2026", items:["Contagem anônima de quantas pessoas usam e instalaram o SOLA (sem nenhum dado pessoal)."] },
   { v:"3.19.2", d:"novembro de 2026", items:["Mapas: ficam só as opções Mapa e Satélite; a linha do percurso ficou mais grossa e com contorno branco, destacada no mapa e no satélite."] },
   { v:"3.19.1", d:"novembro de 2026", items:["Mapas: Relevo no estilo do Google Maps (terreno colorido com sombreamento das montanhas, rios e lagos do próprio mapa) e imagens mais nítidas em telas de alta definição."] },
