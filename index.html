@@ -6479,7 +6479,7 @@ function saltIndex(){
     <div class="salt-grid">${list.map(x=>`<button type="button" class="salt-tile" data-salt="${x.id}">
       <span class="salt-num">${x.n?`${x.n}<small>${esc(x.v)}</small>`:"♪"}</span>
       <span class="salt-tt"><b>${esc(x.t)}</b><em>${esc(x.sub || x.e[0]?.[0] || "")}</em>${x.mel?`<i>Melodia: ${esc(x.mel)}</i>`:""}</span></button>`).join("") || `<p class="muted">Nada encontrado para “${esc(SALT.q)}”.</p>`}</div>
-    <p class="salt-foot">${d.salmos.length} cânticos · ${esc(d.igreja)}</p></div>`;
+    <p class="salt-foot">${d.salmos.length} cânticos · ${esc(d.igreja)}<br>Publicado com autorização do Conselho da Igreja Presbiteriana Reformada em Recife.</p></div>`;
   const qi=$("#saltQ"); qi.addEventListener("input",()=>{ SALT.q=qi.value; const pos=qi.selectionStart; saltIndex(); const n=$("#saltQ"); n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} });
 }
 function saltBody(x){ return `<h2 class="salt-title">${esc(x.t)}</h2>${x.sub?`<p class="salt-subt">${esc(x.sub)}</p>`:""}${x.mel?`<p class="salt-mel">Melodia: ${esc(x.mel)}</p>`:""}
@@ -6493,7 +6493,7 @@ function saltPsalm(id){
     <article class="salt-read" id="saltRead">${saltBody(x)}</article>
     <div class="salt-nav">${prev?`<button type="button" class="btn" data-salt="${prev.id}">‹ ${esc(prev.t)}</button>`:"<span></span>"}${next?`<button type="button" class="btn" data-salt="${next.id}">${esc(next.t)} ›</button>`:"<span></span>"}</div>
     ${x.n?`<div class="salt-more"><button type="button" class="btn btn-sm btn-ghost" data-salt-bib="${x.n}">📖 Ler o Salmo ${x.n} na Bíblia</button></div>`:""}
-    <p class="salt-foot">${esc(d.titulo)} · ${esc(d.igreja)}</p></div>`;
+    <p class="salt-foot">${esc(d.titulo)} · ${esc(d.igreja)}<br>Publicado com autorização do Conselho da igreja.</p></div>`;
   window.scrollTo({top:0}); SALT.cur=id;
 }
 function saltCulto(){
@@ -6748,8 +6748,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.20.0";
+const APP_VERSION = "3.20.1";
 const CHANGELOG = [
+  { v:"3.20.1", d:"novembro de 2026", items:["Saltério: aviso de publicação autorizada pelo Conselho da Igreja Presbiteriana Reformada em Recife."] },
   { v:"3.20.0", d:"novembro de 2026", items:["Novo em Credos: Saltério da Igreja Presbiteriana Reformada em Recife, com 23 salmos e 1 hino para o canto congregacional, letra ajustável (A− / A+), busca e Modo culto em tela cheia."] },
   { v:"3.19.3", d:"novembro de 2026", items:["Contagem anônima de quantas pessoas usam e instalaram o SOLA (sem nenhum dado pessoal)."] },
   { v:"3.19.2", d:"novembro de 2026", items:["Mapas: ficam só as opções Mapa e Satélite; a linha do percurso ficou mais grossa e com contorno branco, destacada no mapa e no satélite."] },
