@@ -512,6 +512,8 @@ div.home-card.rd-card{display:flex;flex-direction:row;align-items:center;gap:12p
 .vg-drop li a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink)}
 .vg-drop li a:hover,.vg-drop li.on a{background:var(--gold-soft)}
 .vg-drop li b{display:block;font-size:15px}.vg-drop li small{display:block;color:var(--ink-2);font-size:13px}
+.vd-help{margin:6px 0 10px;padding:12px 14px;border-radius:12px;background:#fbeaf0;border:1px solid #d9a0b5;color:#4a1f33;font-size:14px;line-height:1.5}
+.vd-help a{color:#9b1c3c;font-weight:800}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -5291,10 +5293,11 @@ const ART_TOPICS = [
   null,["Sexo antes do casamento","sexo antes do casamento pureza sexual"],
   ["Aborto e a santidade da vida","aborto santidade da vida"],["Conselhos para o casamento","conselhos para o casamento cristão"],
   ["Especial de Natal","natal advento encarnação de Cristo"],
-  ["Missões contemporâneas","missões contemporâneas igreja perseguida povos não alcançados"]
+  ["Missões contemporâneas","missões contemporâneas igreja perseguida povos não alcançados"],
+  ["Violência doméstica","violência doméstica abuso igreja acolhimento"]
 ];
-const ART_ICONS = ["t-graca", "t-soberania", "t-oracao", "t-santif", "t-familia", "t-filhos", "t-ansiedade", "t-sofrimento", "t-igreja", "t-sacram", "t-missoes", "t-escrituras", "t-trindade", "t-cristo", "t-espirito", "t-ultimas", null, "t-pureza", "t-vida", "t-conselhos", "t-natal", "t-missoes"];
-const ART_TCOL = ["#2b3a67", "#3f6c99", "#4f7a63", "#6f8f3a", "#b8862e", "#d9694c", "#2f6b7a", "#7a3550", "#3a4a7a", "#8a5a9e", "#2f6b3a", "#9a6b2e", "#5a4a9e", "#b0463c", "#c46a1f", "#4a5a6a", null, "#3f6c99", "#a8455e", "#b8862e", "#9b2c2c", "#7a1f2b"];
+const ART_ICONS = ["t-graca", "t-soberania", "t-oracao", "t-santif", "t-familia", "t-filhos", "t-ansiedade", "t-sofrimento", "t-igreja", "t-sacram", "t-missoes", "t-escrituras", "t-trindade", "t-cristo", "t-espirito", "t-ultimas", null, "t-pureza", "t-vida", "t-conselhos", "t-natal", "t-missoes", "t-sofrimento"];
+const ART_TCOL = ["#2b3a67", "#3f6c99", "#4f7a63", "#6f8f3a", "#b8862e", "#d9694c", "#2f6b7a", "#7a3550", "#3a4a7a", "#8a5a9e", "#2f6b3a", "#9a6b2e", "#5a4a9e", "#b0463c", "#c46a1f", "#4a5a6a", null, "#3f6c99", "#a8455e", "#b8862e", "#9b2c2c", "#7a1f2b", "#6b2f6b"];
 const ART_NATAL = 20;   // especial do Advento: um artigo por dia, de 1º a 25 de dezembro (campo "dia")
 const artSearch = (q, sites) => "https://www.google.com/search?q="+encodeURIComponent(`${q} (${sites.map(x=>"site:"+x).join(" OR ")})`);
 const ART_COLORS=["#2b3a67","#3f6c99","#4f7a63","#b8862e","#8a5a9e","#d9694c","#2f6b3a","#7a3550"];
@@ -5308,7 +5311,7 @@ function artCard(title, q, i=0, all=[]){
   const arts=all.slice(0,ART_MAX), old=all.slice(ART_MAX); const ti=ART_TOPICS.findIndex(t=>t&&t[0]===title); const ic=ART_ICONS[ti]||"i-article", co=ART_TCOL[ti]||ART_COLORS[i%ART_COLORS.length];
   return `<details class="st-row"${i<2?" open":""}><summary><span class="st-thumb art-stk" style="--c:${co}" aria-hidden="true"><svg class="icon"><use href="#${ic}"/></svg></span>
     <span class="st-tx"><b>${esc(title)}</b><small>${arts.length?`${arts.length} artigos do SOLA · `:""}${esc(arts.map(x=>x.author.split(" (")[0]).join(", ")||"Ministério Fiel, Voltemos ao Evangelho e outros")}</small></span><span class="chev" aria-hidden="true">›</span></summary>
-    <div class="st-body">${arts.map(artRow).join("")}${old.length?`<details class="art-old"><summary>Edições anteriores (${old.length})</summary>${old.map(artRow).join("")}</details>`:""}<div class="row-actions">
+    <div class="st-body">${title==="Violência doméstica"?`<div class="vd-help"><b>Precisa de ajuda agora?</b> Em emergência ligue <a href="tel:190">190</a>. A Central de Atendimento à Mulher atende 24 horas pelo <a href="tel:180">180</a> (ligação gratuita e sigilosa). Procure também alguém de confiança e a liderança da sua igreja. Você não está sozinha.</div>`:""}${arts.map(artRow).join("")}${old.length?`<details class="art-old"><summary>Edições anteriores (${old.length})</summary>${old.map(artRow).join("")}</details>`:""}<div class="row-actions">
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Mais artigos em português ↗</a>
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_EN))}" target="_blank" rel="noopener noreferrer">Em inglês ↗</a>
     </div></div></details>`;
@@ -5812,7 +5815,7 @@ $("#catDoc").addEventListener("click",async e=>{
 const DA_REG = {};
 /* Pronúncia de nomes estrangeiros pela voz brasileira (só no áudio; o texto na tela não muda) */
 const PRONUNCIA = [
-  [/\bNik Ripken\b/g,"Níc Rípken"],[/\bRipken\b/g,"Rípken"],[/\bPhilip Jenkins\b/g,"Fílip Djênkins"],[/\bJenkins\b/g,"Djênkins"],[/\bThe Insanity of God\b/g,"De Insániti óv Gód"],[/\bThe Next Christendom\b/g,"De Nékst Críssendom"],
+  [/\bJustin e Lindsey Holcomb\b/g,"Djâstin e Líndsei Hôlcomb"],[/\bHolcomb\b/g,"Hôlcomb"],[/\bIs It My Fault\?/g,"Is It Mai Fólt"],[/\bNik Ripken\b/g,"Níc Rípken"],[/\bRipken\b/g,"Rípken"],[/\bPhilip Jenkins\b/g,"Fílip Djênkins"],[/\bJenkins\b/g,"Djênkins"],[/\bThe Insanity of God\b/g,"De Insániti óv Gód"],[/\bThe Next Christendom\b/g,"De Nékst Críssendom"],
   [/\bJohn Piper\b/g,"Djón Páiper"],[/\bPiper\b/g,"Páiper"],
   [/\bPaul David Tripp\b/g,"Pól Dêivid Trip"],[/\bPaul Tripp\b/g,"Pól Trip"],[/\bTedd Tripp\b/g,"Téd Trip"],[/\bTripp\b/g,"Trip"],
   [/\bJ\. ?I\. Packer\b/g,"Djêi Ái Péquer"],[/\bPacker\b/g,"Péquer"],
@@ -5955,8 +5958,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.14.0";
+const APP_VERSION = "3.15.0";
 const CHANGELOG = [
+  { v:"3.15.0", d:"novembro de 2026", items:["Novo tema nos Artigos: Violência doméstica, com 3 artigos (Hernandes Dias Lopes, pastor Sérgio Andrade — “Até quando?” — e Justin e Lindsey Holcomb) e os contatos de ajuda 180 e 190.","Notícias do mundo cristão com checagem de fontes e 5 matérias por tipo, todos os dias.","Rádio cristã KCBI 90.9 ao vivo no Início."] },
   { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): todo dia, as 5 mais importantes de cada tipo — igreja perseguida, missões, seminários reformados e igreja no mundo —, traduzidas, com a igreja perseguida em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu.","Rádio cristã ao vivo no Início: KCBI 90.9 FM (Dallas), com controle na tela de bloqueio.","Estudo sugerido: tocar em “Visão geral” abre o menu com todas as visões gerais de livros."] },
   { v:"3.13.3", d:"novembro de 2026", items:["Novidades mostram só as 3 últimas versões; o histórico completo continua guardado."] },
   { v:"3.13.2", d:"novembro de 2026", items:["Novo e-mail oficial: contato@solabiblia.net.br (em Configurações › Sugestões e em Privacidade e termos). As sugestões agora vão por e-mail."] },
