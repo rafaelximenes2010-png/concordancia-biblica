@@ -585,6 +585,28 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-eq{height:10px;margin:0 0 0 4px;gap:2px}.rdx-eq i{width:2px}
 @keyframes rdxeq{0%,100%{height:3px}50%{height:10px}}
 .rdx-play{width:42px;height:42px;box-shadow:none}
+/* Busca do farol */
+.farol-top{background:#24345f!important;border-color:#24345f!important;color:#fff!important;border-radius:12px!important}
+.farol-top .icon{stroke:#fff;stroke-width:1.9}
+[data-theme="dark"] .farol-top{background:rgba(255,255,255,.12)!important;border-color:transparent!important}
+.farol-dlg{padding:0;border:0;border-radius:18px;width:min(640px,94vw);max-height:84vh;background:var(--surface);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.35);margin:6vh auto auto}
+.farol-dlg::backdrop{background:rgba(10,14,30,.55);backdrop-filter:blur(2px)}
+.fs-bar{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
+.fs-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#1c2747;color:#f4ead2;flex:none}
+.fs-ic .icon{width:22px;height:22px;stroke:#f4ead2}
+#fsQ{flex:1;min-width:0;border:0;background:transparent;font:500 17px/1.3 inherit;font-family:inherit;color:var(--ink);outline:none;padding:8px 0}
+.fs-x{border:0;background:none;color:var(--ink-2);font:600 14px/1 inherit;font-family:inherit;cursor:pointer;padding:8px}
+.fs-res{overflow:auto;max-height:calc(84vh - 64px);padding:6px 8px 12px}
+.fs-g{margin:12px 8px 4px;font:800 11px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.fs-it{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:0;background:none;color:var(--ink);padding:10px;border-radius:10px;cursor:pointer;font:inherit}
+.fs-it:hover,.fs-it.on{background:var(--gold-soft)}
+.fs-it .fs-k{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none;background:var(--surface-2);color:var(--ink-2);font-size:15px}
+.fs-it b{display:block;font-size:15px;font-weight:700}
+.fs-it small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:12.5px;color:var(--ink-2);margin-top:2px;overflow:hidden}
+.fs-it mark{background:var(--bg-highlight,rgba(240,200,110,.4));color:inherit;border-radius:3px;padding:0 1px}
+.fs-pp{margin:10px 8px 0;border-top:1px solid var(--border);padding-top:10px}
+.fs-pp .fs-k{background:#1f2937;color:#fff}
+.fs-empty{padding:18px 12px;color:var(--ink-2);font-size:14px;line-height:1.5}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -1725,6 +1747,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <symbol id="g-minhas" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-10.2A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 8 2.8C20 15.4 12 20 12 20z"/></symbol>
   <symbol id="i-article" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></symbol>
   <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M2 12h3M19 12h3M4.9 19.1 7 17M17 7l2.1-2.1"/></symbol>
+  <symbol id="i-farol" viewBox="0 0 24 24"><path d="M2.5 6.5 7 8.2M21.5 6.5 17 8.2M9.6 5.6 12 3.6l2.4 2M10 5.6h4V9h-4zM10.2 9 9.2 20h5.6l-1-11M9.7 14.2h4.6M7.5 20.4h9"/></symbol>
   <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/></symbol>
   <symbol id="i-marker" viewBox="0 0 24 24"><path d="m15 4 5 5-9 9H6v-5z"/><path d="M4 21h8"/></symbol>
   <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
@@ -1759,6 +1782,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <div class="header-tools">
       <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
       <button type="button" class="btn btn-icon now-top" id="nowTop" hidden aria-label="Abrir o tocador" title="Tocando agora"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
+      <button type="button" class="btn btn-icon farol-top" id="farolTop" aria-label="Buscar no SOLA" title="Buscar no SOLA (atalho: /)"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
       <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
       <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
@@ -2584,6 +2608,14 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="btn btn-sm" data-cd="all">Mais recursos</button>
     </div>
   </div>
+</dialog>
+<dialog id="farolDlg" class="farol-dlg" aria-label="Buscar no SOLA">
+  <div class="fs-bar">
+    <span class="fs-ic" aria-hidden="true"><svg class="icon"><use href="#i-farol"/></svg></span>
+    <input id="fsQ" type="search" placeholder="Buscar no SOLA: João 3:16, graça, Lidório…" autocomplete="off" enterkeyhint="search" aria-label="O que você procura?">
+    <button type="button" class="fs-x" id="fsClose" aria-label="Fechar">Fechar</button>
+  </div>
+  <div class="fs-res" id="fsRes" role="listbox"></div>
 </dialog>
 <dialog id="inboxDialog" class="note-dlg inbox-dlg" aria-labelledby="inboxTitle">
   <div class="dlg-head">
@@ -5093,6 +5125,76 @@ async function radioToggle(){
 }
 document.addEventListener("click",e=>{ if(e.target.closest("#rdBtn")) radioToggle(); });
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-vgtoggle]"); if(!b) return; const d=$("#vgDrop"); d.hidden=!d.hidden; b.setAttribute("aria-expanded",String(!d.hidden)); const on=d.querySelector("li.on"); if(on && !d.hidden) d.scrollTop=on.offsetTop-d.offsetTop-8; });
+
+/* =====================================================================
+   BUSCA DO FAROL — procura em todo o SOLA (seções, Bíblia, devocionais,
+   artigos, estudos, pensadores, notícias) e, se precisar, abre o Perplexity.
+   Atalho: tecla "/" no computador.
+   ===================================================================== */
+const FS_SECOES = [
+  ["Início","inicio","inicio home pagina principal"],["Bíblia","biblia","biblia ler leitura capitulo versao"],["Busca e concordância","busca","busca concordancia comentario palavra pesquisa"],
+  ["Texto do dia","texto","texto do dia versiculo"],["Devocional","devocional","devocional diario meditacao"],["Vídeos e visão geral","estudos","videos estudos bibleproject visao geral"],
+  ["Artigos","artigos","artigos textos leitura ensaios"],["Pensadores","pensadores","pensadores autores teologos filosofos"],["Mapas e jornadas","mapas","mapas jornadas geografia paulo"],
+  ["Ouvir","ouvir","ouvir audio musica hinos"],["Notícias do mundo cristão","noticias","noticias news missoes perseguicao seminarios"],["Credos e catecismos","catecismos","credos catecismos confissao westminster heidelberg dort"],
+  ["Notas","notas","notas anotacoes"],["Meu devocional","meudevocional","meu devocional diario pessoal"],["Configurações","config","configuracoes ajustes tema letra versao notificacoes"],
+  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádio KCBI 90.9","radio","radio kcbi musica ao vivo ouvir"]
+];
+const fsNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const fsNormPos = t => [...String(t||"")].map(c=>fsNorm(c).charAt(0)||c).join("");   /* mesma posição de cada letra, sem acento */
+const fsMark = (t,q) => { const s=String(t||""); if(!q) return esc(s); const i=fsNormPos(s).indexOf(fsNorm(q)); return i<0?esc(s):esc(s.slice(0,i))+"<mark>"+esc(s.slice(i,i+q.length))+"</mark>"+esc(s.slice(i+q.length)); };
+const fsTrecho = (t,q) => { const s=String(t||"").replace(/[#*_>\n]+/g," ").replace(/\s+/g," "); const i=fsNormPos(s).indexOf(fsNorm(q)); if(i<0) return s.slice(0,110); const a=Math.max(0,s.lastIndexOf(" ",Math.max(0,i-18))+1); return (a?"…":"")+s.slice(a,a+130)+"…"; };
+const FS = { itens:[], sel:0 };
+async function fsBuscar(){
+  const q=$("#fsQ").value.trim(), qn=fsNorm(q), box=$("#fsRes"), grupos=[];
+  const pal=qn.split(/\s+/).filter(Boolean), bate=t=>{ const n=fsNorm(t); return pal.every(p=>n.includes(p)); };
+  if(!q){ box.innerHTML=`<div class="fs-empty">Digite uma passagem (João 3:16, Salmo 23), um tema (graça, ansiedade, missões), um autor (Lidório, Piper) ou uma seção do app. Se não encontrar aqui, você pode perguntar ao Perplexity.</div>`; FS.itens=[]; return; }
+  // Bíblia
+  const ref=parseReference(q);
+  if(ref && !ref.error) grupos.push(["Bíblia",[{ k:"📖", t:`Abrir ${q}`, d:"Ler a passagem na Bíblia do SOLA", go:()=>{ showView("busca"); goToRef(q); } }]]);
+  else { const livros=CANON.filter(b=>bate(b.name)).slice(0,4); if(livros.length) grupos.push(["Bíblia",livros.map(b=>({ k:"📖", t:b.name, d:`Abrir ${b.name} 1`, go:()=>{ showView("busca"); goToRef(b.name+" 1"); } }))]); }
+  // Seções
+  const sec=FS_SECOES.filter(([n,,kw])=>bate(n+" "+kw)).slice(0,4);
+  if(sec.length) grupos.push(["Seções do app",sec.map(([n,v])=>({ k:"🧭", t:n, d:"Abrir esta seção", go:()=>{ if(v==="wa") location.href="site/whatsapp.html"; else if(v==="radio"){ showView("inicio"); setTimeout(()=>$("#rdCard")?.scrollIntoView({ behavior:"smooth", block:"center" }),300); } else showView(v); } }))]);
+  // Devocionais do mês (até hoje)
+  try{ const hoje=new Date(), m=monthKey(hoje), s=await DevoSeries.load(m);
+    const dv=(s?.days||[]).filter(x=>x.day<=hoje.getDate() && bate(`${x.title} ${x.ref} ${passageLabel(x.p)}`)).slice(0,4);
+    if(dv.length) grupos.push(["Devocionais",dv.map(x=>({ k:"🕯️", t:x.title, d:`Dia ${x.day} · ${passageLabel(x.p)}`, go:()=>{ devoOffset=x.day-hoje.getDate(); showView("devocional"); renderDevo(); } }))]); }catch(e){}
+  // Artigos
+  try{ const arts=(await artsLoad()).filter(a=>!a.mes || a.mes<=monthKey(new Date()));
+    const hit=arts.map(a=>({ a, n:(bate(a.title)?3:0)+(bate(a.author)?2:0)+(bate((ART_TOPICS[a.t]||[])[0]||"")?2:0)+(bate(a.body)?1:0) })).filter(x=>x.n).sort((x,y)=>y.n-x.n).slice(0,6);
+    if(hit.length) grupos.push(["Artigos",hit.map(({a})=>({ k:"📝", t:a.title, d:bate(a.title)||bate(a.author)||bate((ART_TOPICS[a.t]||[])[0]||"")?`${a.author} · ${(ART_TOPICS[a.t]||[])[0]||""}`:fsTrecho(a.body,pal[0]), go:()=>{ showView("artigos"); setTimeout(()=>openArticle(a.id),150); } }))]); }catch(e){}
+  // Estudos (visão geral)
+  const bp=BP.filter(x=>bate(`${x.title} ${x.desc} ${x.type}`)).slice(0,4);
+  if(bp.length) grupos.push(["Estudos em vídeo",bp.map(x=>({ k:"🎬", t:x.title, d:`${x.type} · ${x.desc}`, go:()=>window.open(x.url,"_blank","noopener") }))]);
+  // Pensadores
+  const pz=PENSADORES.filter(x=>bate(`${x.name} ${x.area} ${x.idea} ${x.works}`)).slice(0,4);
+  if(pz.length) grupos.push(["Pensadores",pz.map(x=>({ k:"👤", t:x.name, d:`${x.years} · ${x.area}`, go:()=>{ showView("pensadores"); } }))]);
+  // Notícias
+  try{ if(!NT.data){ const r=await fetch("noticias/feed.json?t="+Math.floor(Date.now()/600000)); if(r.ok) NT.data=await r.json(); }
+    const nt=((NT.data?.dias||[])[0]?.itens||[]).filter(x=>bate(`${x.titulo} ${x.resumo} ${x.pais} ${x.fonte}`)).slice(0,4);
+    if(nt.length) grupos.push(["Notícias de hoje",nt.map(x=>({ k:"🌍", t:x.titulo, d:`${x.fonte}${x.pais?" · "+x.pais:""}`, go:()=>window.open(x.url,"_blank","noopener") }))]); }catch(e){}
+  // Busca completa na Bíblia/comentários + Perplexity
+  const extra=[{ k:"🔎", t:`Buscar “${q}” na Bíblia e nos comentários`, d:"Concordância e comentários reformados", go:()=>{ showView("busca"); goToRef(q); } }];
+  const pp={ k:"✦", t:`Perguntar ao Perplexity: “${q}”`, d:"Abre fora do app, com fontes da internet", go:()=>window.open("https://www.perplexity.ai/search?q="+encodeURIComponent(q),"_blank","noopener"), pp:true };
+  FS.itens=[]; let html="";
+  for(const [g,its] of grupos){ html+=`<div class="fs-g">${esc(g)}</div>`; for(const it of its){ const i=FS.itens.push(it)-1; html+=`<button type="button" class="fs-it" data-fs="${i}" role="option"><span class="fs-k">${it.k}</span><span><b>${fsMark(it.t,pal[0])}</b><small>${fsMark(it.d,pal[0])}</small></span></button>`; } }
+  if(!grupos.length) html+=`<div class="fs-empty">Nada encontrado no SOLA para “${esc(q)}”.</div>`;
+  html+=`<div class="fs-pp">`; for(const it of [...extra,pp]){ const i=FS.itens.push(it)-1; html+=`<button type="button" class="fs-it" data-fs="${i}" role="option"><span class="fs-k">${it.k}</span><span><b>${esc(it.t)}</b><small>${esc(it.d)}</small></span></button>`; } html+=`</div>`;
+  box.innerHTML=html; FS.sel=0; fsMarcar();
+}
+function fsMarcar(){ [...document.querySelectorAll("#fsRes .fs-it")].forEach((b,i)=>b.classList.toggle("on",i===FS.sel)); }
+function fsIr(i){ const it=FS.itens[i]; if(!it) return; $("#farolDlg").close(); it.go(); }
+let fsT; $("#fsQ").addEventListener("input",()=>{ clearTimeout(fsT); fsT=setTimeout(fsBuscar,160); });
+$("#fsQ").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){ e.preventDefault(); fsIr(FS.sel); }
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); FS.sel=Math.max(0,Math.min(FS.itens.length-1,FS.sel+(e.key==="ArrowDown"?1:-1))); fsMarcar(); document.querySelector("#fsRes .fs-it.on")?.scrollIntoView({ block:"nearest" }); }
+});
+$("#fsRes").addEventListener("click",e=>{ const b=e.target.closest("[data-fs]"); if(b) fsIr(+b.dataset.fs); });
+$("#fsClose").addEventListener("click",()=>$("#farolDlg").close());
+$("#farolDlg").addEventListener("click",e=>{ if(e.target===$("#farolDlg")) $("#farolDlg").close(); });
+function abrirFarol(){ const d=$("#farolDlg"); if(!d.open) d.showModal(); $("#fsQ").value=""; fsBuscar(); setTimeout(()=>$("#fsQ").focus(),50); }
+$("#farolTop").addEventListener("click",abrirFarol);
+document.addEventListener("keydown",e=>{ if(e.key==="/" && !/input|textarea|select/i.test(document.activeElement?.tagName||"") && !document.activeElement?.isContentEditable){ e.preventDefault(); abrirFarol(); } });
 function downloadIcs(time){
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
   if(framed){ toast("Nesta página de pré-visualização os downloads são bloqueados. No app instalado, este botão gera o lembrete do calendário."); return; }
@@ -6043,8 +6145,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.15.2";
+const APP_VERSION = "3.16.0";
 const CHANGELOG = [
+  { v:"3.16.0", d:"novembro de 2026", items:["Busca do farol (botão com o farol no alto): procura em todo o SOLA — passagens, devocionais, artigos, estudos, pensadores, notícias e seções — e, se precisar, pergunta ao Perplexity."] },
   { v:"3.15.2", d:"novembro de 2026", items:["Início mais limpo, organizado em seções: Notícias (SOLA News), Compartilhar (Marcos 16:15 e envio pelo WhatsApp) e Ouvir (rádio KCBI)."] },
   { v:"3.15.1", d:"novembro de 2026", items:["Novo visual no Início: rádio com cara de player de música, notícias no estilo de jornal financeiro e o cartão do WhatsApp com Marcos 16:15."] },
   { v:"3.15.0", d:"novembro de 2026", items:["Novo tema nos Artigos: Violência doméstica, com 3 artigos (Hernandes Dias Lopes, pastor Sérgio Andrade — “Até quando?” — e Justin e Lindsey Holcomb) e os contatos de ajuda 180 e 190.","Notícias do mundo cristão com checagem de fontes e 5 matérias por tipo, todos os dias.","Rádio cristã KCBI 90.9 ao vivo no Início."] },
