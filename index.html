@@ -488,6 +488,40 @@ dialog.note-dlg{max-width:620px}
 .pv-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none}
 .pv-chip small{font-weight:500;color:var(--muted)}
 .pv-foot{margin:12px 0 0;font-size:12px;color:var(--muted)}
+.hc-pv{gap:12px!important}
+.pv-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.pv-eyebrow{margin:0;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--gold,#c9a24a)}
+#homePV .pv-h{margin:2px 0 0;font-size:26px!important;line-height:1.15}
+.pv-cfg{border:1px solid var(--border);background:transparent;color:var(--muted);border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px;cursor:pointer}
+.pv-hero{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:0;cursor:pointer;border-radius:16px;padding:16px;
+  background:linear-gradient(135deg,#22396a,#132447);color:#fff;box-shadow:0 8px 22px rgba(10,20,45,.25)}
+.pv-hero-ic{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.12);color:#ffd98a}
+.pv-hero-ic .icon{width:26px;height:26px}
+.pv-hero-t{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.pv-hero-t small{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:#ffd98a}
+.pv-hero-t b{font-size:22px;font-family:var(--font-text,Georgia,serif)}
+.pv-hero-t em{font-style:normal;font-size:13px;color:#c9d4ea}
+.pv-hero-btn{flex:none;background:#f2c14e;color:#13213a;font-weight:800;font-size:13.5px;border-radius:999px;padding:9px 14px}
+.pv-sec{border:1px solid var(--border);border-radius:14px;background:var(--bg);overflow:hidden}
+.pv-sec summary{list-style:none;display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer}
+.pv-sec summary::-webkit-details-marker{display:none}
+.pv-ico{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--c);color:#fff;font-weight:800;font-size:16px}
+.pv-st{flex:1;display:flex;flex-direction:column;min-width:0}
+.pv-st b{font-size:16px}.pv-st small{font-size:12.5px;color:var(--muted)}
+.pv-n{flex:none;min-width:26px;height:26px;border-radius:999px;display:grid;place-items:center;font-size:12.5px;font-weight:800;background:var(--surface);border:1px solid var(--border)}
+.pv-chev{flex:none;font-size:20px;color:var(--muted);transition:transform .2s;line-height:1;margin-top:-6px}
+.pv-sec[open] .pv-chev{transform:rotate(180deg);margin-top:6px}
+.pv-body{padding:0 10px 10px;display:flex;flex-direction:column;gap:6px}
+.pv-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.pv-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px 14px;cursor:pointer;text-decoration:none;min-height:50px}
+.pv-it{flex:1;display:flex;flex-direction:column;min-width:0}.pv-it b{font-size:15.5px}.pv-it small{font-size:12.5px;color:var(--muted)}
+.pv-tag{flex:none;font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:999px;background:color-mix(in srgb,var(--gold,#c9a24a) 18%,transparent);color:var(--gold,#c9a24a)}
+.pv-go{flex:none;font-size:20px;color:var(--muted)}
+.pv-temas{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.pv-tema{border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:12px;padding:11px 10px;font-weight:700;font-size:14px;cursor:pointer}
+.pv-tema.on{background:#f2c14e;color:#13213a;border-color:#f2c14e}
+.pv-foot{display:flex;align-items:center;gap:6px;margin:2px 0 0!important}.pv-foot .icon{width:14px;height:14px}
+
 .linklike{border:0;background:none;padding:0;color:var(--accent,#2e6da4);text-decoration:underline;font:inherit;cursor:pointer}
 .cfg-check{display:flex;align-items:center;gap:8px;font-weight:700}
 dialog.card-dlg{max-width:440px;width:calc(100% - 20px);max-height:96dvh;padding:12px 14px calc(14px + env(safe-area-inset-bottom));overflow:auto}
@@ -4828,27 +4862,37 @@ const Perso = {
     return out;
   },
   renderHome(){
-    const box=$("#homePV"); if(!box) return; const s=this.suggest();
+    const box=$("#homePV"); if(!box) return; const s=this.suggest(), open=store.get("pvOpen",{rel:true,est:false,tema:false});
     const ref=r=>`${BOOK[r.b].name} ${r.c}${r.v?":"+r.v:""}`;
-    const go=r=>`<button type="button" class="pv-chip" data-pvgo="${r.b}.${r.c}.${r.v||""}">${esc(ref(r))}${r.tema?` <small>${esc(r.tema)}</small>`:""}</button>`;
-    let h=`<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-open-book"/></svg>Para você</h3>`;
-    if(s.novice){
-      h+=`<p style="margin:0 0 6px">${this.on()?"Começando agora? Escolha um tema e leia passagens-chave:":"Sugestões personalizadas desligadas. Temas para começar:"}</p>
-        <div class="pv-row">${PV_THEMES.map((th,i)=>`<button type="button" class="pv-chip" data-pvtema="${i}">${esc(th.t)}</button>`).join("")}</div><div id="pvTema"></div>`;
-    } else {
-      if(s.next) h+=`<p class="pv-l">Próxima leitura <small>porque você parou em ${esc(s.why)}</small></p><div class="pv-row">${go(s.next)}</div>`;
-      if(s.related.length) h+=`<p class="pv-l">Passagens relacionadas <small>pelos livros que você mais lê${s.topBook?` (${esc(s.topBook)})`:""}</small></p><div class="pv-row">${s.related.map(go).join("")}</div>`;
-      if(s.studies.length) h+=`<p class="pv-l">Estudos para retomar</p><div class="pv-row">${s.studies.map(x=>`<a class="pv-chip" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)} <small>${esc(x.type)} ↗</small></a>`).join("")}</div>`;
+    const sec=(k,ico,cor,t,sub,n,body)=>`<details class="pv-sec" data-pvsec="${k}"${open[k]?" open":""}><summary><span class="pv-ico" style="--c:${cor}">${ico}</span><span class="pv-st"><b>${t}</b><small>${sub}</small></span>${n?`<span class="pv-n">${n}</span>`:""}<span class="pv-chev" aria-hidden="true">⌄</span></summary><div class="pv-body">${body}</div></details>`;
+    const row=(attrs,a,b,tag,ext)=>`<${ext?"a":"button type=\"button\""} class="pv-item" ${attrs}><span class="pv-it"><b>${a}</b>${b?`<small>${b}</small>`:""}</span>${tag?`<span class="pv-tag">${tag}</span>`:""}<span class="pv-go" aria-hidden="true">${ext?"↗":"›"}</span></${ext?"a":"button"}>`;
+    let h=`<div class="pv-head"><div><p class="pv-eyebrow">Recomendado para você</p><h3 class="pv-h">Para você</h3></div>
+      <button type="button" class="pv-cfg" data-pvcfg aria-label="${this.on()?"Desligar":"Ligar"} sugestões personalizadas" title="${this.on()?"Desligar":"Ligar"} sugestões">${this.on()?"Ligado":"Desligado"}</button></div>`;
+    if(!s.novice && s.next){
+      h+=`<button type="button" class="pv-hero" data-pvgo="${s.next.b}.${s.next.c}.">
+        <span class="pv-hero-ic" aria-hidden="true"><svg class="icon"><use href="#i-book"/></svg></span>
+        <span class="pv-hero-t"><small>${s.next.again?"Continue de onde parou":"Próxima leitura"}</small><b>${esc(ref(s.next))}</b><em>Você parou em ${esc(s.why)}</em></span>
+        <span class="pv-hero-btn">Ler agora ›</span></button>`;
     }
-    h+=`<p class="pv-foot">Calculado só neste aparelho, sem usar suas anotações. <button type="button" class="linklike" data-pvcfg>${this.on()?"Desligar":"Ligar"} sugestões</button></p>`;
+    if(!s.novice && s.related.length) h+=sec("rel","✦","#5b6fb5","Passagens relacionadas",`Pelos livros que você mais lê${s.topBook?` · ${esc(s.topBook)}`:""}`,s.related.length,
+      s.related.map(r=>row(`data-pvgo="${r.b}.${r.c}.${r.v}"`,esc(ref(r)),"",esc(r.tema))).join(""));
+    if(!s.novice && s.studies.length) h+=sec("est","▶","#b8862e","Estudos para retomar","Vídeos do BibleProject",s.studies.length,
+      s.studies.map(x=>row(`href="${esc(x.url)}" target="_blank" rel="noopener noreferrer"`,esc(x.title),esc(x.type),"",true)).join(""));
+    h+=sec("tema","☰","#2f7d4a","Explorar por tema",s.novice?(this.on()?"Começando agora? Escolha um assunto":"Sugestões personalizadas desligadas"):"Passagens-chave por assunto",PV_THEMES.length,
+      `<div class="pv-temas">${PV_THEMES.map((th,i)=>`<button type="button" class="pv-tema" data-pvtema="${i}">${esc(th.t)}</button>`).join("")}</div><div id="pvTema"></div>`);
+    h+=`<p class="pv-foot"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Calculado só neste aparelho, sem usar suas anotações.</p>`;
     box.innerHTML=h;
+    if(s.novice && !open.tema){ const d=box.querySelector('[data-pvsec="tema"]'); if(d) d.open=true; }
   }
 };
+$("#homePV")?.addEventListener("click",e=>{ const sm=e.target.closest("summary"); const d=sm&&sm.parentElement; if(!d||!d.dataset.pvsec) return;   // só grava quando a pessoa abre/fecha
+  setTimeout(()=>{ const o=store.get("pvOpen",{rel:true,est:false,tema:false}); o[d.dataset.pvsec]=d.open; store.set("pvOpen",o); },0); });
 $("#homePV")?.addEventListener("click",e=>{
   const g=e.target.closest("[data-pvgo]"); if(g){ const [b,c,v]=g.dataset.pvgo.split("."); return fsBiblia(b,+c,v?+v:null); }
   const im=e.target.closest("[data-pvimg]"); if(im) return VerseCard.openTema(im.dataset.pvimg);
   const t=e.target.closest("[data-pvtema]"); if(t){ const th=PV_THEMES[+t.dataset.pvtema];
-    $("#pvTema").innerHTML=`<p class="pv-l">${esc(th.t)}</p><div class="pv-row">${th.refs.map(r=>`<button type="button" class="pv-chip" data-pvgo="${r.b}.${r.c}.${r.v}">${esc(BOOK[r.b].name)} ${r.c}:${r.v}</button>`).join("")}</div>`; return; }
+    document.querySelectorAll("#homePV .pv-tema").forEach(b=>b.classList.toggle("on",b===t));
+    $("#pvTema").innerHTML=`<div class="pv-list">${th.refs.map(r=>`<button type="button" class="pv-item" data-pvgo="${r.b}.${r.c}.${r.v}"><span class="pv-it"><b>${esc(BOOK[r.b].name)} ${r.c}:${r.v}</b></span><span class="pv-tag">${esc(th.t)}</span><span class="pv-go" aria-hidden="true">›</span></button>`).join("")}</div>`; return; }
   if(e.target.closest("[data-pvcfg]")){ const on=!Perso.on(); store.set("persOn",on); const cb=$("#cfgPerso"); if(cb) cb.checked=on;
     toast(on?"Sugestões personalizadas ligadas.":"Sugestões personalizadas desligadas. O app deixa de registrar sua leitura para sugestões."); Perso.renderHome(); }
 });
@@ -6589,8 +6633,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.18.1";
+const APP_VERSION = "3.18.2";
 const CHANGELOG = [
+  { v:"3.18.2", d:"novembro de 2026", items:["“Para você” redesenhado: destaque para a próxima leitura e seções que abrem e fecham (passagens relacionadas, estudos e temas)."] },
   { v:"3.18.1", d:"novembro de 2026", items:["Barra de baixo presa ao rodapé de outro jeito (faz parte da página), para não flutuar mais no iPhone.","Os temas de imagem saíram da tela inicial: aparecem só ao escolher um versículo e tocar em Imagem."] },
   { v:"3.18.0", d:"novembro de 2026", items:["Banco de imagens para versículos: 24 ilustrações originais por mês, nos temas Graça, Fé, Misericórdia, Perdão, Casamento, Amor, Ânimo e Retomada, com versículos sugeridos para cada tema. Também dá para usar o farol ou uma foto sua.","Mapas: nomes dos lugares voltaram ao tamanho anterior."] },
   { v:"3.17.2", d:"novembro de 2026", items:["Abertura revisada: a mensagem de boas-vindas com a pergunta do dia aparece para todos (também para quem ainda não tem nome no perfil) e fica mais tempo na tela.","Quem instala o app pela primeira vez não recebe mais o aviso de “novidades”; nas correções, o aviso mostra o destaque da versão principal."] },
