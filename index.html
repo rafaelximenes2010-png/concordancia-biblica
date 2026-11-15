@@ -503,6 +503,15 @@ div.home-card.rd-card{display:flex;flex-direction:row;align-items:center;gap:12p
 @keyframes rdpulse{50%{transform:scale(.92)}}
 .rd-live{color:#b0463c;font-size:12px;font-weight:800;margin-left:4px}
 .rd-badge{font:800 11px/1.1 inherit;font-family:inherit;text-align:center;color:var(--ink-2);border:1.5px solid var(--border);border-radius:8px;padding:5px 6px}
+.vg-pill{cursor:pointer;font:inherit;font-size:inherit;border:1px solid var(--border)}
+.vg-pill[aria-expanded="true"] span{display:inline-block;transform:rotate(180deg)}
+.vg-drop{margin:8px 0 4px;border:1px solid var(--border);border-radius:12px;background:var(--surface);max-height:420px;overflow:auto}
+.vg-drop details{border-top:1px solid var(--border)}.vg-drop details:first-child{border-top:0}
+.vg-drop summary{padding:12px 14px;font-weight:800;cursor:pointer}.vg-drop summary small{color:var(--ink-3);font-weight:600}
+.vg-drop ul{list-style:none;margin:0;padding:0 6px 8px}
+.vg-drop li a{display:block;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--ink)}
+.vg-drop li a:hover,.vg-drop li.on a{background:var(--gold-soft)}
+.vg-drop li b{display:block;font-size:15px}.vg-drop li small{display:block;color:var(--ink-2);font-size:13px}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -4554,7 +4563,10 @@ async function renderHome(){
   const dv=devoFor(new Date());
   const pick = BP.find(x=>x.book===dv.p.b) || BP[dayIndex()%BP.length];
   $("#homeEstudo").innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-film"/></svg>Estudo sugerido</h3>
-    <p style="margin:0;font-weight:700">${esc(pick.title)} <span class="pill">${esc(pick.type)}</span></p>
+    <p style="margin:0;font-weight:700">${esc(pick.title)} <button type="button" class="pill vg-pill" data-vgtoggle aria-expanded="false">${esc(pick.type)} <span aria-hidden="true">▾</span></button></p>
+    <div class="vg-drop" id="vgDrop" hidden>${(()=>{ const vg=BP.filter(x=>x.type===pick.type);
+      const grupos=pick.type==="Tema bíblico"?[["Temas bíblicos",vg]]:[["Antigo Testamento",vg.filter(x=>BOOK[x.book].testament==="AT")],["Novo Testamento",vg.filter(x=>BOOK[x.book].testament==="NT")]];
+      return grupos.filter(g=>g[1].length).map(([h,l])=>`<details${l.includes(pick)?" open":""}><summary>${h} <small>${l.length}</small></summary><ul>${l.map(x=>`<li${x===pick?' class="on"':""}><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer"><b>${esc(x.title)}</b><small>${esc(x.desc)}</small></a></li>`).join("")}</ul></details>`).join(""); })()}</div>
     <p style="margin:0;color:var(--ink-2)">${esc(pick.desc)}</p>
     <div class="row-actions"><a class="btn btn-sm btn-ext" href="${esc(pick.url)}" target="_blank" rel="noopener noreferrer">Abrir no BibleProject ↗</a>
     <button type="button" class="btn btn-sm" data-go="estudos">Ver todos os estudos</button></div>`;
@@ -4993,6 +5005,7 @@ async function radioToggle(){
   Radio.erro=true; radioUi("erro");
 }
 document.addEventListener("click",e=>{ if(e.target.closest("#rdBtn")) radioToggle(); });
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-vgtoggle]"); if(!b) return; const d=$("#vgDrop"); d.hidden=!d.hidden; b.setAttribute("aria-expanded",String(!d.hidden)); const on=d.querySelector("li.on"); if(on && !d.hidden) d.scrollTop=on.offsetTop-d.offsetTop-8; });
 function downloadIcs(time){
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
   if(framed){ toast("Nesta página de pré-visualização os downloads são bloqueados. No app instalado, este botão gera o lembrete do calendário."); return; }
@@ -5944,7 +5957,7 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
    ===================================================================== */
 const APP_VERSION = "3.14.0";
 const CHANGELOG = [
-  { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): todo dia, as 5 mais importantes de cada tipo — igreja perseguida, missões, seminários reformados e igreja no mundo —, traduzidas, com a igreja perseguida em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu.","Rádio cristã ao vivo no Início: KCBI 90.9 FM (Dallas), com controle na tela de bloqueio."] },
+  { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): todo dia, as 5 mais importantes de cada tipo — igreja perseguida, missões, seminários reformados e igreja no mundo —, traduzidas, com a igreja perseguida em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu.","Rádio cristã ao vivo no Início: KCBI 90.9 FM (Dallas), com controle na tela de bloqueio.","Estudo sugerido: tocar em “Visão geral” abre o menu com todas as visões gerais de livros."] },
   { v:"3.13.3", d:"novembro de 2026", items:["Novidades mostram só as 3 últimas versões; o histórico completo continua guardado."] },
   { v:"3.13.2", d:"novembro de 2026", items:["Novo e-mail oficial: contato@solabiblia.net.br (em Configurações › Sugestões e em Privacidade e termos). As sugestões agora vão por e-mail."] },
   { v:"3.13.1", d:"novembro de 2026", items:["Tela firme: o fundo não desce mais ao puxar a Bíblia ou os comentários"] },
