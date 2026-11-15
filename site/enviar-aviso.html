@@ -30,6 +30,10 @@
   #msg{margin-top:12px;font-weight:600}
   .ok{color:#2f6b45}.err{color:#a23b2b}
   p.hint{font-size:13px;color:var(--ink2);margin:6px 0 0}
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+  .kpi{background:#fffdf8;border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+  .kpi b{display:block;font-size:26px;line-height:1.1}.kpi span{font-size:12.5px;color:var(--ink2)}
+  .kpi.big{grid-column:1/-1;background:#0f1b33;color:#f4ead2;border-color:#0f1b33}.kpi.big span{color:#e1b553}
 </style>
 </head>
 <body>
@@ -39,6 +43,12 @@
     <label for="k">Senha de administrador</label>
     <input id="k" type="password" autocomplete="current-password" placeholder="PUSH_ADMIN (ou os 6 últimos caracteres do TG_TOKEN)">
     <p class="hint" id="stat">Digite a senha para ver quantos aparelhos estão inscritos.</p>
+  </div>
+  <div class="card" id="instCard">
+    <label style="margin-top:0">Quantas pessoas usam o SOLA</label>
+    <div class="kpis" id="kpis"><p class="hint">Digite a senha acima para ver a contagem.</p></div>
+    <canvas id="graf" width="520" height="120" style="width:100%;height:120px;display:none;margin-top:8px"></canvas>
+    <p class="hint">Contagem anônima, por aparelho: cada celular ou computador conta 1 vez, sem nome, telefone ou e-mail. Começou na versão 3.19.3; quem abriu antes entra na contagem na próxima vez que abrir o app.</p>
   </div>
   <div class="card">
     <label for="t">Título</label>
@@ -83,6 +93,18 @@ async function stats(){
     $("#stat").textContent = `${j.inscritos} aparelho(s) inscrito(s) · ${j.devocional} com devocional diário · versão registrada: ${j.versao || "—"}${j.fila ? ` · ${j.fila} envio(s) na fila` : ""}`;
   } catch (e) { $("#stat").textContent = "Não foi possível falar com o servidor."; }
 }
+async function contagem(){
+  const k = $("#k").value.trim(); if (!k) return;
+  try { const r = await fetch(`${API}/stats?k=${encodeURIComponent(k)}`); const j = await r.json(); if (!r.ok) return;
+    const n = x => Number(x||0).toLocaleString("pt-BR"), K = (v,t,c="") => `<div class="kpi ${c}"><b>${n(v)}</b><span>${t}</span></div>`;
+    $("#kpis").innerHTML = K(j.aparelhos,"pessoas (aparelhos) já abriram o SOLA","big") + K(j.instalados,"instalaram na tela inicial") + K(j.ativos30,"usaram nos últimos 30 dias")
+      + K(j.novosHoje,"novos hoje") + K(j.novos7,"novos nos últimos 7 dias") + K(j.iphone,"iPhone") + K(j.android,"Android") + K(j.computador,"computador") + K(j.inscritosPush,"com notificações ligadas");
+    const c = $("#graf"), v = Object.values(j.porDia||{}); if (!v.length) return; c.style.display = "block"; const g = c.getContext("2d"), mx = Math.max(1, ...v), w = c.width / v.length;
+    g.clearRect(0,0,c.width,c.height); g.fillStyle = "#c99a3b"; v.forEach((x,i) => { const hh = (c.height-18) * x / mx; g.fillRect(i*w+2, c.height-14-hh, w-4, hh); });
+    g.fillStyle = "#56607a"; g.font = "11px system-ui"; g.fillText("novos por dia · últimos 30 dias", 2, c.height-2);
+  } catch (e) {}
+}
+$("#k").addEventListener("change", contagem); $("#stats").addEventListener("click", contagem);
 $("#k").addEventListener("change", stats); $("#stats").addEventListener("click", stats);
 $("#send").addEventListener("click", async () => {
   const k = $("#k").value.trim(), title = $("#t").value.trim(), body = $("#b").value.trim();
@@ -99,7 +121,7 @@ $("#send").addEventListener("click", async () => {
   } catch (e) { m.className = "err"; m.textContent = "Não foi possível falar com o servidor."; }
   $("#send").disabled = false;
 });
-prev(); stats();
+prev(); stats(); contagem();
 </script>
 </body>
 </html>

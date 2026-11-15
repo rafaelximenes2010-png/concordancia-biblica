@@ -4891,6 +4891,20 @@ $("#homePV")?.addEventListener("click",e=>{
   cb.addEventListener("change",()=>{ store.set("persOn",cb.checked); Perso.renderHome(); toast(cb.checked?"Sugestões personalizadas ligadas.":"Sugestões personalizadas desligadas."); });
   $("#cfgPersoClear").addEventListener("click",()=>{ Perso.clear(); Perso.renderHome(); toast("Histórico de leitura das sugestões apagado."); }); })();
 
+/* ---------- Contador anônimo de instalações ----------
+   Cada aparelho gera um código aleatório (sem nome, e-mail, telefone ou localização) e avisa o servidor
+   no máximo 1 vez por semana, ou quando o app é instalado na tela inicial. Serve só para contar quantas pessoas usam o SOLA. */
+(()=>{ try{
+  if(!TR_PROXY || /^(localhost|127\.)/.test(location.hostname)) return;
+  let id=store.get("devId",""); if(!/^[a-f0-9]{16,32}$/.test(id)){ id=[...crypto.getRandomValues(new Uint8Array(12))].map(x=>x.toString(16).padStart(2,"0")).join(""); store.set("devId",id); }
+  const inst = matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+  const ua=navigator.userAgent, os=/iPhone|iPad|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)?"ios":/Android/.test(ua)?"android":"desktop";
+  const last=store.get("devPing",{t:0,i:false}), semana=7*864e5;
+  if(Date.now()-last.t < semana && last.i===inst) return;
+  setTimeout(()=>fetch(TR_PROXY+"/push/ping",{ method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({ id, inst, os, v:APP_VERSION }), keepalive:true })
+    .then(r=>{ if(r.ok) store.set("devPing",{ t:Date.now(), i:inst }); }).catch(()=>{}), 4000);
+}catch(e){} })();
+
 /* ---------- Sequência de estudo (incentivo diário) ---------- */
 const Streak = {
   days(){ return store.get("studyDays",[]); },
@@ -6624,8 +6638,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.19.2";
+const APP_VERSION = "3.19.3";
 const CHANGELOG = [
+  { v:"3.19.3", d:"novembro de 2026", items:["Contagem anônima de quantas pessoas usam e instalaram o SOLA (sem nenhum dado pessoal)."] },
   { v:"3.19.2", d:"novembro de 2026", items:["Mapas: ficam só as opções Mapa e Satélite; a linha do percurso ficou mais grossa e com contorno branco, destacada no mapa e no satélite."] },
   { v:"3.19.1", d:"novembro de 2026", items:["Mapas: Relevo no estilo do Google Maps (terreno colorido com sombreamento das montanhas, rios e lagos do próprio mapa) e imagens mais nítidas em telas de alta definição."] },
   { v:"3.19.0", d:"novembro de 2026", items:["Temas e versículos renovados toda semana: o “Para você” sorteia, toda segunda-feira, 10 temas entre 24 (Gratidão, Família, Provisão, Proteção, Alegria, Missão…) e 4 versículos de cada. Os versículos sugeridos para as imagens também mudam toda semana."] },

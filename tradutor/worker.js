@@ -333,6 +333,20 @@ async function pushTick(env){
 
 function isAdmin(k, env){ return !!k && ((env.PUSH_ADMIN && k === env.PUSH_ADMIN) || (env.TG_TOKEN && k === env.TG_TOKEN.slice(-6))); }
 
+/* Resumo do contador de instalações (lê só os metadados das chaves st:*) */
+async function statsResumo(env){
+  const devs = []; let cursor;
+  do { const page = await env.TR_CACHE.list({ prefix: "st:", cursor }); page.keys.forEach(k => k.metadata && devs.push(k.metadata)); cursor = page.list_complete ? null : page.cursor; } while (cursor);
+  const hoje = brToday(), dias = n => { const d = new Date(hoje + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - n); return d.toISOString().slice(0, 10); };
+  const d7 = dias(6), d30 = dias(29), porDia = {};
+  for (let i = 29; i >= 0; i--) porDia[dias(i)] = 0;
+  devs.forEach(m => { if (m.f in porDia) porDia[m.f]++; });
+  const cnt = f => devs.filter(f).length;
+  return { aparelhos: devs.length, instalados: cnt(m => m.i), iphone: cnt(m => m.o === "ios"), android: cnt(m => m.o === "android"), computador: cnt(m => m.o === "desktop"),
+           novosHoje: cnt(m => m.f === hoje), novos7: cnt(m => m.f >= d7), novos30: cnt(m => m.f >= d30), ativos30: cnt(m => m.l >= d30),
+           inscritosPush: (await allSubs(env)).length, porDia, desde: devs.reduce((a, m) => !a || m.f < a ? m.f : a, "") };
+}
+
 async function pushRoute(request, env, h){
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: h });
   if (!env.TR_CACHE) return json({ error: "config", message: "Ligue o KV TR_CACHE no Worker." }, 500, h);
@@ -345,8 +359,20 @@ async function pushRoute(request, env, h){
     return json({ inscritos: subs.length, devocional: subs.filter(s => s.t?.devo).length, fila: (await env.TR_CACHE.get("push:queue", "json") || []).length,
                   versao: await env.TR_CACHE.get("push:version") }, 200, h);
   }
+  if (path === "/push/stats") {                        // contagem de instalações (só administrador)
+    if (!isAdmin(qs.get("k"), env)) return json({ error: "auth" }, 403, h);
+    return json(await statsResumo(env), 200, h);
+  }
   if (request.method !== "POST") return json({ error: "method" }, 405, h);
   let b; try { b = await request.json(); } catch { return json({ error: "json" }, 400, h); }
+  if (path === "/push/ping") {                          // contador anônimo: um código aleatório por aparelho, sem dados pessoais
+    const id = String(b.id || ""); if (!/^[a-f0-9]{16,32}$/.test(id)) return json({ error: "id" }, 400, h);
+    const os = ["ios","android","desktop"].includes(b.os) ? b.os : "outro", inst = b.inst ? 1 : 0, hoje = brToday(), key = "st:" + id;
+    const old = (await env.TR_CACHE.getWithMetadata(key)).metadata;
+    const m = { f: old?.f || hoje, l: hoje, i: (old?.i || inst) ? 1 : 0, o: os, v: String(b.v || "").slice(0, 12) };
+    if (!old || old.l !== m.l || old.i !== m.i || old.o !== m.o) await env.TR_CACHE.put(key, "1", { metadata: m });
+    return json({ ok: true }, 200, h);
+  }
   if (path === "/push/subscribe") {
     const s = b.sub || {}, e = String(s.endpoint || ""), p = s.keys?.p256dh, a = s.keys?.auth;
     if (!/^https:\/\//.test(e) || !p || !a || e.length > 800) return json({ error: "sub" }, 400, h);
