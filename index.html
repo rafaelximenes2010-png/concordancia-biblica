@@ -563,6 +563,28 @@ div.home-card.rdx{display:grid;grid-template-columns:auto 1fr auto;align-items:c
 .rdx-play:active{transform:scale(.94)}
 .rdx-play.loading{animation:rdpulse 1s infinite}
 @media (max-width:360px){.rdx-art{width:62px;height:62px}.rdx-art svg{width:26px;height:26px}}
+/* Início · seções Notícias / Compartilhar / Ouvir */
+.hsec{margin-top:22px}
+.hsec + .home-grid{margin-top:26px}
+.hsec-h{display:flex;align-items:center;gap:10px;margin:0 2px 8px;font:800 11.5px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.hsec-h::after{content:"";flex:1;height:1px;background:var(--border)}
+.hsec .home-card{margin-top:0}
+.ntx-src{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.ntx-src small{margin:0!important}
+.ntx-more{font:700 12px/1 system-ui,sans-serif;color:#f0a020;flex:none}
+a.home-card.wa3{display:flex;flex-direction:row;align-items:center;gap:14px;text-decoration:none;color:var(--ink);padding:14px 16px;border-top:1px solid var(--border)!important}
+.wa3-vs{flex:1;font-family:var(--serif,Georgia,serif);font-style:italic;font-size:17px;line-height:1.4}
+.wa3-vs cite{display:block;margin-top:5px;font:800 10.5px/1.3 system-ui,sans-serif;font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.wa3-cta{flex:none;display:inline-flex;align-items:center;gap:6px;background:#1f8f4e;color:#fff;font:800 13px/1 system-ui,sans-serif;padding:10px 14px;border-radius:999px}
+div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px;border-radius:14px;box-shadow:none}
+.rdx-art{width:46px;height:46px;border-radius:8px;box-shadow:none}
+.rdx-art svg{width:26px;height:26px}
+.rdx-title{font-size:16px}
+.rdx-live{gap:6px;font-size:10.5px;letter-spacing:.1em}
+.rdx-sub{font:600 11px/1 system-ui,sans-serif;letter-spacing:0;text-transform:none;color:rgba(255,255,255,.65)}
+.rdx-eq{height:10px;margin:0 0 0 4px;gap:2px}.rdx-eq i{width:2px}
+@keyframes rdxeq{0%,100%{height:3px}50%{height:10px}}
+.rdx-play{width:42px;height:42px;box-shadow:none}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -1776,28 +1798,26 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div id="newsBanner"></div>
   <div id="remBanner"></div>
   <div class="streak" id="streakBox" aria-live="polite"></div>
-  <a class="home-card wa2" href="site/whatsapp.html">
-    <span class="wa2-top"><span class="wa2-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="wa2-k">Devocional pelo WhatsApp</span><span class="wa2-go" aria-hidden="true">›</span></span>
-    <blockquote class="wa2-vs">“Ide por todo o mundo, pregai o Evangelho a toda criatura.”<cite>Marcos 16:15</cite></blockquote>
-    <span class="wa2-ft"><span>Envie o devocional de hoje aos seus VIPs e ao Canal do SOLA</span><span class="wa2-cta">Enviar agora</span></span>
-  </a>
-  <button type="button" class="home-card ntx" data-view="noticias" aria-label="Abrir Notícias do mundo cristão">
+  <section class="hsec" aria-labelledby="hsN"><h3 class="hsec-h" id="hsN">Notícias</h3>
+  <button type="button" class="home-card ntx" data-view="noticias" aria-label="Abrir as notícias do mundo cristão">
     <span class="ntx-hd"><span class="ntx-brand"><b>SOLA</b> NEWS</span><span class="ntx-ed">Mundo cristão</span><span class="ntx-date" id="ntxDate"></span></span>
-    <span class="ntx-lead"><span class="ntx-tag" id="ntxTag">Igreja perseguida</span><b id="ntHomeSub">Missões, igreja perseguida e seminários reformados pelo mundo</b><small id="ntxSrc"></small></span>
-    <span class="ntx-list" id="ntxList"></span>
-    <span class="ntx-ft"><span id="ntxCount">5 por editoria, todos os dias · fontes checadas</span><span class="ntx-more">Ler tudo →</span></span>
-  </button>
+    <span class="ntx-lead"><span class="ntx-tag" id="ntxTag">Igreja perseguida</span><b id="ntHomeSub">Missões, igreja perseguida e seminários reformados pelo mundo</b><span class="ntx-src"><small id="ntxSrc"></small><span class="ntx-more">Ler tudo →</span></span></span>
+  </button></section>
+  <section class="hsec" aria-labelledby="hsC"><h3 class="hsec-h" id="hsC">Compartilhar</h3>
+  <a class="home-card wa3" href="site/whatsapp.html">
+    <span class="wa3-vs">“Ide por todo o mundo, pregai o Evangelho a toda criatura.”<cite>Marcos 16:15</cite></span>
+    <span class="wa3-cta"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>Enviar</span>
+  </a></section>
+  <section class="hsec" aria-labelledby="hsO"><h3 class="hsec-h" id="hsO">Ouvir</h3>
   <div class="home-card rdx" id="rdCard">
-    <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="36" r="5" fill="#fff"/><path d="M22 26a14 14 0 0 1 20 0M16 20a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".9"/><path d="M29 41h6l3 13h-12z" fill="#fff" opacity=".85"/></svg><b>90.9</b><small>FM</small></span>
+    <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
     <span class="rdx-meta">
-      <span class="rdx-live"><i></i><span id="rdLiveTxt">Ao vivo</span></span>
       <b class="rdx-title">KCBI 90.9 FM</b>
-      <small class="rdx-sub" id="rdSub">Rádio cristã · Dallas, EUA</small>
-      <span class="rdx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="rdx-live"><i></i><span id="rdLiveTxt">Ao vivo</span><span class="rdx-sub" id="rdSub"> · Dallas, EUA</span><span class="rdx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
       <span id="rdLive" hidden></span>
     </span>
-    <button type="button" class="rdx-play" id="rdBtn" aria-label="Tocar a rádio KCBI 90.9 ao vivo"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path id="rdIco" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
-  </div>
+    <button type="button" class="rdx-play" id="rdBtn" aria-label="Tocar a rádio KCBI 90.9 ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path id="rdIco" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
+  </div></section>
   <div class="home-grid">
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
     <article class="home-card hc-devo" id="homeDevo"></article>
@@ -2099,10 +2119,9 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="btn" data-devo="1">Próximo ›</button>
   </div>
   <div id="devoMonth"></div>
-  <a class="home-card wa2 wa2-dv" href="site/whatsapp.html">
-    <span class="wa2-top"><span class="wa2-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3Z"/></svg></span><span class="wa2-k">Devocional pelo WhatsApp</span><span class="wa2-go" aria-hidden="true">›</span></span>
-    <blockquote class="wa2-vs">“Ide por todo o mundo, pregai o Evangelho a toda criatura.”<cite>Marcos 16:15</cite></blockquote>
-    <span class="wa2-ft"><span>Envie o devocional de hoje aos seus VIPs e ao Canal do SOLA</span><span class="wa2-cta">Enviar agora</span></span>
+  <a class="home-card wa3" href="site/whatsapp.html" style="margin-top:6px">
+    <span class="wa3-vs">“Ide por todo o mundo, pregai o Evangelho a toda criatura.”<cite>Marcos 16:15 · enviar o devocional pelo WhatsApp</cite></span>
+    <span class="wa3-cta"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>Enviar</span>
   </a>
   <div class="home-card" id="remindersCard2" style="margin-top:6px"></div>
 </section>
@@ -5025,8 +5044,8 @@ setTimeout(async()=>{ try{ const r=await fetch("noticias/feed.json?t="+Math.floo
   $("#ntxSrc").textContent=`${dest.fonte} · ${ntQuando(dest.data)}`;
   $("#ntxDate").textContent=new Date(h.dia+"T12:00:00").toLocaleDateString("pt-BR",{ day:"2-digit", month:"short" }).replace(".","");
   const outras=["mis","sem","igr"].map(c=>h.itens.find(x=>x.cat===c)).filter(Boolean);
-  $("#ntxList").innerHTML=outras.map(x=>`<span><i style="--c:${NT_COR[x.cat]}"></i>${esc(x.titulo.length>80?x.titulo.slice(0,x.titulo.lastIndexOf(" ",78))+"…":x.titulo)}<em>${esc((NT.data.categorias[x.cat]||"").split(" ")[0])}</em></span>`).join("");
-  $("#ntxCount").textContent=`${h.itens.length} matérias hoje · fontes checadas`;
+  if($("#ntxList")) $("#ntxList").innerHTML=outras.map(x=>`<span><i style="--c:${NT_COR[x.cat]}"></i>${esc(x.titulo.length>80?x.titulo.slice(0,x.titulo.lastIndexOf(" ",78))+"…":x.titulo)}<em>${esc((NT.data.categorias[x.cat]||"").split(" ")[0])}</em></span>`).join("");
+  if($("#ntxCount")) $("#ntxCount").textContent=`${h.itens.length} matérias hoje · fontes checadas`;
   }catch(e){} },1500);
 
 /* =====================================================================
@@ -5055,7 +5074,7 @@ function radioUi(state){ const b=$("#rdBtn"); if(!b) return;
   $("#rdIco").setAttribute("d", state==="play" ? "M7 5h4v14H7zm6 0h4v14h-4z" : "M8 5v14l11-7z");
   b.setAttribute("aria-label", state==="play" ? "Pausar a rádio" : "Tocar a rádio KCBI 90.9 ao vivo");
   $("#rdLive").hidden = state!=="play";
-  $("#rdSub").textContent = state==="erro" ? "Toque de novo para abrir o site da rádio" : "Rádio cristã · Dallas, EUA";
+  $("#rdSub").textContent = state==="erro" ? " · toque de novo para abrir o site" : " · Dallas, EUA";
 }
 async function radioToggle(){
   if(Radio.on){ Radio.audio.pause(); Radio.audio.removeAttribute("src"); Radio.audio.load(); Radio.on=false; radioUi("stop"); return; }
@@ -6024,8 +6043,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.15.1";
+const APP_VERSION = "3.15.2";
 const CHANGELOG = [
+  { v:"3.15.2", d:"novembro de 2026", items:["Início mais limpo, organizado em seções: Notícias (SOLA News), Compartilhar (Marcos 16:15 e envio pelo WhatsApp) e Ouvir (rádio KCBI)."] },
   { v:"3.15.1", d:"novembro de 2026", items:["Novo visual no Início: rádio com cara de player de música, notícias no estilo de jornal financeiro e o cartão do WhatsApp com Marcos 16:15."] },
   { v:"3.15.0", d:"novembro de 2026", items:["Novo tema nos Artigos: Violência doméstica, com 3 artigos (Hernandes Dias Lopes, pastor Sérgio Andrade — “Até quando?” — e Justin e Lindsey Holcomb) e os contatos de ajuda 180 e 190.","Notícias do mundo cristão com checagem de fontes e 5 matérias por tipo, todos os dias.","Rádio cristã KCBI 90.9 ao vivo no Início."] },
   { v:"3.14.0", d:"novembro de 2026", items:["Notícias do mundo cristão (Estudos › Notícias e no Início): todo dia, as 5 mais importantes de cada tipo — igreja perseguida, missões, seminários reformados e igreja no mundo —, traduzidas, com a igreja perseguida em destaque.","Novo tema nos Artigos: Missões contemporâneas, com 3 artigos — um deles a partir de Ronaldo Lidório.","Listas de visão geral (Vídeos) agora abrem e fecham como menu.","Rádio cristã ao vivo no Início: KCBI 90.9 FM (Dallas), com controle na tela de bloqueio.","Estudo sugerido: tocar em “Visão geral” abre o menu com todas as visões gerais de livros."] },
