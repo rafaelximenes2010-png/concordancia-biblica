@@ -1583,14 +1583,7 @@ body.mp-lock{overflow:hidden}
 .mp-svg.mp-img .mp-lbl{fill:#fff;stroke:rgba(10,14,25,.85);stroke-width:.32em}
 .mp-svg.mp-img .mp-sea,.mp-svg.mp-img .mp-river{fill:#eaf4ff;paint-order:stroke;stroke:rgba(10,20,35,.7);stroke-width:.25em}
 .mp-svg.mp-img .mp-region{fill:#fff;paint-order:stroke;stroke:rgba(10,14,25,.8);stroke-width:.25em}
-/* Relevo no estilo Google Maps (terreno): o mapa de fundo já traz rios, lagos e costas; rótulos escuros com halo branco */
-.mp-svg.mp-rel .mp-land,.mp-svg.mp-rel .mp-riv{display:none}
-.mp-svg.mp-rel .mp-lake{fill:none}
-.mp-svg.mp-rel .mp-lbl{fill:#202124;stroke:rgba(255,255,255,.95);stroke-width:.3em;font-weight:600}
-.mp-svg.mp-rel .mp-sea,.mp-svg.mp-rel .mp-river{fill:#1a5e8a;stroke:rgba(255,255,255,.85);stroke-width:.25em}
-.mp-svg.mp-rel .mp-region{fill:#5f4b32;stroke:rgba(255,255,255,.85);stroke-width:.25em}
-.mp-svg.mp-sat .mp-land,.mp-svg.mp-sat .mp-lake{display:none}
-.mp-svg.mp-sat .mp-lbl{fill:#fff;stroke:rgba(0,0,0,.75);stroke-width:.28em;font-weight:600}
+
 @media (max-width:760px){.mp-layers button{padding:9px 10px}}
 .mp-ctl button{width:40px;height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.92);font-size:20px;font-weight:700;color:#13213a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .mp-legend{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:#1d2433;background:rgba(255,255,255,.85);border-radius:10px;padding:5px 9px;max-width:calc(100% - 70px)}
@@ -2390,7 +2383,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <div class="mpv-grid">
       <div class="mp-stage" id="mpStage">
         <svg id="mpSvg" class="mp-svg" role="img" aria-label="Mapa"></svg>
-        <div class="mp-layers" role="radiogroup" aria-label="Tipo de mapa"><button type="button" data-mplayer="mapa" aria-pressed="true">Mapa</button><button type="button" data-mplayer="relevo" aria-pressed="false">Relevo</button><button type="button" data-mplayer="satelite" aria-pressed="false">Satélite</button></div>
+        <div class="mp-layers" role="radiogroup" aria-label="Tipo de mapa"><button type="button" data-mplayer="mapa" aria-pressed="true">Mapa</button><button type="button" data-mplayer="satelite" aria-pressed="false">Satélite</button></div>
         <div class="mp-attr" id="mpAttr" hidden></div>
         <div class="mp-ctl"><button type="button" id="mpZin" aria-label="Aproximar">+</button><button type="button" id="mpZout" aria-label="Afastar">−</button><button type="button" id="mpZfit" aria-label="Enquadrar">⤢</button><button type="button" id="mpFull" aria-label="Tela cheia">⛶</button></div>
         <div class="mp-step" id="mpStep" hidden></div>
@@ -6105,7 +6098,7 @@ $("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefaul
    Selos de fonte: B = relato bíblico · H = evidência histórica ·
    T = tradição cristã · Hp = hipótese/reconstrução.
    ===================================================================== */
-const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null, layer:store.get("mpLayer","mapa") };
+const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null, layer:(l=>l==="satelite"?l:"mapa")(store.get("mpLayer","mapa")) };
 /* Camadas de fundo: Relevo e Satélite (imagens de satélite estilo Google Earth), desenhadas sob o mapa do SOLA */
 const MP_LAYERS = {
   relevo:   { urls:["https://tiles.maps.eox.at/wmts/1.0.0/terrain_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg"], max:12,
@@ -6244,7 +6237,8 @@ function mpDraw(){
       const off=Math.min(L*0.12, 22*k)*(i%2?1:-1); const qx=mx-dy/L*off, qy=my+dx/L*off; const r=j.etapas[i].rota;
       const act = j===c.obj && MP.stage===i;
       const dash = r==="aprox" ? `stroke-dasharray="${7*k} ${5*k}"` : r==="mar" ? `stroke-dasharray="${1.5*k} ${4*k}" stroke-linecap="round"` : "";
-      routes+=`<path d="M${x1} ${y1}Q${qx} ${qy} ${x2} ${y2}" fill="none" stroke="${j.cor}" stroke-width="${(act?5:ji?2.2:3)*k}" ${dash} opacity="${ji?0.75:(MP.stage>=0&&!act?0.45:0.95)}" marker-end="url(#mpa-${j.id})"/>`; } });
+      routes+=`<path class="mp-route-c" d="M${x1} ${y1}Q${qx} ${qy} ${x2} ${y2}" fill="none" stroke="#fff" opacity="${ji?0.6:(MP.stage>=0&&!act?0.4:0.9)}" stroke-width="${((act?6:ji?3:4.5)+3.5)*k}" stroke-linecap="round"/>`;
+      routes+=`<path d="M${x1} ${y1}Q${qx} ${qy} ${x2} ${y2}" fill="none" stroke="${j.cor}" stroke-width="${(act?6:ji?3:4.5)*k}" ${dash} opacity="${ji?0.75:(MP.stage>=0&&!act?0.45:0.95)}" marker-end="url(#mpa-${j.id})"/>`; } });
   // marcadores
   const ids = new Set([...c.lugares, ...c.extra.flatMap(id=>MP.data.jornadas.find(j=>j.id===id).etapas.map(e=>e.p))]);
   const nums={}; if(c.kind==="j") c.obj.etapas.forEach((e,i)=>{ (nums[e.p]=nums[e.p]||[]).push(i+1); });
@@ -6636,8 +6630,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.19.1";
+const APP_VERSION = "3.19.2";
 const CHANGELOG = [
+  { v:"3.19.2", d:"novembro de 2026", items:["Mapas: ficam só as opções Mapa e Satélite; a linha do percurso ficou mais grossa e com contorno branco, destacada no mapa e no satélite."] },
   { v:"3.19.1", d:"novembro de 2026", items:["Mapas: Relevo no estilo do Google Maps (terreno colorido com sombreamento das montanhas, rios e lagos do próprio mapa) e imagens mais nítidas em telas de alta definição."] },
   { v:"3.19.0", d:"novembro de 2026", items:["Temas e versículos renovados toda semana: o “Para você” sorteia, toda segunda-feira, 10 temas entre 24 (Gratidão, Família, Provisão, Proteção, Alegria, Missão…) e 4 versículos de cada. Os versículos sugeridos para as imagens também mudam toda semana."] },
   { v:"3.18.3", d:"novembro de 2026", items:["“Para você” mais enxuto, no mesmo tamanho das outras seções do Início."] },
