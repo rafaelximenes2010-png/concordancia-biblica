@@ -589,12 +589,14 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .farol-top{background:#24345f!important;border-color:#24345f!important;color:#fff!important;border-radius:12px!important}
 .farol-top .icon{stroke:#fff;stroke-width:1.9}
 [data-theme="dark"] .farol-top{background:rgba(255,255,255,.12)!important;border-color:transparent!important}
-.farol-dlg{padding:0;border:0;border-radius:18px;width:min(640px,94vw);max-height:84vh;background:var(--surface);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.35);margin:6vh auto auto}
+.farol-dlg{padding:0;border:0;border-radius:18px;box-sizing:border-box;width:calc(100vw - 24px);max-width:640px;inset-inline:0;max-height:84vh;background:var(--surface);color:var(--ink);box-shadow:0 24px 60px rgba(0,0,0,.35);margin:6vh auto auto}
 .farol-dlg::backdrop{background:rgba(10,14,30,.55);backdrop-filter:blur(2px)}
-.fs-bar{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
+.fs-bar{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
 .fs-ic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:#1c2747;color:#f4ead2;flex:none}
 .fs-ic .icon{width:22px;height:22px;stroke:#f4ead2}
-#fsQ{flex:1;min-width:0;border:0;background:transparent;font:500 17px/1.3 inherit;font-family:inherit;color:var(--ink);outline:none;padding:8px 0}
+#fsQ{flex:1;min-width:0;border:2px solid var(--gold);background:var(--bg);font:600 18px/1.3 inherit;font-family:inherit;color:var(--ink);outline:none;padding:11px 14px;border-radius:12px;box-shadow:0 0 0 4px var(--gold-soft)}
+#fsQ::placeholder{color:var(--ink-2);opacity:.85;font-weight:500}
+#fsQ:focus{box-shadow:0 0 0 5px var(--gold-soft)}
 .fs-x{border:0;background:none;color:var(--ink-2);font:600 14px/1 inherit;font-family:inherit;cursor:pointer;padding:8px}
 .fs-res{overflow:auto;max-height:calc(84vh - 64px);padding:6px 8px 12px}
 .fs-g{margin:12px 8px 4px;font:800 11px/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
@@ -607,6 +609,30 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .fs-pp{margin:10px 8px 0;border-top:1px solid var(--border);padding-top:10px}
 .fs-pp .fs-k{background:#1f2937;color:#fff}
 .fs-empty{padding:18px 12px;color:var(--ink-2);font-size:14px;line-height:1.5}
+/* Concordância — formulário profissional */
+.conc{overflow:hidden}
+.conc-head .cf-eyebrow{margin:0 0 4px;font:800 11px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.conc-head h2{margin:0 0 6px}
+.conc-form.cf2{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:14px}
+.cf-search{display:flex;align-items:center;gap:8px;min-width:0;border:2px solid var(--gold);border-radius:14px;background:var(--bg);padding:4px 6px 4px 14px;box-shadow:0 0 0 4px var(--gold-soft)}
+.cf-search .cf-lupa{width:20px;height:20px;color:var(--gold);flex:none}
+.conc-form.cf2 .cf-search input{flex:1;min-width:0;width:auto;border:0!important;background:transparent!important;padding:10px 4px!important;font:600 17px/1.3 inherit;font-family:inherit;color:var(--ink);outline:none;box-shadow:none}
+.cf-search input::placeholder{color:var(--ink-2);font-weight:500}
+.cf-mic{flex:none;width:40px;height:40px;border-radius:10px;border:0;background:var(--surface-2);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.cf-mic[aria-pressed="true"]{background:#b0463c;color:#fff}
+.cf-seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border)}
+.cf-seg label{position:relative;margin:0;cursor:pointer;min-width:0}
+.cf-seg input{position:absolute;opacity:0;pointer-events:none}
+.cf-seg span{display:block;text-align:center;padding:9px 6px;border-radius:9px;font:700 13px/1.2 system-ui,sans-serif;color:var(--ink-2)}
+.cf-seg input:checked+span{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.cf-seg input:focus-visible+span{outline:2px solid var(--gold)}
+.cf-hint{margin:-4px 2px 0;font-size:13px;color:var(--ink-2)}
+.cf-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cf-sel{display:grid;gap:4px;min-width:0;margin:0}
+.cf-sel span{font:800 10.5px/1 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.conc-form.cf2 .cf-sel select{width:100%;min-width:0;border:1px solid var(--border);border-radius:10px;background:var(--bg);padding:10px 8px;font:600 14px/1.2 inherit;font-family:inherit;color:var(--ink);text-overflow:ellipsis}
+.cf-go{justify-self:stretch;width:100%;justify-content:center;padding:13px 16px;font-size:16px;border-radius:12px}
+@media (max-width:420px){.cf-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.cf-row .cf-sel:first-child{grid-column:1/-1}}
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
 .nt-chips button[aria-selected="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
@@ -1966,20 +1992,28 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 
   <section class="conc" id="concPanel" hidden aria-labelledby="concTitle">
     <div class="conc-head">
-      <h2 id="concTitle">Concordância bíblica</h2>
-      <p class="muted">Índice de palavras da Bíblia, como numa concordância impressa: veja quantas vezes cada palavra aparece e a lista completa dos versículos. Em português, usa a <strong>Bíblia Livre</strong> (texto completo); também funciona nas outras versões.</p>
+      <p class="cf-eyebrow">Concordância</p>
+      <h2 id="concTitle">Onde a Bíblia diz isso?</h2>
+      <p class="muted">Encontre todas as ocorrências de uma palavra, com a contagem por livro e a lista completa dos versículos.</p>
     </div>
-    <form class="conc-form" id="concForm" novalidate>
-      <label>Palavra<span class="with-mic"><input id="cWord" type="search" placeholder="Ex.: graça, aliança, misericórdia" maxlength="40" autocomplete="off"><button type="button" class="btn btn-icon mic-btn" id="concMic" aria-label="Dizer a palavra por voz" title="Dizer a palavra por voz" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-mic"/></svg></button></span></label>
-      <label>Versão<select id="cVer"></select></label>
-      <label>Abrangência<select id="cScope"><option value="all">Bíblia inteira</option><option value="AT">Antigo Testamento</option><option value="NT">Novo Testamento</option></select></label>
-      <label>Livro<select id="cBook"><option value="">Todos</option></select></label>
-      <fieldset class="conc-opts"><legend>Incluir</legend>
-        <label><input type="radio" name="cMatch" value="exact" checked> Só a palavra exata</label>
-        <label><input type="radio" name="cMatch" value="prefix"> Palavras que começam com ela <small>(graça → graças, gracioso)</small></label>
-        <label><input type="radio" name="cMatch" value="family"> Formas relacionadas cadastradas <small>(amor → amou, caridade…)</small></label>
-      </fieldset>
-      <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Gerar concordância</button>
+    <form class="conc-form cf2" id="concForm" novalidate>
+      <div class="cf-search">
+        <svg class="icon cf-lupa" aria-hidden="true"><use href="#i-search"/></svg>
+        <input id="cWord" type="search" placeholder="Palavra: graça, aliança, misericórdia" maxlength="40" autocomplete="off" enterkeyhint="search" aria-label="Palavra para a concordância">
+        <button type="button" class="cf-mic" id="concMic" aria-label="Dizer a palavra por voz" title="Dizer a palavra por voz" aria-pressed="false"><svg class="icon" aria-hidden="true"><use href="#i-mic"/></svg></button>
+      </div>
+      <div class="cf-seg" role="radiogroup" aria-label="Como procurar">
+        <label><input type="radio" name="cMatch" value="exact" checked><span>Palavra exata</span></label>
+        <label><input type="radio" name="cMatch" value="prefix"><span>Começa com</span></label>
+        <label><input type="radio" name="cMatch" value="family"><span>Formas relacionadas</span></label>
+      </div>
+      <p class="cf-hint" id="cfHint">Só a palavra exatamente como você digitou.</p>
+      <div class="cf-row">
+        <label class="cf-sel"><span>Versão</span><select id="cVer"></select></label>
+        <label class="cf-sel"><span>Abrangência</span><select id="cScope"><option value="all">Bíblia inteira</option><option value="AT">Antigo Testamento</option><option value="NT">Novo Testamento</option></select></label>
+        <label class="cf-sel"><span>Livro</span><select id="cBook"><option value="">Todos</option></select></label>
+      </div>
+      <button type="submit" class="btn btn-primary cf-go"><svg class="icon" aria-hidden="true"><use href="#i-list"/></svg>Gerar concordância</button>
     </form>
     <div class="conc-index" id="cIndex" aria-live="polite"></div>
     <div id="cResult" aria-live="polite"></div>
@@ -2612,7 +2646,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 <dialog id="farolDlg" class="farol-dlg" aria-label="Buscar no SOLA">
   <div class="fs-bar">
     <span class="fs-ic" aria-hidden="true"><svg class="icon"><use href="#i-farol"/></svg></span>
-    <input id="fsQ" type="search" placeholder="Buscar no SOLA: João 3:16, graça, Lidório…" autocomplete="off" enterkeyhint="search" aria-label="O que você procura?">
+    <input id="fsQ" type="search" placeholder="Digite: João 3:16, graça, Lidório…" autocomplete="off" enterkeyhint="search" aria-label="O que você procura?">
     <button type="button" class="fs-x" id="fsClose" aria-label="Fechar">Fechar</button>
   </div>
   <div class="fs-res" id="fsRes" role="listbox"></div>
@@ -5150,8 +5184,8 @@ async function fsBuscar(){
   if(!q){ box.innerHTML=`<div class="fs-empty">Digite uma passagem (João 3:16, Salmo 23), um tema (graça, ansiedade, missões), um autor (Lidório, Piper) ou uma seção do app. Se não encontrar aqui, você pode perguntar ao Perplexity.</div>`; FS.itens=[]; return; }
   // Bíblia
   const ref=parseReference(q);
-  if(ref && !ref.error) grupos.push(["Bíblia",[{ k:"📖", t:`Abrir ${q}`, d:"Ler a passagem na Bíblia do SOLA", go:()=>{ showView("busca"); goToRef(q); } }]]);
-  else { const livros=CANON.filter(b=>bate(b.name)).slice(0,4); if(livros.length) grupos.push(["Bíblia",livros.map(b=>({ k:"📖", t:b.name, d:`Abrir ${b.name} 1`, go:()=>{ showView("busca"); goToRef(b.name+" 1"); } }))]); }
+  if(ref && !ref.error) grupos.push(["Bíblia",[{ k:"📖", t:`Ler ${refLabel(ref.b,ref.c,ref.v1,ref.v2)}`, d:"Abrir na Bíblia do SOLA", go:()=>fsBiblia(ref.b,ref.c,ref.v1) }]]);
+  else { const livros=CANON.filter(b=>bate(b.name)).slice(0,4); if(livros.length) grupos.push(["Bíblia",livros.map(b=>({ k:"📖", t:b.name, d:`Ler ${b.name} 1 na Bíblia`, go:()=>fsBiblia(b.id,1,null) }))]); }
   // Seções
   const sec=FS_SECOES.filter(([n,,kw])=>bate(n+" "+kw)).slice(0,4);
   if(sec.length) grupos.push(["Seções do app",sec.map(([n,v])=>({ k:"🧭", t:n, d:"Abrir esta seção", go:()=>{ if(v==="wa") location.href="site/whatsapp.html"; else if(v==="radio"){ showView("inicio"); setTimeout(()=>$("#rdCard")?.scrollIntoView({ behavior:"smooth", block:"center" }),300); } else showView(v); } }))]);
@@ -5182,6 +5216,8 @@ async function fsBuscar(){
   html+=`<div class="fs-pp">`; for(const it of [...extra,pp]){ const i=FS.itens.push(it)-1; html+=`<button type="button" class="fs-it" data-fs="${i}" role="option"><span class="fs-k">${it.k}</span><span><b>${esc(it.t)}</b><small>${esc(it.d)}</small></span></button>`; } html+=`</div>`;
   box.innerHTML=html; FS.sel=0; fsMarcar();
 }
+/* Abre direto na Bíblia (leitor), já no capítulo e destacando o versículo */
+function fsBiblia(b,c,v){ showView("biblia"); setTimeout(()=>openReader({ b, c, hi:v||null, asView:true }),60); }
 function fsMarcar(){ [...document.querySelectorAll("#fsRes .fs-it")].forEach((b,i)=>b.classList.toggle("on",i===FS.sel)); }
 function fsIr(i){ const it=FS.itens[i]; if(!it) return; $("#farolDlg").close(); it.go(); }
 let fsT; $("#fsQ").addEventListener("input",()=>{ clearTimeout(fsT); fsT=setTimeout(fsBuscar,160); });
@@ -5340,7 +5376,8 @@ async function renderConcIndex(){
 $("#cIndex").addEventListener("click",e=>{ const b=e.target.closest("[data-cw]"); if(!b) return; $("#cWord").value=b.dataset.cw; runConc(); });
 $("#concForm").addEventListener("submit",e=>{ e.preventDefault(); runConc(); });
 ["#cScope","#cBook"].forEach(s=>$(s).addEventListener("change",()=>{ if(Conc.last) runConc(); }));
-document.querySelectorAll('input[name="cMatch"]').forEach(r=>r.addEventListener("change",()=>{ if(Conc.last) runConc(); }));
+const CF_DICAS={ exact:"Só a palavra exatamente como você digitou.", prefix:"Palavras que começam assim (graça → graças, gracioso).", family:"Inclui formas relacionadas cadastradas (amor → amou, caridade…)." };
+document.querySelectorAll('input[name="cMatch"]').forEach(r=>r.addEventListener("change",()=>{ $("#cfHint").textContent=CF_DICAS[r.value]||""; if(Conc.last) runConc(); }));
 
 async function runConc(bookFilter=null){
   const word=$("#cWord").value.trim(), out=$("#cResult");
@@ -6145,8 +6182,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.16.0";
+const APP_VERSION = "3.16.1";
 const CHANGELOG = [
+  { v:"3.16.1", d:"novembro de 2026", items:["Busca do farol: campo de digitação mais visível, e passagens e livros abrem direto na Bíblia.","Concordância com novo visual: busca em destaque, escolha rápida do tipo (exata, começa com, formas relacionadas) e filtros organizados."] },
   { v:"3.16.0", d:"novembro de 2026", items:["Busca do farol (botão com o farol no alto): procura em todo o SOLA — passagens, devocionais, artigos, estudos, pensadores, notícias e seções — e, se precisar, pergunta ao Perplexity."] },
   { v:"3.15.2", d:"novembro de 2026", items:["Início mais limpo, organizado em seções: Notícias (SOLA News), Compartilhar (Marcos 16:15 e envio pelo WhatsApp) e Ouvir (rádio KCBI)."] },
   { v:"3.15.1", d:"novembro de 2026", items:["Novo visual no Início: rádio com cara de player de música, notícias no estilo de jornal financeiro e o cartão do WhatsApp com Marcos 16:15."] },
