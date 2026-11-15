@@ -484,9 +484,6 @@ dialog.note-dlg{max-width:620px}
 
 
 .pv-l{margin:10px 0 6px;font-weight:800;font-size:13.5px}.pv-l small{font-weight:500;color:var(--muted);margin-left:4px}
-.pv-row{display:flex;flex-wrap:wrap;gap:6px}
-.pv-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none}
-.pv-chip small{font-weight:500;color:var(--muted)}
 .pv-foot{margin:12px 0 0;font-size:12px;color:var(--muted)}
 .hc-pv{gap:8px!important}
 .pv-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.pv-head h3{margin:0}
@@ -4884,7 +4881,6 @@ $("#homePV")?.addEventListener("click",e=>{ const sm=e.target.closest("summary")
   setTimeout(()=>{ const o=store.get("pvOpen2",{rel:false,est:false,tema:false}); o[d.dataset.pvsec]=d.open; store.set("pvOpen2",o); },0); });
 $("#homePV")?.addEventListener("click",e=>{
   const g=e.target.closest("[data-pvgo]"); if(g){ const [b,c,v]=g.dataset.pvgo.split("."); return fsBiblia(b,+c,v?+v:null); }
-  const im=e.target.closest("[data-pvimg]"); if(im) return VerseCard.openTema(im.dataset.pvimg);
   const t=e.target.closest("[data-pvtema]"); if(t){ const th=pvTemas()[+t.dataset.pvtema];
     document.querySelectorAll("#homePV .pv-tema").forEach(b=>b.classList.toggle("on",b===t));
     $("#pvTema").innerHTML=`<div class="pv-list">${th.refs.map(r=>`<button type="button" class="pv-item" data-pvgo="${r.b}.${r.c}.${r.v}"><span class="pv-it"><b>${esc(BOOK[r.b].name)} ${r.c}:${r.v}</b></span><span class="pv-tag">${esc(th.t)}</span><span class="pv-go" aria-hidden="true">›</span></button>`).join("")}</div>`; return; }
@@ -6099,10 +6095,8 @@ $("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefaul
    T = tradição cristã · Hp = hipótese/reconstrução.
    ===================================================================== */
 const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null, layer:(l=>l==="satelite"?l:"mapa")(store.get("mpLayer","mapa")) };
-/* Camadas de fundo: Relevo e Satélite (imagens de satélite estilo Google Earth), desenhadas sob o mapa do SOLA */
+/* Camada de fundo: Satélite (imagens de satélite estilo Google Earth), desenhadas sob o mapa do SOLA */
 const MP_LAYERS = {
-  relevo:   { urls:["https://tiles.maps.eox.at/wmts/1.0.0/terrain_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg"], max:12,
-              attr:"© EOX · OpenStreetMap · NASA SRTM" },
   satelite: { urls:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg"], max:13,
               attr:"Sentinel-2 cloudless © EOX · Copernicus" }
 };
@@ -6259,7 +6253,7 @@ function mpDraw(){
   const seas = b.seaLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-sea" x="${x}" y="${y}" text-anchor="middle" font-size="${11*k}">${esc(s.t)}</text>`; }).join("")
     + b.riverLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-river" x="${x}" y="${y}" font-size="${9.5*k}">${esc(s.t)}</text>`; }).join("");
   const tiles = MP.layer!=="mapa" ? mpTiles(v, W) : "";
-  svg.classList.toggle("mp-img", !!tiles); svg.classList.toggle("mp-sat", MP.layer==="satelite" && !!tiles); svg.classList.toggle("mp-rel", MP.layer==="relevo" && !!tiles);
+  svg.classList.toggle("mp-img", !!tiles); svg.classList.toggle("mp-sat", MP.layer==="satelite" && !!tiles);
   const at=$("#mpAttr"); if(at){ at.hidden=!tiles; at.textContent=tiles?MP_LAYERS[MP.layer].attr:""; }
   svg.innerHTML=`<defs>${defs}</defs><rect class="mp-seab" x="-500" y="-500" width="${b.w+1000}" height="${b.h+1000}"/>${tiles?`<path class="mp-land0" d="${b.land}"/>`:""}${tiles}
     <path class="mp-land" d="${b.land}" stroke-width="${0.7*k}"/><path class="mp-lake" d="${b.lakes}"/><path class="mp-riv" d="${b.rivers}" stroke-width="${1.6*k}"/>
@@ -6289,7 +6283,7 @@ $("#mpViewer").addEventListener("click",e=>{
   const t=e.target;
   const ly=t.closest("[data-mplayer]"); if(ly){ MP.layer=ly.dataset.mplayer; store.set("mpLayer",MP.layer);
     document.querySelectorAll("[data-mplayer]").forEach(x=>x.setAttribute("aria-pressed",String(x===ly)));
-    toast(MP.layer==="mapa"?"Mapa do SOLA.":MP.layer==="relevo"?"Relevo do terreno: montanhas, vales e desertos.":"Imagens de satélite.");
+    toast(MP.layer==="mapa"?"Mapa do SOLA.":"Imagens de satélite.");
     return mpDraw(); }
   if(t.closest("[data-mpback]")) return MP.fromProfile ? mpOpenProfile(MP.fromProfile) : renderMapas();
   const r=t.closest("[data-mpref]"); if(r){ const p=mpRefParse(r.dataset.mpref); if(p) openReader({ b:p.b, c:p.c, hi:p.v1, asView:false }); return; }

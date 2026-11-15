@@ -16,9 +16,10 @@ Hoje o SOLA **não usa um modelo de machine learning**. As sugestões vêm de re
 
 **Como as sugestões são montadas**
 1. *Próxima leitura:* o capítulo seguinte ao último lido.
-2. *Passagens relacionadas:* cada livro recebe uma pontuação. Os temas de `PV_THEMES` (Graça, Fé, Paz e ansiedade, Perdão…) somam as pontuações dos livros que citam. As passagens-chave dos 2 temas mais fortes são sugeridas, menos as que foram lidas recentemente.
+2. *Passagens relacionadas:* cada livro recebe uma pontuação. Os 24 temas de `PV_POOL` (Graça, Fé, Paz e ansiedade, Perdão, Gratidão, Família…) somam as pontuações dos livros que citam. As passagens dos 2 temas mais fortes são sugeridas, menos as que foram lidas recentemente.
 3. *Estudos para retomar:* vídeos do BibleProject (`BP`) dos 3 livros mais lidos. Se não houver, são usados os temas em comum.
-4. *Iniciantes* (sem histórico) ou com a personalização desligada: aparece a escolha de temas com passagens-chave.
+4. *Rotação semanal:* `PV_POOL` tem 24 temas com 8 versículos cada (conferidos no texto bíblico). Toda segunda-feira (`pvSemana()`) o app sorteia, com semente fixa da semana, 10 temas para “Explorar por tema” e 4 versículos de cada tema. Todos os aparelhos veem a mesma seleção na mesma semana, e os versículos sugeridos para as imagens seguem a mesma rotação.
+5. *Iniciantes* (sem histórico) ou com a personalização desligada: aparece a escolha de temas com passagens-chave.
 
 **Controle do usuário:** em Configurações › Leitura e aparência › “Sugestões personalizadas”, ou no próprio cartão. Quando a opção está desligada, o app para de gravar `readLog` e mostra só sugestões gerais. Há também o botão “Apagar histórico de leitura”.
 
