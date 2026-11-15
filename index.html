@@ -1576,13 +1576,21 @@ body.mp-lock{overflow:hidden}
 .mp-layers{position:absolute;left:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:12px;background:rgba(255,255,255,.92);box-shadow:0 2px 8px rgba(0,0,0,.16);border:1px solid rgba(0,0,0,.1)}
 .mp-layers button{border:0;background:none;border-radius:9px;padding:8px 11px;font:800 12.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;color:#13213a;cursor:pointer}
 .mp-layers button[aria-pressed="true"]{background:#13213a;color:#fff}
-.mp-attr{position:absolute;left:10px;top:56px;max-width:70%;font-size:9.5px;line-height:1.25;color:#fff;background:rgba(0,0,0,.5);padding:3px 6px;border-radius:6px;text-align:right}
+.mp-attr{position:absolute;right:6px;bottom:4px;left:auto;top:auto;max-width:60%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9px!important;padding:1px 5px!important;background:rgba(255,255,255,.7)!important;color:#333!important;font-size:9.5px;line-height:1.25;color:#fff;background:rgba(0,0,0,.5);padding:3px 6px;border-radius:6px;text-align:right}
 .mp-land0{fill:#d9cfb8}.mp-svg.mp-img .mp-land{fill:none;stroke:rgba(255,255,255,.55)}
 .mp-svg.mp-img .mp-lake,.mp-svg.mp-img .mp-seab{fill:#8fb3c7}
 .mp-svg.mp-sat .mp-riv{stroke:rgba(140,200,255,.85)}
 .mp-svg.mp-img .mp-lbl{fill:#fff;stroke:rgba(10,14,25,.85);stroke-width:.32em}
 .mp-svg.mp-img .mp-sea,.mp-svg.mp-img .mp-river{fill:#eaf4ff;paint-order:stroke;stroke:rgba(10,20,35,.7);stroke-width:.25em}
 .mp-svg.mp-img .mp-region{fill:#fff;paint-order:stroke;stroke:rgba(10,14,25,.8);stroke-width:.25em}
+/* Relevo no estilo Google Maps (terreno): o mapa de fundo já traz rios, lagos e costas; rótulos escuros com halo branco */
+.mp-svg.mp-rel .mp-land,.mp-svg.mp-rel .mp-riv{display:none}
+.mp-svg.mp-rel .mp-lake{fill:none}
+.mp-svg.mp-rel .mp-lbl{fill:#202124;stroke:rgba(255,255,255,.95);stroke-width:.3em;font-weight:600}
+.mp-svg.mp-rel .mp-sea,.mp-svg.mp-rel .mp-river{fill:#1a5e8a;stroke:rgba(255,255,255,.85);stroke-width:.25em}
+.mp-svg.mp-rel .mp-region{fill:#5f4b32;stroke:rgba(255,255,255,.85);stroke-width:.25em}
+.mp-svg.mp-sat .mp-land,.mp-svg.mp-sat .mp-lake{display:none}
+.mp-svg.mp-sat .mp-lbl{fill:#fff;stroke:rgba(0,0,0,.75);stroke-width:.28em;font-weight:600}
 @media (max-width:760px){.mp-layers button{padding:9px 10px}}
 .mp-ctl button{width:40px;height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.92);font-size:20px;font-weight:700;color:#13213a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .mp-legend{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:#1d2433;background:rgba(255,255,255,.85);border-radius:10px;padding:5px 9px;max-width:calc(100% - 70px)}
@@ -6100,20 +6108,21 @@ $("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefaul
 const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null, layer:store.get("mpLayer","mapa") };
 /* Camadas de fundo: Relevo e Satélite (imagens de satélite estilo Google Earth), desenhadas sob o mapa do SOLA */
 const MP_LAYERS = {
-  relevo:   { urls:["https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/terrain_3857/default/g/{z}/{y}/{x}.jpg"], max:12,
-              attr:"Relevo: Terrain Light © EOX IT Services · dados © OpenStreetMap, NASA SRTM, GEBCO e outros" },
+  relevo:   { urls:["https://tiles.maps.eox.at/wmts/1.0.0/terrain_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg"], max:12,
+              attr:"© EOX · OpenStreetMap · NASA SRTM" },
   satelite: { urls:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg"], max:13,
-              attr:"Satélite: Sentinel-2 cloudless © EOX IT Services (contém dados modificados do Copernicus Sentinel)" }
+              attr:"Sentinel-2 cloudless © EOX · Copernicus" }
 };
 function mpTiles(v, W){
   const L=MP_LAYERS[MP.layer]; if(!L) return "";
   const b=MP.base, lonOf=x=>x/(b.c*b.k)+b.b.x0, latOf=y=>b.b.y1-y/b.k;
   const lonW=lonOf(v.x), lonE=lonOf(v.x+v.w), latN=Math.min(84,latOf(v.y)), latS=Math.max(-84,latOf(v.y+v.h));
-  let z=Math.round(Math.log2(360*W/((lonE-lonW)||1)/256)); z=Math.max(3,Math.min(L.max,z));
+  const dpr=Math.min(2,window.devicePixelRatio||1);   // tela de alta definição: um nível a mais de detalhe, imagem nítida como no Google Maps
+  let z=Math.round(Math.log2(360*W*dpr/((lonE-lonW)||1)/256)); z=Math.max(3,Math.min(L.max,z));
   const n=2**z, tx=lon=>Math.floor((lon+180)/360*n), ty=lat=>{ const r=lat*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n); };
   const lon2=x=>x/n*360-180, lat2=y=>{ const m=Math.PI-2*Math.PI*y/n; return 180/Math.PI*Math.atan(0.5*(Math.exp(m)-Math.exp(-m))); };
   const x0=Math.max(0,tx(lonW)), x1=Math.min(n-1,tx(lonE)), y0=Math.max(0,ty(latN)), y1=Math.min(n-1,ty(latS));
-  if((x1-x0+1)*(y1-y0+1)>60) return "";
+  if((x1-x0+1)*(y1-y0+1)>120) return "";
   let out="";
   for(let X=x0;X<=x1;X++) for(let Y=y0;Y<=y1;Y++){
     const [ax,ay]=mpXY(lat2(Y),lon2(X)), [bx,by]=mpXY(lat2(Y+1),lon2(X+1));
@@ -6256,7 +6265,7 @@ function mpDraw(){
   const seas = b.seaLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-sea" x="${x}" y="${y}" text-anchor="middle" font-size="${11*k}">${esc(s.t)}</text>`; }).join("")
     + b.riverLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-river" x="${x}" y="${y}" font-size="${9.5*k}">${esc(s.t)}</text>`; }).join("");
   const tiles = MP.layer!=="mapa" ? mpTiles(v, W) : "";
-  svg.classList.toggle("mp-img", !!tiles); svg.classList.toggle("mp-sat", MP.layer==="satelite" && !!tiles);
+  svg.classList.toggle("mp-img", !!tiles); svg.classList.toggle("mp-sat", MP.layer==="satelite" && !!tiles); svg.classList.toggle("mp-rel", MP.layer==="relevo" && !!tiles);
   const at=$("#mpAttr"); if(at){ at.hidden=!tiles; at.textContent=tiles?MP_LAYERS[MP.layer].attr:""; }
   svg.innerHTML=`<defs>${defs}</defs><rect class="mp-seab" x="-500" y="-500" width="${b.w+1000}" height="${b.h+1000}"/>${tiles?`<path class="mp-land0" d="${b.land}"/>`:""}${tiles}
     <path class="mp-land" d="${b.land}" stroke-width="${0.7*k}"/><path class="mp-lake" d="${b.lakes}"/><path class="mp-riv" d="${b.rivers}" stroke-width="${1.6*k}"/>
@@ -6627,8 +6636,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.19.0";
+const APP_VERSION = "3.19.1";
 const CHANGELOG = [
+  { v:"3.19.1", d:"novembro de 2026", items:["Mapas: Relevo no estilo do Google Maps (terreno colorido com sombreamento das montanhas, rios e lagos do próprio mapa) e imagens mais nítidas em telas de alta definição."] },
   { v:"3.19.0", d:"novembro de 2026", items:["Temas e versículos renovados toda semana: o “Para você” sorteia, toda segunda-feira, 10 temas entre 24 (Gratidão, Família, Provisão, Proteção, Alegria, Missão…) e 4 versículos de cada. Os versículos sugeridos para as imagens também mudam toda semana."] },
   { v:"3.18.3", d:"novembro de 2026", items:["“Para você” mais enxuto, no mesmo tamanho das outras seções do Início."] },
   { v:"3.18.2", d:"novembro de 2026", items:["“Para você” redesenhado: destaque para a próxima leitura e seções que abrem e fecham (passagens relacionadas, estudos e temas)."] },
