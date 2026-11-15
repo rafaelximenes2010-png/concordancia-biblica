@@ -301,6 +301,10 @@ dialog.reader[open]{display:flex}
 .rd-verse{font-family:var(--font-text);font-size:var(--rd-size,19px);line-height:1.75;margin:0 0 6px;padding:2px 6px;border-radius:6px;cursor:pointer}
 .rd-verse:hover{background:var(--surface-2)}
 .rd-verse sup{font-family:var(--font-ui);font-size:11px;color:var(--accent);font-weight:700;margin-right:5px}
+.rd-note{display:inline-flex;align-items:center;gap:2px;vertical-align:.18em;margin:0 6px 0 -2px;padding:3px 6px;border:0;border-radius:6px;background:#24345f;color:#fff;cursor:pointer;font:700 10px/1 var(--font-ui)}
+.rd-note .icon{width:13px;height:13px}
+.note-ref{display:inline-flex;align-items:center;gap:4px;color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px dotted currentColor}
+.note-ref .icon{width:13px;height:13px}
 .rd-verse.sel{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
 .rd-verse.current{background:var(--mark);color:var(--mark-ink)}
 .rd-cmp-text{display:block;font-size:.85em;color:var(--ink-2);margin-top:2px;padding-left:10px;border-left:2px solid var(--border)}
@@ -477,6 +481,25 @@ a.btn-ext{color:var(--ext)}
 .notes-list{display:grid;gap:10px}
 .storage-note{font-size:12px;color:var(--ink-3);display:flex;gap:6px;align-items:center}
 dialog.note-dlg{max-width:620px}
+
+
+.pv-l{margin:10px 0 6px;font-weight:800;font-size:13.5px}.pv-l small{font-weight:500;color:var(--muted);margin-left:4px}
+.pv-row{display:flex;flex-wrap:wrap;gap:6px}
+.pv-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 12px;font-weight:700;font-size:13.5px;cursor:pointer;text-decoration:none}
+.pv-chip small{font-weight:500;color:var(--muted)}
+.pv-foot{margin:12px 0 0;font-size:12px;color:var(--muted)}
+.linklike{border:0;background:none;padding:0;color:var(--accent,#2e6da4);text-decoration:underline;font:inherit;cursor:pointer}
+.cfg-check{display:flex;align-items:center;gap:8px;font-weight:700}
+dialog.card-dlg{max-width:440px;width:calc(100% - 20px);max-height:96dvh;padding:12px 14px calc(14px + env(safe-area-inset-bottom));overflow:auto}
+.cd-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.cd-fmt{display:flex;gap:4px;padding:3px;border-radius:12px;background:var(--surface-2,rgba(0,0,0,.06));margin-bottom:10px}
+.cd-fmt button{flex:1;border:0;background:none;border-radius:9px;padding:9px;font-weight:800;color:var(--ink);cursor:pointer}
+.cd-fmt button[aria-pressed="true"]{background:#13213a;color:#fff}
+.cd-prev{display:flex;justify-content:center}
+.cd-prev img{display:block;height:min(58dvh,560px);max-width:100%;object-fit:contain;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);background:#2b6cc4}
+.cd-note{font-size:12.5px;color:var(--muted);text-align:center;margin:10px 0}
+.cd-acts{display:flex;gap:8px;flex-wrap:wrap}.cd-acts .btn{flex:1;justify-content:center;min-height:46px}
+
 .note-form-grid{display:grid;gap:10px}
 .note-form-grid label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--ink-2)}
 .note-form-grid input,.note-form-grid textarea,.note-form-grid select{border:1px solid var(--border);background:var(--bg);border-radius:10px;padding:8px 10px;font-weight:400;color:var(--ink)}
@@ -633,15 +656,16 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .conc-form.cf2 .cf-sel select{width:100%;min-width:0;border:1px solid var(--border);border-radius:10px;background:var(--bg);padding:10px 8px;font:600 14px/1.2 inherit;font-family:inherit;color:var(--ink);text-overflow:ellipsis}
 .cf-go{justify-self:stretch;width:100%;justify-content:center;padding:13px 16px;font-size:16px;border-radius:12px}
 @media (max-width:420px){.cf-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.cf-row .cf-sel:first-child{grid-column:1/-1}}
-/* Tela travada na largura do celular: nada desliza para os lados */
-html,body{overflow-x:clip;max-width:100%}
+/* Largura travada no conteúdo, e não no html/body: no iPhone, mexer no html/body solta a barra fixa do rodapé */
+.app-header,#views,main.layout,.demo-banner,section.view{max-width:100vw;overflow-x:clip}
 @media (max-width:820px){
   input,select,textarea{font-size:16px!important}   /* evita o zoom automático do iPhone ao tocar num campo */
-  body{touch-action:pan-y pinch-zoom}
-  .sub-tabs,.nt-chips,.cfg-index,[class*="chips"],[class*="carousel"],.vg-drop{touch-action:pan-x pan-y}
-  .bottom-nav{background:color-mix(in srgb,var(--surface) 88%,transparent)!important;-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);
-    border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent)!important;box-shadow:0 -6px 20px rgba(0,0,0,.18);transform:translateZ(0);will-change:transform;
-    left:0!important;right:0!important;width:100%!important;max-width:100vw;touch-action:none}
+  .bottom-nav{position:fixed!important;top:auto!important;bottom:0!important;left:0!important;right:0!important;width:100%!important;z-index:60!important;
+    background:color-mix(in srgb,var(--surface) 90%,transparent)!important;-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);
+    border-top:1px solid color-mix(in srgb,var(--ink) 14%,transparent)!important;box-shadow:0 -6px 20px rgba(0,0,0,.16)}
+  /* espaço no fim de cada tela para a barra nunca cobrir o último item */
+  body{padding-bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  dialog.reader .dlg-body{padding-bottom:calc(120px + env(safe-area-inset-bottom))!important}
 }
 .nt-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}
 .nt-chips button{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:8px 14px;font:600 14px/1 inherit;font-family:inherit;cursor:pointer}
@@ -891,8 +915,11 @@ dialog.reader.as-view .rd-com{max-height:24vh}
 .hl{ --hlc:255,235,59; background:linear-gradient(100deg,rgba(var(--hlc),0) 0,rgba(var(--hlc),.78) 1.5%,rgba(var(--hlc),.62) 50%,rgba(var(--hlc),.8) 98.5%,rgba(var(--hlc),0) 100%);
   -webkit-box-decoration-break:clone; box-decoration-break:clone; border-radius:.35em .2em; padding:0 .12em; color:inherit }
 mark.hl{color:inherit}
-.hl-y{--hlc:255,235,59} .hl-g{--hlc:105,240,120} .hl-p{--hlc:255,120,200} .hl-b{--hlc:90,200,255} .hl-o{--hlc:255,170,60}
-[data-theme="dark"] .hl{color:#14161c}
+/* Tons pastel (as mesmas categorias de antes: y, g, p, b, o) */
+.hl-y{--hlc:255,236,150} .hl-g{--hlc:176,236,204} .hl-p{--hlc:216,198,246} .hl-b{--hlc:178,218,250} .hl-o{--hlc:255,210,176}
+.hl{background:linear-gradient(100deg,rgba(var(--hlc),0) 0,rgba(var(--hlc),.9) 1.5%,rgba(var(--hlc),.8) 50%,rgba(var(--hlc),.92) 98.5%,rgba(var(--hlc),0) 100%)}
+[data-theme="dark"] .hl{color:#1b1d24;background:linear-gradient(100deg,rgba(var(--hlc),0) 0,rgba(var(--hlc),.82) 1.5%,rgba(var(--hlc),.74) 50%,rgba(var(--hlc),.84) 98.5%,rgba(var(--hlc),0) 100%)}
+[data-theme="dark"] .hl-dot{border-color:rgba(255,255,255,.18)}
 .hl-dot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(0,0,0,.12);cursor:pointer;padding:0;display:inline-block;flex:none;background:rgb(var(--hlc))}
 .hl-dot.on{outline:3px solid var(--accent);outline-offset:2px}
 i.hl-dot{width:14px;height:14px;vertical-align:-2px;margin-right:4px;border-width:1px}
@@ -1501,6 +1528,17 @@ body.mp-lock{overflow:hidden}
 .mp-region{fill:#8a6a35;font-weight:800;letter-spacing:.1em;opacity:.8;paint-order:stroke;stroke:#efe6d2;stroke-width:.2em}
 .mp-region.imperio{fill:#8c2f39}.mp-region.reino{fill:#2b3a67}.mp-region.tribo{fill:#5e4a72;letter-spacing:.04em}
 .mp-ctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.mp-layers{position:absolute;left:10px;top:10px;display:flex;gap:2px;padding:3px;border-radius:12px;background:rgba(255,255,255,.92);box-shadow:0 2px 8px rgba(0,0,0,.16);border:1px solid rgba(0,0,0,.1)}
+.mp-layers button{border:0;background:none;border-radius:9px;padding:8px 11px;font:800 12.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;color:#13213a;cursor:pointer}
+.mp-layers button[aria-pressed="true"]{background:#13213a;color:#fff}
+.mp-attr{position:absolute;left:10px;top:56px;max-width:70%;font-size:9.5px;line-height:1.25;color:#fff;background:rgba(0,0,0,.5);padding:3px 6px;border-radius:6px;text-align:right}
+.mp-land0{fill:#d9cfb8}.mp-svg.mp-img .mp-land{fill:none;stroke:rgba(255,255,255,.55)}
+.mp-svg.mp-img .mp-lake,.mp-svg.mp-img .mp-seab{fill:#8fb3c7}
+.mp-svg.mp-sat .mp-riv{stroke:rgba(140,200,255,.85)}
+.mp-svg.mp-img .mp-lbl{fill:#fff;stroke:rgba(10,14,25,.85);stroke-width:.32em}
+.mp-svg.mp-img .mp-sea,.mp-svg.mp-img .mp-river{fill:#eaf4ff;paint-order:stroke;stroke:rgba(10,20,35,.7);stroke-width:.25em}
+.mp-svg.mp-img .mp-region{fill:#fff;paint-order:stroke;stroke:rgba(10,14,25,.8);stroke-width:.25em}
+@media (max-width:760px){.mp-lbl{font-size:1.06em}.mp-layers button{padding:9px 10px}}
 .mp-ctl button{width:40px;height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.92);font-size:20px;font-weight:700;color:#13213a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .mp-legend{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:#1d2433;background:rgba(255,255,255,.85);border-radius:10px;padding:5px 9px;max-width:calc(100% - 70px)}
 .mp-legend i{display:inline-block;width:22px;height:0;border-top:3px solid #13213a;margin-right:5px;vertical-align:3px}
@@ -1882,6 +1920,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
     <article class="home-card hc-devo" id="homeDevo"></article>
     <article class="home-card hc-estudo" id="homeEstudo"></article>
+    <article class="home-card hc-pv" id="homePV"></article>
     <article class="home-card hc-busca">
       <h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-magnify"/></svg>Pesquisar</h3>
       <div class="home-mode" role="radiogroup" aria-label="Tipo de pesquisa">
@@ -2298,9 +2337,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <div class="mpv-grid">
       <div class="mp-stage" id="mpStage">
         <svg id="mpSvg" class="mp-svg" role="img" aria-label="Mapa"></svg>
+        <div class="mp-layers" role="radiogroup" aria-label="Tipo de mapa"><button type="button" data-mplayer="mapa" aria-pressed="true">Mapa</button><button type="button" data-mplayer="relevo" aria-pressed="false">Relevo</button><button type="button" data-mplayer="satelite" aria-pressed="false">Satélite</button></div>
+        <div class="mp-attr" id="mpAttr" hidden></div>
         <div class="mp-ctl"><button type="button" id="mpZin" aria-label="Aproximar">+</button><button type="button" id="mpZout" aria-label="Afastar">−</button><button type="button" id="mpZfit" aria-label="Enquadrar">⤢</button><button type="button" id="mpFull" aria-label="Tela cheia">⛶</button></div>
         <div class="mp-step" id="mpStep" hidden></div>
-        <div class="mp-legend"><span><i class="lg-solid"></i>trajeto citado</span><span><i class="lg-sea"></i>por mar</span><span><i class="lg-dash"></i>aproximado</span><span><i class="lg-unc"></i>local incerto</span><span id="mpScale"></span></div>
+        <div class="mp-legend"><span><i class="lg-solid"></i>trajeto citado</span><span><i class="lg-sea"></i>por mar</span><span><i class="lg-dash"></i>aproximado</span><span><i class="lg-unc"></i>local aproximado ou incerto (?)</span><span id="mpScale"></span></div>
         <div class="mp-panel" id="mpPanel" hidden></div>
       </div>
       <aside class="mpv-side">
@@ -2523,6 +2564,8 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
           <span class="hint">Vale para todas as seções. A Bíblia tem um ajuste próprio logo abaixo.</span></div>
         <label>Tamanho da letra da Bíblia <span class="muted" id="cfgSizeV"></span><input type="range" id="cfgSize" min="14" max="30" step="1"></label>
         <label>Versão bíblica padrão<select id="cfgVersion"></select></label>
+        <label class="cfg-check"><input type="checkbox" id="cfgPerso"> Sugestões personalizadas (“Para você”)</label>
+        <span class="hint">Usa só o que você leu, favoritou e grifou, guardado neste aparelho. O conteúdo das suas anotações nunca é usado nem sai do celular. <button type="button" class="linklike" id="cfgPersoClear">Apagar histórico de leitura</button></span>
       </div>
     </section>
 
@@ -2799,23 +2842,33 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div class="reader-multi" id="rdMultiBar" hidden>
     <div class="rm-top"><strong id="rmCount"></strong><button type="button" class="btn btn-icon btn-ghost" data-rm="done" aria-label="Limpar seleção"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
     <div class="rm-colors" role="group" aria-label="Grifar com cor">
-      <button type="button" class="hl-dot hl-y" data-rmc="y" aria-label="Grifar em amarelo"></button>
-      <button type="button" class="hl-dot hl-g" data-rmc="g" aria-label="Grifar em verde"></button>
-      <button type="button" class="hl-dot hl-p" data-rmc="p" aria-label="Grifar em rosa"></button>
-      <button type="button" class="hl-dot hl-b" data-rmc="b" aria-label="Grifar em azul"></button>
-      <button type="button" class="hl-dot hl-o" data-rmc="o" aria-label="Grifar em laranja"></button>
+      <button type="button" class="hl-dot hl-y" data-rmc="y" aria-label="Grifar em amarelo suave"></button>
+      <button type="button" class="hl-dot hl-g" data-rmc="g" aria-label="Grifar em verde-menta"></button>
+      <button type="button" class="hl-dot hl-p" data-rmc="p" aria-label="Grifar em lilás"></button>
+      <button type="button" class="hl-dot hl-b" data-rmc="b" aria-label="Grifar em azul-claro"></button>
+      <button type="button" class="hl-dot hl-o" data-rmc="o" aria-label="Grifar em pêssego"></button>
       <button type="button" class="rm-clear" data-rmc="" aria-label="Remover grifo">✕ cor</button>
     </div>
     <div class="rm-actions h-scroll">
       <button type="button" class="act-chip act-main" data-rm="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentário</button>
       <button type="button" class="act-chip" data-rm="copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar</button>
       <a class="act-chip act-wa" id="rmWA" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+      <button type="button" class="act-chip" data-rm="card"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Imagem</button>
       <button type="button" class="act-chip" data-rm="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
       <button type="button" class="act-chip" data-rm="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Anotar</button>
       <button type="button" class="act-chip" data-rm="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
       <button type="button" class="act-chip" data-rm="all"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Todos</button>
     </div>
   </div>
+</dialog>
+
+<!-- Cartão do farol para Stories/Feed -->
+<dialog class="card-dlg" id="cardDlg" aria-labelledby="cardDlgT">
+  <div class="cd-head"><b id="cardDlgT">Imagem para compartilhar</b><button type="button" class="btn btn-icon btn-ghost" data-cdk="close" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
+  <div class="cd-fmt" role="radiogroup" aria-label="Formato"><button type="button" data-cdk="story" aria-pressed="true">Stories 9:16</button><button type="button" data-cdk="feed" aria-pressed="false">Feed 4:5</button></div>
+  <div class="cd-prev"><img id="cardImg" alt="Prévia do cartão"></div>
+  <p class="cd-note">Só o texto bíblico selecionado vai na imagem. Suas anotações continuam privadas.</p>
+  <div class="cd-acts"><button type="button" class="btn btn-primary" data-cdk="share" id="cardShareBtn"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Facebook…</button><button type="button" class="btn" data-cdk="dl"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Baixar imagem</button></div>
 </dialog>
 
 <!-- Busca por foto (OCR) -->
@@ -3415,7 +3468,7 @@ async function renderReader(){
   }catch(e){
     el.dlgBody.innerHTML = `<div class="notice error">Não foi possível carregar esta versão. ${navigator.onLine?"Tente novamente.":"Conecte-se à internet para baixá-la na primeira vez."}</div>`; return;
   }
-  store.set("reader", { t:rd.t, b:rd.b, c:rd.c, cmp:rd.cmp });
+  store.set("reader", { t:rd.t, b:rd.b, c:rd.c, cmp:rd.cmp }); Perso.logRead(rd.b, rd.c);
   fillVersionSelect(rdEl.v, rd.t, false, true); fillVersionSelect(rdEl.cmp, rd.cmp, true);
   $("#rdVerLbl").textContent = rd.t; $("#rdSizeVal").textContent = rd.size;
   $("#rdExt").innerHTML = `<span class="rd-plbl">Abrir em outras versões</span> ` + EXT_PT.map(x=>`<a href="${esc(extUrl(x,rd.b,rd.c))}" target="_blank" rel="noopener noreferrer" title="${esc(x.name)} — ${esc(x.holder)} (abre ${x.url?x.site:"no YouVersion"})">${x.code}</a>`).join("");
@@ -3436,6 +3489,7 @@ async function renderReader(){
   rdEl.actions.hidden=true; rd.sel=null; $("#rdCom").hidden=true; if(typeof Multi!=="undefined" && Multi.set.size) endMulti();
   if(ver.lang!=="pt"){ el.dlgBody.insertAdjacentHTML("afterbegin", readerTranslateBar(ver)); rdTrJob++; if(Tr.auto && (TR_PROXY || ("Translator" in self))) translateReaderChapter("pt", true); }
   const cur=el.dlgBody.querySelector(".current"); if(cur) cur.scrollIntoView({block:"center"}); else el.dlgBody.scrollTop=0;
+  paintNoteIcons();
   rdEl.prev.disabled = !neighbor(-1); rdEl.next.disabled = !neighbor(1);
   $("#rdYV").href = `https://www.bible.com/bible/compare/${rd.b}.${rd.c}.1-${verses.length||1}`;
 }
@@ -3474,6 +3528,7 @@ function selectVerse(p){
   $("#rdWA").href = waUrl(verseShareText(rd.sel));
   $("#rdCom").hidden=true; openComDrawer(rd.sel);
 }
+el.dlgBody.addEventListener("click",e=>{ const nb=e.target.closest(".rd-note"); if(nb){ e.stopPropagation(); e.preventDefault(); openNoteEditor({ id:nb.dataset.noteid }); return; } },true);
 el.dlgBody.addEventListener("click",e=>{ const p=e.target.closest(".rd-verse"); if(p) selectVerse(p); });
 el.dlgBody.addEventListener("keydown",e=>{ const p=e.target.closest(".rd-verse"); if(p && (e.key==="Enter"||e.key===" ")){ e.preventDefault(); selectVerse(p); } });
 rdEl.actions.addEventListener("click",e=>{
@@ -4522,6 +4577,136 @@ async function shareSola(){
   copyText(`${text} ${APP_URL}?instalar`,"Convite copiado — cole onde quiser enviar.");
 }
 
+
+/* ---------- Cartão do farol (Stories 9:16 e Feed 4:5) ----------
+   Só o texto bíblico escolhido entra na imagem (nunca anotações). */
+const VerseCard = {
+  fmt: "story", cur: null, blob: null, _img: null,
+  SIZES: { story:[1080,1920], feed:[1080,1350] },
+  art(){ return this._img || (this._img = new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>ok(im); im.onerror=no; im.src="icons/farol-card.jpg"; })); },
+  wrap(ctx, text, maxW){ const out=[]; let line=""; for(const w of text.split(/\s+/)){ const t=line?line+" "+w:w; if(ctx.measureText(t).width>maxW && line){ out.push(line); line=w; } else line=t; } if(line) out.push(line); return out; },
+  async draw(o, fmt){
+    const [W,H]=this.SIZES[fmt]; const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
+    const im=await this.art(); const sc=H/im.height, iw=im.width*sc;
+    const lhC=0.849*im.width*sc, want=W*0.80; const ox=Math.min(0,Math.max(W-iw, want-lhC));   // farol sempre à direita, visível
+    ctx.drawImage(im, ox, 0, iw, H);
+    const lhLeft = 0.795*im.width*sc+ox;              // borda esquerda da torre do farol
+    const m=Math.round(W*0.05), bx=m, bw=Math.min(W-2*m, lhLeft-m-28), top=Math.round(H*(fmt==="story"?0.075:0.06)), maxBottom=Math.round(H*(fmt==="story"?0.86:0.84));
+    const pad=Math.round(W*0.045), tw=bw-2*pad, serif='Georgia,"Times New Roman",serif', ui='-apple-system,"Segoe UI",Roboto,system-ui,sans-serif';
+    const ver=Repo.version(o.t); const refTxt=`${o.ref}${o.t?` · ${o.t}`:""}`;
+    const txt=`“${String(o.text).replace(/\s+/g," ").trim()}”`;
+    let fs=fmt==="story"?62:56, lines, lh, refFs, boxH;
+    for(;fs>=18;fs-=2){ ctx.font=`500 ${fs}px ${serif}`; lines=this.wrap(ctx,txt,tw); lh=fs*1.34; refFs=Math.max(24,Math.round(fs*0.62)); boxH=pad*2+lines.length*lh+refFs*2.1; if(top+boxH<=maxBottom) break; }
+    // vidro escuro atrás do texto
+    ctx.save(); ctx.fillStyle="rgba(12,22,44,.58)"; ctx.shadowColor="rgba(0,0,0,.25)"; ctx.shadowBlur=30;
+    const r=34; ctx.beginPath(); ctx.moveTo(bx+r,top); ctx.arcTo(bx+bw,top,bx+bw,top+boxH,r); ctx.arcTo(bx+bw,top+boxH,bx,top+boxH,r); ctx.arcTo(bx,top+boxH,bx,top,r); ctx.arcTo(bx,top,bx+bw,top,r); ctx.fill(); ctx.restore();
+    ctx.fillStyle="#fff"; ctx.textBaseline="alphabetic"; ctx.font=`500 ${fs}px ${serif}`;
+    lines.forEach((L,i)=>ctx.fillText(L, bx+pad, top+pad+fs+i*lh));
+    ctx.font=`800 ${refFs}px ${ui}`; ctx.fillStyle="#ffd98a"; ctx.fillText(refTxt, bx+pad, top+pad+lines.length*lh+refFs*1.45);
+    // assinatura discreta
+    const sg=Math.round(W*0.024); ctx.font=`700 ${sg}px ${ui}`; ctx.textAlign="right"; ctx.fillStyle="rgba(255,255,255,.92)"; ctx.shadowColor="rgba(0,0,0,.55)"; ctx.shadowBlur=8;
+    ctx.fillText("SOLA | Bíblia & Teologia", W-m, H-Math.round(H*0.03)); ctx.shadowBlur=0; ctx.textAlign="left";
+    this.lastFit={ fs, lines:lines.length, fits: top+boxH<=maxBottom, lighthouseVisible: bx+bw < lhLeft };
+    return new Promise(ok=>cv.toBlob(ok,"image/jpeg",0.9));
+  },
+  async render(){
+    const im=$("#cardImg"); im.style.aspectRatio = this.fmt==="story"?"9/16":"4/5";
+    document.querySelectorAll('#cardDlg [data-cdk="story"],#cardDlg [data-cdk="feed"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.cdk===this.fmt)));
+    try{ this.blob=await this.draw(this.cur,this.fmt); if(im.src.startsWith("blob:")) URL.revokeObjectURL(im.src); im.src=URL.createObjectURL(this.blob); }
+    catch(e){ toast("Não foi possível montar a imagem. Conecte-se uma vez para baixar a arte do farol."); }
+  },
+  fileName(){ return `SOLA-${String(this.cur.ref).replace(/[^\wÀ-ú]+/g,"-")}-${this.fmt==="story"?"stories":"feed"}.jpg`; },
+  async open(o){ this.cur=o; const d=$("#cardDlg"); if(!d.open) d.showModal(); await this.render(); },
+  download(){ if(!this.blob) return; const a=document.createElement("a"); a.href=URL.createObjectURL(this.blob); a.download=this.fileName(); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); toast("Imagem salva. No Instagram ou Facebook, escolha-a na galeria."); },
+  async share(){
+    if(!this.blob) return; const f=new File([this.blob], this.fileName(), { type:"image/jpeg" });
+    if(navigator.share && navigator.canShare && navigator.canShare({ files:[f] })){
+      try{ await navigator.share({ files:[f], title:this.cur.ref }); return; }catch(e){ if(e && e.name==="AbortError") return; }
+    }
+    toast("Este aparelho não envia imagens direto para os apps. Vou baixar a imagem para você postar.",4500); this.download();
+  }
+};
+$("#cardDlg").addEventListener("click",e=>{ const b=e.target.closest("[data-cdk]"); if(!b){ if(e.target.id==="cardDlg") e.target.close(); return; }
+  const k=b.dataset.cdk; if(k==="close") return $("#cardDlg").close();
+  if(k==="story"||k==="feed"){ VerseCard.fmt=k; return VerseCard.render(); }
+  if(k==="dl") return VerseCard.download(); if(k==="share") return VerseCard.share(); });
+
+
+/* ---------- Para você: personalização v1 (regras, no aparelho) ----------
+   Sinais: capítulos lidos, favoritos e grifos (só referências). O texto das anotações NUNCA entra aqui.
+   v1 é baseada em regras e pesos com decaimento no tempo; ver docs/PERSONALIZACAO.md para evoluir a um modelo de ML. */
+const PV_THEMES = [
+  ["Graça",      ["EPH.2.8","ROM.3.24","2CO.12.9","TIT.2.11"]],
+  ["Fé",         ["HEB.11.1","ROM.10.17","GAL.2.20","JAS.2.17"]],
+  ["Paz e ansiedade",["PHP.4.6","MAT.6.34","JHN.14.27","1PE.5.7","PSA.23.1"]],
+  ["Perdão",     ["1JN.1.9","EPH.4.32","PSA.51.1","MAT.6.14"]],
+  ["Oração",     ["MAT.6.9","LUK.18.1","1TH.5.17","PSA.62.8"]],
+  ["Esperança",  ["ROM.15.13","LAM.3.22","ROM.8.28","JER.29.11"]],
+  ["Amor",       ["1CO.13.4","1JN.4.8","JHN.15.13","ROM.5.8"]],
+  ["Sabedoria",  ["PRO.3.5","JAS.1.5","PSA.119.105","PRO.9.10"]],
+  ["Salvação",   ["JHN.3.16","ROM.6.23","ACT.4.12","ROM.10.9"]],
+  ["Sofrimento", ["ROM.5.3","2CO.4.17","JAS.1.2","PSA.34.18"]]
+].map(([t,refs])=>({ t, refs:refs.map(k=>{ const [b,c,v]=k.split("."); return { b, c:+c, v:+v }; }) }));
+const Perso = {
+  on(){ return store.get("persOn", true) !== false; },
+  logRead(b,c){ if(!this.on()) return; const L=store.get("readLog",[]); if(L[0] && L[0].b===b && L[0].c===c) return; L.unshift({ b, c, at:Date.now() }); store.set("readLog", L.slice(0,300)); },
+  clear(){ store.set("readLog",[]); },
+  /* pontuação por livro: leitura 1, grifo 2, favorito 3; meia-vida de 14 dias */
+  bookScores(){
+    const now=Date.now(), w=(at,base)=>base*Math.pow(0.5,(now-(at||now))/(14*864e5)), S={};
+    const add=(b,x)=>{ if(BOOK[b]) S[b]=(S[b]||0)+x; };
+    store.get("readLog",[]).forEach(r=>add(r.b, w(r.at,1)));
+    (state.favorites||[]).forEach(f=>add(f.b, 3));
+    Object.entries(store.get("hl",{})).forEach(([k,h])=>add(k.split(".")[0], w(h&&h.at,2)));
+    return S;
+  },
+  suggest(){
+    const log=store.get("readLog",[]), S=this.bookScores(), books=Object.entries(S).sort((a,b)=>b[1]-a[1]);
+    if(!this.on() || !books.length) return { novice:true };
+    const recent=new Set(log.slice(0,40).map(r=>r.b+"."+r.c));
+    const out={ novice:false, next:null, related:[], studies:[] };
+    const last=log[0];
+    if(last){ const cnt=Math.max(0,...Object.keys(Bible.data).map(t=>Repo.chapterCount(t,last.b))); const n=last.c<cnt ? { b:last.b, c:last.c+1 } : null;
+      out.next = n || { b:last.b, c:last.c, again:true }; out.why=`${BOOK[last.b].name} ${last.c}`; }
+    // temas: livros que você mais lê pontuam os temas que citam esses livros
+    const T=PV_THEMES.map(th=>({ th, sc:th.refs.reduce((a,r)=>a+(S[r.b]||0),0) })).sort((a,b)=>b.sc-a.sc);
+    const top=T.filter(x=>x.sc>0).slice(0,2); if(!top.length) top.push(T[0]);
+    top.forEach(({th})=>th.refs.filter(r=>!recent.has(r.b+"."+r.c)).slice(0,2).forEach(r=>out.related.push({ ...r, tema:th.t })));
+    out.related=out.related.slice(0,4);
+    const topB=books.slice(0,3).map(x=>x[0]);
+    out.studies = BP.filter(x=>topB.includes(x.book)).slice(0,2);
+    if(!out.studies.length){ const tags=new Set(top.map(x=>x.th.t)); out.studies=BP.filter(x=>x.themes.some(t=>tags.has(t))).slice(0,2); }
+    out.topBook=BOOK[topB[0]]?.name;
+    return out;
+  },
+  renderHome(){
+    const box=$("#homePV"); if(!box) return; const s=this.suggest();
+    const ref=r=>`${BOOK[r.b].name} ${r.c}${r.v?":"+r.v:""}`;
+    const go=r=>`<button type="button" class="pv-chip" data-pvgo="${r.b}.${r.c}.${r.v||""}">${esc(ref(r))}${r.tema?` <small>${esc(r.tema)}</small>`:""}</button>`;
+    let h=`<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-open-book"/></svg>Para você</h3>`;
+    if(s.novice){
+      h+=`<p style="margin:0 0 6px">${this.on()?"Começando agora? Escolha um tema e leia passagens-chave:":"Sugestões personalizadas desligadas. Temas para começar:"}</p>
+        <div class="pv-row">${PV_THEMES.map((th,i)=>`<button type="button" class="pv-chip" data-pvtema="${i}">${esc(th.t)}</button>`).join("")}</div><div id="pvTema"></div>`;
+    } else {
+      if(s.next) h+=`<p class="pv-l">Próxima leitura <small>porque você parou em ${esc(s.why)}</small></p><div class="pv-row">${go(s.next)}</div>`;
+      if(s.related.length) h+=`<p class="pv-l">Passagens relacionadas <small>pelos livros que você mais lê${s.topBook?` (${esc(s.topBook)})`:""}</small></p><div class="pv-row">${s.related.map(go).join("")}</div>`;
+      if(s.studies.length) h+=`<p class="pv-l">Estudos para retomar</p><div class="pv-row">${s.studies.map(x=>`<a class="pv-chip" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)} <small>${esc(x.type)} ↗</small></a>`).join("")}</div>`;
+    }
+    h+=`<p class="pv-foot">Calculado só neste aparelho, sem usar suas anotações. <button type="button" class="linklike" data-pvcfg>${this.on()?"Desligar":"Ligar"} sugestões</button></p>`;
+    box.innerHTML=h;
+  }
+};
+$("#homePV")?.addEventListener("click",e=>{
+  const g=e.target.closest("[data-pvgo]"); if(g){ const [b,c,v]=g.dataset.pvgo.split("."); return fsBiblia(b,+c,v?+v:null); }
+  const t=e.target.closest("[data-pvtema]"); if(t){ const th=PV_THEMES[+t.dataset.pvtema];
+    $("#pvTema").innerHTML=`<p class="pv-l">${esc(th.t)}</p><div class="pv-row">${th.refs.map(r=>`<button type="button" class="pv-chip" data-pvgo="${r.b}.${r.c}.${r.v}">${esc(BOOK[r.b].name)} ${r.c}:${r.v}</button>`).join("")}</div>`; return; }
+  if(e.target.closest("[data-pvcfg]")){ const on=!Perso.on(); store.set("persOn",on); const cb=$("#cfgPerso"); if(cb) cb.checked=on;
+    toast(on?"Sugestões personalizadas ligadas.":"Sugestões personalizadas desligadas. O app deixa de registrar sua leitura para sugestões."); Perso.renderHome(); }
+});
+(()=>{ const cb=$("#cfgPerso"); if(!cb) return; cb.checked=Perso.on();
+  cb.addEventListener("change",()=>{ store.set("persOn",cb.checked); Perso.renderHome(); toast(cb.checked?"Sugestões personalizadas ligadas.":"Sugestões personalizadas desligadas."); });
+  $("#cfgPersoClear").addEventListener("click",()=>{ Perso.clear(); Perso.renderHome(); toast("Histórico de leitura das sugestões apagado."); }); })();
+
 /* ---------- Sequência de estudo (incentivo diário) ---------- */
 const Streak = {
   days(){ return store.get("studyDays",[]); },
@@ -4731,6 +4916,7 @@ async function renderHome(){
   $("#homeLer").innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-open-book"/></svg>Ler a Bíblia</h3>
     <p style="margin:0">${last?`Continue de onde parou: <strong>${esc(BOOK[last.b]?.name||"")} ${last.c}</strong> (${esc(last.t)}).`:"Leia por livro e capítulo e compare versões."}</p>
     <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-read>${last?"Continuar leitura":"Começar a ler"}</button></div>`;
+  Perso.renderHome();
 }
 $("#view-inicio").addEventListener("click",e=>{
   const g=e.target.closest("[data-go]"); if(g) return showView(g.dataset.go);
@@ -4808,6 +4994,34 @@ const NotesStore = {
   },
   remove(id){ store.set(this.KEY,this.all().filter(n=>n.id!==id)); SyncAdapter.queueDelete(id); }
 };
+/* Vínculo nota ↔ texto bíblico: guardado pela referência (livro, capítulo, versículos),
+   e não pela tradução — por isso continua valendo quando o leitor troca de versão. */
+const NoteLink = {
+  of(n){
+    if(n.link && n.link.b) return n.link;
+    const first=String(n.ref||"").split(/[;,]/)[0].trim(); if(!first) return null;
+    const r=parseReference(first); if(!r || r.error || !r.b || !r.c) return null;
+    return { b:r.b, c:r.c, v1:r.v1||null, v2:r.v2||r.v1||null };
+  },
+  index(){
+    const m={};
+    for(const n of NotesStore.all()){ const L=this.of(n); if(!L) continue;
+      const v1=L.v1||1, v2=L.v1?Math.min(L.v2||L.v1, L.v1+176):1;   /* nota de capítulo inteiro: ícone no v. 1 */
+      for(let v=v1; v<=v2; v++) (m[`${L.b}.${L.c}.${v}`] ||= []).push(n.id); }
+    return m;
+  },
+  label(L){ return L ? refLabel(L.b,L.c,L.v1,L.v2&&L.v2!==L.v1?L.v2:undefined) : ""; }
+};
+/* Ícone de nota ao lado do número do versículo, no leitor */
+function paintNoteIcons(){
+  if(!el.dlgBody || typeof rd==="undefined" || !rd.b) return;
+  const idx=NoteLink.index();
+  el.dlgBody.querySelectorAll(".rd-verse").forEach(p=>{
+    p.querySelector(".rd-note")?.remove();
+    const ids=idx[`${rd.b}.${rd.c}.${p.dataset.v}`]; if(!ids) return;
+    p.querySelector("sup")?.insertAdjacentHTML("afterend",`<button type="button" class="rd-note" data-noteid="${esc(ids[0])}" aria-label="Abrir sua nota sobre o versículo ${p.dataset.v}${ids.length>1?` (${ids.length} notas)`:""}"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>${ids.length>1?`<b>${ids.length}</b>`:""}</button>`);
+  });
+}
 if(!storageOK) $("#storageNote").textContent="Atenção: este navegador está bloqueando o armazenamento local (modo privado?). As notas não serão guardadas.";
 
 const nd = { dlg:$("#noteDialog"), form:$("#noteEditForm"), id:$("#neId"), title:$("#neTitle"), date:$("#neDate"), ref:$("#neRef"), text:$("#neText"), extra:$("#neExtra"), err:$("#neErr") };
@@ -4834,7 +5048,9 @@ nd.form.addEventListener("submit",e=>{
     if(!r || r.error){ nd.err.textContent="Não reconheci a referência (ex.: João 3:16). A nota será salva assim mesmo — toque em Salvar de novo para confirmar.";
       if(nd.form.dataset.refWarned!==ref){ nd.form.dataset.refWarned=ref; return; } } }
   const type=document.querySelector('input[name="neType"]:checked').value;
-  NotesStore.save({ id:nd.id.value||undefined, title, date, type, ref, text, extra:nd.extra.value.trim() });
+  const saved=NotesStore.save({ id:nd.id.value||undefined, title, date, type, ref, text, extra:nd.extra.value.trim(), link:null });
+  saved.link=NoteLink.of(saved); NotesStore.save(saved);
+  if(el.dlg.open) paintNoteIcons();
   delete nd.form.dataset.refWarned; closeNoteEditor();
   toast(storageOK?"Nota salva neste aparelho.":"Não foi possível salvar: armazenamento bloqueado.");
   renderNotesView(); renderNotesMini(); if(currentView==="inicio") renderHome();
@@ -4851,7 +5067,7 @@ function renderNotesView(){
       <h3>${esc(n.title)}</h3>
       <div class="meta"><span class="pill ${n.type==="culto"?"demo":""}">${n.type==="culto"?"Culto":"Estudo"}</span>
         <span>${esc(new Date(n.date+"T12:00").toLocaleDateString("pt-BR"))}</span>
-        ${n.ref?`<span>· ${esc(n.ref)}</span>`:""}${n.extra?`<span>· ${esc(n.extra)}</span>`:""}</div>
+        ${n.ref?(NoteLink.of(n)?`<span>· <a href="#" class="note-ref" data-n="open"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>${esc(n.ref)}</a></span>`:`<span>· ${esc(n.ref)}</span>`):""}${n.extra?`<span>· ${esc(n.extra)}</span>`:""}</div>
       <p class="body">${esc(n.text.length>400?n.text.slice(0,400)+"…":n.text)}</p>
       <div class="row-actions">
         ${n.text.length>400?`<button type="button" class="btn btn-sm btn-ghost" data-n="more">Ver tudo</button>`:""}
@@ -4873,9 +5089,9 @@ $("#notesList").addEventListener("click",e=>{
   if(a==="edit") openNoteEditor({id:n.id});
   if(a==="more"){ card.querySelector(".body").textContent=n.text; b.remove(); }
   if(a==="share") shareText(n.title, `${n.ref?n.ref+"\n":""}${n.text}`);
-  if(a==="open"){ showView("busca"); el.q.value=n.ref.split(/[;,]/)[0].trim(); setMode("ref"); runSearch({auto:false}); }
+  if(a==="open"){ e.preventDefault(); const L=NoteLink.of(n); if(L) fsBiblia(L.b,L.c,L.v1); else { showView("busca"); el.q.value=n.ref.split(/[;,]/)[0].trim(); setMode("ref"); runSearch({auto:false}); } }
   if(a==="del"){
-    if(b.dataset.confirm){ NotesStore.remove(n.id); toast("Nota excluída."); renderNotesView(); renderNotesMini(); }
+    if(b.dataset.confirm){ NotesStore.remove(n.id); toast("Nota excluída."); renderNotesView(); renderNotesMini(); if(el.dlg.open) paintNoteIcons(); }
     else { b.dataset.confirm="1"; b.lastChild.textContent="Confirmar exclusão"; b.classList.add("btn-primary"); setTimeout(()=>{ if(b.isConnected){ delete b.dataset.confirm; b.lastChild.textContent="Excluir"; b.classList.remove("btn-primary"); } },4000); }
   }
 });
@@ -5694,7 +5910,31 @@ $("#spUrl").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefaul
    Selos de fonte: B = relato bíblico · H = evidência histórica ·
    T = tradição cristã · Hp = hipótese/reconstrução.
    ===================================================================== */
-const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null };
+const MP = { base:null, data:null, tab:"atlas", per:"Todos", q:"", cur:null, view:null, sel:null, play:null, stage:-1, drag:null, layer:store.get("mpLayer","mapa") };
+/* Camadas de fundo: Relevo e Satélite (imagens de satélite estilo Google Earth), desenhadas sob o mapa do SOLA */
+const MP_LAYERS = {
+  relevo:   { urls:["https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/terrain_3857/default/g/{z}/{y}/{x}.jpg"], max:12,
+              attr:"Relevo: Terrain Light © EOX IT Services · dados © OpenStreetMap, NASA SRTM, GEBCO e outros" },
+  satelite: { urls:["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2024_3857/default/g/{z}/{y}/{x}.jpg","https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg"], max:13,
+              attr:"Satélite: Sentinel-2 cloudless © EOX IT Services (contém dados modificados do Copernicus Sentinel)" }
+};
+function mpTiles(v, W){
+  const L=MP_LAYERS[MP.layer]; if(!L) return "";
+  const b=MP.base, lonOf=x=>x/(b.c*b.k)+b.b.x0, latOf=y=>b.b.y1-y/b.k;
+  const lonW=lonOf(v.x), lonE=lonOf(v.x+v.w), latN=Math.min(84,latOf(v.y)), latS=Math.max(-84,latOf(v.y+v.h));
+  let z=Math.round(Math.log2(360*W/((lonE-lonW)||1)/256)); z=Math.max(3,Math.min(L.max,z));
+  const n=2**z, tx=lon=>Math.floor((lon+180)/360*n), ty=lat=>{ const r=lat*Math.PI/180; return Math.floor((1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*n); };
+  const lon2=x=>x/n*360-180, lat2=y=>{ const m=Math.PI-2*Math.PI*y/n; return 180/Math.PI*Math.atan(0.5*(Math.exp(m)-Math.exp(-m))); };
+  const x0=Math.max(0,tx(lonW)), x1=Math.min(n-1,tx(lonE)), y0=Math.max(0,ty(latN)), y1=Math.min(n-1,ty(latS));
+  if((x1-x0+1)*(y1-y0+1)>60) return "";
+  let out="";
+  for(let X=x0;X<=x1;X++) for(let Y=y0;Y<=y1;Y++){
+    const [ax,ay]=mpXY(lat2(Y),lon2(X)), [bx,by]=mpXY(lat2(Y+1),lon2(X+1));
+    const u=L.urls[0].replace("{z}",z).replace("{x}",X).replace("{y}",Y);
+    out+=`<image href="${u}" x="${ax}" y="${ay}" width="${bx-ax+0.02}" height="${by-ay+0.02}" preserveAspectRatio="none" data-alt="${esc(L.urls[1].replace("{z}",z).replace("{x}",X).replace("{y}",Y))}" onerror="if(this.dataset.alt){this.setAttribute('href',this.dataset.alt);this.dataset.alt=''}"/>`;
+  }
+  return `<g class="mp-tiles">${out}</g>`;
+}
 const MP_PER = ["Todos","Patriarcas","Êxodo e conquista","Reinos, exílio e retorno","Vida de Jesus","Igreja primitiva"];
 const MP_FONTE = { B:["Bíblia","#2f7d4a"], H:["História","#2e6da4"], T:["Tradição","#b8862e"], Hp:["Hipótese","#7a7a7a"] };
 const mpBadge = f => { const x=MP_FONTE[f]||MP_FONTE.Hp; return `<span class="mp-badge" style="--c:${x[1]}" title="${esc(MP.data?.fontes?.[f]||x[0])}">${x[0]}</span>`; };
@@ -5760,6 +6000,7 @@ function mpOpen(kind,id){
   MP.cur.extra=[];   // jornadas extras sobrepostas (filtros)
   $("#mpStep").hidden=true; $("#mpPanel").hidden=true;
   $("#mpHome").hidden=true; $("#mpProfile").hidden=true; $("#mpViewer").hidden=false; window.scrollTo({top:0});
+  document.querySelectorAll("[data-mplayer]").forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.mplayer===MP.layer)));
   mpRenderViewer(); mpFit(); if(kind==="l") mpSelect(id);
 }
 function mpRenderViewer(){
@@ -5827,7 +6068,10 @@ function mpDraw(){
   const labs = c.kind==="m" ? c.obj.labels.map(L=>{ const [x,y]=mpXY(L.lat,L.lon); return `<text class="mp-region ${L.k}" x="${x}" y="${y}" text-anchor="middle" font-size="${(L.k==="imperio"?17:L.k==="reino"?13:11.5)*k}">${esc(L.t)}</text>`; }).join("") : "";
   const seas = b.seaLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-sea" x="${x}" y="${y}" text-anchor="middle" font-size="${11*k}">${esc(s.t)}</text>`; }).join("")
     + b.riverLabels.map(s=>{ const [x,y]=mpXY(s.lat,s.lon); return `<text class="mp-river" x="${x}" y="${y}" font-size="${9.5*k}">${esc(s.t)}</text>`; }).join("");
-  svg.innerHTML=`<defs>${defs}</defs><rect class="mp-seab" x="-500" y="-500" width="${b.w+1000}" height="${b.h+1000}"/>
+  const tiles = MP.layer!=="mapa" ? mpTiles(v, W) : "";
+  svg.classList.toggle("mp-img", !!tiles); svg.classList.toggle("mp-sat", MP.layer==="satelite" && !!tiles);
+  const at=$("#mpAttr"); if(at){ at.hidden=!tiles; at.textContent=tiles?MP_LAYERS[MP.layer].attr:""; }
+  svg.innerHTML=`<defs>${defs}</defs><rect class="mp-seab" x="-500" y="-500" width="${b.w+1000}" height="${b.h+1000}"/>${tiles?`<path class="mp-land0" d="${b.land}"/>`:""}${tiles}
     <path class="mp-land" d="${b.land}" stroke-width="${0.7*k}"/><path class="mp-lake" d="${b.lakes}"/><path class="mp-riv" d="${b.rivers}" stroke-width="${1.6*k}"/>
     ${seas}${labs}${routes}${marks}`;
   $("#mpScale").textContent = `${Math.round(v.w/b.k*111*b.c)} km de largura`;
@@ -5853,6 +6097,10 @@ function mpSelect(id){
 /* Interações do visualizador */
 $("#mpViewer").addEventListener("click",e=>{
   const t=e.target;
+  const ly=t.closest("[data-mplayer]"); if(ly){ MP.layer=ly.dataset.mplayer; store.set("mpLayer",MP.layer);
+    document.querySelectorAll("[data-mplayer]").forEach(x=>x.setAttribute("aria-pressed",String(x===ly)));
+    toast(MP.layer==="mapa"?"Mapa do SOLA.":MP.layer==="relevo"?"Relevo do terreno: montanhas, vales e desertos.":"Imagens de satélite.");
+    return mpDraw(); }
   if(t.closest("[data-mpback]")) return MP.fromProfile ? mpOpenProfile(MP.fromProfile) : renderMapas();
   const r=t.closest("[data-mpref]"); if(r){ const p=mpRefParse(r.dataset.mpref); if(p) openReader({ b:p.b, c:p.c, hi:p.v1, asView:false }); return; }
   const s=t.closest("[data-mpsel]"); if(s) return mpSelect(s.dataset.mpsel);
@@ -6192,8 +6440,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.16.2";
+const APP_VERSION = "3.17.0";
 const CHANGELOG = [
+  { v:"3.17.0", d:"novembro de 2026", items:["Barra de baixo fixa no rodapé em qualquer tela, com espaço reservado no fim das páginas.","Anotações ligadas ao versículo: ícone ao lado do número abre a nota, mesmo trocando de tradução; nas notas, a referência leva à passagem.","Grifos em cores pastel (amarelo suave, verde-menta, azul-claro, lilás e pêssego), legíveis no tema escuro.","Mapas: novas opções Relevo e Satélite, rótulos mais legíveis e indicação de local ou trajeto aproximado.","Imagem do farol para Stories (9:16) e Feed (4:5) com o versículo escolhido.","“Para você”: sugestões de leitura e estudos calculadas no aparelho, sem usar suas anotações; dá para desligar."] },
   { v:"3.16.2", d:"novembro de 2026", items:["A tela não desliza mais para os lados e a barra de baixo fica sempre fixa, com fundo desfocado."] },
   { v:"3.16.1", d:"novembro de 2026", items:["Busca do farol: campo de digitação mais visível, e passagens e livros abrem direto na Bíblia.","Concordância com novo visual: busca em destaque, escolha rápida do tipo (exata, começa com, formas relacionadas) e filtros organizados."] },
   { v:"3.16.0", d:"novembro de 2026", items:["Busca do farol (botão com o farol no alto): procura em todo o SOLA — passagens, devocionais, artigos, estudos, pensadores, notícias e seções — e, se precisar, pergunta ao Perplexity."] },
@@ -6310,7 +6559,7 @@ async function resizePhoto(file){
 }
 
 /* ---------- Grifos (marca-texto) ---------- */
-const HL_COLORS = [ ["y","Amarelo"], ["g","Verde"], ["p","Rosa"], ["b","Azul"], ["o","Laranja"] ];
+const HL_COLORS = [ ["y","Amarelo suave"], ["g","Verde-menta"], ["p","Lilás"], ["b","Azul-claro"], ["o","Pêssego"] ];
 const HL_NAME = Object.fromEntries(HL_COLORS);
 const Hl = {
   all(){ return store.get("hl",{}); },
@@ -6714,7 +6963,7 @@ paintAvatar();
     const nm=(Profile.get().name||"").trim().split(/\s+/)[0]; if(!nm) return;
     if(sessionStorage.getItem("solaWelcome")) return; sessionStorage.setItem("solaWelcome","1");
     const h=new Date().getHours();
-    const sub = h<12 ? "Bom dia! Que tal começar com a Palavra?" : h<18 ? "Boa tarde! Que bom ter você aqui." : "Boa noite! Descanse na Palavra de Deus.";
+    const sub = "Você sente que há algo que, se perdesse, não conseguiria suportar?";
     const box=$("#welcomeMsg"); $("#welcomeT").textContent=`Oi, ${nm}, seja bem-vindo de volta!`; $("#welcomeS").textContent=sub;
     const show=()=>{ box.hidden=false; requestAnimationFrame(()=>requestAnimationFrame(()=>box.classList.add("show")));
       const hide=()=>{ box.classList.remove("show"); setTimeout(()=>box.hidden=true,500); };
@@ -7288,6 +7537,7 @@ $("#rdMultiBar").addEventListener("click",e=>{
   if(a==="all"){ const n=Bible.data[rd.t].books[rd.b][rd.c-1].length; const full=Multi.set.size===n; Multi.set.clear(); if(!full) for(let i=1;i<=n;i++) Multi.set.add(i); return paintMulti(); }
   if(!Multi.set.size) return;
   if(a==="copy") copyText(multiText(), `Copiado: ${multiRef()}.`);
+  if(a==="card"){ const vs=multiVerses(); return VerseCard.open({ text:vs.map(x=>x.text).join(" "), ref:multiRef(), t:rd.t }); }
   if(a==="share"){ const t=multiShare(); if(navigator.share) navigator.share({ text:t }).catch(()=>{}); else copyText(t,"Texto copiado para compartilhar."); }
   if(a==="note") openNoteEditor({ type:"estudo", title:`Estudo de ${multiRef()}`, ref:multiRef(), text:multiText()+"\n\n" });
   if(a==="fav"){ multiVerses().forEach(x=>toggleFav({ t:rd.t, b:rd.b, c:rd.c, v:x.v, text:x.text })); }
