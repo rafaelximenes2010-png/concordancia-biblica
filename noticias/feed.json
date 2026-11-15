@@ -1,5 +1,5 @@
 {
- "atualizado": "2026-11-15T00:19:03.517Z",
+ "atualizado": "2026-11-15T00:27:09.059Z",
  "categorias": {
   "mis": "Missões",
   "per": "Igreja perseguida",
@@ -63,7 +63,7 @@
     {
      "id": "nbc743fda3525",
      "cat": "per",
-     "titulo": "A menina que mataram por recusar um casamento forçado",
+     "titulo": "A menina que foi morta por recusar um casamento forçado",
      "resumo": "No dia 6 de novembro, uma jovem cristã de 18 anos chamada Ajak Mabior foi espancada até a morte em Jonglei, no Sudão do Sul, depois de se recusar a aceitar um casamento forçado arranjado por sua família. Esperava-se que ela se casasse com um homem muçulmano mais velho — um...",
      "url": "https://persecution.org/2026/11/12/the-girl-they-killed-for-refusing-a-forced-marriage/",
      "fonte": "International Christian Concern",
@@ -94,7 +94,7 @@
      "id": "ncfed4ff07c59",
      "cat": "per",
      "titulo": "Padre fica inconsciente após ataque no estado de Benue, na Nigéria",
-     "resumo": "ABUJA, Nigéria (Christian Daily International–Morning Star News) – Os ataques a líderes cristãos na Nigéria continuaram quando um padre católico foi agredido na semana passada e outro, que havia sido sequestrado em outubro, foi libertado…",
+     "resumo": "ABUJA, Nigéria (Christian Daily International–Morning Star News) – Os ataques a líderes cristãos na Nigéria continuaram quando um padre católico foi agredido na semana passada e outro, que havia sido sequestrado em outubro, foi libertado...",
      "url": "https://morningstarnews.org/2026/11/priest-left-unconscious-in-attack-in-benue-state-nigeria/",
      "fonte": "Morning Star News",
      "fonteUrl": "",
@@ -139,7 +139,7 @@
      "id": "nba468f39a848",
      "cat": "mis",
      "titulo": "As doações contínuas para a oferta de Lottie Moon ajudam a levar o acesso ao evangelho às comunidades de surdos no Oriente Médio",
-     "resumo": "Cada dólar que você doa para a oferta da Lottie Moon é usado para apoiar missionários como Noah Lewis, que vivem e servem entre os não alcançados. Você consideraria doar hoje? Noah Lewis não conseguiu evitar cantar junto com uma música de adoração...",
+     "resumo": "Cada dólar que você doa para a oferta da Lottie Moon é usado para apoiar missionários como Noah Lewis, que vivem e servem entre os perdidos. Você consideraria doar hoje? Noah Lewis não conseguiu evitar cantar junto com uma música de adoração...",
      "url": "https://www.imb.org/2026/11/12/sustained-giving-to-lottie-moon-offering-helps-provide-gospel-access-deaf-middle-east/",
      "fonte": "IMB",
      "fonteUrl": "",
@@ -229,7 +229,7 @@
      "id": "n6a1d2ee564f2",
      "cat": "sem",
      "titulo": "Fortalecimento da compreensão bíblica e do ministério em Malamulele e Makonde",
-     "resumo": "O Centro de Aprendizagem Local de Malamulele do Mukhanyo Theological College teve uma semana frutífera de ensino e ministério de 28 de setembro a 4 de outubro de 2026, com o Rev. Brian McLean se juntando aos alunos e líderes da igreja para…",
+     "resumo": "O Local de Aprendizagem de Malamulele da Faculdade de Teologia Mukhanyo teve uma semana frutífera de ensino e ministério de 28 de setembro a 4 de outubro de 2026, com o Rev. Brian McLean se juntando aos alunos e líderes da igreja para…",
      "url": "https://mtc.ac.za/strengthening-biblical-understanding-and-ministry-in-malamulele-and-makonde/?utm_source=rss&utm_medium=rss&utm_campaign=strengthening-biblical-understanding-and-ministry-in-malamulele-and-makonde",
      "fonte": "Mukhanyo Theological College",
      "fonteUrl": "",
@@ -273,8 +273,8 @@
     {
      "id": "n8d79f8c847de",
      "cat": "igr",
-     "titulo": "Como orar pelo Quênia após a sentença pelo massacre da Floresta de Shakahola de 2023",
-     "resumo": "Quênia (MNN) — A FMI enfatizou a necessidade de um sólido ensino bíblico para proteger as pessoas de falsos mestres.",
+     "titulo": "Como orar pelo Quênia após a sentença pelo massacre da floresta de Shakahola de 2023",
+     "resumo": "Quênia (MNN) — A FMI enfatizou a necessidade de um ensino bíblico sólido para proteger as pessoas de falsos mestres.",
      "url": "https://www.mnnonline.org/news/how-to-pray-for-kenya-after-the-2023-shakahola-forest-massacre-sentencing/",
      "fonte": "Mission Network News",
      "fonteUrl": "",
@@ -288,7 +288,7 @@
     {
      "id": "n6987fd3d8e56",
      "cat": "igr",
-     "titulo": "Igrejas atendem a necessidades urgentes à medida que a escassez de financiamento limita a ajuda humanitária no Sudão",
+     "titulo": "Igrejas atendem a necessidades urgentes, enquanto a escassez de financiamento limita a ajuda ao Sudão",
      "resumo": "Sudão (MNN) -- Conflitos e escassez agravam a crise no Sudão; os fiéis reagem.",
      "url": "https://www.mnnonline.org/news/churches-meet-urgent-needs-as-funding-shortages-limit-sudan-relief/",
      "fonte": "Mission Network News",
@@ -298,21 +298,6 @@
      "lang": "pt",
      "verif": "fonte acompanhada pelo SOLA",
      "orig": "Churches meet urgent needs as funding shortages limit Sudan relief",
-     "traduzido": true
-    },
-    {
-     "id": "n311346e31db4",
-     "cat": "igr",
-     "titulo": "O Irã intensifica suas exigências nucleares à medida que os custos da guerra disparam",
-     "resumo": "Irã (MNN) – Contra todas as probabilidades, o ministério compartilha novos números do crescimento da Igreja no Irã.",
-     "url": "https://www.mnnonline.org/news/iran-doubles-down-on-nuclear-demands-as-war-costs-soar/",
-     "fonte": "Mission Network News",
-     "fonteUrl": "",
-     "pais": "Irã",
-     "data": "2026-11-12T05:00:52.000Z",
-     "lang": "pt",
-     "verif": "fonte acompanhada pelo SOLA",
-     "orig": "Iran doubles down on nuclear demands as war costs soar",
      "traduzido": true
     },
     {
@@ -334,7 +319,7 @@
      "id": "nbcd4365aaa51",
      "cat": "igr",
      "titulo": "O traje festivo de que realmente precisamos",
-     "resumo": "Mesmo com nossas roupas mais elegantes, ainda podemos estar sujos por dentro. O Advento nos lembra que Jesus nos veste com a Sua justiça.",
+     "resumo": "Mesmo com nossas roupas mais finas, ainda podemos estar sujos por dentro. O Advento nos lembra que Jesus nos veste com a Sua justiça.",
      "url": "https://www.thegospelcoalition.org/article/festive-attire-we-need/",
      "fonte": "The Gospel Coalition",
      "fonteUrl": "",
@@ -343,6 +328,21 @@
      "lang": "pt",
      "verif": "fonte acompanhada pelo SOLA",
      "orig": "The Festive Attire We Really Need",
+     "traduzido": true
+    },
+    {
+     "id": "n47d653882eaa",
+     "cat": "igr",
+     "titulo": "Não tenha medo da questão alienígena",
+     "resumo": "\"Faith in Space\" mostra que muitos americanos ao longo da história já levaram a sério a questão da vida extraterrestre, mas o fizeram fora de uma estrutura cristã ortodoxa.",
+     "url": "https://www.thegospelcoalition.org/reviews/faith-in-space-extraterrestrial/",
+     "fonte": "The Gospel Coalition",
+     "fonteUrl": "",
+     "pais": "",
+     "data": "2026-11-14T05:00:00.000Z",
+     "lang": "pt",
+     "verif": "fonte acompanhada pelo SOLA",
+     "orig": "Don’t Be Afraid of the Alien Question",
      "traduzido": true
     }
    ]
