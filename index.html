@@ -4650,6 +4650,8 @@ const CA_THEMES = [
   { id:"retomada", t:"Retomada", pal:["#22406f","#ffb36b","#fff0c9","#4a5d7e","#22314d"], cenas:["caminho","aurora","oliveira"],
     vs:["LAM.3.23","ISA.43.19","2CO.5.17","PHP.3.13"] }
 ];
+const CA_POOL_MAP = {"graca": "Graça", "fe": "Fé", "misericordia": "Misericórdia", "perdao": "Perdão", "casamento": "Casamento", "amor": "Amor", "animo": "Ânimo e coragem", "retomada": "Recomeço"};
+const caVersos = th => (typeof PV_POOL!=="undefined" && PV_POOL[CA_POOL_MAP[th.id]]) ? pvVersos(CA_POOL_MAP[th.id],4) : th.vs;   // versículos do tema também mudam toda semana
 const CardArt = {
   mes(d=new Date()){ return d.getFullYear()*100+d.getMonth()+1; },
   mesNome(m){ return new Date(Math.floor(m/100), m%100-1, 1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"}); },
@@ -4771,13 +4773,13 @@ const VerseCard = {
     $("#vcStrip").innerHTML=strip;
     $("#vcMes").textContent = this.tab==="farol"||this.tab==="foto" ? "" : `Coleção de ${CardArt.mesNome(m)} · ${col.length} imagens originais do SOLA · renova todo mês`;
     const th=CA_THEMES.find(t=>t.id===this.tab);
-    $("#vcVs").innerHTML = th ? `<span class="vc-lbl">Versículos sobre ${esc(th.t.toLowerCase())}:</span>`+th.vs.map(k=>{ const [b,c,v]=k.split("."); return `<button type="button" class="vc-v" data-vcv="${k}">${esc(BOOK[b].name)} ${c}:${v}</button>`; }).join("") : "";
+    $("#vcVs").innerHTML = th ? `<span class="vc-lbl">Versículos sobre ${esc(th.t.toLowerCase())}:</span>`+caVersos(th).map(k=>{ const [b,c,v]=k.split("."); return `<button type="button" class="vc-v" data-vcv="${k}">${esc(BOOK[b].name)} ${c}:${v}</button>`; }).join("") : "";
   },
   async setVerse(k){ const [b,c,v]=k.split("."); const t=this.cur?.t||store.get("version",DEFAULT_VERSION);
     try{ const ch=await Repo.getChapter(t,b,+c); const x=ch.find(y=>y.v===+v); if(!x) throw 0; this.cur={ text:x.text, ref:`${BOOK[b].name} ${c}:${v}`, t }; await this.render(); }
     catch(e){ toast("Não foi possível carregar esse versículo agora."); } },
   async openTema(id){ this.tab=id; const th=CA_THEMES.find(t=>t.id===id)||CA_THEMES[0]; const b=CardArt.colecao().find(x=>x.tema===th.id); if(b){ this.bg=b; store.set("cardBg",b); }
-    this.cur={ text:"", ref:"", t:store.get("version",DEFAULT_VERSION) }; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.setVerse(th.vs[0]); },
+    this.cur={ text:"", ref:"", t:store.get("version",DEFAULT_VERSION) }; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.setVerse(caVersos(th)[0]); },
   async render(){
     const im=$("#cardImg"); im.style.aspectRatio = this.fmt==="story"?"9/16":"4/5";
     document.querySelectorAll('#cardDlg [data-cdk="story"],#cardDlg [data-cdk="feed"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.cdk===this.fmt)));
@@ -4812,18 +4814,16 @@ $("#vcFile").addEventListener("change",e=>{ const f=e.target.files&&e.target.fil
 /* ---------- Para você: personalização v1 (regras, no aparelho) ----------
    Sinais: capítulos lidos, favoritos e grifos (só referências). O texto das anotações NUNCA entra aqui.
    v1 é baseada em regras e pesos com decaimento no tempo; ver docs/PERSONALIZACAO.md para evoluir a um modelo de ML. */
-const PV_THEMES = [
-  ["Graça",      ["EPH.2.8","ROM.3.24","2CO.12.9","TIT.2.11"]],
-  ["Fé",         ["HEB.11.1","ROM.10.17","GAL.2.20","JAS.2.17"]],
-  ["Paz e ansiedade",["PHP.4.6","MAT.6.34","JHN.14.27","1PE.5.7","PSA.23.1"]],
-  ["Perdão",     ["1JN.1.9","EPH.4.32","PSA.51.1","MAT.6.14"]],
-  ["Oração",     ["MAT.6.9","LUK.18.1","1TH.5.17","PSA.62.8"]],
-  ["Esperança",  ["ROM.15.13","LAM.3.22","ROM.8.28","JER.29.11"]],
-  ["Amor",       ["1CO.13.4","1JN.4.8","JHN.15.13","ROM.5.8"]],
-  ["Sabedoria",  ["PRO.3.5","JAS.1.5","PSA.119.105","PRO.9.10"]],
-  ["Salvação",   ["JHN.3.16","ROM.6.23","ACT.4.12","ROM.10.9"]],
-  ["Sofrimento", ["ROM.5.3","2CO.4.17","JAS.1.2","PSA.34.18"]]
-].map(([t,refs])=>({ t, refs:refs.map(k=>{ const [b,c,v]=k.split("."); return { b, c:+c, v:+v }; }) }));
+/* Banco de temas e versículos (24 temas × 8 versículos, conferidos no texto bíblico).
+   Toda segunda-feira o app sorteia 10 temas e 4 versículos de cada: a seção nunca fica repetitiva. */
+const PV_POOL = {"Graça": ["EPH.2.8", "2CO.12.9", "ROM.3.24", "TIT.2.11", "ROM.5.20", "JHN.1.16", "HEB.4.16", "2TI.1.9"], "Fé": ["HEB.11.1", "ROM.10.17", "GAL.2.20", "MRK.9.23", "2CO.5.7", "HEB.11.6", "ROM.5.1", "JAS.2.17"], "Paz e ansiedade": ["PHP.4.6", "PHP.4.7", "MAT.6.34", "JHN.14.27", "1PE.5.7", "ISA.26.3", "PSA.4.8", "MAT.11.28"], "Perdão": ["1JN.1.9", "EPH.4.32", "PSA.103.12", "COL.3.13", "ISA.1.18", "MAT.6.14", "PSA.32.1", "MIC.7.18"], "Oração": ["MAT.6.6", "LUK.18.1", "1TH.5.17", "PSA.62.8", "JER.33.3", "JAS.5.16", "PHP.4.6", "MAT.7.7"], "Esperança": ["ROM.15.13", "LAM.3.22", "ROM.8.28", "JER.29.11", "HEB.6.19", "ROM.5.5", "PSA.42.11", "1PE.1.3"], "Amor": ["1CO.13.4", "1JN.4.8", "JHN.15.13", "ROM.5.8", "1JN.4.19", "JHN.13.34", "ROM.8.39", "1CO.16.14"], "Sabedoria": ["PRO.3.5", "JAS.1.5", "PSA.119.105", "PRO.9.10", "PRO.2.6", "COL.3.16", "PSA.90.12", "PRO.4.7"], "Salvação": ["JHN.3.16", "ROM.6.23", "ACT.4.12", "ROM.10.9", "EPH.2.8", "TIT.3.5", "JHN.14.6", "ACT.16.31"], "Sofrimento": ["ROM.5.3", "2CO.4.17", "JAS.1.2", "PSA.34.18", "ROM.8.18", "1PE.4.12", "2CO.1.4", "PSA.46.1"], "Misericórdia": ["LAM.3.22", "PSA.103.8", "EPH.2.4", "MIC.6.8", "LUK.6.36", "HEB.4.16", "PSA.136.1", "TIT.3.5"], "Gratidão": ["1TH.5.18", "PSA.100.4", "COL.3.15", "PSA.107.1", "PHP.4.6", "PSA.103.2", "EPH.5.20", "COL.2.7"], "Família": ["JOS.24.15", "PSA.127.1", "PRO.22.6", "EPH.6.4", "DEU.6.6", "COL.3.20", "PSA.128.3", "1TI.5.8"], "Casamento": ["GEN.2.24", "ECC.4.12", "EPH.5.25", "SNG.8.7", "PRO.18.22", "COL.3.19", "1PE.3.7", "HEB.13.4"], "Ânimo e coragem": ["JOS.1.9", "ISA.40.31", "PHP.4.13", "PSA.27.14", "DEU.31.6", "ISA.41.10", "2TI.1.7", "PSA.31.24"], "Recomeço": ["LAM.3.23", "ISA.43.19", "2CO.5.17", "PHP.3.13", "PSA.51.10", "EZK.36.26", "REV.21.5", "ISA.43.18"], "Provisão": ["PHP.4.19", "MAT.6.33", "PSA.23.1", "PSA.37.25", "MAT.6.26", "2CO.9.8", "PSA.34.10", "LUK.12.24"], "Proteção": ["PSA.91.1", "PSA.121.7", "PRO.18.10", "PSA.46.1", "2TH.3.3", "PSA.18.2", "ISA.54.17", "PSA.34.7"], "Santidade": ["1PE.1.16", "HEB.12.14", "ROM.12.1", "1TH.4.3", "2CO.7.1", "PSA.24.3", "LEV.20.26", "MAT.5.8"], "Trabalho": ["COL.3.23", "PRO.16.3", "ECC.9.10", "1CO.15.58", "PSA.90.17", "PRO.12.24", "2TH.3.10", "GAL.6.9"], "Alegria": ["PHP.4.4", "NEH.8.10", "PSA.16.11", "JHN.15.11", "ROM.15.13", "PSA.30.5", "HAB.3.18", "1PE.1.8"], "Fidelidade de Deus": ["LAM.3.23", "DEU.7.9", "2TI.2.13", "PSA.36.5", "1CO.10.13", "HEB.10.23", "1TH.5.24", "PSA.89.1"], "Espírito Santo": ["ACT.1.8", "GAL.5.22", "ROM.8.26", "JHN.14.26", "EPH.5.18", "ROM.8.16", "1CO.6.19", "JHN.16.13"], "Missão": ["MRK.16.15", "MAT.28.19", "ACT.1.8", "ROM.10.14", "ISA.6.8", "MAT.5.14", "2CO.5.20", "ROM.1.16"]};
+const pvSemana = (d=new Date()) => Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5 + 3)/7);   // muda na segunda-feira
+function pvPick(arr, n, seed){ const r=CardArt.rng(seed), a=arr.slice(); for(let i=a.length-1;i>0;i--){ const k=Math.floor(r()*(i+1)); [a[i],a[k]]=[a[k],a[i]]; } return a.slice(0,n); }
+const pvRefs = keys => keys.map(k=>{ const [b,c,v]=k.split("."); return { b, c:+c, v:+v }; });
+function pvVersos(tema, n=4, w=pvSemana()){ return pvPick(PV_POOL[tema]||[], n, CardArt.hash(w+":"+tema)); }
+let _pvW=null, _pvT=null;
+function pvTemas(){ const w=pvSemana(); if(_pvW!==w){ _pvW=w; _pvT=pvPick(Object.keys(PV_POOL),10,CardArt.hash("temas:"+w)).map(t=>({ t, refs:pvRefs(pvVersos(t,4,w)) })); } return _pvT; }
+function pvTodos(){ const w=pvSemana(); return Object.keys(PV_POOL).map(t=>({ t, refs:pvRefs(pvVersos(t,4,w)) })); }
 const Perso = {
   on(){ return store.get("persOn", true) !== false; },
   logRead(b,c){ if(!this.on()) return; const L=store.get("readLog",[]); if(L[0] && L[0].b===b && L[0].c===c) return; L.unshift({ b, c, at:Date.now() }); store.set("readLog", L.slice(0,300)); },
@@ -4846,7 +4846,7 @@ const Perso = {
     if(last){ const cnt=Math.max(0,...Object.keys(Bible.data).map(t=>Repo.chapterCount(t,last.b))); const n=last.c<cnt ? { b:last.b, c:last.c+1 } : null;
       out.next = n || { b:last.b, c:last.c, again:true }; out.why=`${BOOK[last.b].name} ${last.c}`; }
     // temas: livros que você mais lê pontuam os temas que citam esses livros
-    const T=PV_THEMES.map(th=>({ th, sc:th.refs.reduce((a,r)=>a+(S[r.b]||0),0) })).sort((a,b)=>b.sc-a.sc);
+    const T=pvTodos().map(th=>({ th, sc:th.refs.reduce((a,r)=>a+(S[r.b]||0),0) })).sort((a,b)=>b.sc-a.sc);
     const top=T.filter(x=>x.sc>0).slice(0,2); if(!top.length) top.push(T[0]);
     top.forEach(({th})=>th.refs.filter(r=>!recent.has(r.b+"."+r.c)).slice(0,2).forEach(r=>out.related.push({ ...r, tema:th.t })));
     out.related=out.related.slice(0,4);
@@ -4872,8 +4872,8 @@ const Perso = {
       s.related.map(r=>row(`data-pvgo="${r.b}.${r.c}.${r.v}"`,esc(ref(r)),"",esc(r.tema))).join(""));
     if(!s.novice && s.studies.length) h+=sec("est","▶","#b8862e","Estudos para retomar","BibleProject",s.studies.length,
       s.studies.map(x=>row(`href="${esc(x.url)}" target="_blank" rel="noopener noreferrer"`,esc(x.title),esc(x.type),"",true)).join(""));
-    h+=sec("tema","☰","#2f7d4a","Explorar por tema",s.novice?(this.on()?"Comece por um assunto":"Sugestões desligadas"):"Passagens por assunto",PV_THEMES.length,
-      `<div class="pv-temas">${PV_THEMES.map((th,i)=>`<button type="button" class="pv-tema" data-pvtema="${i}">${esc(th.t)}</button>`).join("")}</div><div id="pvTema"></div>`);
+    h+=sec("tema","☰","#2f7d4a","Explorar por tema",s.novice?(this.on()?"Comece por um assunto":"Sugestões desligadas"):"Temas da semana · renovam toda segunda",pvTemas().length,
+      `<div class="pv-temas">${pvTemas().map((th,i)=>`<button type="button" class="pv-tema" data-pvtema="${i}">${esc(th.t)}</button>`).join("")}</div><div id="pvTema"></div>`);
     h+=`<p class="pv-foot">Calculado no aparelho, sem usar suas anotações.</p>`;
     box.innerHTML=h;
     if(s.novice && !open.tema){ const d=box.querySelector('[data-pvsec="tema"]'); if(d) d.open=true; }
@@ -4884,7 +4884,7 @@ $("#homePV")?.addEventListener("click",e=>{ const sm=e.target.closest("summary")
 $("#homePV")?.addEventListener("click",e=>{
   const g=e.target.closest("[data-pvgo]"); if(g){ const [b,c,v]=g.dataset.pvgo.split("."); return fsBiblia(b,+c,v?+v:null); }
   const im=e.target.closest("[data-pvimg]"); if(im) return VerseCard.openTema(im.dataset.pvimg);
-  const t=e.target.closest("[data-pvtema]"); if(t){ const th=PV_THEMES[+t.dataset.pvtema];
+  const t=e.target.closest("[data-pvtema]"); if(t){ const th=pvTemas()[+t.dataset.pvtema];
     document.querySelectorAll("#homePV .pv-tema").forEach(b=>b.classList.toggle("on",b===t));
     $("#pvTema").innerHTML=`<div class="pv-list">${th.refs.map(r=>`<button type="button" class="pv-item" data-pvgo="${r.b}.${r.c}.${r.v}"><span class="pv-it"><b>${esc(BOOK[r.b].name)} ${r.c}:${r.v}</b></span><span class="pv-tag">${esc(th.t)}</span><span class="pv-go" aria-hidden="true">›</span></button>`).join("")}</div>`; return; }
   if(e.target.closest("[data-pvcfg]")){ const on=!Perso.on(); store.set("persOn",on); const cb=$("#cfgPerso"); if(cb) cb.checked=on;
@@ -6627,8 +6627,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.18.3";
+const APP_VERSION = "3.19.0";
 const CHANGELOG = [
+  { v:"3.19.0", d:"novembro de 2026", items:["Temas e versículos renovados toda semana: o “Para você” sorteia, toda segunda-feira, 10 temas entre 24 (Gratidão, Família, Provisão, Proteção, Alegria, Missão…) e 4 versículos de cada. Os versículos sugeridos para as imagens também mudam toda semana."] },
   { v:"3.18.3", d:"novembro de 2026", items:["“Para você” mais enxuto, no mesmo tamanho das outras seções do Início."] },
   { v:"3.18.2", d:"novembro de 2026", items:["“Para você” redesenhado: destaque para a próxima leitura e seções que abrem e fecham (passagens relacionadas, estudos e temas)."] },
   { v:"3.18.1", d:"novembro de 2026", items:["Barra de baixo presa ao rodapé de outro jeito (faz parte da página), para não flutuar mais no iPhone.","Os temas de imagem saíram da tela inicial: aparecem só ao escolher um versículo e tocar em Imagem."] },
