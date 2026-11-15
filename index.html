@@ -496,8 +496,21 @@ dialog.card-dlg{max-width:440px;width:calc(100% - 20px);max-height:96dvh;padding
 .vc-fmt button{flex:1;border:0;background:none;border-radius:9px;padding:9px;font-weight:800;color:var(--ink);cursor:pointer}
 .vc-fmt button[aria-pressed="true"]{background:#13213a;color:#fff}
 .vc-prev{display:flex;justify-content:center}
-.vc-prev img{display:block;height:min(58dvh,560px);max-width:100%;object-fit:contain;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);background:#2b6cc4}
+.vc-prev img{display:block;height:min(44dvh,440px);max-width:100%;object-fit:contain;border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);background:#2b6cc4}
 .vc-note{font-size:12.5px;color:var(--muted);text-align:center;margin:10px 0}
+.vc-tabs,.vc-strip,.vc-vs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.vc-tabs::-webkit-scrollbar,.vc-strip::-webkit-scrollbar,.vc-vs::-webkit-scrollbar{display:none}
+.vc-tabs{margin-top:12px}
+.vc-tab,.vc-v{flex:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap}
+.vc-tab.on{background:#13213a;color:#fff;border-color:#13213a}
+.vc-strip{margin-top:8px}
+.vc-th{flex:none;position:relative;width:64px;height:114px;padding:0;border:2px solid transparent;border-radius:10px;overflow:hidden;cursor:pointer;background:#ccc}
+.vc-th img{width:100%;height:100%;object-fit:cover;display:block}
+.vc-th small{position:absolute;left:0;right:0;bottom:0;font-size:9.5px;font-weight:800;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.6));padding:8px 2px 3px;text-align:center}
+.vc-th.on{border-color:#f2b93b;box-shadow:0 0 0 2px rgba(242,185,59,.35)}
+.vc-up{display:flex;align-items:center;justify-content:center;background:var(--surface);border:2px dashed var(--border);color:var(--ink);font-weight:700;font-size:11px;text-align:center}
+.vc-mes{font-size:11.5px;color:var(--muted);margin:6px 0 0}
+.vc-vs{margin-top:8px;align-items:center}.vc-lbl{flex:none;font-size:12px;font-weight:800;color:var(--muted)}
 .vc-acts{display:flex;gap:8px;flex-wrap:wrap}.vc-acts .btn{flex:1;justify-content:center;min-height:46px}
 
 .note-form-grid{display:grid;gap:10px}
@@ -1539,7 +1552,7 @@ body.mp-lock{overflow:hidden}
 .mp-svg.mp-img .mp-lbl{fill:#fff;stroke:rgba(10,14,25,.85);stroke-width:.32em}
 .mp-svg.mp-img .mp-sea,.mp-svg.mp-img .mp-river{fill:#eaf4ff;paint-order:stroke;stroke:rgba(10,20,35,.7);stroke-width:.25em}
 .mp-svg.mp-img .mp-region{fill:#fff;paint-order:stroke;stroke:rgba(10,14,25,.8);stroke-width:.25em}
-@media (max-width:760px){.mp-lbl{font-size:1.06em}.mp-layers button{padding:9px 10px}}
+@media (max-width:760px){.mp-layers button{padding:9px 10px}}
 .mp-ctl button{width:40px;height:40px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:rgba(255,255,255,.92);font-size:20px;font-weight:700;color:#13213a;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .mp-legend{position:absolute;left:8px;bottom:8px;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11.5px;color:#1d2433;background:rgba(255,255,255,.85);border-radius:10px;padding:5px 9px;max-width:calc(100% - 70px)}
 .mp-legend i{display:inline-block;width:22px;height:0;border-top:3px solid #13213a;margin-right:5px;vertical-align:3px}
@@ -2868,6 +2881,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div class="vc-head"><b id="cardDlgT">Imagem para compartilhar</b><button type="button" class="btn btn-icon btn-ghost" data-cdk="close" aria-label="Fechar"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button></div>
   <div class="vc-fmt" role="radiogroup" aria-label="Formato"><button type="button" data-cdk="story" aria-pressed="true">Stories 9:16</button><button type="button" data-cdk="feed" aria-pressed="false">Feed 4:5</button></div>
   <div class="vc-prev"><img id="cardImg" alt="Prévia do cartão"></div>
+  <div class="vc-tabs h-scroll" id="vcTabs" role="group" aria-label="Fundo da imagem"></div>
+  <div class="vc-strip h-scroll" id="vcStrip"></div>
+  <p class="vc-mes" id="vcMes"></p>
+  <div class="vc-vs h-scroll" id="vcVs"></div>
+  <input type="file" id="vcFile" accept="image/*" hidden>
   <p class="vc-note">Só o texto bíblico selecionado vai na imagem. Suas anotações continuam privadas.</p>
   <div class="vc-acts"><button type="button" class="btn btn-primary" data-cdk="share" id="cardShareBtn"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Facebook…</button><button type="button" class="btn" data-cdk="dl"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Baixar imagem</button></div>
 </dialog>
@@ -4580,6 +4598,99 @@ async function shareSola(){
 }
 
 
+/* ---------- Banco de imagens para os cartões ----------
+   Ilustrações originais geradas no aparelho, por tema. A coleção muda todo mês (semente = ano+mês),
+   sem baixar nada e sem direitos de terceiros. Também dá para usar o farol ou uma foto sua. */
+const CA_THEMES = [
+  { id:"graca", t:"Graça", pal:["#1d3b6e","#f6c87a","#fff1c4","#3a4f78","#16294d"], cenas:["aurora","cruz","campo","caminho"],
+    vs:["EPH.2.8","2CO.12.9","ROM.5.20","JHN.1.16"] },
+  { id:"fe", t:"Fé", pal:["#0f1b3d","#5b6fb5","#ffe8b0","#26365f","#0d1733"], cenas:["montanhas","estrelas","aurora"],
+    vs:["HEB.11.1","MRK.9.23","ROM.10.17","2CO.5.7"] },
+  { id:"misericordia", t:"Misericórdia", pal:["#6d5a9e","#f4b7a1","#fff3dc","#7a5a7a","#4a3858"], cenas:["chuva","campo","aurora"],
+    vs:["LAM.3.22","PSA.103.8","MIC.7.18","EPH.2.4"] },
+  { id:"perdao", t:"Perdão", pal:["#2d6e7e","#cfe8d8","#fffbe6","#4f8a76","#2a5a4c"], cenas:["oliveira","cruz","chuva"],
+    vs:["1JN.1.9","PSA.103.12","COL.3.13","ISA.1.18"] },
+  { id:"casamento", t:"Casamento", pal:["#b98aa0","#f7e1d3","#fff8ee","#c9a27e","#8c6b58"], cenas:["aliancas","bokeh","campo"],
+    vs:["GEN.2.24","ECC.4.12","EPH.5.25","SNG.8.7"] },
+  { id:"amor", t:"Amor", pal:["#7a2141","#f59a76","#ffe0b8","#8e3550","#5c1d33"], cenas:["bokeh","aliancas","aurora"],
+    vs:["1CO.13.4","1JN.4.19","JHN.15.12","ROM.8.39"] },
+  { id:"animo", t:"Ânimo", pal:["#2a7fd0","#bfe6ff","#fff7cc","#3d8f5a","#2a6b43"], cenas:["montanhas","caminho","aurora"],
+    vs:["JOS.1.9","ISA.40.31","PHP.4.13","PSA.27.14"] },
+  { id:"retomada", t:"Retomada", pal:["#22406f","#ffb36b","#fff0c9","#4a5d7e","#22314d"], cenas:["caminho","aurora","oliveira"],
+    vs:["LAM.3.23","ISA.43.19","2CO.5.17","PHP.3.13"] }
+];
+const CardArt = {
+  mes(d=new Date()){ return d.getFullYear()*100+d.getMonth()+1; },
+  mesNome(m){ return new Date(Math.floor(m/100), m%100-1, 1).toLocaleDateString("pt-BR",{month:"long",year:"numeric"}); },
+  rng(seed){ let a=seed>>>0; return ()=>{ a=(a+0x6D2B79F5)>>>0; let t=a; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; }; },
+  hash(s){ let h=2166136261; for(const ch of String(s)){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619); } return h>>>0; },
+  /* ajusta a paleta do tema a cada mês (matiz e luz), para a coleção parecer nova */
+  shade(hex, dh, dl){ let [r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255); const mx=Math.max(r,g,b), mn=Math.min(r,g,b); let h=0,s=0,l=(mx+mn)/2;
+    if(mx!==mn){ const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4; h*=60; }
+    h=(h+dh+360)%360; l=Math.min(.97,Math.max(.04,l+dl));
+    const c=(1-Math.abs(2*l-1))*s, x=c*(1-Math.abs((h/60)%2-1)), m=l-c/2; const [R,G,B]=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];
+    return "#"+[R,G,B].map(v=>Math.round((v+m)*255).toString(16).padStart(2,"0")).join(""); },
+  /* coleção do mês: 3 imagens por tema */
+  colecao(m=this.mes()){ const out=[]; CA_THEMES.forEach(th=>{ const r=this.rng(this.hash(m+th.id)); const pool=th.cenas.slice();
+      for(let i=0;i<3;i++){ const cena=pool.splice(Math.floor(r()*pool.length),1)[0] || th.cenas[i%th.cenas.length]; out.push({ kind:"gen", tema:th.id, cena, seed:this.hash(`${m}:${th.id}:${i}`), m }); } }); return out; },
+  pinta(ctx,W,H,bg){
+    const th=CA_THEMES.find(t=>t.id===bg.tema)||CA_THEMES[0], r=this.rng(bg.seed), dh=(r()-.5)*28, dl=(r()-.5)*.1;
+    const p=th.pal.map(c=>this.shade(c,dh,dl)); (this.cenas[bg.cena]||this.cenas.aurora).call(this,ctx,W,H,r,p);
+    const v=ctx.createRadialGradient(W/2,H*.45,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75); v.addColorStop(0,"rgba(0,0,0,0)"); v.addColorStop(1,"rgba(0,0,0,.28)"); ctx.fillStyle=v; ctx.fillRect(0,0,W,H);
+  },
+  ceu(ctx,W,H,a,b,hy){ const g=ctx.createLinearGradient(0,0,0,hy); g.addColorStop(0,a); g.addColorStop(1,b); ctx.fillStyle=g; ctx.fillRect(0,0,W,hy+2); },
+  sol(ctx,x,y,R,c){ const g=ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0,c); g.addColorStop(.12,c); g.addColorStop(.35,c+"88"); g.addColorStop(1,c+"00"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,R,0,7); ctx.fill(); },
+  crista(ctx,W,y0,amp,r,fill,H,rough=1){ ctx.beginPath(); ctx.moveTo(0,H); let y=y0; ctx.lineTo(0,y); const n=60;
+    for(let i=1;i<=n;i++){ y+= (r()-.5)*amp*rough*.35; y=Math.max(y0-amp,Math.min(y0+amp*.4,y)); ctx.lineTo(W*i/n,y); } ctx.lineTo(W,H); ctx.closePath(); ctx.fillStyle=fill; ctx.fill(); },
+  mix(a,b,t){ const A=[1,3,5].map(i=>parseInt(a.slice(i,i+2),16)), B=[1,3,5].map(i=>parseInt(b.slice(i,i+2),16)); return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); },
+  cenas: {
+    aurora(ctx,W,H,r,p){ const hy=H*(.6+r()*.08); this.ceu(ctx,W,H,p[0],p[1],hy); this.sol(ctx,W*(.25+r()*.5),hy-H*.03,W*.55,p[2]);
+      const s=ctx.createLinearGradient(0,hy,0,H); s.addColorStop(0,this.mix(p[3],p[1],.35)); s.addColorStop(1,p[4]); ctx.fillStyle=s; ctx.fillRect(0,hy,W,H-hy);
+      ctx.strokeStyle=p[2]+"55"; for(let i=0;i<70;i++){ const y=hy+Math.pow(r(),1.6)*(H-hy), w=W*(.03+r()*.12)*(1+(y-hy)/(H-hy)), x=W*(.2+r()*.6); ctx.lineWidth=Math.max(1,W*.003); ctx.beginPath(); ctx.moveTo(x-w/2,y); ctx.lineTo(x+w/2,y); ctx.stroke(); }
+      for(let i=0;i<5;i++){ const cy=H*(.12+r()*.3), cx=W*r(); ctx.fillStyle="rgba(255,255,255,.18)"; for(let k=0;k<6;k++){ ctx.beginPath(); ctx.ellipse(cx+k*W*.04,cy+(r()-.5)*H*.01,W*(.05+r()*.05),H*.012,0,0,7); ctx.fill(); } } },
+    montanhas(ctx,W,H,r,p){ const hy=H*.62; this.ceu(ctx,W,H,p[0],p[1],H); this.sol(ctx,W*(.2+r()*.6),H*(.42+r()*.1),W*.45,p[2]);
+      for(let k=0;k<4;k++){ const t=k/3; this.crista(ctx,W,hy+t*H*.14,H*(.16-t*.05),r,this.mix(this.mix(p[1],p[3],.5),p[4],t),H,1.2);
+        const m=ctx.createLinearGradient(0,hy+t*H*.14-H*.04,0,hy+t*H*.14+H*.08); m.addColorStop(0,"rgba(255,255,255,0)"); m.addColorStop(.5,"rgba(255,255,255,.10)"); m.addColorStop(1,"rgba(255,255,255,0)"); ctx.fillStyle=m; ctx.fillRect(0,hy+t*H*.14-H*.04,W,H*.12); } },
+    estrelas(ctx,W,H,r,p){ this.ceu(ctx,W,H,this.mix(p[4],"#000000",.4),p[0],H);
+      for(let i=0;i<900;i++){ const x=r()*W, y=r()*H*.8, s=Math.pow(r(),6)*W*.004+W*.0007; ctx.fillStyle=`rgba(255,255,240,${.3+r()*.7})`; ctx.fillRect(x,y,s,s); }
+      ctx.save(); ctx.translate(W/2,H*.35); ctx.rotate(-.6+r()*.3); for(let i=0;i<1400;i++){ const x=(r()-.5)*W*1.6, y=(r()+r()+r()-1.5)*H*.06; ctx.fillStyle=`rgba(230,225,255,${r()*.25})`; ctx.fillRect(x,y,W*.002,W*.002); } ctx.restore();
+      this.sol(ctx,W*(.6+r()*.2),H*.18,W*.08,"#fffbe8"); this.crista(ctx,W,H*.86,H*.05,r,"#05080f",H,.8); },
+    campo(ctx,W,H,r,p){ const hy=H*.6; this.ceu(ctx,W,H,p[0],p[1],hy+H*.05); this.sol(ctx,W*(.3+r()*.4),hy-H*.02,W*.6,p[2]);
+      for(let k=0;k<3;k++){ ctx.beginPath(); ctx.moveTo(0,H); const ph=r()*6, y0=hy+k*H*.07; for(let i=0;i<=40;i++){ const x=W*i/40; ctx.lineTo(x,y0+Math.sin(i/6+ph)*H*.02); } ctx.lineTo(W,H); ctx.fillStyle=this.mix(this.mix(p[3],p[2],.35),p[4],k/2.2); ctx.fill(); }
+      for(let i=0;i<260;i++){ const x=r()*W, y=H*(.8+r()*.22), h=H*(.05+r()*.07); ctx.strokeStyle=this.mix(p[2],"#c8952e",.5+r()*.3)+"cc"; ctx.lineWidth=W*.0025; ctx.beginPath(); ctx.moveTo(x,y); ctx.quadraticCurveTo(x+W*.01,y-h/2,x+(r()-.3)*W*.02,y-h); ctx.stroke();
+        ctx.fillStyle=ctx.strokeStyle; ctx.beginPath(); ctx.ellipse(x+(r()-.3)*W*.02,y-h,W*.004,H*.008,.3,0,7); ctx.fill(); } },
+    caminho(ctx,W,H,r,p){ const hy=H*.58, vx=W*(.42+r()*.16); this.ceu(ctx,W,H,p[0],p[1],hy); this.sol(ctx,vx,hy,W*.5,p[2]);
+      const g=ctx.createLinearGradient(0,hy,0,H); g.addColorStop(0,this.mix(p[3],p[1],.3)); g.addColorStop(1,p[4]); ctx.fillStyle=g; ctx.fillRect(0,hy,W,H-hy);
+      ctx.beginPath(); ctx.moveTo(vx-W*.004,hy); ctx.lineTo(vx+W*.004,hy); ctx.lineTo(W*.86,H); ctx.lineTo(W*.14,H); ctx.closePath(); const rd=ctx.createLinearGradient(0,hy,0,H); rd.addColorStop(0,this.mix(p[2],p[1],.4)); rd.addColorStop(1,this.mix(p[4],"#ffffff",.12)); ctx.fillStyle=rd; ctx.fill();
+      ctx.strokeStyle="rgba(255,255,255,.7)"; for(let i=0;i<14;i++){ const t1=Math.pow(i/14,2), t2=Math.pow((i+.5)/14,2); ctx.lineWidth=W*.002+W*.012*t1; ctx.beginPath(); ctx.moveTo(vx,hy+(H-hy)*t1); ctx.lineTo(vx,hy+(H-hy)*t2); ctx.stroke(); }
+      for(let i=0;i<2;i++) this.crista(ctx,W,hy-H*.02*i,H*.03,r,this.mix(p[3],p[0],.3)+"aa",hy+H*.01,1); },
+    cruz(ctx,W,H,r,p){ const hy=H*.7; this.ceu(ctx,W,H,p[0],p[1],H); const sx=W*(.35+r()*.3); this.sol(ctx,sx,hy-H*.05,W*.8,p[2]);
+      ctx.save(); ctx.globalAlpha=.12; ctx.fillStyle=p[2]; for(let i=0;i<14;i++){ const a=-Math.PI*(.05+.9*i/13); ctx.beginPath(); ctx.moveTo(sx,hy-H*.08); ctx.lineTo(sx+Math.cos(a-.03)*H,hy-H*.08+Math.sin(a-.03)*H); ctx.lineTo(sx+Math.cos(a+.03)*H,hy-H*.08+Math.sin(a+.03)*H); ctx.fill(); } ctx.restore();
+      ctx.beginPath(); ctx.moveTo(0,H); ctx.lineTo(0,hy+H*.05); ctx.quadraticCurveTo(sx,hy-H*.06,W,hy+H*.06); ctx.lineTo(W,H); ctx.fillStyle=p[4]; ctx.fill();
+      const cw=W*.026, ch=H*.15, cy=hy-H*.005-ch; ctx.fillStyle=this.mix(p[4],"#000000",.35); ctx.fillRect(sx-cw/2,cy,cw,ch); ctx.fillRect(sx-ch*.32,cy+ch*.22,ch*.64,cw); },
+    chuva(ctx,W,H,r,p){ this.ceu(ctx,W,H,p[0],p[1],H); const cx=W*(.3+r()*.4), cy=H*.78, R=W*.75;
+      ["#ff6b6b","#ffa94d","#ffe066","#69db7c","#4dabf7","#748ffc","#b197fc"].forEach((c,i)=>{ ctx.strokeStyle=c+"55"; ctx.lineWidth=W*.022; ctx.beginPath(); ctx.arc(cx,cy,R-i*W*.022,Math.PI,2*Math.PI); ctx.stroke(); });
+      for(let i=0;i<7;i++){ const x=r()*W, y=H*(.08+r()*.3); ctx.fillStyle="rgba(255,255,255,.35)"; for(let k=0;k<8;k++){ ctx.beginPath(); ctx.arc(x+(r()-.5)*W*.2,y+(r()-.5)*H*.03,W*(.04+r()*.05),0,7); ctx.fill(); } }
+      this.crista(ctx,W,H*.8,H*.04,r,this.mix(p[3],p[1],.2),H,.7); this.crista(ctx,W,H*.88,H*.04,r,p[4],H,.6); },
+    oliveira(ctx,W,H,r,p){ this.ceu(ctx,W,H,p[1],this.mix(p[1],p[2],.6),H);
+      for(let i=0;i<26;i++){ const x=r()*W, y=r()*H, R=W*(.03+r()*.09), g=ctx.createRadialGradient(x,y,0,x,y,R); g.addColorStop(0,"rgba(255,255,255,.35)"); g.addColorStop(1,"rgba(255,255,255,0)"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,R,0,7); ctx.fill(); }
+      const x0=W*(.05+r()*.1), y0=H*.97, x1=W*.95, y1=H*(.7+r()*.08), mx=W*.5, my=H*(.72+r()*.1); ctx.strokeStyle=this.mix(p[4],"#3b2a1a",.5); ctx.lineWidth=W*.012; ctx.lineCap="round"; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.quadraticCurveTo(mx,my,x1,y1); ctx.stroke();
+      for(let i=1;i<26;i++){ const t=i/26, bx=(1-t)*(1-t)*x0+2*(1-t)*t*mx+t*t*x1, by=(1-t)*(1-t)*y0+2*(1-t)*t*my+t*t*y1, side=i%2?1:-1, ang=-.6+side*(.7+r()*.4);
+        ctx.save(); ctx.translate(bx,by); ctx.rotate(ang); ctx.fillStyle=this.mix(p[3],"#6f8f4e",.4+r()*.3); ctx.beginPath(); ctx.ellipse(W*.045,0,W*.05,W*.013,0,0,7); ctx.fill(); ctx.restore();
+        if(r()<.18){ ctx.fillStyle=this.mix(p[4],"#2b3a1e",.6); ctx.beginPath(); ctx.arc(bx+side*W*.02,by+W*.02,W*.014,0,7); ctx.fill(); } } },
+    bokeh(ctx,W,H,r,p){ this.ceu(ctx,W,H,p[0],this.mix(p[0],p[1],.6),H);
+      for(let i=0;i<70;i++){ const x=r()*W, y=r()*H, R=W*(.02+Math.pow(r(),2)*.12), c=[p[1],p[2],"#ffd6a5"][i%3], g=ctx.createRadialGradient(x,y,R*.6,x,y,R);
+        g.addColorStop(0,c+"55"); g.addColorStop(.9,c+"40"); g.addColorStop(1,c+"00"); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,R,0,7); ctx.fill(); }
+      if(r()<.6){ const x=W*(.5+(r()-.5)*.3), y=H*.84, s=W*.07; ctx.fillStyle=p[2]+"cc"; ctx.beginPath(); ctx.moveTo(x,y+s*.9); ctx.bezierCurveTo(x-s*1.6,y-s*.2,x-s*.6,y-s*1.3,x,y-s*.35); ctx.bezierCurveTo(x+s*.6,y-s*1.3,x+s*1.6,y-s*.2,x,y+s*.9); ctx.fill(); } },
+    aliancas(ctx,W,H,r,p){ this.cenas.bokeh.call(this,ctx,W,H,r,p);
+      const cx=W*.5, cy=H*.82, R=W*.1, lw=W*.024, ring=(x,a0,a1)=>{ const g=ctx.createLinearGradient(x-R,cy-R,x+R,cy+R); g.addColorStop(0,"#fff3c4"); g.addColorStop(.4,"#e0b354"); g.addColorStop(.7,"#a77a26"); g.addColorStop(1,"#f6dc8f"); ctx.strokeStyle=g; ctx.lineWidth=lw; ctx.beginPath(); ctx.arc(x,cy,R,a0,a1); ctx.stroke(); };
+      ctx.save(); ctx.shadowColor="rgba(0,0,0,.25)"; ctx.shadowBlur=W*.02; ring(cx-R*.55,0,7); ring(cx+R*.55,0,7); ctx.restore(); ring(cx-R*.55,-.5,.5); }
+  },
+  thumbs:new Map(),
+  thumb(bg){ const k=`${bg.tema}:${bg.cena}:${bg.seed}`; if(this.thumbs.has(k)) return this.thumbs.get(k);
+    const c=document.createElement("canvas"); c.width=162; c.height=288; this.pinta(c.getContext("2d"),162,288,bg); const u=c.toDataURL("image/jpeg",.8); this.thumbs.set(k,u); return u; }
+};
+
 /* ---------- Cartão do farol (Stories 9:16 e Feed 4:5) ----------
    Só o texto bíblico escolhido entra na imagem (nunca anotações). */
 const VerseCard = {
@@ -4589,28 +4700,53 @@ const VerseCard = {
   wrap(ctx, text, maxW){ const out=[]; let line=""; for(const w of text.split(/\s+/)){ const t=line?line+" "+w:w; if(ctx.measureText(t).width>maxW && line){ out.push(line); line=w; } else line=t; } if(line) out.push(line); return out; },
   async draw(o, fmt){
     const [W,H]=this.SIZES[fmt]; const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
-    const im=await this.art(); const sc=H/im.height, iw=im.width*sc;
-    const lhC=0.849*im.width*sc, want=W*0.80; const ox=Math.min(0,Math.max(W-iw, want-lhC));   // farol sempre à direita, visível
-    ctx.drawImage(im, ox, 0, iw, H);
-    const lhLeft = 0.795*im.width*sc+ox;              // borda esquerda da torre do farol
-    const m=Math.round(W*0.05), bx=m, bw=Math.min(W-2*m, lhLeft-m-28), top=Math.round(H*(fmt==="story"?0.075:0.06)), maxBottom=Math.round(H*(fmt==="story"?0.86:0.84));
+    const bg=this.bg||{kind:"farol"}, m=Math.round(W*0.05);
+    let bx=m, bw=W-2*m, top, maxBottom, lhLeft=Infinity, center=false;
+    if(bg.kind==="foto" && this.photo){ const im=this.photo, sc=Math.max(W/im.width,H/im.height); ctx.drawImage(im,(W-im.width*sc)/2,(H-im.height*sc)/2,im.width*sc,im.height*sc);
+      ctx.fillStyle="rgba(0,0,0,.12)"; ctx.fillRect(0,0,W,H); center=true; }
+    else if(bg.kind==="gen"){ CardArt.pinta(ctx,W,H,bg); center=true; }
+    else { const im=await this.art(); const sc=H/im.height, iw=im.width*sc;
+      const lhC=0.849*im.width*sc, want=W*0.80; const ox=Math.min(0,Math.max(W-iw, want-lhC));   // farol sempre à direita, visível
+      ctx.drawImage(im, ox, 0, iw, H); lhLeft = 0.795*im.width*sc+ox; bw=Math.min(W-2*m, lhLeft-m-28); }
+    top=Math.round(H*(fmt==="story"?0.075:0.06)); maxBottom=Math.round(H*(fmt==="story"?0.86:0.84));
+    if(center){ top=Math.round(H*(fmt==="story"?0.1:0.07)); maxBottom=Math.round(H*(fmt==="story"?0.76:0.8)); }
     const pad=Math.round(W*0.045), tw=bw-2*pad, serif='Georgia,"Times New Roman",serif', ui='-apple-system,"Segoe UI",Roboto,system-ui,sans-serif';
-    const ver=Repo.version(o.t); const refTxt=`${o.ref}${o.t?` · ${o.t}`:""}`;
+    const refTxt=`${o.ref}${o.t?` · ${o.t}`:""}`;
     const txt=`“${String(o.text).replace(/\s+/g," ").trim()}”`;
-    let fs=fmt==="story"?62:56, lines, lh, refFs, boxH;
+    let fs=fmt==="story"?(center?66:62):(center?60:56), lines, lh, refFs, boxH;
     for(;fs>=18;fs-=2){ ctx.font=`500 ${fs}px ${serif}`; lines=this.wrap(ctx,txt,tw); lh=fs*1.34; refFs=Math.max(24,Math.round(fs*0.62)); boxH=pad*2+lines.length*lh+refFs*2.1; if(top+boxH<=maxBottom) break; }
-    // vidro escuro atrás do texto
-    ctx.save(); ctx.fillStyle="rgba(12,22,44,.58)"; ctx.shadowColor="rgba(0,0,0,.25)"; ctx.shadowBlur=30;
+    if(center) top=Math.max(top, Math.round((top+maxBottom)/2 - boxH/2 - H*0.03));   // centraliza na área livre (as figuras ficam embaixo)
+    ctx.save(); ctx.fillStyle="rgba(12,22,44,.56)"; ctx.shadowColor="rgba(0,0,0,.25)"; ctx.shadowBlur=30;
     const r=34; ctx.beginPath(); ctx.moveTo(bx+r,top); ctx.arcTo(bx+bw,top,bx+bw,top+boxH,r); ctx.arcTo(bx+bw,top+boxH,bx,top+boxH,r); ctx.arcTo(bx,top+boxH,bx,top,r); ctx.arcTo(bx,top,bx+bw,top,r); ctx.fill(); ctx.restore();
     ctx.fillStyle="#fff"; ctx.textBaseline="alphabetic"; ctx.font=`500 ${fs}px ${serif}`;
     lines.forEach((L,i)=>ctx.fillText(L, bx+pad, top+pad+fs+i*lh));
     ctx.font=`800 ${refFs}px ${ui}`; ctx.fillStyle="#ffd98a"; ctx.fillText(refTxt, bx+pad, top+pad+lines.length*lh+refFs*1.45);
-    // assinatura discreta
     const sg=Math.round(W*0.024); ctx.font=`700 ${sg}px ${ui}`; ctx.textAlign="right"; ctx.fillStyle="rgba(255,255,255,.92)"; ctx.shadowColor="rgba(0,0,0,.55)"; ctx.shadowBlur=8;
     ctx.fillText("SOLA | Bíblia & Teologia", W-m, H-Math.round(H*0.03)); ctx.shadowBlur=0; ctx.textAlign="left";
-    this.lastFit={ fs, lines:lines.length, fits: top+boxH<=maxBottom, lighthouseVisible: bx+bw < lhLeft };
+    this.lastFit={ fs, lines:lines.length, fits: top+boxH<=maxBottom+1, lighthouseVisible: bx+bw < lhLeft, bg:bg.kind+(bg.cena?":"+bg.cena:"") };
     return new Promise(ok=>cv.toBlob(ok,"image/jpeg",0.9));
   },
+  bg: (b=>b&&b.kind!=="foto"?b:{kind:"farol"})(store.get("cardBg",null)), photo:null, tab:null,
+  paintPicker(){
+    const col=CardArt.colecao(), m=CardArt.mes(); if(!this.tab) this.tab = this.bg.kind==="gen" ? this.bg.tema : this.bg.kind==="foto" ? "foto" : "farol";
+    const tabs=[["mes","✨ Este mês"],["farol","Farol"],...CA_THEMES.map(t=>[t.id,t.t]),["foto","📷 Sua foto"]];
+    $("#vcTabs").innerHTML=tabs.map(([k,l])=>`<button type="button" class="vc-tab${k===this.tab?" on":""}" data-vctab="${k}">${l}</button>`).join("");
+    const same=b=>this.bg.kind==="gen" && b.seed===this.bg.seed && b.tema===this.bg.tema;
+    let strip="";
+    if(this.tab==="farol") strip=`<button type="button" class="vc-th${this.bg.kind==="farol"?" on":""}" data-vcfarol><img src="icons/farol-card.jpg" alt="Farol ao sol"></button>`;
+    else if(this.tab==="foto") strip=`<button type="button" class="vc-th vc-up${this.bg.kind==="foto"?" on":""}" data-vcup>${this.photo?`<img src="${this.photoUrl}" alt="Sua foto">`:"<span>＋<br>Escolher foto</span>"}</button><p class="vc-mes" style="align-self:center">Use uma foto sua. Ela fica só neste aparelho e não é enviada a lugar nenhum.</p>`;
+    else { const list = this.tab==="mes" ? col : col.filter(b=>b.tema===this.tab);
+      strip=list.map((b,i)=>`<button type="button" class="vc-th${same(b)?" on":""}" data-vcgen="${col.indexOf(b)}" aria-label="${esc(CA_THEMES.find(t=>t.id===b.tema).t)} ${i+1}"><img src="${CardArt.thumb(b)}" alt=""><small>${esc(CA_THEMES.find(t=>t.id===b.tema).t)}</small></button>`).join(""); }
+    $("#vcStrip").innerHTML=strip;
+    $("#vcMes").textContent = this.tab==="farol"||this.tab==="foto" ? "" : `Coleção de ${CardArt.mesNome(m)} · ${col.length} imagens originais do SOLA · renova todo mês`;
+    const th=CA_THEMES.find(t=>t.id===this.tab);
+    $("#vcVs").innerHTML = th ? `<span class="vc-lbl">Versículos sobre ${esc(th.t.toLowerCase())}:</span>`+th.vs.map(k=>{ const [b,c,v]=k.split("."); return `<button type="button" class="vc-v" data-vcv="${k}">${esc(BOOK[b].name)} ${c}:${v}</button>`; }).join("") : "";
+  },
+  async setVerse(k){ const [b,c,v]=k.split("."); const t=this.cur?.t||store.get("version",DEFAULT_VERSION);
+    try{ const ch=await Repo.getChapter(t,b,+c); const x=ch.find(y=>y.v===+v); if(!x) throw 0; this.cur={ text:x.text, ref:`${BOOK[b].name} ${c}:${v}`, t }; await this.render(); }
+    catch(e){ toast("Não foi possível carregar esse versículo agora."); } },
+  async openTema(id){ this.tab=id; const th=CA_THEMES.find(t=>t.id===id)||CA_THEMES[0]; const b=CardArt.colecao().find(x=>x.tema===th.id); if(b){ this.bg=b; store.set("cardBg",b); }
+    this.cur={ text:"", ref:"", t:store.get("version",DEFAULT_VERSION) }; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.setVerse(th.vs[0]); },
   async render(){
     const im=$("#cardImg"); im.style.aspectRatio = this.fmt==="story"?"9/16":"4/5";
     document.querySelectorAll('#cardDlg [data-cdk="story"],#cardDlg [data-cdk="feed"]').forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.cdk===this.fmt)));
@@ -4618,7 +4754,7 @@ const VerseCard = {
     catch(e){ toast("Não foi possível montar a imagem. Conecte-se uma vez para baixar a arte do farol."); }
   },
   fileName(){ return `SOLA-${String(this.cur.ref).replace(/[^\wÀ-ú]+/g,"-")}-${this.fmt==="story"?"stories":"feed"}.jpg`; },
-  async open(o){ this.cur=o; const d=$("#cardDlg"); if(!d.open) d.showModal(); await this.render(); },
+  async open(o){ this.cur=o; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.render(); },
   download(){ if(!this.blob) return; const a=document.createElement("a"); a.href=URL.createObjectURL(this.blob); a.download=this.fileName(); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); toast("Imagem salva. No Instagram ou Facebook, escolha-a na galeria."); },
   async share(){
     if(!this.blob) return; const f=new File([this.blob], this.fileName(), { type:"image/jpeg" });
@@ -4632,6 +4768,14 @@ $("#cardDlg").addEventListener("click",e=>{ const b=e.target.closest("[data-cdk]
   const k=b.dataset.cdk; if(k==="close") return $("#cardDlg").close();
   if(k==="story"||k==="feed"){ VerseCard.fmt=k; return VerseCard.render(); }
   if(k==="dl") return VerseCard.download(); if(k==="share") return VerseCard.share(); });
+$("#cardDlg").addEventListener("click",e=>{ const V=VerseCard;
+  const t=e.target.closest("[data-vctab]"); if(t){ V.tab=t.dataset.vctab; return V.paintPicker(); }
+  const g=e.target.closest("[data-vcgen]"); if(g){ V.bg=CardArt.colecao()[+g.dataset.vcgen]; store.set("cardBg",V.bg); V.paintPicker(); return V.render(); }
+  if(e.target.closest("[data-vcfarol]")){ V.bg={kind:"farol"}; store.set("cardBg",V.bg); V.paintPicker(); return V.render(); }
+  if(e.target.closest("[data-vcup]")){ if(V.photo && V.bg.kind!=="foto"){ V.bg={kind:"foto"}; V.paintPicker(); return V.render(); } return $("#vcFile").click(); }
+  const v=e.target.closest("[data-vcv]"); if(v) return V.setVerse(v.dataset.vcv); });
+$("#vcFile").addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; const V=VerseCard; if(V.photoUrl) URL.revokeObjectURL(V.photoUrl);
+  V.photoUrl=URL.createObjectURL(f); const im=new Image(); im.onload=()=>{ V.photo=im; V.bg={kind:"foto"}; V.paintPicker(); V.render(); }; im.onerror=()=>toast("Não consegui abrir essa imagem."); im.src=V.photoUrl; e.target.value=""; });
 
 
 /* ---------- Para você: personalização v1 (regras, no aparelho) ----------
@@ -4694,12 +4838,14 @@ const Perso = {
       if(s.related.length) h+=`<p class="pv-l">Passagens relacionadas <small>pelos livros que você mais lê${s.topBook?` (${esc(s.topBook)})`:""}</small></p><div class="pv-row">${s.related.map(go).join("")}</div>`;
       if(s.studies.length) h+=`<p class="pv-l">Estudos para retomar</p><div class="pv-row">${s.studies.map(x=>`<a class="pv-chip" href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)} <small>${esc(x.type)} ↗</small></a>`).join("")}</div>`;
     }
+    h+=`<p class="pv-l">Criar imagem com versículo <small>temas que mudam todo mês</small></p><div class="pv-row">${CA_THEMES.map(t=>`<button type="button" class="pv-chip" data-pvimg="${t.id}">🖼️ ${esc(t.t)}</button>`).join("")}</div>`;
     h+=`<p class="pv-foot">Calculado só neste aparelho, sem usar suas anotações. <button type="button" class="linklike" data-pvcfg>${this.on()?"Desligar":"Ligar"} sugestões</button></p>`;
     box.innerHTML=h;
   }
 };
 $("#homePV")?.addEventListener("click",e=>{
   const g=e.target.closest("[data-pvgo]"); if(g){ const [b,c,v]=g.dataset.pvgo.split("."); return fsBiblia(b,+c,v?+v:null); }
+  const im=e.target.closest("[data-pvimg]"); if(im) return VerseCard.openTema(im.dataset.pvimg);
   const t=e.target.closest("[data-pvtema]"); if(t){ const th=PV_THEMES[+t.dataset.pvtema];
     $("#pvTema").innerHTML=`<p class="pv-l">${esc(th.t)}</p><div class="pv-row">${th.refs.map(r=>`<button type="button" class="pv-chip" data-pvgo="${r.b}.${r.c}.${r.v}">${esc(BOOK[r.b].name)} ${r.c}:${r.v}</button>`).join("")}</div>`; return; }
   if(e.target.closest("[data-pvcfg]")){ const on=!Perso.on(); store.set("persOn",on); const cb=$("#cfgPerso"); if(cb) cb.checked=on;
@@ -6442,8 +6588,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.17.2";
+const APP_VERSION = "3.18.0";
 const CHANGELOG = [
+  { v:"3.18.0", d:"novembro de 2026", items:["Banco de imagens para versículos: 24 ilustrações originais por mês, nos temas Graça, Fé, Misericórdia, Perdão, Casamento, Amor, Ânimo e Retomada, com versículos sugeridos para cada tema. Também dá para usar o farol ou uma foto sua.","Mapas: nomes dos lugares voltaram ao tamanho anterior."] },
   { v:"3.17.2", d:"novembro de 2026", items:["Abertura revisada: a mensagem de boas-vindas com a pergunta do dia aparece para todos (também para quem ainda não tem nome no perfil) e fica mais tempo na tela.","Quem instala o app pela primeira vez não recebe mais o aviso de “novidades”; nas correções, o aviso mostra o destaque da versão principal."] },
   { v:"3.17.1", d:"novembro de 2026", items:["Corrigida a gaveta de comentários, que tinha ficado desalinhada (cabeçalho e comentaristas deslocados para o lado)."] },
   { v:"3.17.0", d:"novembro de 2026", items:["Barra de baixo fixa no rodapé em qualquer tela, com espaço reservado no fim das páginas.","Anotações ligadas ao versículo: ícone ao lado do número abre a nota, mesmo trocando de tradução; nas notas, a referência leva à passagem.","Grifos em cores pastel (amarelo suave, verde-menta, azul-claro, lilás e pêssego), legíveis no tema escuro.","Mapas: novas opções Relevo e Satélite, rótulos mais legíveis e indicação de local ou trajeto aproximado.","Imagem do farol para Stories (9:16) e Feed (4:5) com o versículo escolhido.","“Para você”: sugestões de leitura e estudos calculadas no aparelho, sem usar suas anotações; dá para desligar."] },
