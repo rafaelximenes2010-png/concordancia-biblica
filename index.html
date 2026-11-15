@@ -3015,6 +3015,7 @@ const store = {
   get(k,def){ try{ const r=localStorage.getItem("cb:"+k); return r?JSON.parse(r):def; }catch(e){ return def; } },
   set(k,v){ try{ localStorage.setItem("cb:"+k, JSON.stringify(v)); }catch(e){} }
 };
+const FIRST_VISIT = (()=>{ try{ return !localStorage.getItem("cb:seenVersion") && !localStorage.getItem("cb:profile") && !localStorage.getItem("cb:reader"); }catch(e){ return false; } })();
 
 /* =====================================================================
    CAMADA DE DADOS (repositório)
@@ -6441,8 +6442,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.17.1";
+const APP_VERSION = "3.17.2";
 const CHANGELOG = [
+  { v:"3.17.2", d:"novembro de 2026", items:["Abertura revisada: a mensagem de boas-vindas com a pergunta do dia aparece para todos (também para quem ainda não tem nome no perfil) e fica mais tempo na tela.","Quem instala o app pela primeira vez não recebe mais o aviso de “novidades”; nas correções, o aviso mostra o destaque da versão principal."] },
   { v:"3.17.1", d:"novembro de 2026", items:["Corrigida a gaveta de comentários, que tinha ficado desalinhada (cabeçalho e comentaristas deslocados para o lado)."] },
   { v:"3.17.0", d:"novembro de 2026", items:["Barra de baixo fixa no rodapé em qualquer tela, com espaço reservado no fim das páginas.","Anotações ligadas ao versículo: ícone ao lado do número abre a nota, mesmo trocando de tradução; nas notas, a referência leva à passagem.","Grifos em cores pastel (amarelo suave, verde-menta, azul-claro, lilás e pêssego), legíveis no tema escuro.","Mapas: novas opções Relevo e Satélite, rótulos mais legíveis e indicação de local ou trajeto aproximado.","Imagem do farol para Stories (9:16) e Feed (4:5) com o versículo escolhido.","“Para você”: sugestões de leitura e estudos calculadas no aparelho, sem usar suas anotações; dá para desligar."] },
   { v:"3.16.2", d:"novembro de 2026", items:["A tela não desliza mais para os lados e a barra de baixo fica sempre fixa, com fundo desfocado."] },
@@ -6962,14 +6964,15 @@ paintAvatar();
 /* ---------- Mensagem de boas-vindas ao abrir o app ---------- */
 (function welcomeBack(){
   try{
-    const nm=(Profile.get().name||"").trim().split(/\s+/)[0]; if(!nm) return;
+    const nm=(Profile.get().name||"").trim().split(/\s+/)[0];
     if(sessionStorage.getItem("solaWelcome")) return; sessionStorage.setItem("solaWelcome","1");
-    const h=new Date().getHours();
+    const voltou = !FIRST_VISIT;
     const sub = "Você sente que há algo que, se perdesse, não conseguiria suportar?";
-    const box=$("#welcomeMsg"); $("#welcomeT").textContent=`Oi, ${nm}, seja bem-vindo de volta!`; $("#welcomeS").textContent=sub;
+    const box=$("#welcomeMsg"); if(!box) return;
+    $("#welcomeT").textContent = nm ? `Oi, ${nm}, seja bem-vindo de volta!` : voltou ? "Que bom ter você de volta ao SOLA!" : "Bem-vindo ao SOLA!"; $("#welcomeS").textContent=sub;
     const show=()=>{ box.hidden=false; requestAnimationFrame(()=>requestAnimationFrame(()=>box.classList.add("show")));
       const hide=()=>{ box.classList.remove("show"); setTimeout(()=>box.hidden=true,500); };
-      box.addEventListener("click",hide,{once:true}); setTimeout(hide,4500); };
+      box.addEventListener("click",hide,{once:true}); setTimeout(hide,8000); };
     const wait=()=>{ const sp=document.getElementById("splash"); if(sp && !sp.classList.contains("sp-out")) return setTimeout(wait,150); setTimeout(show,450); };   // depois da abertura
     wait();
   }catch(e){}
@@ -7271,7 +7274,10 @@ const ANALYTICS = { goatcounter:"" };
 })();
 /* Aviso de novidades no Início após uma atualização */
 function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VERSION) return "";
-  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novo no SOLA ${APP_VERSION}:</strong> ${esc((CHANGELOG.find(c=>c.v===APP_VERSION)||CHANGELOG[0]).items[0])}</span><button type="button" class="btn btn-sm" data-inbox="open">Ver</button></div>`; }
+  if(!seen){ store.set("seenVersion",APP_VERSION); return ""; }   // primeira visita: nada de "novidades" para quem acabou de chegar
+  const mm=APP_VERSION.split(".").slice(0,2).join(".");             // correções (x.y.1) mostram o destaque da versão x.y.0, se a pessoa ainda não viu
+  const ent = (!seen.startsWith(mm+".") && CHANGELOG.find(c=>c.v===mm+".0")) || CHANGELOG.find(c=>c.v===APP_VERSION) || CHANGELOG[0];
+  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novo no SOLA ${APP_VERSION}:</strong> ${esc(ent.items[0])}</span><button type="button" class="btn btn-sm" data-inbox="open">Ver</button></div>`; }
 
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
