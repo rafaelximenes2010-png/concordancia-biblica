@@ -1,0 +1,12 @@
+Este conteúdo foi escrito em português.	This content was written in Portuguese.	Este contenido fue escrito en portugués.
+Tradução automática do português · pode conter imprecisões. O texto bíblico não é traduzido por máquina.	Automatic translation from Portuguese · may contain inaccuracies. The Bible text is never machine-translated.	Traducción automática del portugués · puede contener imprecisiones. El texto bíblico no se traduce por máquina.
+Ver original em português	See original in Portuguese	Ver original en portugués
+Traduzir: {idioma}	Translate: {idioma}	Traducir: {idioma}
+Tradução automática para {idioma}	Automatic translation into {idioma}	Traducción automática al {idioma}
+Traduzindo…	Translating…	Traduciendo…
+re:^Texto em (.+)\.$	Text in $1.	Texto en $1.
+re:^Hoje, (.+)$	Today, $1	Hoy, $1
+re:^Série de (\S+)$	$1 series	Serie de $1
+re:^Dia (\d+) de (\d+)$	Day $1 of $2	Día $1 de $2
+Noite	Night	Noche
+Modo dia (claro)	Day mode (light)	Modo día (claro)

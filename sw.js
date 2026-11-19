@@ -1,13 +1,13 @@
 /* Service worker: guarda o app e as Bíblias baixadas para funcionar offline.
    Ao publicar uma nova versão, altere CACHE (ex.: v5) para forçar a atualização. */
-const CACHE = "sola-v136";
+const CACHE = "sola-v137";
 const BIBLES = "concordancia-biblias-v1"; // separado: não é apagado a cada atualização do app
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./biblias/index.json", "./docs/index.json", "./salterio/ipr-recife.json",
-  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/farol-card.jpg", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg", "./artigos/sola.json", "./ouvir/spotify.json"];
+  "./icons/icon.svg", "./icons/favicon-64.png", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./icons/mark.svg", "./icons/apple-touch-180.png", "./icons/og-sola.png", "./icons/farol-card.jpg", "./icons/favicon-32.png", "./icons/badge-96.png", "./devocionais/series.json", "./icons/qr-instalar.svg", "./artigos/sola.json", "./ouvir/spotify.json", "./i18n/i18n.js", "./i18n/en.json", "./i18n/es.json"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
-  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== BIBLES && k !== "sola-inbox").map(k => caches.delete(k)))));
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE && k !== BIBLES && k !== "sola-inbox" && k !== "sola-pref").map(k => caches.delete(k)))));
   self.clients.claim();
 });
 self.addEventListener("fetch", e => {
@@ -31,7 +31,7 @@ self.addEventListener("fetch", e => {
   }
   // App: rede primeiro (para receber atualizações), cópia guardada se estiver offline
   // Página e arquivos do app sempre conferidos no servidor (ignora o cache de 10 min do GitHub Pages)
-  const fresh = e.request.mode === "navigate" || /(\/|\.html|\.webmanifest|index\.json|devocionais\/[^/]+\.json|artigos\/[^/]+\.json|noticias\/[^/]+\.json)$/.test(url.pathname);
+  const fresh = e.request.mode === "navigate" || /(\/|\.html|\.webmanifest|index\.json|devocionais\/[^/]+\.json|artigos\/[^/]+\.json|noticias\/[^/]+\.json|i18n\/[^/]+\.(?:json|js))$/.test(url.pathname);
   const req = fresh ? fetch(url.href, { cache: "no-cache", credentials: "same-origin" }) : fetch(e.request);
   e.respondWith(req.then(res => {
     if (res.ok) { const copy=res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
@@ -47,10 +47,13 @@ self.addEventListener("fetch", e => {
 /* Notificações push (devocional, versão nova, avisos): chegam com o app fechado */
 self.addEventListener("push", e => {
   let m = {}; try { m = e.data ? e.data.json() : {}; } catch (err) { m = { body: e.data ? e.data.text() : "" }; }
+  e.waitUntil((async () => {
+  /* Idioma do app (gravado pela página): o servidor pode mandar m.i18n = { en:{title,body}, es:{…} } */
+  let lang = "pt"; try { const r0 = await (await caches.open("sola-pref")).match("lang"); if (r0) lang = (await r0.text()) || "pt"; } catch (err) {}
+  if (m.i18n && m.i18n[lang]) m = Object.assign({}, m, m.i18n[lang]);
   const title = m.title || "SOLA | Bíblia & Teologia";
   const opt = { body: m.body || "", icon: "icons/apple-touch-180.png?v=3", badge: "icons/badge-96.png?v=3",
     tag: m.tag || m.kind || "sola", data: { url: m.url || "./index.html#inicio", kind: m.kind || "aviso" }, renotify: !!m.tag };
-  e.waitUntil((async () => {
     await self.registration.showNotification(title, opt);
     // Guarda na central de notificações do app e acende o número no ícone
     const c = await caches.open("sola-inbox"); const r = await c.match("inbox"); const list = r ? await r.json() : [];

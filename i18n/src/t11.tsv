@@ -1,0 +1,175 @@
+# ---- padrões (re:<regex em português>  →  substituição; grupos $1.. são traduzidos quando possível)
+re:^Quem é (.+)\?$	Who is $1?	¿Quién es $1?
+re:^Ilustração: (.+)$	Illustration: $1	Ilustración: $1
+re:^1 dia seguido$	1 day in a row	1 día seguido
+re:^(\d+) dias seguidos$	$1 days in a row	$1 días seguidos
+re:^Dia (\d+) de (\d+)$	Day $1 of $2	Día $1 de $2
+re:^(\d+) de (\d+)$	$1 of $2	$1 de $2
+re:^(\d+) nova\(s\) · (\d+) no total$	$1 new · $2 in total	$1 nueva(s) · $2 en total
+re:^(\d+) no total$	$1 in total	$1 en total
+re:^há (\d+) (h|min|d)$	$1 $2 ago	hace $1 $2
+re:^há (\d+) dias$	$1 days ago	hace $1 días
+re:^📍 (.+)$	📍 $1	📍 $1
+re:^Grifar em (.+)$	Highlight in $1	Resaltar en $1
+re:^Versão ([\d.]+) · (\S+) de (\d{4})$	Version $1 · $2 $3	Versión $1 · $2 de $3
+re:^Série de (\S+)$	$1 series	Serie de $1
+re:^Atualizado (.+) · (\d+) fontes acompanhadas · nova seleção todos os dias$	Updated $1 · $2 sources followed · new selection every day	Actualizado $1 · $2 fuentes seguidas · nueva selección todos los días
+re:^✓ confirmada também por (.+)$	✓ also confirmed by $1	✓ confirmada también por $1
+re:^Domínio público\. (\d+) livros · ([\d.,]+) versículos\.$	Public domain. $1 books · $2 verses.	Dominio público. $1 libros · $2 versículos.
+re:^(.+): Domínio público\.$	$1: Public domain.	$1: Dominio público.
+re:^(.+) \((alemão|francês|holandês|russo|sueco|polonês|húngaro|grego|latim|hebraico|espanhol|inglês|chinês tradicional|hebraico, AT|grego, NT, 1550/1894|latim)\)$	$1 ($2)	$1 ($2)
+re:^c\. (.+) a\.C\.(.*)$	c. $1 BC$2	c. $1 a. C.$2
+re:^c\. (.+) d\.C\.(.*)$	c. AD $1$2	c. $1 d. C.$2
+re:^(\d+) etapas$	$1 steps	$1 etapas
+re:^(\d+) (.+)$	$1 $2	$1 $2
+# ---- meses
+janeiro	January	enero
+fevereiro	February	febrero
+março	March	marzo
+abril	April	abril
+maio	May	mayo
+junho	June	junio
+julho	July	julio
+agosto	August	agosto
+setembro	September	septiembre
+outubro	October	octubre
+novembro	November	noviembre
+dezembro	December	diciembre
+# ---- idiomas (minúsculas, nas listas de versões)
+alemão	German	alemán
+francês	French	francés
+holandês	Dutch	neerlandés
+russo	Russian	ruso
+sueco	Swedish	sueco
+polonês	Polish	polaco
+húngaro	Hungarian	húngaro
+latim	Latin	latín
+espanhol	Spanish	español
+inglês	English	inglés
+chinês tradicional	traditional Chinese	chino tradicional
+hebraico, AT	Hebrew, OT	hebreo, AT
+grego, NT, 1550/1894	Greek, NT, 1550/1894	griego, NT, 1550/1894
+# ---- contagens
+resultados	results	resultados
+capítulos	chapters	capítulos
+perguntas e respostas	questions and answers	preguntas y respuestas
+perguntas	questions	preguntas
+seções	sections	secciones
+hinos	hymns	himnos
+hinos · órgão	hymns · organ	himnos · órgano
+artigos do SOLA	SOLA articles	artículos de SOLA
+notícias	stories	noticias
+fontes acompanhadas	sources followed	fuentes seguidas
+novos artigos todo mês	new articles every month	nuevos artículos cada mes
+# ---- documentos e rótulos
+Catecismo	Catechism	Catecismo
+Confissão	Confession	Confesión
+Credo	Creed	Credo
+em português	in Portuguese	en portugués
+Podcast	Podcast	Pódcast
+Mapa temático	Thematic map	Mapa temático
+Relato bíblico	Biblical account	Relato bíblico
+Hipótese ou reconstrução	Hypothesis or reconstruction	Hipótesis o reconstrucción
+Evidência histórica ou arqueológica	Historical or archaeological evidence	Evidencia histórica o arqueológica
+Tradição cristã antiga	Early Christian tradition	Tradición cristiana antigua
+Ouvir os hinos	Listen to the hymns	Escuchar los himnos
+Ouvir o credo	Listen to the creed	Escuchar el credo
+Ouvir o texto do dia	Listen to the verse of the day	Escuchar el texto del día
+Desligar sugestões	Turn off suggestions	Desactivar sugerencias
+Desligar sugestões personalizadas	Turn off personalized suggestions	Desactivar sugerencias personalizadas
+🌍 Ore pela igreja perseguida	🌍 Pray for the persecuted church	🌍 Ora por la iglesia perseguida
+Tradução automática do inglês para o português	Automatic translation from English into Portuguese	Traducción automática del inglés al portugués
+Texto em inglês.	Text in English.	Texto en inglés.
+Igreja no mundo	The church in the world	Iglesia en el mundo
+Seminários reformados	Reformed seminaries	Seminarios reformados
+Credos ecumênicos	Ecumenical creeds	Credos ecuménicos
+Credo de Atanásio	Athanasian Creed	Credo de Atanasio
+Credo Niceno	Nicene Creed	Credo Niceno
+Definição de Calcedônia	Chalcedonian Definition	Definición de Calcedonia
+Confissão Belga	Belgic Confession	Confesión Belga
+Confissão Escocesa	Scots Confession	Confesión Escocesa
+Confissão de Fé de Westminster	Westminster Confession of Faith	Confesión de Fe de Westminster
+Confissão Batista de Londres (1689)	London Baptist Confession (1689)	Confesión Bautista de Londres (1689)
+Segunda Confissão Helvética	Second Helvetic Confession	Segunda Confesión Helvética
+Três Formas de Unidade	Three Forms of Unity	Tres Formas de Unidad
+Padrões de Westminster	Westminster Standards	Normas de Westminster
+Outras confissões reformadas	Other Reformed confessions	Otras confesiones reformadas
+Resumo antigo da fé cristã, usado no batismo e no culto.	An ancient summary of the Christian faith, used in baptism and worship.	Resumen antiguo de la fe cristiana, usado en el bautismo y en el culto.
+Confissão da plena divindade do Filho e do Espírito Santo (325/381).	Confession of the full deity of the Son and the Holy Spirit (325/381).	Confesión de la plena divinidad del Hijo y del Espíritu Santo (325/381).
+Exposição clássica da Trindade e da encarnação.	A classic exposition of the Trinity and the incarnation.	Exposición clásica de la Trinidad y la encarnación.
+As duas naturezas de Cristo em uma só pessoa (451).	The two natures of Christ in one person (451).	Las dos naturalezas de Cristo en una sola persona (451).
+129 perguntas sobre o único conforto na vida e na morte.	129 questions on the only comfort in life and in death.	129 preguntas sobre el único consuelo en la vida y en la muerte.
+107 perguntas: “Qual é o fim principal do homem?”	107 questions: “What is the chief end of man?”	107 preguntas: “¿Cuál es el fin principal del hombre?”
+196 perguntas para o ensino aprofundado da fé.	196 questions for in-depth teaching of the faith.	196 preguntas para la enseñanza profunda de la fe.
+Confissão das igrejas presbiterianas, em 33 capítulos.	Confession of the Presbyterian churches, in 33 chapters.	Confesión de las iglesias presbiterianas, en 33 capítulos.
+Confissão dos batistas reformados, baseada na de Westminster.	Confession of the Reformed Baptists, based on Westminster.	Confesión de los bautistas reformados, basada en la de Westminster.
+Confissão das igrejas reformadas dos Países Baixos, de Guido de Brès.	Confession of the Reformed churches of the Netherlands, by Guido de Brès.	Confesión de las iglesias reformadas de los Países Bajos, de Guido de Brès.
+Resposta do Sínodo de Dort sobre a graça soberana de Deus na salvação.	The Synod of Dort's answer on God's sovereign grace in salvation.	Respuesta del Sínodo de Dort sobre la gracia soberana de Dios en la salvación.
+Confissão da Reforma na Escócia, de John Knox e outros (1560).	Confession of the Reformation in Scotland, by John Knox and others (1560).	Confesión de la Reforma en Escocia, de John Knox y otros (1560).
+Confissão de Heinrich Bullinger adotada pelas igrejas reformadas suíças (1566).	Heinrich Bullinger's confession adopted by the Swiss Reformed churches (1566).	Confesión de Heinrich Bullinger adoptada por las iglesias reformadas suizas (1566).
+# ---- mapas e jornadas
+A jornada de Abraão	Abraham's journey	El viaje de Abraham
+O êxodo e o deserto	The exodus and the wilderness	El éxodo y el desierto
+A conquista de Canaã	The conquest of Canaan	La conquista de Canaán
+As doze tribos de Israel	The twelve tribes of Israel	Las doce tribus de Israel
+Os reinos de Israel e Judá	The kingdoms of Israel and Judah	Los reinos de Israel y Judá
+Exílio: Israel e Judá	Exile: Israel and Judah	Exilio: Israel y Judá
+Os grandes impérios	The great empires	Los grandes imperios
+O retorno a Jerusalém	The return to Jerusalem	El regreso a Jerusalén
+O ministério de Jesus	The ministry of Jesus	El ministerio de Jesús
+A expansão da igreja em Atos	The spread of the church in Acts	La expansión de la iglesia en Hechos
+Paulo: conversão e primeiros anos	Paul: conversion and early years	Pablo: conversión y primeros años
+Paulo: 1ª viagem missionária	Paul: 1st missionary journey	Pablo: 1.er viaje misionero
+Paulo: 2ª viagem missionária	Paul: 2nd missionary journey	Pablo: 2.º viaje misionero
+Paulo: 3ª viagem missionária	Paul: 3rd missionary journey	Pablo: 3.er viaje misionero
+As sete igrejas do Apocalipse	The seven churches of Revelation	Las siete iglesias del Apocalipsis
+João, o apóstolo	John the apostle	Juan, el apóstol
+Jornadas de Davi, Elias e Eliseu, e reinos de Saul, Davi e Salomão.	Journeys of David, Elijah and Elisha, and the reigns of Saul, David and Solomon.	Viajes de David, Elías y Eliseo, y reinos de Saúl, David y Salomón.
+Antigo Testamento · visão geral	Old Testament · overview	Antiguo Testamento · visión general
+Novo Testamento · visão geral	New Testament · overview	Nuevo Testamento · visión general
+# ---- pensadores (áreas)
+Cosmovisão	Worldview	Cosmovisión
+Teoria política	Political theory	Teoría política
+História e política	History and politics	Historia y política
+Política e sociedade	Politics and society	Política y sociedad
+Teologia e cosmovisão	Theology and worldview	Teología y cosmovisión
+Apologética e cultura	Apologetics and culture	Apologética y cultura
+Apologética e filosofia	Apologetics and philosophy	Apologética y filosofía
+Apologética e cultura urbana	Apologetics and urban culture	Apologética y cultura urbana
+Aconselhamento bíblico	Biblical counseling	Consejería bíblica
+Aconselhamento e vida cristã	Counseling and Christian life	Consejería y vida cristiana
+Filosofia, estética e justiça	Philosophy, aesthetics and justice	Filosofía, estética y justicia
+Teologia, filosofia e política	Theology, philosophy and politics	Teología, filosofía y política
+Teologia, filosofia e apologética	Theology, philosophy and apologetics	Teología, filosofía y apologética
+# ---- países
+Sudão	Sudan	Sudán
+Índia	India	India
+Líbano	Lebanon	Líbano
+México	Mexico	México
+Quênia	Kenya	Kenia
+Nigéria	Nigeria	Nigeria
+Ucrânia	Ukraine	Ucrania
+Jordânia	Jordan	Jordania
+Indonésia	Indonesia	Indonesia
+Paquistão	Pakistan	Pakistán
+África do Sul	South Africa	Sudáfrica
+Egito	Egypt	Egipto
+Irã	Iran	Irán
+Iraque	Iraq	Irak
+Síria	Syria	Siria
+China	China	China
+Coreia do Norte	North Korea	Corea del Norte
+Eritreia	Eritrea	Eritrea
+Somália	Somalia	Somalia
+Iêmen	Yemen	Yemen
+Líbia	Libya	Libia
+Afeganistão	Afghanistan	Afganistán
+Etiópia	Ethiopia	Etiopía
+Mianmar	Myanmar	Myanmar
+Vietnã	Vietnam	Vietnam
+Brasil	Brazil	Brasil
+EUA	USA	EE. UU.
+Reino Unido	United Kingdom	Reino Unido
+Holanda	Netherlands	Países Bajos
+Escócia	Scotland	Escocia
+Internacional	International	Internacional

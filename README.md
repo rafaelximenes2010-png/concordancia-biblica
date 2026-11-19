@@ -81,3 +81,10 @@ Cada mês tem um arquivo `devocionais/AAAA-MM.json` com um devocional por dia (`
 | Canal de sugestões | Usando GitHub | E-mail ou WhatsApp do SOLA. |
 | **App em espanhol e inglês** (Configurações › Idioma: Português / Español / English) | Pedido em 14/11/2026 — não iniciado | **Fase 1:** traduzir a interface inteira (menus, botões, avisos, notificações, sininho) com arquivo de textos por idioma; a Bíblia padrão muda junto (EN: KJV/ASV · ES: Reina-Valera 1909 — já no app). **Fase 2:** conteúdo — devocionais, artigos e comentários pelo tradutor do Worker (guardado no KV, uma vez por texto); catecismos com os textos oficiais em inglês/espanhol. Continuam em português: canais do Telegram/WhatsApp e páginas do site. |
 | Envio automático no Canal do WhatsApp e aos VIPs às 5h15 | Envio manual pronto (`site/whatsapp.html`, agenda + VIPs) | Rotina diária precisa do Google Chrome com a extensão Claude no computador (o WhatsApp Web não abre no navegador do app Claude). |
+
+## Idiomas (português, inglês e espanhol)
+
+- Configurações › Idioma: Automático (segue o idioma do aparelho/navegador, com variações regionais; sem pt/en/es nas preferências, usa português), Português, English ou Español. A escolha fica salva e a troca vale na hora.
+- Traduções centralizadas em `i18n/src/*.tsv` (português ⇥ inglês ⇥ espanhol; linhas `re:` são padrões com partes variáveis). Gere os catálogos com `python3 tools/i18n-build.py` → `i18n/en.json` e `i18n/es.json`. Texto ausente cai no português.
+- `i18n/i18n.js` traduz a interface no próprio DOM e acompanha o que o app desenha depois. No código: `_t("texto em português", {var})` e `LOC()` para datas e números.
+- A Bíblia acompanha o idioma (KJV em inglês, RV1909 em espanhol), mantendo livro e capítulo. Tradução automática de texto bíblico aparece sempre identificada como tal.
