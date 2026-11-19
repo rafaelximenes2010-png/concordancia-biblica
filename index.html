@@ -1782,7 +1782,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <p class="sp-verse">“A minha graça te basta.” <span>2 Coríntios 12:9</span></p>
   </div>
 </div>
-<script src="i18n/i18n.js?v=1"></script>
+<script src="i18n/i18n.js?v=2"></script>
 <script>
 /* Abertura: mostra o farol e entra no app (mais rápido se já abriu nesta sessão) */
 (function(){ var sp=document.getElementById("splash"); var quick=false; try{ quick=sessionStorage.getItem("cb:splash")==="1"; sessionStorage.setItem("cb:splash","1"); }catch(e){}
@@ -2637,6 +2637,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
         </select></label>
       </div>
       <p class="hint" id="cfgLangHint"></p>
+      <p class="hint">Em inglês e espanhol, todo o app e os seus conteúdos (devocionais, artigos, mapas, credos e catecismos, saltério e notícias) aparecem traduzidos. A tradução dos conteúdos é automática, a partir do português; o texto bíblico vem sempre de versões publicadas da Bíblia.</p>
       <p class="hint">A troca vale na hora, sem sair da tela. Suas anotações, marcações e o progresso de leitura continuam como estão. Textos que você escreveu ficam no idioma original.</p>
     </section>
     <section class="cfg-card" id="cfgLeitura" aria-labelledby="cfgLeituraT">
@@ -6749,8 +6750,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.21.0";
+const APP_VERSION = "3.22.0";
 const CHANGELOG = [
+  { v:"3.22.0", d:"novembro de 2026", items:["Em inglês e espanhol, os conteúdos também aparecem traduzidos: devocionais, artigos, mapas e jornadas, credos e catecismos, saltério, notícias e textos de estudo."] },
   { v:"3.21.0", d:"novembro de 2026", items:["SOLA em três idiomas: português, inglês e espanhol. Em Configurações › Idioma, escolha Automático (segue o idioma do celular) ou um idioma fixo. A troca vale na hora, sem perder a tela, as notas ou o progresso de leitura.","A Bíblia acompanha o idioma: King James (inglês) e Reina-Valera 1909 (espanhol), mantendo o livro e o capítulo. As pesquisas com IA pedem a resposta no idioma escolhido."] },
   { v:"3.20.3", d:"novembro de 2026", items:["Notícias: todo dia entra pelo menos uma matéria nova em cada tipo, no lugar da mais antiga, e o destaque da tela de início é sempre uma notícia nova.","Selo “Nova” nas matérias do dia."] },
   { v:"3.20.2", d:"novembro de 2026", items:["Barra de baixo presa no rodapé de novo, com um vigia que a recoloca se o iPhone a deslocar.","Saltério no mesmo padrão dos outros documentos de Credos."] },
@@ -8423,8 +8425,6 @@ document.addEventListener("click", async e=>{
   if(ok){ bar.querySelector("span").textContent=_t("Tradução automática do português · pode conter imprecisões. O texto bíblico não é traduzido por máquina."); b.dataset.ct="orig"; b.textContent=_t("Ver original em português"); }
   else { b.textContent=_t("Traduzir: {idioma}",{idioma:NOME_IDIOMA[to]}); toast(_t("Não foi possível traduzir agora")); }
 });
-{ const _rd=renderDevo; renderDevo=async function(){ const r=await _rd.apply(this,arguments); barraTraducao($("#devoBody")); return r; }; }
-{ const _oa=openArticle; openArticle=async function(){ const r=await _oa.apply(this,arguments); barraTraducao($("#artReader .art-read")); return r; }; }
 /* =====================================================================
    IDIOMA — integração do app com i18n/i18n.js
    (nomes dos livros, Bíblia do idioma, datas, Configurações → Idioma)
@@ -8466,6 +8466,9 @@ document.addEventListener("sola:idioma", e=>{
   nomesDosLivros(); pintaIdiomaCfg();
   const aplicado=store.get("idiomaBiblia",null);
   if(aplicado!==d.lang){ store.set("idiomaBiblia",d.lang); if(aplicado!==null || d.lang!=="pt") bibliaDoIdioma(d.lang, !d.inicio); }
+  if(!d.inicio){ /* conteúdos no novo idioma: esvazia o que já foi carregado */
+    try{ DevoSeries.cache={}; DevoSeries.pending={}; NT.data=null; Arts.list=null; SP.data=null; MP.base=null; MP.data=null; Docs.list=null; Docs.cache={}; SALT.data=null; }catch(_){}
+  }
   if(!d.inicio){ const y=window.scrollY, lendo=el.dlg.open;
     try{ if(!lendo) showView(currentView,{push:false}); }catch(_){}   // com a Bíblia aberta, só o leitor é redesenhado
     try{ fillBookSelect(); if(lendo) renderReader(); }catch(_){}

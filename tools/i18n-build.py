@@ -26,6 +26,13 @@ for f in sorted(glob.glob(os.path.join(ROOT, "i18n", "src", "*.tsv"))):
         for i, lang in ((1, "en"), (2, "es")):
             v = parts[i].strip().replace("\\n", "\n")
             if v and v != k: out[lang]["strings"][k] = v
+# Traduções automáticas dos textos de conteúdo do app (as escritas à mão têm prioridade)
+for lang in ("en", "es"):
+    f = os.path.join(ROOT, "i18n", "src", "mt-" + lang + ".json")
+    if os.path.exists(f):
+        for k, v in json.load(open(f, encoding="utf-8")).items():
+            k2 = re.sub(r"\s+", " ", k).strip()
+            if v and k2 not in out[lang]["strings"]: out[lang]["strings"][k2] = v
 # Livros: nome sozinho e referências ("Mateus 6:33", "Hebreus 4:15–16 · BLIVRE")
 esc = lambda s: re.escape(s).replace("\\ ", " ")
 for lang in ("en", "es"):

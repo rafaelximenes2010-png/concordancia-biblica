@@ -172,6 +172,26 @@
   /* Nome do idioma para pedir respostas da IA */
   I.nomeParaIA = function () { return { pt: "português do Brasil", en: "English", es: "español" }[I.lang]; };
 
+  /* Conteúdos traduzidos: em inglês/espanhol, os arquivos de conteúdo vêm de i18n/conteudo/<idioma>/…
+     (gerados por tools/traduzir-conteudo.mjs). Se a cópia ainda não existir, usa o original. */
+  var CONTEUDO = /^(devocionais\/(\d{4}-\d{2}|series)\.json|artigos\/sola\.json|mapas\/(base|dados)\.json|docs\/[a-z0-9-]+\.json|salterio\/[a-z0-9-]+\.json|noticias\/feed\.json|ouvir\/spotify\.json)$/;
+  var fetch0 = window.fetch ? window.fetch.bind(window) : null;
+  if (fetch0) window.fetch = function (entrada, init) {
+    try {
+      if (I.lang !== "pt" && typeof entrada === "string") {
+        var u = new URL(entrada, location.href), base = new URL(".", location.href);
+        if (u.origin === base.origin && u.pathname.indexOf(base.pathname) === 0) {
+          var rel = u.pathname.slice(base.pathname.length);
+          if (CONTEUDO.test(rel)) {
+            var alt = "i18n/conteudo/" + I.lang + "/" + rel + u.search;
+            return fetch0(alt, init).then(function (r) { return r.ok ? r : fetch0(entrada, init); }, function () { return fetch0(entrada, init); });
+          }
+        }
+      }
+    } catch (e) {}
+    return fetch0(entrada, init);
+  };
+
   /* Aplica já na abertura: com o catálogo guardado no aparelho, a primeira pintura sai no idioma certo */
   if (I.lang !== "pt") {
     try { var c0 = ls("sola.i18n." + I.lang); if (c0) compilar(JSON.parse(c0)); } catch (e) {}

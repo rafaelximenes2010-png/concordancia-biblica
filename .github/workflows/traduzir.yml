@@ -1,0 +1,40 @@
+name: Traduzir conteúdos (inglês e espanhol)
+on:
+  push:
+    branches: [main]
+    paths:
+      - "devocionais/*.json"
+      - "artigos/*.json"
+      - "mapas/*.json"
+      - "docs/*.json"
+      - "salterio/*.json"
+      - "ouvir/spotify.json"
+      - "index.html"
+      - "tools/traduzir-conteudo.mjs"
+  workflow_run:
+    workflows: ["Notícias do mundo cristão"]
+    types: [completed]
+  schedule:
+    - cron: "47 10 * * *"
+  workflow_dispatch:
+concurrency: { group: traduzir, cancel-in-progress: false }
+permissions:
+  contents: write
+jobs:
+  traduzir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node tools/traduzir-conteudo.mjs
+      - run: python3 tools/i18n-build.py
+      - run: |
+          git config user.name "SOLA (tradução automática)"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add i18n
+          git diff --cached --quiet && exit 0
+          git commit -m "Conteúdos traduzidos (inglês e espanhol)"
+          for i in 1 2 3; do git pull -q --rebase origin main && git push && break; sleep 5; done
+          git push --force origin HEAD:refs/heads/gh-pages   # publica (push do robô não dispara o outro fluxo)
