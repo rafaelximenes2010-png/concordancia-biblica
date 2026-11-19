@@ -47,7 +47,7 @@ function fontes() {
 /* Campos que nunca se traduzem (identificadores, links, códigos, nomes próprios) */
 const NUNCA = new Set(["id", "ref", "r", "url", "art", "mes", "month", "status", "data", "dia", "p", "img", "tint", "glow", "lang", "source", "kind",
   "icon", "cor", "color", "mel", "code", "author", "autor", "fonte", "cat", "pais", "tipo", "n", "c", "day", "min", "t0", "land", "lakes", "rivers",
-  "coords", "x0", "y0", "lat", "lon", "uri", "spotify", "destaque", "dias", "usados", "log", "atualizado", "verif", "orig", "titleEn", "qEn", "aEn",
+  "coords", "x0", "y0", "lat", "lon", "uri", "spotify", "destaque", "usados", "log", "atualizado", "verif", "orig", "titleEn", "qEn", "aEn",
   "original", "ctEn", "tEn", "year", "license", "palette", "relatorio", "link", "links_url", "voz", "audio", "mp3", "arquivo", "path", "d", "z"]);
 const pulaValor = s => !/[A-Za-zÀ-ú]{2}/.test(s) || /^(https?:|bib:|doc:|#|mailto:|tel:)/.test(s) || /^[MLHVCZmlhvcz0-9 .,-]+$/.test(s)
   || /^#?[0-9a-f]{3,8}$/i.test(s) || /^\d{4}-\d{2}(-\d{2})?/.test(s) || /^[1-3]?[A-Z]{2,3}[ .]\d/.test(s) || (!/\s/.test(s) && /^[a-z0-9_-]+$/.test(s));
@@ -58,7 +58,7 @@ let semCota = false, chamadas = 0, caracteres = 0;
 async function traduzirTexto(texto, de, para, memoria) {
   const k = de + ">" + para + ":" + sha(texto);
   if (memoria[k] != null) return memoria[k];
-  if (semCota) return null;
+  if (semCota || process.env.OFFLINE) return null;
   for (let tentativa = 0; tentativa < 3; tentativa++) {
     try {
       const r = await fetch(PONTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: texto, from: de, to: para }) });
@@ -126,7 +126,7 @@ async function traduzirArquivo(rel, para, memoria) {
       : para === "en" ? "Automatic translation into English (Microsoft Translator), from the Portuguese text prepared by SOLA."
       : "Traducción automática al español (Microsoft Translator) a partir del " + (temEn ? "original en inglés." : "texto en portugués preparado por SOLA.");
   }
-  if (doc && typeof doc === "object" && !Array.isArray(doc)) doc._i18n = { idioma: para, origem: rel, traducao: "Microsoft Translator (automática), revisável", faltam };
+  if (doc && typeof doc === "object" && !Array.isArray(doc)) doc._i18n = { idioma: para, origem: rel, traducao: "SOLA (revisada) e Microsoft Translator (automática) nos trechos ainda sem revisão", faltam };
   const destino = path.join(ROOT, "i18n", "conteudo", para, rel);
   fs.mkdirSync(path.dirname(destino), { recursive: true });
   fs.writeFileSync(destino, JSON.stringify(doc));
