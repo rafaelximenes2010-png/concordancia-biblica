@@ -153,7 +153,7 @@ async function traduzir(texto){
 
 const anterior = (() => { try { return JSON.parse(fs.readFileSync(OUT, "utf8")); } catch { return { itens: [] }; } })();
 const limite = Date.now() - DIAS * 86400e3;
-const limiteSem = Date.now() - 45 * 86400e3;   // seminários publicam menos: janela maior para sempre haver uma matéria nova
+const limiteSem = Date.now() - 45 * 86400e3;   // reserva: matérias de até 45 dias, para nunca faltar uma nova em cada tipo
 const relatorio = [], itens = [], vistos = new Set();
 
 for (const f of FONTES) {
@@ -163,7 +163,7 @@ for (const f of FONTES) {
   let n = 0;
   for (const x of ok.sort((a, b) => (b.data || 0) - (a.data || 0))) {
     if (n >= POR_FONTE) break;
-    if (x.data && +x.data < (f.cat === "sem" ? limiteSem : limite)) continue;
+    if (x.data && +x.data < limiteSem) continue;   // guarda até 45 dias; a seleção prefere os últimos 10
     let titulo = x.titulo, fonte = f.nome, fonteUrl = "";
     if (f.gnews) { const m = titulo.match(/^(.*) - ([^-]+)$/); if (m) { titulo = m[1].trim(); fonte = m[2].trim(); } fonte = x.fonte || fonte; fonteUrl = x.fonteUrl; }
     const k = normT(titulo); if (vistos.has(k)) continue; vistos.add(k);
@@ -263,7 +263,8 @@ if (!dHoje && (brAgora.getUTCHours() >= 6 || process.env.FORCAR || !dias.length)
   const novos = [], picks = [];
   for (const c of ["per", "mis", "sem", "igr"]) {
     const antigos = ontem ? ontem.itens.filter(x => x.cat === c).map(x => ({ ...x, novo: false })) : [];
-    const cand = itens.filter(y => y.cat === c && inedito(y));
+    const todas = itens.filter(y => y.cat === c && inedito(y)), recentes = todas.filter(y => Date.parse(y.data) >= limite);
+    const cand = recentes.length ? recentes : todas;
     const qtd = Math.max(1, POR_TIPO - antigos.length);          // ao menos 1 nova; mais se faltar para completar 5
     const doTipo = [];
     while (doTipo.length < qtd) {
