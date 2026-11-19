@@ -1,5 +1,5 @@
 {
- "atualizado": "2026-11-19T08:24:59.039Z",
+ "atualizado": "2026-11-19T08:29:17.743Z",
  "categorias": {
   "mis": "Missões",
   "per": "Igreja perseguida",
@@ -126,20 +126,6 @@
      "novo": false
     },
     {
-     "id": "nbf9ba22d1703",
-     "cat": "mis",
-     "titulo": "Igrejas locais impulsionam tradução da Bíblia em lugares remotos",
-     "resumo": "",
-     "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPaHVoOHBxSnhCMURGLWp3M0FkS0pNVXp1TzFUU1pfU0JPMVR6dTNJQ0RnNjhUUW1fV1dhTTY3ZkNZQko3cE1fSkFlNmp3NFlIdk56ZmpLVElQS1dla1Vkajh0X2RjbGdLWnFsMk1MSGRPb3pvOHo0MWU2Z2M0SzVFaWxxZnNndFZ4R196cVZ0MXJZYkxRWVR3WmNPam9xeTdIUndWeGFsUWFBcVA1c1ZF?oc=5",
-     "fonte": "Rádio 93 FM",
-     "fonteUrl": "https://radio93.com.br",
-     "pais": "",
-     "data": "2026-11-18T11:04:08.000Z",
-     "lang": "pt",
-     "verif": "confirmada também por Exibir Gospel",
-     "novo": true
-    },
-    {
      "id": "n5eacd48e1879",
      "cat": "mis",
      "titulo": "Primeira pessoa: Por que pedimos que você ore",
@@ -198,6 +184,70 @@
      "lang": "pt",
      "verif": "fonte reconhecida",
      "novo": false
+    },
+    {
+     "id": "n7b49d51aca1e",
+     "cat": "mis",
+     "titulo": "A Mission Cry embarca em um novo projeto para servir a um grupo de pessoas único",
+     "resumo": "México (MNN)—O ministério atende os menonitas russos no México por meio de traduções da Bíblia para o alemão.",
+     "url": "https://www.mnnonline.org/news/mission-cry-embarks-on-new-project-to-serve-a-unique-people-group/",
+     "fonte": "Mission Network News",
+     "fonteUrl": "",
+     "pais": "México",
+     "data": "2026-11-16T05:00:45.000Z",
+     "lang": "pt",
+     "verif": "fonte acompanhada pelo SOLA",
+     "orig": "Mission Cry embarks on new project to serve a unique people group",
+     "traduzido": true,
+     "novo": false
+    },
+    {
+     "id": "ne55c1dcf12b9",
+     "cat": "sem",
+     "titulo": "Igrejas mais fortes começam com líderes bem treinados",
+     "resumo": "À medida que as igrejas em toda a África continuam a servir comunidades em crescimento e em mudança, a necessidade de um ensino bíblico sólido e de líderes cristãos bem preparados permanece essencial. O Mukhanyo Theological College está ajudando a atender…",
+     "url": "https://mtc.ac.za/stronger-churches-start-with-well-trained-leaders/?utm_source=rss&utm_medium=rss&utm_campaign=stronger-churches-start-with-well-trained-leaders",
+     "fonte": "Mukhanyo Theological College",
+     "fonteUrl": "",
+     "pais": "África do Sul",
+     "data": "2026-10-29T13:42:19.000Z",
+     "lang": "pt",
+     "verif": "fonte acompanhada pelo SOLA",
+     "novo": true,
+     "orig": "Stronger churches start with well-trained leaders",
+     "traduzido": true
+    },
+    {
+     "id": "n90a78c214f39",
+     "cat": "sem",
+     "titulo": "Perspectivas Reformadas: Um Seminário Chamado para Servir à Igreja",
+     "resumo": "O que começou como uma simples conversa se transformou em uma série de workshops do corpo docente e, por fim, em uma compilação de ensaios centrados na pergunta: \"O que o Seminário Teológico de Calvino quer dizer quando... O post Pós-reformado...",
+     "url": "https://calvinseminary.edu/blog/reformed-perspectives-a-seminary-called-to-serve-the-church/",
+     "fonte": "Calvin Theological Seminary",
+     "fonteUrl": "",
+     "pais": "EUA",
+     "data": "2026-10-12T12:00:54.000Z",
+     "lang": "pt",
+     "verif": "fonte acompanhada pelo SOLA",
+     "novo": true,
+     "orig": "Reformed Perspectives: A Seminary Called to Serve the Church",
+     "traduzido": true
+    },
+    {
+     "id": "n50836d4a4baa",
+     "cat": "sem",
+     "titulo": "Trazer as Escrituras para o diálogo com as realidades africanas",
+     "resumo": "Como é a teologia cristã fiel quando se depara com as realidades da vida na África? As questões relacionadas à família, aos ancestrais, às práticas tradicionais, à pobreza, à liderança, à corrupção e à comunidade não são...",
+     "url": "https://mtc.ac.za/bringing-scripture-into-conversation-with-african-realities/?utm_source=rss&utm_medium=rss&utm_campaign=bringing-scripture-into-conversation-with-african-realities",
+     "fonte": "Mukhanyo Theological College",
+     "fonteUrl": "",
+     "pais": "África do Sul",
+     "data": "2026-10-05T13:58:01.000Z",
+     "lang": "pt",
+     "verif": "fonte acompanhada pelo SOLA",
+     "novo": true,
+     "orig": "Bringing Scripture into conversation with African realities",
+     "traduzido": true
     },
     {
      "id": "n564a8b3bcdcb",
