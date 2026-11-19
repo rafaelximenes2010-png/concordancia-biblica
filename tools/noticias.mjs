@@ -8,8 +8,9 @@
    2. Classifica: Missões · Igreja perseguida · Seminários · Igreja no mundo.
    3. Traduz para o português só as escolhidas (tradutor do SOLA no
       Cloudflare; reserva: MyMemory).
-   4. Todo dia escolhe as 5 matérias mais importantes de cada tipo e grava
-      noticias/feed.json com os últimos 7 dias.
+   4. Todo dia mantém 5 matérias por tipo: entra pelo menos 1 nova em cada
+      tipo no lugar da mais antiga, e o destaque da entrada é sempre novo.
+      Grava noticias/feed.json com os últimos 7 dias.
    Só guardamos título, resumo curto (do próprio feed) e o link da fonte.
    Uso local: node tools/noticias.mjs
    ===================================================================== */
@@ -251,11 +252,32 @@ function escolherDia(){
 }
 const dias = (anterior.dias || []).filter(d => d.dia !== HOJE || !process.env.FORCAR);
 let dHoje = dias.find(d => d.dia === HOJE);
+/* REGRA DIÁRIA (pedido do Rafael, nov/2026): todo dia entra pelo menos 1 matéria NOVA em cada
+   categoria, no lugar da mais antiga, e o destaque da entrada do celular é sempre uma matéria nova.
+   "Nova" = nunca publicada em nenhum dia anterior do feed. */
 if (!dHoje && (brAgora.getUTCHours() >= 6 || process.env.FORCAR || !dias.length)) {
-  const picks = escolherDia();
-  /* Tradução só das 5 escolhidas */
+  const ontem = dias.filter(d => d.dia < HOJE).sort((x, y) => y.dia.localeCompare(x.dia))[0];
+  const jaSaiu = new Set(); dias.forEach(d => d.itens.forEach(x => { jaSaiu.add(x.id); jaSaiu.add(normT(x.titulo)); if (x.orig) jaSaiu.add(normT(x.orig)); }));
+  const inedito = x => !jaSaiu.has(x.id) && !jaSaiu.has(normT(x.titulo));
+  const novos = [], picks = [];
+  for (const c of ["per", "mis", "sem", "igr"]) {
+    const antigos = ontem ? ontem.itens.filter(x => x.cat === c).map(x => ({ ...x, novo: false })) : [];
+    const cand = itens.filter(y => y.cat === c && inedito(y));
+    const qtd = Math.max(1, POR_TIPO - antigos.length);          // ao menos 1 nova; mais se faltar para completar 5
+    const doTipo = [];
+    while (doTipo.length < qtd) {
+      const x = melhor(cand, [...novos, ...doTipo]) || cand.filter(y => !doTipo.includes(y) && !novos.includes(y)).sort((a, b) => b.nota - a.nota)[0];
+      if (!x) break; doTipo.push(x);
+    }
+    if (!doTipo.length) relatorio.push(`  ⚠ ${c}: nenhuma matéria inédita hoje; mantidas as anteriores`);
+    novos.push(...doTipo);
+    /* as novas entram no topo; das anteriores sai a mais antiga até ficar com 5 */
+    const manter = antigos.sort((a, b) => b.data.localeCompare(a.data)).slice(0, Math.max(0, POR_TIPO - doTipo.length));
+    picks.push(...doTipo, ...manter);
+  }
   let traduzidos = 0;
-  for (const x of picks) {
+  for (const x of novos) {
+    x.novo = true;
     if (x.lang === "pt") continue;
     try {
       const sep = "\n\n§§§\n\n";
@@ -265,12 +287,13 @@ if (!dHoje && (brAgora.getUTCHours() >= 6 || process.env.FORCAR || !dias.length)
     } catch (e) { relatorio.push(`  (tradução falhou: ${e.message})`); }
   }
   picks.forEach(x => { delete x.nota; delete x.gnews; });
-  const per = picks.filter(x => x.cat === "per");
-  const dest = per.find(x => PAISES.some(([pt]) => pt === x.pais)) || per[0] || picks[0];
+  /* destaque da entrada: sempre uma matéria nova (igreja perseguida em país da Lista Mundial, de preferência) */
+  const nper = novos.filter(x => x.cat === "per");
+  const dest = nper.find(x => PAISES.some(([pt]) => pt === x.pais)) || nper[0] || novos.slice().sort((a, b) => (b.nota || 0) - (a.nota || 0))[0] || picks[0];
   dHoje = { dia: HOJE, destaque: dest ? dest.id : null, itens: picks };
   dias.unshift(dHoje);
-  relatorio.push(`\nSeleção de ${HOJE}: ${picks.length} matérias, 5 por tipo (${traduzidos} traduzidas)`);
-  picks.forEach((x, k) => relatorio.push(`  ${k + 1}. [${x.cat}] ${x.titulo} — ${x.fonte}${x.pais ? " · " + x.pais : ""}`));
+  relatorio.push(`\nSeleção de ${HOJE}: ${picks.length} matérias (${novos.length} novas, ${traduzidos} traduzidas); destaque novo: ${dest ? dest.titulo : "—"}`);
+  picks.forEach((x, k) => relatorio.push(`  ${k + 1}. ${x.novo ? "NOVA " : "     "}[${x.cat}] ${x.titulo} — ${x.fonte}${x.pais ? " · " + x.pais : ""}`));
 } else relatorio.push(`\nSeleção de hoje mantida (${dHoje ? dHoje.dia : "aguardando 6h"}).`);
 dias.sort((a, b) => b.dia.localeCompare(a.dia));
 
