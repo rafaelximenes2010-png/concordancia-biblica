@@ -1092,6 +1092,10 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .saved-text{max-height:220px;overflow:auto;font-size:15px}
 .sg-item{font-size:14px;padding:6px 0;border-top:1px solid var(--border)}
 .news-banner span{flex:1}
+[data-swipe]{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+[data-swipe].swiping{transition:none!important}
+.swipe-x{all:unset;cursor:pointer;flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;font-size:18px;line-height:1;opacity:.6}
+.swipe-x:hover{opacity:1}
 
 /* ===== Tamanho do texto do app e navegação estilo iOS ===== */
 #views,#backBar,#helpDialog .dlg-body,#noteDialog .dlg-body{zoom:var(--app-zoom,1)}
@@ -5681,9 +5685,10 @@ const Inbox = {
     const items=await this.load(true), s=this.seen(), px=Push.get();
     const ic={ devo:["i-lamp","#8a5a2b"], versao:["i-download","#2e5e8c"], aviso:["i-bell","#4f7a63"] };
     $("#inboxBody").innerHTML = (items.length ? `<ul class="inbox-list">${items.map((x,i)=>{ const [sym,col]=ic[x.kind]||ic.aviso;
-      return `<li class="${!s||String(x.date)>s?"new":""}"><button type="button" data-ib="${i}"><span class="ib-ic" style="background:${col}"><svg class="icon" aria-hidden="true"><use href="#${sym}"/></svg></span><span><b>${esc(x.title)}</b><span class="ib-tx">${esc(x.body||"")}</span><time>${esc(this.when(x.date))}</time></span></button></li>`; }).join("")}</ul>` : `<p class="muted">Nenhuma notificação por enquanto.</p>`)
+      return `<li class="${!s||String(x.date)>s?"new":""}" data-swipe="inbox" data-ibi="${i}"><button type="button" data-ib="${i}"><span class="ib-ic" style="background:${col}"><svg class="icon" aria-hidden="true"><use href="#${sym}"/></svg></span><span><b>${esc(x.title)}</b><span class="ib-tx">${esc(x.body||"")}</span><time>${esc(this.when(x.date))}</time></span></button></li>`; }).join("")}</ul>` : `<p class="muted">Nenhuma notificação por enquanto.</p>`)
       + (px.on && Notification.permission==="granted" ? `<p class="hint" style="margin-top:12px">Notificações ligadas neste aparelho. <a href="#devocional" data-ib-cfg>Ajustar</a></p>`
          : `<div class="inbox-cta"><p><strong>Receba na tela do celular</strong>, mesmo com o app fechado: devocional do dia, versões novas e avisos do SOLA.</p><button type="button" class="btn btn-sm btn-primary" data-ib-cfg>Ligar notificações</button></div>`);
+    Inbox.cur=items;
     $("#inboxBody").onclick=e=>{
       if(e.target.closest("[data-ib-cfg]")){ e.preventDefault(); $("#inboxDialog").close(); showView("devocional"); setTimeout(()=>$("#remindersCard2")?.scrollIntoView({ behavior:"smooth", block:"center" }),250); return; }
       const b=e.target.closest("[data-ib]"); if(!b) return; const it=items[+b.dataset.ib]; if(!it) return;
@@ -5707,6 +5712,8 @@ const Inbox = {
 const _ibRecv=Inbox.received.bind(Inbox); Inbox.received=async()=>[...await _ibRecv(), ...store.get("inboxKeep",[])];
 document.addEventListener("click",e=>{ if(e.target.closest("[data-inbox='open']")){ e.preventDefault(); Inbox.open(); } });
 $("#inboxClose")?.addEventListener("click",()=>$("#inboxDialog").close());
+$("#inboxBody")?.addEventListener("swiped",e=>{ const it=(Inbox.cur||[])[+e.target.dataset.ibi]; if(it) Inbox.dismiss(it);
+  setTimeout(()=>{ const ul=$("#inboxBody .inbox-list"); if(ul && !ul.children.length) ul.outerHTML=`<p class="muted">Nenhuma notificação por enquanto.</p>`; },500); });
 navigator.serviceWorker?.addEventListener("message",e=>{ if(e.data?.type==="push"){ Inbox.paint(); if(e.data.item?.title) toast("🔔 "+e.data.item.title,3500); } });
 document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") Inbox.paint(); });
 setTimeout(()=>{
@@ -6950,8 +6957,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.3";
+const APP_VERSION = "3.25.4";
 const CHANGELOG = [
+  { v:"3.25.4", d:"novembro de 2026", items:["Arraste para o lado para excluir o aviso de novidades no Início e as notificações da lista (ou toque no ×)."] },
   { v:"3.25.3", d:"novembro de 2026", items:["Notificações: ao tocar num aviso de atualização, ele é marcado como lido e some da lista. Os outros avisos também saem da lista depois de abertos."] },
   { v:"3.25.2", d:"novembro de 2026", items:["Ouvir: as opções de rádio agora ficam centralizadas."] },
   { v:"3.25.1", d:"novembro de 2026", items:["Ouvir: agora aparece uma rádio por vez. Escolha a rádio no rolo logo acima do player (KCBI 90.9, RefNet ou Rádio IPB); o app lembra a sua escolha.","RefNet voltou a tocar, com o endereço atual da transmissão."] },
@@ -7789,12 +7797,33 @@ const ANALYTICS = { goatcounter:"" };
   sc.dataset.goatcounter=`https://${ANALYTICS.goatcounter}.goatcounter.com/count`; document.head.appendChild(sc);
   window.addEventListener("appinstalled",()=>{ try{ window.goatcounter.count?.({ path:"evento-instalacao", event:true }); }catch(e){} });
 })();
+/* Arrastar para o lado para dispensar (avisos com data-swipe). Dispara o evento "swiped" e remove o elemento. */
+function swipeOut(el,dir){ const w=el.offsetWidth||300; el.classList.remove("swiping");
+  el.dispatchEvent(new CustomEvent("swiped",{ bubbles:true }));
+  el.style.transition="transform .22s ease-out,opacity .22s"; el.style.transform=`translateX(${dir*(w+40)}px)`; el.style.opacity="0";
+  setTimeout(()=>{ const h=el.offsetHeight; el.style.overflow="hidden"; el.style.height=h+"px"; el.style.transition="height .2s,margin .2s,padding .2s";
+    requestAnimationFrame(()=>{ el.style.height="0"; el.style.marginTop="0"; el.style.marginBottom="0"; el.style.paddingTop="0"; el.style.paddingBottom="0"; el.style.borderWidth="0"; });
+    setTimeout(()=>{ el.remove(); el.dispatchEvent(new CustomEvent("swipedone",{ bubbles:false })); },210); },220); }
+(()=>{ let el=null, x0=0, y0=0, dx=0, drag=false, t0=0, block=false;
+  document.addEventListener("pointerdown",e=>{ if(e.button>0) return; const t=e.target.closest("[data-swipe]"); if(!t) return; el=t; x0=e.clientX; y0=e.clientY; dx=0; drag=false; t0=Date.now(); },{ passive:true });
+  document.addEventListener("pointermove",e=>{ if(!el) return; const mx=e.clientX-x0, my=e.clientY-y0;
+    if(!drag){ if(Math.abs(mx)>10 && Math.abs(mx)>Math.abs(my)*1.3){ drag=true; el.classList.add("swiping"); try{ el.setPointerCapture(e.pointerId); }catch(_){} } else if(Math.abs(my)>12){ el=null; return; } else return; }
+    dx=mx; el.style.transform=`translateX(${dx}px)`; el.style.opacity=String(Math.max(.25,1-Math.abs(dx)/(el.offsetWidth||300))); },{ passive:true });
+  const fim=()=>{ if(!el) return; const t=el; el=null; if(!drag) return; block=true; setTimeout(()=>block=false,350);
+    const v=Math.abs(dx)/Math.max(1,Date.now()-t0);
+    if(Math.abs(dx)>Math.min(110,(t.offsetWidth||300)*.35) || (v>.6 && Math.abs(dx)>70)) swipeOut(t,dx>0?1:-1);
+    else { t.classList.remove("swiping"); t.style.transition="transform .2s,opacity .2s"; t.style.transform=""; t.style.opacity=""; } };
+  document.addEventListener("pointerup",fim); document.addEventListener("pointercancel",fim);
+  document.addEventListener("click",e=>{ if(block && e.target.closest("[data-swipe]")){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    const x=e.target.closest("[data-swipe-x]"); if(x){ e.preventDefault(); const t=x.closest("[data-swipe]"); if(t) swipeOut(t,1); } },true);
+  document.addEventListener("swiped",e=>{ if(e.target.dataset?.swipe==="news") store.set("seenVersion",APP_VERSION); });
+})();
 /* Aviso de novidades no Início após uma atualização */
 function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VERSION) return "";
   if(!seen){ store.set("seenVersion",APP_VERSION); return ""; }   // primeira visita: nada de "novidades" para quem acabou de chegar
   const mm=APP_VERSION.split(".").slice(0,2).join(".");             // correções (x.y.1) mostram o destaque da versão x.y.0, se a pessoa ainda não viu
   const ent = (!seen.startsWith(mm+".") && CHANGELOG.find(c=>c.v===mm+".0")) || CHANGELOG.find(c=>c.v===APP_VERSION) || CHANGELOG[0];
-  return `<div class="rem-banner news-banner"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novo no SOLA ${APP_VERSION}:</strong> ${esc(ent.items[0])}</span><button type="button" class="btn btn-sm" data-inbox="open">Ver</button></div>`; }
+  return `<div class="rem-banner news-banner" data-swipe="news"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span><strong>Novo no SOLA ${APP_VERSION}:</strong> ${esc(ent.items[0])}</span><button type="button" class="btn btn-sm" data-inbox="open">Ver</button><button type="button" class="swipe-x" data-swipe-x aria-label="Dispensar aviso">×</button></div>`; }
 
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
