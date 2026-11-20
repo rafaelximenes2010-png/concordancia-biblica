@@ -648,10 +648,15 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-eq{height:10px;margin:0 0 0 4px;gap:2px}.rdx-eq i{width:2px}
 @keyframes rdxeq{0%,100%{height:3px}50%{height:10px}}
 .rdx-play{width:42px;height:42px;box-shadow:none}
-.hsec .home-card.rdx + .home-card.rdx{margin-top:8px}
+.rdx-rolo{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -2px 10px;padding:2px}
+.rdx-rolo::-webkit-scrollbar{display:none}
+.rdx-op{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:700 13px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;cursor:pointer}
+.rdx-op[aria-checked="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
+.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
-.rdx-v2 .rdx-art{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}
-.rdx-v3 .rdx-art{background:linear-gradient(145deg,#2f9e6e,#14503f)}
+.rdx.rdx-v2 .rdx-art{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}
+.rdx.rdx-v3 .rdx-art{background:linear-gradient(145deg,#2f9e6e,#14503f)}
 /* Busca do farol */
 .farol-top{background:#24345f!important;border-color:#24345f!important;color:#fff!important;border-radius:12px!important}
 .farol-top .icon{stroke:#fff;stroke-width:1.9}
@@ -2038,29 +2043,18 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <span class="wa3-cta"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>Enviar</span>
   </a></section>
   <section class="hsec" aria-labelledby="hsO"><h3 class="hsec-h" id="hsO">Ouvir</h3>
-  <div class="home-card rdx " id="rdCard" data-radio="kcbi">
+  <div class="rdx-rolo" role="radiogroup" aria-label="Escolha a rádio">
+    <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9</button>
+    <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet</button>
+    <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB</button>
+  </div>
+  <div class="home-card rdx" id="rdCard" data-radio="kcbi">
     <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
     <span class="rdx-meta">
       <b class="rdx-title">KCBI 90.9 FM</b>
       <span class="rdx-live"><i></i><span class="rdx-livetxt">Ao vivo</span><span class="rdx-sub"> · Dallas, EUA</span><span class="rdx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
     </span>
-    <button type="button" class="rdx-play" aria-label="Tocar a rádio KCBI 90.9 ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="rdx-ico" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
-  </div>
-  <div class="home-card rdx rdx-v2" data-radio="refnet">
-    <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
-    <span class="rdx-meta">
-      <b class="rdx-title">RefNet</b>
-      <span class="rdx-live"><i></i><span class="rdx-livetxt">Ao vivo</span><span class="rdx-sub"> · Ligonier, EUA</span><span class="rdx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
-    </span>
-    <button type="button" class="rdx-play" aria-label="Tocar a rádio RefNet ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="rdx-ico" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
-  </div>
-  <div class="home-card rdx rdx-v3" data-radio="ipb">
-    <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
-    <span class="rdx-meta">
-      <b class="rdx-title">Rádio IPB</b>
-      <span class="rdx-live"><i></i><span class="rdx-livetxt">Ao vivo</span><span class="rdx-sub"> · São Paulo, Brasil</span><span class="rdx-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
-    </span>
-    <button type="button" class="rdx-play" aria-label="Tocar a Rádio IPB ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="rdx-ico" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
+    <button type="button" class="rdx-play" aria-label="Tocar a rádio KCBI 90.9 FM ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="rdx-ico" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
   </div></section>
   <div class="home-grid">
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
@@ -5756,17 +5750,17 @@ setTimeout(async()=>{ try{ const r=await fetch("noticias/feed.json?t="+Math.floo
    Só uma toca por vez.
    ===================================================================== */
 const RADIOS = {
-  kcbi:{ nome:"KCBI 90.9 FM", sub:" · Dallas, EUA", artista:"Rádio cristã · Dallas, EUA", site:"https://kcbi.org/", busca:"KCBI",
+  kcbi:{ nome:"KCBI 90.9 FM", cls:"", sub:" · Dallas, EUA", artista:"Rádio cristã · Dallas, EUA", site:"https://kcbi.org/", busca:"KCBI",
     ok:x=>/kcbi/i.test(x.name) && !/teach/i.test(x.name),
     extra:["https://playerservices.streamtheworld.com/api/livestream-redirect/KCBIFMAAC.aac","https://playerservices.streamtheworld.com/api/livestream-redirect/KCBIFM.mp3"] },
-  refnet:{ nome:"RefNet", sub:" · Ligonier, EUA", artista:"Rádio reformada 24h · Ligonier Ministries", site:"https://www.refnet.fm/", busca:"RefNet",
+  refnet:{ nome:"RefNet", cls:"rdx-v2", pre:["https://icecast.refnet.fm/utc/-0500"], sub:" · Ligonier, EUA", artista:"Rádio reformada 24h · Ligonier Ministries", site:"https://www.refnet.fm/", busca:"RefNet",
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
-  ipb:{ nome:"Rádio IPB", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
+  ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
-  const urls=[];
+  const urls=[...(st.pre||[])];
   for(const h of ["de1","nl1","at1"]){
     try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(st.busca)}&limit=20&hidebroken=true`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
       const list=await r.json();
@@ -5799,7 +5793,7 @@ async function radioToggle(k){
   radioUi(k,"loading");
   for(const u of await radioUrls(st)){
     if(Radio.pedido!==pedido) return;
-    try{ Radio.audio.src=u; await Radio.audio.play(); if(Radio.pedido!==pedido) return; Radio.on=k; radioUi(k,"play");
+    try{ Radio.audio.src=u; await Radio.audio.play(); if(Radio.pedido!==pedido){ try{ Radio.audio.pause(); }catch(e){} return; } Radio.on=k; radioUi(k,"play");
       if("mediaSession" in navigator){ navigator.mediaSession.metadata=new MediaMetadata({ title:`${st.nome} — ao vivo`, artist:st.artista, album:"SOLA | Bíblia & Teologia", artwork:[{ src:"icons/apple-touch-180.png?v=3", sizes:"180x180", type:"image/png" }] });
         navigator.mediaSession.setActionHandler("pause",()=>radioStop()); navigator.mediaSession.setActionHandler("play",()=>Radio.audio.play()); }
       return;
@@ -5808,7 +5802,17 @@ async function radioToggle(k){
   if(Radio.pedido!==pedido) return;
   Radio.pedido=null; Radio.erro[k]=true; radioUi(k,"erro");
 }
-document.addEventListener("click",e=>{ const b=e.target.closest(".rdx .rdx-play"); if(b) radioToggle(b.closest(".rdx").dataset.radio); });
+function radioEscolher(k,salvar){ const st=RADIOS[k], c=$("#rdCard"); if(!st || !c) return;
+  if(c.dataset.radio!==k){ const p=c.dataset.radio; radioStop(); Radio.pedido=null; try{ Radio.audio?.pause(); }catch(e){} Radio.erro={}; radioUi(p,"stop"); }
+  c.dataset.radio=k; c.className=`home-card rdx ${st.cls}`.trim();
+  c.querySelector(".rdx-title").textContent=st.nome;
+  document.querySelectorAll(".rdx-op").forEach(o=>o.setAttribute("aria-checked", String(o.dataset.pick===k)));
+  radioUi(k, Radio.on===k ? "play" : "stop");
+  if(salvar) store.set("radio",k);
+}
+document.addEventListener("click",e=>{ const b=e.target.closest(".rdx .rdx-play"); if(b) radioToggle(b.closest(".rdx").dataset.radio);
+  const o=e.target.closest(".rdx-op"); if(o){ radioEscolher(o.dataset.pick,true); o.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" }); } });
+{ const k=store.get("radio","kcbi"); if(RADIOS[k] && k!=="kcbi") radioEscolher(k,false); }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-vgtoggle]"); if(!b) return; const d=$("#vgDrop"); d.hidden=!d.hidden; b.setAttribute("aria-expanded",String(!d.hidden)); const on=d.querySelector("li.on"); if(on && !d.hidden) d.scrollTop=on.offsetTop-d.offsetTop-8; });
 
 /* =====================================================================
@@ -6932,8 +6936,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.0";
+const APP_VERSION = "3.25.1";
 const CHANGELOG = [
+  { v:"3.25.1", d:"novembro de 2026", items:["Ouvir: agora aparece uma rádio por vez. Escolha a rádio no rolo logo acima do player (KCBI 90.9, RefNet ou Rádio IPB); o app lembra a sua escolha.","RefNet voltou a tocar, com o endereço atual da transmissão."] },
   { v:"3.25.0", d:"novembro de 2026", items:["Mais duas rádios ao vivo no Início, em Ouvir: RefNet, a rádio reformada 24 horas do Ligonier Ministries, e Rádio IPB, a rádio oficial da Igreja Presbiteriana do Brasil. Só uma toca por vez, com controle na tela de bloqueio."] },
   { v:"3.24.1", d:"dezembro de 2026", items:["38 novos artigos para ler e ouvir (2 por tema)"] },
   { v:"3.24.0", d:"novembro de 2026", items:["Novo fundo 🌍 Lugares na imagem para Stories e Feed: 12 fotos reais de lugares lindos do mundo (paisagens, montanhas, litorais, ilhas, Brasil e Terra Santa), escolhidas entre as fotos premiadas do Wikimedia Commons. Trocam toda segunda-feira, com o crédito do fotógrafo na imagem."] },
