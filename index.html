@@ -1727,6 +1727,43 @@ html,body{overscroll-behavior:none}
 body.reading,body.scroll-lock{overflow:hidden!important;overscroll-behavior:none}
 dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .cfg-mail{margin:10px 0 4px;font-size:14px;color:var(--ink-2)} .cfg-mail a{font-weight:700;color:var(--accent);text-decoration:none}
+
+/* ===== Cabeçalho maior e uniforme + Frase do dia (3.23.0) ===== */
+@media (max-width:760px){
+  .app-header .header-inner{padding:14px 16px 12px!important;row-gap:12px!important}
+  .brand img{width:54px!important;height:54px!important;border-radius:14px!important}
+  .brand a{gap:14px!important}
+  .brand .brand-name{font-size:31px!important;letter-spacing:.2em!important}
+  .brand .brand-sub{font-size:12.5px!important;letter-spacing:.2em!important;margin-top:5px!important}
+  #appHeader .header-tools{display:flex!important;gap:8px!important;width:100%;flex-basis:100%;justify-content:stretch!important}
+  #appHeader .header-tools>[hidden]{display:none!important}
+  #appHeader .header-tools>.btn-icon{flex:1 1 0!important;min-width:0;width:auto!important;height:62px!important;padding:6px 2px!important;margin:0!important;
+    display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px;
+    border:1px solid var(--border)!important;background:var(--surface-2)!important;border-radius:16px!important;box-shadow:none!important;opacity:1!important;color:var(--ink)!important;position:relative}
+  #appHeader .header-tools>.btn-icon .icon{width:23px!important;height:23px!important;stroke:currentColor}
+  #appHeader .header-tools>.btn-icon[data-label]::after{content:attr(data-label)!important;display:block!important;font:600 11px/1 system-ui,sans-serif!important;letter-spacing:.02em;color:var(--ink-2)!important;margin:0!important}
+  #appHeader .header-tools>.farol-top{background:#24345f!important;border-color:#24345f!important;color:#fff!important}
+  #appHeader .header-tools>.farol-top[data-label]::after{color:#e8dcc0!important}
+  [data-theme="dark"] #appHeader .header-tools>.farol-top{background:#2c3e6e!important;border-color:#3b4f84!important}
+  #appHeader .header-tools>.btn-icon[hidden]{display:none!important}
+  #appHeader .header-tools>.avatar-btn{overflow:visible}
+  #appHeader .header-tools>.avatar-btn #cfgAvatar{width:30px!important;height:30px!important;flex:none;border:2px solid var(--gold);background:#1c2747}
+  #appHeader .header-tools>.avatar-btn .cfg-gear{right:calc(50% - 24px);bottom:auto;top:20px;width:15px;height:15px;box-shadow:0 0 0 2px var(--surface-2)}
+  #appHeader .header-tools>.avatar-btn .cfg-gear .icon{width:10px!important;height:10px!important}
+  #appHeader .header-tools .bell-n{top:6px;right:calc(50% - 20px)}
+  #appHeader .header-tools>#instTop{flex:1.3 1 0;height:62px!important;border-radius:16px!important;padding:6px 4px!important;font-size:12px!important;flex-direction:column;gap:4px}
+}
+.frase-dia{margin:0 0 14px;padding:22px 20px 18px;border-radius:18px;text-align:center;position:relative;overflow:hidden;color:#f4f1ea;
+  background:radial-gradient(120% 90% at 50% 0%,rgba(225,181,83,.22),transparent 55%),linear-gradient(160deg,#101d3b,#1d3263);box-shadow:0 8px 22px rgba(19,36,71,.28)}
+.frase-dia .fd-eyebrow{margin:0 0 10px;font:800 11.5px/1 system-ui,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#e1b553}
+.frase-dia blockquote{margin:0 auto;max-width:34ch;font:italic 21px/1.5 var(--font-text);color:#fbf8f1}
+.frase-dia figcaption{margin-top:12px;display:flex;flex-direction:column;gap:4px;align-items:center}
+.frase-dia figcaption b{font:800 12.5px/1.2 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#e1b553}
+.frase-dia figcaption span{font:italic 13px/1.3 var(--font-text);color:rgba(244,241,234,.7)}
+.fd-acts{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.fd-btn{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;border-radius:999px!important;padding:8px 16px!important;font-weight:650}
+.fd-btn .icon{width:16px;height:16px;stroke:#fff}
+.fd-btn.fd-ghost{background:transparent!important;border-color:transparent!important;color:rgba(255,255,255,.8)!important}
 </style>
 </head>
 <body>
@@ -1921,7 +1958,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 </svg>
 
 <!-- ===================== CABEÇALHO ===================== -->
-<header class="app-header">
+<header class="app-header" id="appHeader">
   <div class="header-inner">
     <h1 class="brand"><a href="#inicio" data-view="inicio"><img src="icons/mark.svg?v=3" alt="" width="38" height="38"><span class="brand-txt"><span class="brand-name">SOLA</span><span class="brand-sub">Bíblia &amp; Teologia</span></span></a></h1>
     <nav class="top-nav" aria-label="Seções do aplicativo">
@@ -1935,11 +1972,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     </nav>
     <div class="header-tools">
       <button type="button" class="btn btn-icon now-top" id="nowTop" hidden aria-label="Abrir o tocador" title="Tocando agora"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
-      <button type="button" class="btn btn-icon farol-top" id="farolTop" aria-label="Buscar no SOLA" title="Buscar no SOLA (atalho: /)"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
-      <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
+      <button type="button" class="btn btn-icon farol-top" id="farolTop" data-label="Buscar" aria-label="Buscar no SOLA" title="Buscar no SOLA (atalho: /)"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
+      <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" data-label="Avisos" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
       <button type="button" class="btn btn-icon" id="shareTop" data-label="Enviar" aria-label="Compartilhar o app" title="Compartilhar o app"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
-      <button type="button" class="btn btn-icon" id="helpBtn" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
-      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></button>
+      <button type="button" class="btn btn-icon" id="helpBtn" data-label="Ajuda" aria-label="Ajuda desta seção" title="Ajuda: o que faz cada botão"><svg class="icon" aria-hidden="true"><use href="#i-help"/></svg></button>
+      <button type="button" class="btn btn-icon avatar-btn" id="cfgBtn" data-view="config" data-label="Perfil" aria-label="Configurações e perfil" title="Configurações e perfil"><span id="cfgAvatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span><span class="cfg-gear" aria-hidden="true"><svg class="icon"><use href="#i-gear"/></svg></button>
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
@@ -1966,6 +2003,16 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <figure class="sola-verse" aria-label="Versículo central do app">
     <blockquote>“A minha graça te basta.”</blockquote>
     <figcaption>2 Coríntios 12:9</figcaption>
+  </figure>
+  <figure class="frase-dia" id="fraseDia" aria-label="Frase do dia">
+    <p class="fd-eyebrow">Frase do dia</p>
+    <blockquote id="fdTxt"></blockquote>
+    <figcaption><b id="fdAut"></b><span id="fdObra"></span></figcaption>
+    <div class="fd-acts">
+      <button type="button" class="btn btn-sm fd-btn" data-fd="story"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Stories</button>
+      <button type="button" class="btn btn-sm fd-btn" data-fd="feed"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Feed</button>
+      <button type="button" class="btn btn-sm fd-btn fd-ghost" data-fd="copy">Copiar</button>
+    </div>
   </figure>
   <div class="inst-banner" id="instBanner" hidden>
     <img src="icons/apple-touch-180.png?v=3" alt="" width="56" height="56">
@@ -4878,6 +4925,46 @@ $("#cardDlg").addEventListener("click",e=>{ const V=VerseCard;
 $("#vcFile").addEventListener("change",e=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; const V=VerseCard; if(V.photoUrl) URL.revokeObjectURL(V.photoUrl);
   V.photoUrl=URL.createObjectURL(f); const im=new Image(); im.onload=()=>{ V.photo=im; V.bg={kind:"foto"}; V.paintPicker(); V.render(); }; im.onerror=()=>toast("Não consegui abrir essa imagem."); im.src=V.photoUrl; e.target.value=""; });
 
+/* ---------- Frase do dia (autores clássicos da fé) — muda todo dia; Stories/Feed pelo cartão do farol ---------- */
+const FRASES=[
+ ["Fizeste-nos para ti, e inquieto está o nosso coração enquanto não repousa em ti.","Agostinho","Confissões"],
+ ["Mate o pecado, ou ele matará você.","John Owen","A mortificação do pecado"],
+ ["O coração humano é uma fábrica perpétua de ídolos.","João Calvino","Institutas"],
+ ["Quase toda a soma da nossa sabedoria consiste em duas partes: o conhecimento de Deus e o de nós mesmos.","João Calvino","Institutas"],
+ ["Não há um único centímetro quadrado em todo o domínio da existência humana sobre o qual Cristo, que é soberano sobre tudo, não clame: É meu!","Abraham Kuyper",""],
+ ["Aqui estou. Não posso fazer outra coisa. Que Deus me ajude.","Martinho Lutero","Dieta de Worms, 1521"],
+ ["Aprendi a beijar a onda que me lança contra a Rocha Eterna.","Charles Spurgeon",""],
+ ["Uma Bíblia que está caindo aos pedaços geralmente pertence a alguém que não está.","Charles Spurgeon",""],
+ ["O fim principal do homem é glorificar a Deus e gozá-lo para sempre.","Breve Catecismo de Westminster","Pergunta 1"],
+ ["Quando Cristo chama um homem, ele o chama para vir e morrer.","Dietrich Bonhoeffer","Discipulado"],
+ ["Creio no cristianismo como creio que o sol nasceu: não só porque o vejo, mas porque por meio dele vejo todas as outras coisas.","C. S. Lewis",""],
+ ["Deus sussurra em nossos prazeres, fala em nossa consciência, mas grita em nossas dores: elas são o seu megafone para despertar um mundo surdo.","C. S. Lewis","O problema do sofrimento"],
+ ["Não há poço tão profundo que o amor de Deus não seja mais profundo ainda.","Betsie ten Boom","O refúgio secreto"],
+ ["Não é tolo aquele que dá o que não pode reter para ganhar o que não pode perder.","Jim Elliot",""],
+ ["Dá o que ordenas, e ordena o que quiseres.","Agostinho","Confissões"],
+ ["O que vem à nossa mente quando pensamos em Deus é a coisa mais importante a nosso respeito.","A. W. Tozer","O conhecimento do Santo"],
+ ["Até que o pecado seja amargo, Cristo não será doce.","Thomas Watson",""],
+ ["Há mais misericórdia em Cristo do que pecado em nós.","Richard Sibbes","A cana quebrada"],
+ ["Na oração, é melhor ter um coração sem palavras do que palavras sem coração.","John Bunyan",""],
+ ["Não somos nossos; somos de Deus.","João Calvino","Institutas"],
+ ["Ama, e faze o que quiseres.","Agostinho","Comentário à 1ª Epístola de João"],
+ ["Aquele que tem Deus e tudo mais não tem mais do que aquele que tem apenas Deus.","C. S. Lewis","O peso de glória"],
+ ["A obra de Deus, feita do jeito de Deus, nunca carecerá dos recursos de Deus.","Hudson Taylor",""],
+ ["Espere grandes coisas de Deus; empreenda grandes coisas para Deus.","William Carey",""],
+ ["O mundo é o teatro da glória de Deus.","João Calvino",""],
+ ["Resolvido: viver com todas as minhas forças enquanto eu viver.","Jonathan Edwards","Resoluções"],
+ ["Qual é o teu único conforto na vida e na morte? Que eu não pertenço a mim mesmo, mas ao meu fiel Salvador Jesus Cristo.","Catecismo de Heidelberg","Pergunta 1"],
+ ["Graça barata é a graça sem discipulado, a graça sem a cruz.","Dietrich Bonhoeffer","Discipulado"],
+ ["Somos mais pecadores do que jamais ousamos crer, e mais amados e aceitos em Jesus Cristo do que jamais ousamos esperar.","Timothy Keller",""],
+ ["A santidade é o hábito de estar de acordo com a mente de Deus.","J. C. Ryle","Santidade"]
+];
+function fraseHoje(){ const d=new Date(), n=Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5); return FRASES[((n%FRASES.length)+FRASES.length)%FRASES.length]; }
+function paintFrase(){ const [t,a,o]=fraseHoje(); const T=$("#fdTxt"); if(!T) return; T.textContent=`“${t}”`; $("#fdAut").textContent=a; $("#fdObra").textContent=o||""; $("#fdObra").hidden=!o; }
+paintFrase();
+$("#fraseDia")?.addEventListener("click",async e=>{ const b=e.target.closest("[data-fd]"); if(!b) return; const [t,a,o]=fraseHoje();
+  if(b.dataset.fd==="copy"){ const txt=`“${t}” — ${a}${o?`, ${o}`:""}\n\nSOLA | Bíblia & Teologia · ${APP_URL}`; try{ await navigator.clipboard.writeText(txt); toast("Frase copiada."); }catch(_){ toast("Não consegui copiar."); } return; }
+  VerseCard.fmt=b.dataset.fd; VerseCard.open({ text:t, ref:a+(o?` · ${o}`:""), t:"" }); });
+
 
 /* ---------- Para você: personalização v1 (regras, no aparelho) ----------
    Sinais: capítulos lidos, favoritos e grifos (só referências). O texto das anotações NUNCA entra aqui.
@@ -6771,8 +6858,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.22.3";
+const APP_VERSION = "3.23.0";
 const CHANGELOG = [
+  { v:"3.23.0", d:"novembro de 2026", items:["Cabeçalho maior e mais limpo: nome SOLA em destaque e botões do mesmo tamanho, cada um com seu nome (Buscar, Avisos, Enviar, Ajuda, Perfil, Dia/Noite).","Nova Frase do dia no Início: uma frase de um autor clássico da fé (Agostinho, Calvino, Spurgeon, Lewis e outros), que muda todo dia, pronta para postar nos Stories ou no Feed do Instagram."] },
   { v:"3.22.3", d:"novembro de 2026", items:["No devocional, um convite para seguir o Canal SOLA no WhatsApp e receber o devocional todo dia."] },
   { v:"3.22.2", d:"novembro de 2026", items:["Botão “Abrir app” no canto superior direito, para instalar o SOLA no celular. Os botões do topo agora ocupam a linha toda, sem ficar apertados à esquerda."] },
   { v:"3.22.1", d:"novembro de 2026", items:["Devocionais de novembro e dezembro em inglês e espanhol, com o tom do SOLA. Em inglês e espanhol, o texto do dia e o devocional usam a Bíblia do idioma (King James ou Reina-Valera) e a leitura em voz alta usa uma voz do aparelho nesse idioma."] },
