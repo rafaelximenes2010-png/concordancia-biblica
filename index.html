@@ -1363,6 +1363,12 @@ dialog.reader.has-sel .reader-nav{display:none}
 [data-theme="dark"] .news-banner strong{color:#f3d48a}
 
 /* ===== Instalar no celular ===== */
+.canal-cta{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;margin:14px 0;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,rgba(31,168,85,.12),rgba(31,168,85,.04));border:1px solid rgba(31,168,85,.35)}
+.canal-cta[hidden]{display:none}
+.canal-cta>.icon{width:26px;height:26px;stroke:#1fa855;flex:none}
+.cc-txt{flex:1;min-width:200px;display:flex;flex-direction:column;gap:2px}.cc-txt span{color:var(--ink-2);font-size:14px}
+.cc-acts{display:flex;gap:8px;flex-wrap:wrap}
+.canal-cta .btn-wa{background:#1fa855!important;border-color:#1fa855!important;color:#fff!important;font-weight:700}
 .inst-top{display:inline-flex;align-items:center;gap:5px;background:var(--gold)!important;color:#1b1606!important;border-color:var(--gold)!important;font-weight:700;padding:6px 11px;border-radius:999px}
 .inst-top .icon{width:18px;height:18px}
 
@@ -2295,6 +2301,14 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <div><p class="eyebrow">Devocional diário</p><h2 id="devoTitle">Devocional</h2><p id="devoDate"></p></div>
   </div>
   <div class="day-card" id="devoBody"><p class="muted">Carregando…</p></div>
+  <aside class="canal-cta" id="devoCanal" hidden>
+    <svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>
+    <div class="cc-txt"><b>Receba o devocional todo dia</b><span>Siga o Canal SOLA no WhatsApp. É gratuito e seu número não aparece para ninguém.</span></div>
+    <div class="cc-acts">
+      <a class="btn btn-sm btn-wa" id="devoCanalWa" target="_blank" rel="noopener noreferrer">Seguir o canal</a>
+      <button type="button" class="btn btn-sm btn-ghost" id="devoCanalOk">Já sigo</button>
+    </div>
+  </aside>
   <div class="day-nav">
     <button type="button" class="btn" data-devo="-1">‹ Anterior</button>
     <button type="button" class="btn btn-ghost" data-devo="0">Hoje</button>
@@ -6757,8 +6771,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.22.2";
+const APP_VERSION = "3.22.3";
 const CHANGELOG = [
+  { v:"3.22.3", d:"novembro de 2026", items:["No devocional, um convite para seguir o Canal SOLA no WhatsApp e receber o devocional todo dia."] },
   { v:"3.22.2", d:"novembro de 2026", items:["Botão “Abrir app” no canto superior direito, para instalar o SOLA no celular. Os botões do topo agora ocupam a linha toda, sem ficar apertados à esquerda."] },
   { v:"3.22.1", d:"novembro de 2026", items:["Devocionais de novembro e dezembro em inglês e espanhol, com o tom do SOLA. Em inglês e espanhol, o texto do dia e o devocional usam a Bíblia do idioma (King James ou Reina-Valera) e a leitura em voz alta usa uma voz do aparelho nesse idioma."] },
   { v:"3.22.0", d:"novembro de 2026", items:["Em inglês e espanhol, os conteúdos também aparecem traduzidos: devocionais, artigos, mapas e jornadas, credos e catecismos, saltério, notícias e textos de estudo."] },
@@ -8435,6 +8450,14 @@ document.addEventListener("click", async e=>{
   if(ok){ bar.querySelector("span").textContent=_t("Tradução automática do português · pode conter imprecisões. O texto bíblico não é traduzido por máquina."); b.dataset.ct="orig"; b.textContent=_t("Ver original em português"); }
   else { b.textContent=_t("Traduzir: {idioma}",{idioma:NOME_IDIOMA[to]}); toast(_t("Não foi possível traduzir agora")); }
 });
+/* Convite para seguir o Canal SOLA no devocional (some quando a pessoa toca em "Já sigo" ou "Seguir o canal") */
+(function(){ const box=$("#devoCanal"); if(!box) return;
+  const a=$("#devoCanalWa"); a.href=WA_CHANNEL;
+  if(!store.get("canalSigo",false)) box.hidden=false;
+  const fim=()=>{ store.set("canalSigo",true); box.hidden=true; };
+  a.addEventListener("click",()=>setTimeout(fim,400));
+  $("#devoCanalOk").addEventListener("click",()=>{ fim(); toast(_t("Que bom! Até amanhã no canal.")); });
+})();
 /* =====================================================================
    IDIOMA — integração do app com i18n/i18n.js
    (nomes dos livros, Bíblia do idioma, datas, Configurações → Idioma)
