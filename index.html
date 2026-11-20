@@ -157,7 +157,8 @@ a{color:var(--accent)}
 #shareTop{border-color:transparent!important;background:transparent!important;box-shadow:none!important;display:inline-flex;flex-direction:column;align-items:center}
 #shareTop::after{content:attr(data-label);font-size:10px;display:block;line-height:1;margin-top:2px;color:var(--ink-2)}
 @media (max-width:430px){.brand .brand-sub{letter-spacing:.08em!important;font-size:9.5px!important}
-  .header-tools{gap:4px!important} #shareTop,#themeBtn{padding-left:4px!important;padding-right:4px!important}}
+  .header-tools{gap:4px!important;flex-basis:100%;width:100%;justify-content:space-between} #shareTop,#themeBtn{padding-left:4px!important;padding-right:4px!important}
+  }   /* celular: botões distribuídos por toda a linha, "Abrir app" na ponta direita */
 
 /* Faixa de aviso sobre os dados */
 .demo-banner{max-width:1500px;margin:12px auto 0;padding:0 16px}
@@ -1364,7 +1365,8 @@ dialog.reader.has-sel .reader-nav{display:none}
 /* ===== Instalar no celular ===== */
 .inst-top{display:inline-flex;align-items:center;gap:5px;background:var(--gold)!important;color:#1b1606!important;border-color:var(--gold)!important;font-weight:700;padding:6px 11px;border-radius:999px}
 .inst-top .icon{width:18px;height:18px}
-@media (max-width:420px){ .inst-top span{display:none} .inst-top{padding:8px} }
+
+@media (max-width:420px){ .inst-top{flex-direction:column;gap:2px;padding:5px 9px;border-radius:12px;font-size:10px;line-height:1;white-space:nowrap} .inst-top .icon{width:17px;height:17px} }
 .inst-banner{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:12px 14px;border-radius:14px;background:var(--surface);border:2px solid var(--gold);box-shadow:0 4px 14px rgba(0,0,0,.08);position:relative}
 .inst-banner[hidden]{display:none}
 .inst-banner img{width:56px;height:56px;border-radius:13px;flex:none;box-shadow:0 3px 8px rgba(0,0,0,.25)}
@@ -1926,7 +1928,6 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Minhas notas</button>
     </nav>
     <div class="header-tools">
-      <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Instalar o SOLA | Bíblia &amp; Teologia no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Instalar</span></button>
       <button type="button" class="btn btn-icon now-top" id="nowTop" hidden aria-label="Abrir o tocador" title="Tocando agora"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span></button>
       <button type="button" class="btn btn-icon farol-top" id="farolTop" aria-label="Buscar no SOLA" title="Buscar no SOLA (atalho: /)"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
       <button type="button" class="btn btn-icon bell-top" id="bellTop" data-inbox="open" aria-label="Notificações" title="Notificações"><svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span class="bell-n" id="bellN" hidden></span></button>
@@ -1936,6 +1937,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="btn btn-icon" id="themeBtn" aria-label="Alternar para tema escuro" title="Alternar tema">
         <svg class="icon" aria-hidden="true"><use href="#i-moon" id="themeIcon"/></svg>
       </button>
+      <button type="button" class="btn inst-top" id="instTop" hidden aria-label="Abrir app: instalar o SOLA | Bíblia &amp; Teologia no celular" title="Instalar o SOLA no celular"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg><span>Abrir app</span></button>
     </div>
   </div>
 </header>
@@ -6755,8 +6757,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.22.1";
+const APP_VERSION = "3.22.2";
 const CHANGELOG = [
+  { v:"3.22.2", d:"novembro de 2026", items:["Botão “Abrir app” no canto superior direito, para instalar o SOLA no celular. Os botões do topo agora ocupam a linha toda, sem ficar apertados à esquerda."] },
   { v:"3.22.1", d:"novembro de 2026", items:["Devocionais de novembro e dezembro em inglês e espanhol, com o tom do SOLA. Em inglês e espanhol, o texto do dia e o devocional usam a Bíblia do idioma (King James ou Reina-Valera) e a leitura em voz alta usa uma voz do aparelho nesse idioma."] },
   { v:"3.22.0", d:"novembro de 2026", items:["Em inglês e espanhol, os conteúdos também aparecem traduzidos: devocionais, artigos, mapas e jornadas, credos e catecismos, saltério, notícias e textos de estudo."] },
   { v:"3.21.0", d:"novembro de 2026", items:["SOLA em três idiomas: português, inglês e espanhol. Em Configurações › Idioma, escolha Automático (segue o idioma do celular) ou um idioma fixo. A troca vale na hora, sem perder a tela, as notas ou o progresso de leitura.","A Bíblia acompanha o idioma: King James (inglês) e Reina-Valera 1909 (espanhol), mantendo o livro e o capítulo. As pesquisas com IA pedem a resposta no idioma escolhido."] },
