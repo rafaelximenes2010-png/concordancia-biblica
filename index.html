@@ -4839,6 +4839,33 @@ const CardArt = {
     const c=document.createElement("canvas"); c.width=162; c.height=288; this.pinta(c.getContext("2d"),162,288,bg); const u=c.toDataURL("image/jpeg",.8); this.thumbs.set(k,u); return u; }
 };
 
+/* ---------- Lugares reais da semana: 10+ fotos premiadas (Featured pictures) do Wikimedia Commons, trocadas toda segunda ---------- */
+const Lugares={
+  CATS:["Featured_pictures_of_landscapes","Featured_pictures_of_mountains","Featured_pictures_of_coasts","Featured_pictures_of_islands","Featured_pictures_of_Brazil","Featured_pictures_of_Israel"],
+  POR_SEMANA:12, cache:null, _p:null,
+  semana(){ const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); },
+  api(q){ return fetch("https://commons.wikimedia.org/w/api.php?format=json&formatversion=2&origin=*&"+q).then(r=>r.json()); },
+  rnd(seed){ let h=2166136261; for(const c of seed){ h^=c.charCodeAt(0); h=Math.imul(h,16777619); } return ()=>{ h^=h<<13; h^=h>>>17; h^=h<<5; return ((h>>>0)%1e6)/1e6; }; },
+  limpa(h){ const d=document.createElement("div"); d.innerHTML=String(h||""); return d.textContent.replace(/\s+/g," ").trim(); },
+  load(){ if(this._p) return this._p; const wk=this.semana(), ck=store.get("lugaresSemana",null);
+    if(ck && ck.wk===wk && ck.list && ck.list.length){ this.cache=ck.list; return this._p=Promise.resolve(this.cache); }
+    return this._p=(async()=>{ try{
+      const r=this.rnd("sola-"+wk), pool=[];
+      await Promise.all(this.CATS.map(async c=>{ try{ const j=await this.api(`action=query&list=categorymembers&cmtype=file&cmlimit=500&cmtitle=Category:${c}`);
+        (j.query&&j.query.categorymembers||[]).forEach(m=>{ if(/\.(jpe?g)$/i.test(m.title)) pool.push(m.title); }); }catch(e){} }));
+      const uniq=[...new Set(pool)]; for(let i=uniq.length-1;i>0;i--){ const k=Math.floor(r()*(i+1)); [uniq[i],uniq[k]]=[uniq[k],uniq[i]]; }
+      const pick=uniq.slice(0,30), out=[];
+      const j=await this.api(`action=query&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1920&iiextmetadatafilter=Artist|LicenseShortName|ObjectName&titles=${encodeURIComponent(pick.join("|"))}`);
+      for(const pg of (j.query&&j.query.pages||[])){ const ii=pg.imageinfo&&pg.imageinfo[0]; if(!ii||!ii.thumburl) continue;
+        if(ii.width<ii.height*0.55 || ii.width>ii.height*2.6) continue;      // evita panorâmicas extremas
+        const md=ii.extmetadata||{}, nome=(this.limpa(md.ObjectName&&md.ObjectName.value)||pg.title.replace(/^File:/,"").replace(/\.\w+$/,"").replace(/[_-]+/g," ")).slice(0,60);
+        const autor=this.limpa(md.Artist&&md.Artist.value).slice(0,40), lic=this.limpa(md.LicenseShortName&&md.LicenseShortName.value);
+        out.push({ nome, url:ii.thumburl, thumb:ii.thumburl.replace(/\/1920px-/,"/330px-"), cred:`Foto: ${autor||"Wikimedia Commons"}${lic?` · ${lic}`:""} · Wikimedia Commons` });
+        if(out.length>=this.POR_SEMANA) break; }
+      this.cache=out; if(out.length) store.set("lugaresSemana",{wk,list:out});
+    }catch(e){ this.cache=[]; } this._p=null; return this.cache; })(); }
+};
+
 /* ---------- Cartão do farol (Stories 9:16 e Feed 4:5) ----------
    Só o texto bíblico escolhido entra na imagem (nunca anotações). */
 const VerseCard = {
@@ -4850,7 +4877,7 @@ const VerseCard = {
     const [W,H]=this.SIZES[fmt]; const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
     const bg=this.bg||{kind:"farol"}, m=Math.round(W*0.05);
     let bx=m, bw=W-2*m, top, maxBottom, lhLeft=Infinity, center=false;
-    if(bg.kind==="foto" && this.photo){ const im=this.photo, sc=Math.max(W/im.width,H/im.height); ctx.drawImage(im,(W-im.width*sc)/2,(H-im.height*sc)/2,im.width*sc,im.height*sc);
+    if((bg.kind==="foto"||bg.kind==="lugar") && this.photo){ const im=this.photo, sc=Math.max(W/im.width,H/im.height); ctx.drawImage(im,(W-im.width*sc)/2,(H-im.height*sc)/2,im.width*sc,im.height*sc);
       ctx.fillStyle="rgba(0,0,0,.12)"; ctx.fillRect(0,0,W,H); center=true; }
     else if(bg.kind==="gen"){ CardArt.pinta(ctx,W,H,bg); center=true; }
     else { const im=await this.art(); const sc=H/im.height, iw=im.width*sc;
@@ -4871,22 +4898,28 @@ const VerseCard = {
     ctx.font=`800 ${refFs}px ${ui}`; ctx.fillStyle="#ffd98a"; ctx.fillText(refTxt, bx+pad, top+pad+lines.length*lh+refFs*1.45);
     const sg=Math.round(W*0.024); ctx.font=`700 ${sg}px ${ui}`; ctx.textAlign="right"; ctx.fillStyle="rgba(255,255,255,.92)"; ctx.shadowColor="rgba(0,0,0,.55)"; ctx.shadowBlur=8;
     ctx.fillText("SOLA | Bíblia & Teologia", W-m, H-Math.round(H*0.03)); ctx.shadowBlur=0; ctx.textAlign="left";
+    if(bg.kind==="lugar" && bg.cred){ const cf=Math.round(W*0.017); ctx.font=`600 ${cf}px ${ui}`; ctx.fillStyle="rgba(255,255,255,.85)"; ctx.shadowColor="rgba(0,0,0,.6)"; ctx.shadowBlur=6;
+      let c=bg.cred; while(ctx.measureText(c).width>W*0.55 && c.length>12) c=c.slice(0,-2); if(c!==bg.cred) c=c.slice(0,-1)+"…";
+      ctx.fillText(c, m, H-Math.round(H*0.03)); ctx.shadowBlur=0; }
     this.lastFit={ fs, lines:lines.length, fits: top+boxH<=maxBottom+1, lighthouseVisible: bx+bw < lhLeft, bg:bg.kind+(bg.cena?":"+bg.cena:"") };
     return new Promise(ok=>cv.toBlob(ok,"image/jpeg",0.9));
   },
-  bg: (b=>b&&b.kind!=="foto"?b:{kind:"farol"})(store.get("cardBg",null)), photo:null, tab:null,
+  bg: (b=>b&&b.kind!=="foto"&&b.kind!=="lugar"?b:{kind:"farol"})(store.get("cardBg",null)), photo:null, tab:null,
   paintPicker(){
     const col=CardArt.colecao(), m=CardArt.mes(); if(!this.tab) this.tab = this.bg.kind==="gen" ? this.bg.tema : this.bg.kind==="foto" ? "foto" : "farol";
-    const tabs=[["mes","✨ Este mês"],["farol","Farol"],...CA_THEMES.map(t=>[t.id,t.t]),["foto","📷 Sua foto"]];
+    const tabs=[["lugares","🌍 Lugares"],["mes","✨ Este mês"],["farol","Farol"],...CA_THEMES.map(t=>[t.id,t.t]),["foto","📷 Sua foto"]];
     $("#vcTabs").innerHTML=tabs.map(([k,l])=>`<button type="button" class="vc-tab${k===this.tab?" on":""}" data-vctab="${k}">${l}</button>`).join("");
     const same=b=>this.bg.kind==="gen" && b.seed===this.bg.seed && b.tema===this.bg.tema;
     let strip="";
-    if(this.tab==="farol") strip=`<button type="button" class="vc-th${this.bg.kind==="farol"?" on":""}" data-vcfarol><img src="icons/farol-card.jpg" alt="Farol ao sol"></button>`;
+    if(this.tab==="lugares"){ const L=Lugares.cache; strip = !L ? `<p class="vc-mes" style="align-self:center">Carregando os lugares da semana…</p>` : !L.length ? `<p class="vc-mes" style="align-self:center">Sem conexão para buscar os lugares agora. Tente de novo em instantes.</p>`
+      : L.map((x,i)=>`<button type="button" class="vc-th${this.bg.kind==="lugar"&&this.bg.url===x.url?" on":""}" data-vclugar="${i}" aria-label="${esc(x.nome)}"><img src="${esc(x.thumb)}" alt="" loading="lazy" crossorigin="anonymous"><small>${esc(x.nome)}</small></button>`).join("");
+      if(!L) Lugares.load().then(()=>{ if(this.tab==="lugares") this.paintPicker(); }); }
+    else if(this.tab==="farol") strip=`<button type="button" class="vc-th${this.bg.kind==="farol"?" on":""}" data-vcfarol><img src="icons/farol-card.jpg" alt="Farol ao sol"></button>`;
     else if(this.tab==="foto") strip=`<button type="button" class="vc-th vc-up${this.bg.kind==="foto"?" on":""}" data-vcup>${this.photo?`<img src="${this.photoUrl}" alt="Sua foto">`:"<span>＋<br>Escolher foto</span>"}</button><p class="vc-mes" style="align-self:center">Use uma foto sua. Ela fica só neste aparelho e não é enviada a lugar nenhum.</p>`;
     else { const list = this.tab==="mes" ? col : col.filter(b=>b.tema===this.tab);
       strip=list.map((b,i)=>`<button type="button" class="vc-th${same(b)?" on":""}" data-vcgen="${col.indexOf(b)}" aria-label="${esc(CA_THEMES.find(t=>t.id===b.tema).t)} ${i+1}"><img src="${CardArt.thumb(b)}" alt=""><small>${esc(CA_THEMES.find(t=>t.id===b.tema).t)}</small></button>`).join(""); }
     $("#vcStrip").innerHTML=strip;
-    $("#vcMes").textContent = this.tab==="farol"||this.tab==="foto" ? "" : `Coleção de ${CardArt.mesNome(m)} · ${col.length} imagens originais do SOLA · renova todo mês`;
+    $("#vcMes").textContent = this.tab==="lugares" ? (Lugares.cache&&Lugares.cache.length?`${Lugares.cache.length} lugares reais desta semana · fotos premiadas do Wikimedia Commons · renova toda segunda`:"") : this.tab==="farol"||this.tab==="foto" ? "" : `Coleção de ${CardArt.mesNome(m)} · ${col.length} imagens originais do SOLA · renova todo mês`;
     const th=CA_THEMES.find(t=>t.id===this.tab);
     $("#vcVs").innerHTML = th ? `<span class="vc-lbl">Versículos sobre ${esc(th.t.toLowerCase())}:</span>`+caVersos(th).map(k=>{ const [b,c,v]=k.split("."); return `<button type="button" class="vc-v" data-vcv="${k}">${esc(BOOK[b].name)} ${c}:${v}</button>`; }).join("") : "";
   },
@@ -4902,7 +4935,7 @@ const VerseCard = {
     catch(e){ toast("Não foi possível montar a imagem. Conecte-se uma vez para baixar a arte do farol."); }
   },
   fileName(){ return `SOLA-${String(this.cur.ref).replace(/[^\wÀ-ú]+/g,"-")}-${this.fmt==="story"?"stories":"feed"}.jpg`; },
-  async open(o){ this.cur=o; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.render(); },
+  async open(o){ this.cur=o; const nt=document.querySelector("#cardDlg .vc-note"); if(nt) nt.textContent = o.t==="" ? "A frase e o autor vão na imagem, com a assinatura do SOLA." : "Só o texto bíblico selecionado vai na imagem. Suas anotações continuam privadas."; const d=$("#cardDlg"); if(!d.open) d.showModal(); this.paintPicker(); await this.render(); },
   download(){ if(!this.blob) return; const a=document.createElement("a"); a.href=URL.createObjectURL(this.blob); a.download=this.fileName(); document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); toast("Imagem salva. No Instagram ou Facebook, escolha-a na galeria."); },
   async share(){
     if(!this.blob) return; const f=new File([this.blob], this.fileName(), { type:"image/jpeg" });
@@ -4919,6 +4952,8 @@ $("#cardDlg").addEventListener("click",e=>{ const b=e.target.closest("[data-cdk]
 $("#cardDlg").addEventListener("click",e=>{ const V=VerseCard;
   const t=e.target.closest("[data-vctab]"); if(t){ V.tab=t.dataset.vctab; return V.paintPicker(); }
   const g=e.target.closest("[data-vcgen]"); if(g){ V.bg=CardArt.colecao()[+g.dataset.vcgen]; store.set("cardBg",V.bg); V.paintPicker(); return V.render(); }
+  const lg=e.target.closest("[data-vclugar]"); if(lg){ const x=Lugares.cache[+lg.dataset.vclugar]; toast("Carregando a foto…",1500);
+    const im=new Image(); im.crossOrigin="anonymous"; im.onload=()=>{ V.photo=im; V.bg={kind:"lugar",url:x.url,cred:x.cred}; V.paintPicker(); V.render(); }; im.onerror=()=>toast("Não consegui baixar essa foto. Tente outra."); im.src=x.url; return; }
   if(e.target.closest("[data-vcfarol]")){ V.bg={kind:"farol"}; store.set("cardBg",V.bg); V.paintPicker(); return V.render(); }
   if(e.target.closest("[data-vcup]")){ if(V.photo && V.bg.kind!=="foto"){ V.bg={kind:"foto"}; V.paintPicker(); return V.render(); } return $("#vcFile").click(); }
   const v=e.target.closest("[data-vcv]"); if(v) return V.setVerse(v.dataset.vcv); });
@@ -4963,7 +4998,7 @@ function paintFrase(){ const [t,a,o]=fraseHoje(); const T=$("#fdTxt"); if(!T) re
 paintFrase();
 $("#fraseDia")?.addEventListener("click",async e=>{ const b=e.target.closest("[data-fd]"); if(!b) return; const [t,a,o]=fraseHoje();
   if(b.dataset.fd==="copy"){ const txt=`“${t}” — ${a}${o?`, ${o}`:""}\n\nSOLA | Bíblia & Teologia · ${APP_URL}`; try{ await navigator.clipboard.writeText(txt); toast("Frase copiada."); }catch(_){ toast("Não consegui copiar."); } return; }
-  VerseCard.fmt=b.dataset.fd; VerseCard.open({ text:t, ref:a+(o?` · ${o}`:""), t:"" }); });
+  VerseCard.fmt=b.dataset.fd; VerseCard.tab="lugares"; VerseCard.open({ text:t, ref:a+(o?` · ${o}`:""), t:"" }); });
 
 
 /* ---------- Para você: personalização v1 (regras, no aparelho) ----------
@@ -6858,8 +6893,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.23.0";
+const APP_VERSION = "3.24.0";
 const CHANGELOG = [
+  { v:"3.24.0", d:"novembro de 2026", items:["Novo fundo 🌍 Lugares na imagem para Stories e Feed: 12 fotos reais de lugares lindos do mundo (paisagens, montanhas, litorais, ilhas, Brasil e Terra Santa), escolhidas entre as fotos premiadas do Wikimedia Commons. Trocam toda segunda-feira, com o crédito do fotógrafo na imagem."] },
   { v:"3.23.0", d:"novembro de 2026", items:["Cabeçalho maior e mais limpo: nome SOLA em destaque e botões do mesmo tamanho, cada um com seu nome (Buscar, Avisos, Enviar, Ajuda, Perfil, Dia/Noite).","Nova Frase do dia no Início: uma frase de um autor clássico da fé (Agostinho, Calvino, Spurgeon, Lewis e outros), que muda todo dia, pronta para postar nos Stories ou no Feed do Instagram."] },
   { v:"3.22.3", d:"novembro de 2026", items:["No devocional, um convite para seguir o Canal SOLA no WhatsApp e receber o devocional todo dia."] },
   { v:"3.22.2", d:"novembro de 2026", items:["Botão “Abrir app” no canto superior direito, para instalar o SOLA no celular. Os botões do topo agora ocupam a linha toda, sem ficar apertados à esquerda."] },
