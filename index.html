@@ -752,6 +752,8 @@ details.st-group:not([open])>summary.st-h{background:var(--surface);border:1px s
 .inbox-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .inbox-list li button{all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:grid;grid-template-columns:34px 1fr;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
 .inbox-list li.new button{border-color:var(--gold);background:var(--gold-soft)}
+.inbox-list li{transition:opacity .25s,transform .25s,max-height .3s .2s,margin .3s .2s;max-height:400px;overflow:hidden}
+.inbox-list li.lida{opacity:0;transform:translateX(40px);max-height:0;margin-top:-8px}
 .inbox-list .ib-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff}
 .inbox-list .ib-ic .icon{width:18px;height:18px}
 .inbox-list b{display:block;font-size:15px}
@@ -5650,6 +5652,10 @@ async function pushAction(e){
 const Inbox = {
   feed:[], loaded:0,
   seen(){ return store.get("inboxSeen",""); },
+  key(x){ return x.id || (x.title+"|"+(x.body||"")); },
+  gone(){ return store.get("inboxGone",[]); },
+  dismiss(x){ const g=this.gone(), k=this.key(x); if(!g.includes(k)){ g.push(k); store.set("inboxGone",g.slice(-200)); }
+    store.set("inboxKeep",store.get("inboxKeep",[]).filter(y=>this.key(y)!==k)); },
   async received(){ try{ const c=await caches.open("sola-inbox"); const r=await c.match("inbox"); return r?await r.json():[]; }catch(e){ return []; } },
   async load(force){
     if(force || Date.now()-this.loaded>10*60*1000){
@@ -5662,7 +5668,8 @@ const Inbox = {
     this.feed.forEach(add);
     const cur=CHANGELOG.find(c=>c.v===APP_VERSION);
     if(cur) add({ id:"v"+APP_VERSION, kind:"versao", title:`SOLA ${APP_VERSION} instalado`, body:cur.items[0], url:"./index.html#config", date:store.get("verSeenAt",new Date().toISOString()) });
-    return items.sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,30);
+    const g=this.gone();
+    return items.filter(x=>!g.includes(this.key(x))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,30);
   },
   unread(items){ const s=this.seen(); return items.filter(x=>!s || String(x.date)>s).length; },
   async paint(force){ const items=await this.load(force), n=this.unread(items), b=$("#bellN"); if(!b) return items;
@@ -5679,7 +5686,13 @@ const Inbox = {
          : `<div class="inbox-cta"><p><strong>Receba na tela do celular</strong>, mesmo com o app fechado: devocional do dia, versões novas e avisos do SOLA.</p><button type="button" class="btn btn-sm btn-primary" data-ib-cfg>Ligar notificações</button></div>`);
     $("#inboxBody").onclick=e=>{
       if(e.target.closest("[data-ib-cfg]")){ e.preventDefault(); $("#inboxDialog").close(); showView("devocional"); setTimeout(()=>$("#remindersCard2")?.scrollIntoView({ behavior:"smooth", block:"center" }),250); return; }
-      const b=e.target.closest("[data-ib]"); if(!b) return; const it=items[+b.dataset.ib]; $("#inboxDialog").close();
+      const b=e.target.closest("[data-ib]"); if(!b) return; const it=items[+b.dataset.ib]; if(!it) return;
+      Inbox.dismiss(it);
+      if(it.kind==="versao"){ // atualização: marca como lida e some da lista
+        const li=b.closest("li"); li.classList.add("lida"); b.disabled=true;
+        setTimeout(()=>{ li.remove(); const ul=$("#inboxBody .inbox-list"); if(ul && !ul.children.length) ul.outerHTML=`<p class="muted">Nenhuma notificação por enquanto.</p>`; },550);
+        return; }
+      $("#inboxDialog").close();
       const h=(String(it.url||"").split("#")[1])||"inicio"; showView(h);
     };
     openDialog($("#inboxDialog"));
@@ -6937,8 +6950,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.2";
+const APP_VERSION = "3.25.3";
 const CHANGELOG = [
+  { v:"3.25.3", d:"novembro de 2026", items:["Notificações: ao tocar num aviso de atualização, ele é marcado como lido e some da lista. Os outros avisos também saem da lista depois de abertos."] },
   { v:"3.25.2", d:"novembro de 2026", items:["Ouvir: as opções de rádio agora ficam centralizadas."] },
   { v:"3.25.1", d:"novembro de 2026", items:["Ouvir: agora aparece uma rádio por vez. Escolha a rádio no rolo logo acima do player (KCBI 90.9, RefNet ou Rádio IPB); o app lembra a sua escolha.","RefNet voltou a tocar, com o endereço atual da transmissão."] },
   { v:"3.25.0", d:"novembro de 2026", items:["Mais duas rádios ao vivo no Início, em Ouvir: RefNet, a rádio reformada 24 horas do Ligonier Ministries, e Rádio IPB, a rádio oficial da Igreja Presbiteriana do Brasil. Só uma toca por vez, com controle na tela de bloqueio."] },
