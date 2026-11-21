@@ -2063,7 +2063,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9<small>Dallas · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet<small>Reformada · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB<small>São Paulo · português</small></button>
-    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="reformada" aria-checked="false"><i class="rdx-dot"></i>Radio Reformada<small>Chile · espanhol</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="espanhol" aria-checked="false"><i class="rdx-dot"></i>Radio Cristiana<small>Cristã · espanhol</small></button>
     </div></div>
   <div class="home-card rdx" id="rdCard" data-radio="kcbi">
     <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
@@ -5837,14 +5837,14 @@ const RADIOS = {
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
-  reformada:{ nome:"Radio Reformada", cls:"rdx-v4", sub:" · Linares, Chile", artista:"Rádio cristã reformada em espanhol · Linares, Chile", site:"https://radioreformada.cl/", busca:"Radio Reformada",
-    ok:x=>/radio\s*reformada/i.test(x.name) || /radioreformada/i.test(x.homepage||""), extra:[] }
+  espanhol:{ nome:"Radio Cristiana", cls:"rdx-v4", sub:" · em espanhol", artista:"Rádio cristã em espanhol", site:"https://radioscristianasdelmundo.com/", busca:"", qs:"language=spanish&tag=christian&order=votes&reverse=true&limit=60", max:14,
+    ok:x=>!/cat[oó]lic|maria/i.test(x.name||""), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
   const urls=[...(st.pre||[])];
   for(const h of ["de1","nl1","at1"]){
-    try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?name=${encodeURIComponent(st.busca)}&limit=20&hidebroken=true`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
+    try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?${st.qs ? st.qs+"&hidebroken=true" : "name="+encodeURIComponent(st.busca)+"&limit=20&hidebroken=true"}`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
       const list=await r.json();
       list.filter(st.ok).sort((a,b)=>(b.votes||0)-(a.votes||0))
         .forEach(x=>[x.url_resolved,x.url].forEach(u=>{ if(u && /^https:/.test(u) && !urls.includes(u)) urls.push(u); }));
@@ -5852,7 +5852,7 @@ async function radioUrls(st){
     }catch(e){}
   }
   st.extra.forEach(u=>{ if(!urls.includes(u)) urls.push(u); });
-  return urls;
+  return st.max ? urls.slice(0,st.max) : urls;
 }
 function radioUi(k,state){ const c=document.querySelector(`.rdx[data-radio="${k}"]`); if(!c) return; const st=RADIOS[k], b=c.querySelector(".rdx-play");
   c.classList.toggle("playing", state==="play");
@@ -5912,7 +5912,7 @@ const FS_SECOES = [
   ["Artigos","artigos","artigos textos leitura ensaios"],["Pensadores","pensadores","pensadores autores teologos filosofos"],["Mapas e jornadas","mapas","mapas jornadas geografia paulo"],
   ["Ouvir","ouvir","ouvir audio musica hinos"],["Notícias do mundo cristão","noticias","noticias news missoes perseguicao seminarios"],["Credos e catecismos","catecismos","credos catecismos confissao westminster heidelberg dort"],
   ["Notas","notas","notas anotacoes"],["Meu devocional","meudevocional","meu devocional diario pessoal"],["Configurações","config","configuracoes ajustes tema letra versao notificacoes"],
-  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Reformada)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
+  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Cristiana)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
 ];
 const fsNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const fsNormPos = t => [...String(t||"")].map(c=>fsNorm(c).charAt(0)||c).join("");   /* mesma posição de cada letra, sem acento */
@@ -7022,8 +7022,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.28.0";
+const APP_VERSION = "3.28.1";
 const CHANGELOG = [
+  { v:"3.28.1", d:"novembro de 2026", items:["Rádio cristã em espanhol: o app agora procura sozinho uma transmissão cristã em espanhol que esteja no ar e toca a primeira que funcionar."] },
   { v:"3.28.0", d:"novembro de 2026", items:["Seletor de rádios compacto: toque na setinha e escolha a rádio.","Radio Reformada (Chile, em espanhol) no lugar da Radio Encuentro."] },
   { v:"3.27.3", d:"novembro de 2026", items:["Radio Encuentro: transmissão direta adicionada."] },
   { v:"3.27.2", d:"novembro de 2026", items:["Dicionário de grego: numeração simplificada (nº 26, sem a letra G) e visual das entradas melhorado."] },
