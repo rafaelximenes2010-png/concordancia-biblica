@@ -7049,8 +7049,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.31.0";
+const APP_VERSION = "3.31.1";
 const CHANGELOG = [
+  { v:"3.31.1", d:"novembro de 2026", items:["Mensagem de boas-vindas: arraste o dedo para cima para dispensar."] },
   { v:"3.31.0", d:"novembro de 2026", items:["Compartilhe: nova imagem de divulgação do SOLA para Stories do Instagram e do Facebook, em 3 estilos (Noite, Farol e Claro), com botões para postar e baixar."] },
   { v:"3.30.2", d:"novembro de 2026", items:["Cartões para compartilhar: aba “Farol” (com a xícara) retirada."] },
   { v:"3.30.1", d:"novembro de 2026", items:["Cartões para compartilhar: nova aba “Faróis reais”, com fotos de faróis famosos e ondas grandes (Wikimedia Commons, com crédito do fotógrafo). Os faróis desenhados saíram."] },
@@ -7621,7 +7622,16 @@ paintAvatar();
     $("#welcomeT").textContent = nm ? `Oi, ${nm}, seja bem-vindo de volta!` : voltou ? "Que bom ter você de volta ao SOLA!" : "Bem-vindo ao SOLA!"; $("#welcomeS").textContent=sub;
     const show=()=>{ box.hidden=false; requestAnimationFrame(()=>requestAnimationFrame(()=>box.classList.add("show")));
       const hide=()=>{ box.classList.remove("show"); setTimeout(()=>box.hidden=true,500); };
-      box.addEventListener("click",hide,{once:true}); setTimeout(hide,8000); };
+      box.addEventListener("click",hide,{once:true}); const tm=setTimeout(hide,8000);
+      /* arrastar o dedo para cima dispensa a mensagem */
+      let y0=null, dy=0, t0=0;
+      box.style.touchAction="none";
+      box.addEventListener("pointerdown",e=>{ y0=e.clientY; dy=0; t0=Date.now(); clearTimeout(tm); try{ box.setPointerCapture(e.pointerId); }catch(_){} });
+      box.addEventListener("pointermove",e=>{ if(y0===null) return; dy=Math.min(0,e.clientY-y0); box.style.transition="none"; box.style.transform=`translate(-50%,${dy}px)`; box.style.opacity=String(Math.max(.2,1+dy/160)); });
+      const fim=()=>{ if(y0===null) return; const v=-dy/Math.max(1,Date.now()-t0); y0=null; box.style.transition=""; box.style.opacity="";
+        if(-dy>40 || v>0.5){ box.style.transform="translate(-50%,-160%)"; box.style.opacity="0"; setTimeout(()=>{ box.hidden=true; box.classList.remove("show"); box.style.transform=""; },300); }
+        else { box.style.transform=""; setTimeout(hide,4000); } };
+      box.addEventListener("pointerup",fim); box.addEventListener("pointercancel",fim); };
     const wait=()=>{ const sp=document.getElementById("splash"); if(sp && !sp.classList.contains("sp-out")) return setTimeout(wait,150); setTimeout(show,450); };   // depois da abertura
     wait();
   }catch(e){}
