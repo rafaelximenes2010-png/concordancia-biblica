@@ -656,6 +656,12 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-op .rdx-dot::after{content:"";width:12px;height:12px;background:#fff;opacity:.92;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;transform:scale(1.7)}
 .rdx-op[aria-checked="true"]{border-color:var(--gold,#e0b04a);box-shadow:0 0 0 1px var(--gold,#e0b04a),0 6px 18px rgba(224,176,74,.22);background:linear-gradient(160deg,var(--surface),rgba(224,176,74,.10))}
 .rdx-op[aria-checked="true"]::after{content:"";position:absolute;right:10px;top:10px;width:8px;height:8px;border-radius:50%;background:#e0533f;box-shadow:0 0 0 3px rgba(224,83,63,.25)}
+.gr-it{border:1px solid var(--border);border-radius:14px;margin:10px 0;background:var(--surface)}
+.gr-it>summary{padding:12px 14px;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;list-style:none}
+.gr-it>summary::-webkit-details-marker{display:none}
+.gr-l{font-size:1.3rem;font-weight:600}.gr-x{font-style:italic;opacity:.8}
+.gr-d{flex-basis:100%;opacity:.7;font-size:.92rem;line-height:1.35;margin-top:2px}
+.gr-b{padding:0 14px 12px}.gr-b p{margin:.5em 0;line-height:1.45}.gr-ref{color:var(--gold,#e0b04a);text-decoration:underline}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
 .rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
@@ -2533,7 +2539,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div class="view-head"><div><p class="eyebrow">Estudos · língua original</p><h2 id="grTitle">Dicionário de grego</h2>
     <p>Mais de 5.500 palavras do Novo Testamento, com número de Strong, transliteração e significado em português.</p></div></div>
   <div class="pen-tools">
-    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar palavra grega</span><input id="grQ" type="search" placeholder="Número (G26), grego, transliteração ou português…" autocomplete="off"></label>
+    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar palavra grega</span><input id="grQ" type="search" placeholder="Número, grego, transliteração ou português…" autocomplete="off"></label>
   </div>
   <div id="grList"></div>
   <p class="bp-note">Dicionário de Strong (1890/1894, domínio público), em dados de Open Scriptures (CC-BY-SA), traduzido para o português para o SOLA. A tradução automática pode conter imprecisões; confira em obras de referência.</p>
@@ -7014,8 +7020,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.27.1";
+const APP_VERSION = "3.27.2";
 const CHANGELOG = [
+  { v:"3.27.2", d:"novembro de 2026", items:["Dicionário de grego: numeração simplificada (nº 26, sem a letra G) e visual das entradas melhorado."] },
   { v:"3.27.1", d:"novembro de 2026", items:["Seletor de rádios redesenhado: cartões em grade com idioma e destaque na rádio escolhida.","Radio Encuentro: busca da transmissão ampliada."] },
   { v:"3.27.0", d:"novembro de 2026", items:["Novo: Dicionário de grego em Estudos, com mais de 5.500 palavras (número de Strong, transliteração, significado em português e origem). Busca por número, grego, transliteração ou português."] },
   { v:"3.26.0", d:"novembro de 2026", items:["Nova rádio em espanhol: Radio Encuentro (Radio Cadena de Vida, Madrid), na seleção de rádios."] },
@@ -7407,7 +7414,7 @@ const HELP = {
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["▶ Ouvir","Toque no botão redondo ▶ para ouvir o devocional inteiro em voz alta. Toque de novo para pausar; 1× muda a velocidade."],["Modo carro","Tela cheia com botões grandes (voltar, tocar/pausar, avançar), texto grande e a tela sempre ligada. Use com o celular no suporte."],["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
-  grego:["Dicionário de grego",[["Buscar","Digite o número de Strong (ex.: G26), a palavra em grego, a transliteração (agapē) ou uma palavra em português (amor)."],["Toque na palavra","Abre o significado completo, o uso na tradução KJV e a origem."]]],
+  grego:["Dicionário de grego",[["Buscar","Digite o número de Strong (ex.: 26), a palavra em grego, a transliteração (agapē) ou uma palavra em português (amor)."],["Toque na palavra","Abre o significado completo, o uso na tradução KJV e a origem."]]],
   pensadores:["Pensadores",[["Áreas","Filtre por Filosofia e teologia, Psicologia e aconselhamento ou Política e sociedade."],["Nome do pensador","Toque para ver quem é, formação e links."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre as ideias daquele pensador na perspectiva reformada."]]],
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
   catecismos:["Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
@@ -8248,10 +8255,10 @@ let penCat="";
 /* Dicionário de grego (Strong, em português) */
 const Grego={ dados:null, q:"" };
 const grNorm=t=>String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">${m}</a>`); }
+function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">nº ${n}</a>`).replace(/\bH(\d{1,4})\b/g,"hebr. nº $1"); }
 function grCard(n,e,aberto){
   const [l,x,p,d,k,o]=e;
-  return `<details class="gr-it"${aberto?" open":""} data-g="${n}"><summary><span class="gr-l" lang="grc">${esc(l)}</span> <span class="gr-x">${esc(x)}</span> <span class="count-pill">G${n}</span><span class="gr-d">${esc((d||"").split(/[;:]/)[0])}</span></summary>
+  return `<details class="gr-it"${aberto?" open":""} data-g="${n}"><summary><span class="gr-l" lang="grc">${esc(l)}</span> <span class="gr-x">${esc(x)}</span> <span class="count-pill">nº ${n}</span><span class="gr-d">${esc((d||"").split(/[;:]/)[0])}</span></summary>
     <div class="gr-b">${p?`<p><b>Pronúncia:</b> ${esc(p)}</p>`:""}${d?`<p><b>Definição:</b> ${grLink(d)}</p>`:""}${k?`<p><b>Uso na KJV:</b> ${esc(k)}</p>`:""}${o?`<p><b>Origem:</b> ${grLink(o)}</p>`:""}</div></details>`;
 }
 function grPintar(){
@@ -8275,7 +8282,7 @@ async function renderGrego(){
     catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o dicionário. Verifique a conexão e tente de novo.</p>`; return; } }
   const inp=$("#grQ");
   if(inp && !inp.dataset.on){ inp.dataset.on=1; let t; inp.addEventListener("input",()=>{ clearTimeout(t); t=setTimeout(()=>{ Grego.q=inp.value; grPintar(); },150); }); }
-  if(!box.dataset.on){ box.dataset.on=1; box.addEventListener("click",ev=>{ const a=ev.target.closest(".gr-ref"); if(!a) return; ev.preventDefault(); Grego.q="G"+a.dataset.g; const i=$("#grQ"); if(i) i.value=Grego.q; grPintar(); window.scrollTo({top:0,behavior:"smooth"}); }); }
+  if(!box.dataset.on){ box.dataset.on=1; box.addEventListener("click",ev=>{ const a=ev.target.closest(".gr-ref"); if(!a) return; ev.preventDefault(); Grego.q=a.dataset.g; const i=$("#grQ"); if(i) i.value=Grego.q; grPintar(); window.scrollTo({top:0,behavior:"smooth"}); }); }
   grPintar();
 }
 function renderPensadores(){
