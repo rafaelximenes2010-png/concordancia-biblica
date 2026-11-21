@@ -654,10 +654,11 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-op{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:700 13px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;cursor:pointer}
 .rdx-op[aria-checked="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
-.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}
+.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
 .rdx.rdx-v2 .rdx-art{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}
 .rdx.rdx-v3 .rdx-art{background:linear-gradient(145deg,#2f9e6e,#14503f)}
+.rdx.rdx-v4 .rdx-art{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 /* Busca do farol */
 .farol-top{background:#24345f!important;border-color:#24345f!important;color:#fff!important;border-radius:12px!important}
 .farol-top .icon{stroke:#fff;stroke-width:1.9}
@@ -2055,6 +2056,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9</button>
     <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet</button>
     <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB</button>
+    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="encuentro" aria-checked="false"><i class="rdx-dot"></i>Radio Encuentro (ES)</button>
   </div>
   <div class="home-card rdx" id="rdCard" data-radio="kcbi">
     <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
@@ -5800,7 +5802,9 @@ const RADIOS = {
   refnet:{ nome:"RefNet", cls:"rdx-v2", pre:["https://icecast.refnet.fm/utc/-0500"], sub:" · Ligonier, EUA", artista:"Rádio reformada 24h · Ligonier Ministries", site:"https://www.refnet.fm/", busca:"RefNet",
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
-    ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] }
+    ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
+  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Encuentro",
+    ok:x=>/radio\s*encuentro|cadena de vida/i.test(x.name) && /^ES$|spain|espa/i.test((x.countrycode||"")+(x.country||"")), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
@@ -5870,7 +5874,7 @@ const FS_SECOES = [
   ["Artigos","artigos","artigos textos leitura ensaios"],["Pensadores","pensadores","pensadores autores teologos filosofos"],["Mapas e jornadas","mapas","mapas jornadas geografia paulo"],
   ["Ouvir","ouvir","ouvir audio musica hinos"],["Notícias do mundo cristão","noticias","noticias news missoes perseguicao seminarios"],["Credos e catecismos","catecismos","credos catecismos confissao westminster heidelberg dort"],
   ["Notas","notas","notas anotacoes"],["Meu devocional","meudevocional","meu devocional diario pessoal"],["Configurações","config","configuracoes ajustes tema letra versao notificacoes"],
-  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
+  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Encuentro)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
 ];
 const fsNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const fsNormPos = t => [...String(t||"")].map(c=>fsNorm(c).charAt(0)||c).join("");   /* mesma posição de cada letra, sem acento */
@@ -6980,8 +6984,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.7";
+const APP_VERSION = "3.26.0";
 const CHANGELOG = [
+  { v:"3.26.0", d:"novembro de 2026", items:["Nova rádio em espanhol: Radio Encuentro (Radio Cadena de Vida, Madrid), na seleção de rádios."] },
   { v:"3.25.7", d:"novembro de 2026", items:["Correção: a lista de notícias voltou a carregar."] },
   { v:"3.25.6", d:"novembro de 2026", items:["Janelas abertas (notificações, compartilhar, notas, ajuda, comentários e outras) agora fecham ao arrastar para baixo, com uma barrinha no topo indicando o gesto."] },
   { v:"3.25.5", d:"novembro de 2026", items:["Notícias do dia trocam todo dia às 5h da manhã (horário de Brasília)."] },
