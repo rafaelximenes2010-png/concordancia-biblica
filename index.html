@@ -2648,6 +2648,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="btn" id="invCopy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar convite</button>
       <button type="button" class="btn" id="invSite"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Compartilhar site</button>
       <button type="button" class="btn" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Com a imagem do farol</button>
+      <button type="button" class="btn" id="invRedes"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Threads e Facebook</button>
       <button type="button" class="btn" id="invInstall"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Instalar aplicativo</button>
     </div>
   </div>
@@ -2656,8 +2657,11 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <p class="muted" style="margin:0">Imagem pronta para postar nos Stories do Instagram e do Facebook, ou enviar no WhatsApp.</p>
     <div class="hl-filter" id="promoSty" role="group" aria-label="Estilo da imagem"><button type="button" class="chip on" data-psty="noite">Noite</button><button type="button" class="chip" data-psty="farol">Farol</button><button type="button" class="chip" data-psty="claro">Claro</button></div>
     <img id="promoImg" alt="Imagem de divulgação do SOLA" style="width:100%;max-width:300px;aspect-ratio:9/16;border-radius:16px;display:block;margin:6px auto;background:#0f1b33">
-    <div class="inv-row"><button type="button" class="btn inv-big" id="promoShare"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Facebook…</button>
+    <div class="inv-row"><button type="button" class="btn inv-big" id="promoShare"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram (Stories ou Feed)</button>
+      <button type="button" class="btn" id="promoThreads"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Threads</button>
+      <button type="button" class="btn" id="promoFace"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Facebook</button>
       <button type="button" class="btn" id="promoDl"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Baixar imagem</button></div>
+    <p class="muted" style="margin:6px 0 0;font-size:13px">O texto de convite com o link para baixar é copiado automaticamente: cole na legenda da postagem.</p>
   </div>
   <div class="home-card">
     <h3 style="margin:0">Mensagem do convite</h3>
@@ -7049,8 +7053,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.31.1";
+const APP_VERSION = "3.31.2";
 const CHANGELOG = [
+  { v:"3.31.2", d:"novembro de 2026", items:["Compartilhe: botões para divulgar o SOLA no Instagram, Threads e Facebook, com a imagem de divulgação e o texto de convite com o link para instalar."] },
   { v:"3.31.1", d:"novembro de 2026", items:["Mensagem de boas-vindas: arraste o dedo para cima para dispensar."] },
   { v:"3.31.0", d:"novembro de 2026", items:["Compartilhe: nova imagem de divulgação do SOLA para Stories do Instagram e do Facebook, em 3 estilos (Noite, Farol e Claro), com botões para postar e baixar."] },
   { v:"3.30.2", d:"novembro de 2026", items:["Cartões para compartilhar: aba “Farol” (com a xícara) retirada."] },
@@ -7829,11 +7834,15 @@ const Promo={ sty:"noite", blob:null,
   async render(){ const im=$("#promoImg"); if(!im) return; try{ this.blob=await this.draw(this.sty); if(im.src.startsWith("blob:")) URL.revokeObjectURL(im.src); im.src=URL.createObjectURL(this.blob); }catch(e){ toast("Não foi possível montar a imagem agora."); } },
   file(){ return new File([this.blob],`SOLA-divulgacao-${this.sty}-stories.jpg`,{type:"image/jpeg"}); },
   download(){ if(!this.blob) return; const a=document.createElement("a"); a.href=URL.createObjectURL(this.blob); a.download=this.file().name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); toast("Imagem salva. Poste nos Stories."); },
-  async share(){ if(!this.blob) return; const f=this.file(); if(navigator.share && navigator.canShare && navigator.canShare({files:[f]})){ try{ await navigator.share({ files:[f], title:"SOLA | Bíblia & Teologia" }); return; }catch(e){ if(e && e.name==="AbortError") return; } }
+  async share(){ if(!this.blob) return; try{ await navigator.clipboard.writeText(PROMO_TXT()); }catch(_){} const f=this.file(); if(navigator.share && navigator.canShare && navigator.canShare({files:[f]})){ try{ await navigator.share({ files:[f], title:"SOLA | Bíblia & Teologia", text:PROMO_TXT() }); return; }catch(e){ if(e && e.name==="AbortError") return; } }
     toast("Este aparelho não envia imagens direto para os apps. Vou baixar a imagem para você postar.",4500); this.download(); } };
 $("#promoSty").addEventListener("click",e=>{ const b=e.target.closest("[data-psty]"); if(!b) return; Promo.sty=b.dataset.psty; document.querySelectorAll("#promoSty .chip").forEach(x=>x.classList.toggle("on",x===b)); Promo.render(); });
 $("#promoShare").addEventListener("click",()=>Promo.share());
 $("#promoDl").addEventListener("click",()=>Promo.download());
+const PROMO_URL="https://solabiblia.net.br", PROMO_TXT=()=>"Conheça o SOLA | Bíblia & Teologia: Bíblia, devocional diário, estudos reformados, rádios cristãs e muito mais. Estude. Reflita. Aprofunde-se.\n\nInstale grátis, sem anúncios: "+PROMO_URL;
+$("#promoThreads").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(PROMO_TXT()); }catch(_){} window.open("https://www.threads.net/intent/post?text="+encodeURIComponent(PROMO_TXT()),"_blank","noopener"); toast("Abrindo o Threads. Se quiser, anexe a imagem baixada.",4000); });
+$("#promoFace").addEventListener("click",async()=>{ try{ await navigator.clipboard.writeText(PROMO_TXT()); }catch(_){} window.open("https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(PROMO_URL)+"&quote="+encodeURIComponent("Conheça o SOLA | Bíblia & Teologia. Instale grátis!"),"_blank","noopener"); toast("Abrindo o Facebook. Texto de convite copiado.",4000); });
+$("#invRedes").addEventListener("click",()=>{ $("#promoCard").scrollIntoView({behavior:"smooth",block:"start"}); });
 function renderInvite(){
   if(!Promo.blob) Promo.render();
   const ta=$("#invMsg"); if(document.activeElement!==ta) ta.value=inviteText();
