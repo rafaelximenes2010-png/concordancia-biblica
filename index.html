@@ -648,15 +648,14 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-eq{height:10px;margin:0 0 0 4px;gap:2px}.rdx-eq i{width:2px}
 @keyframes rdxeq{0%,100%{height:3px}50%{height:10px}}
 .rdx-play{width:42px;height:42px;box-shadow:none}
-.rdx-rolo{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -2px 10px;padding:2px}
-.rdx-rolo::-webkit-scrollbar{display:none}
-.rdx-op:first-child{margin-left:auto}.rdx-op:last-child{margin-right:auto}
-.rdx-op{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:700 13px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;cursor:pointer}
-.rdx-op[aria-checked="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
-.gr-it{border:1px solid var(--line,#ddd);border-radius:12px;margin:8px 0;background:var(--surface)}
-.gr-it>summary{padding:10px 12px;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
-.gr-l{font-size:1.25rem;font-weight:600}.gr-x{font-style:italic}.gr-d{flex-basis:100%;color:var(--muted,#666);font-size:.9rem}
-.gr-b{padding:0 12px 10px}.gr-b p{margin:.4em 0}.gr-ref{text-decoration:underline}
+.rdx-rolo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
+.rdx-op{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 12px 12px 54px;min-height:62px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--ink);text-align:left;cursor:pointer;font:700 14px/1.15 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:transform .15s,box-shadow .2s,border-color .2s}
+.rdx-op small{font:500 11.5px/1.2 system-ui,-apple-system,sans-serif;opacity:.65}
+.rdx-op:active{transform:scale(.97)}
+.rdx-op .rdx-dot{position:absolute;left:12px;top:50%;width:32px;height:32px;margin-top:-16px;border-radius:10px;display:grid;place-items:center}
+.rdx-op .rdx-dot::after{content:"";width:12px;height:12px;background:#fff;opacity:.92;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;transform:scale(1.7)}
+.rdx-op[aria-checked="true"]{border-color:var(--gold,#e0b04a);box-shadow:0 0 0 1px var(--gold,#e0b04a),0 6px 18px rgba(224,176,74,.22);background:linear-gradient(160deg,var(--surface),rgba(224,176,74,.10))}
+.rdx-op[aria-checked="true"]::after{content:"";position:absolute;right:10px;top:10px;width:8px;height:8px;border-radius:50%;background:#e0533f;box-shadow:0 0 0 3px rgba(224,83,63,.25)}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
 .rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
@@ -2057,10 +2056,10 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   </a></section>
   <section class="hsec" aria-labelledby="hsO"><h3 class="hsec-h" id="hsO">Ouvir</h3>
   <div class="rdx-rolo" role="radiogroup" aria-label="Escolha a rádio">
-    <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9</button>
-    <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet</button>
-    <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB</button>
-    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="encuentro" aria-checked="false"><i class="rdx-dot"></i>Radio Encuentro (ES)</button>
+    <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9<small>Dallas · inglês</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet<small>Reformada · inglês</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB<small>São Paulo · português</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="encuentro" aria-checked="false"><i class="rdx-dot"></i>Radio Encuentro<small>Madrid · espanhol</small></button>
   </div>
   <div class="home-card rdx" id="rdCard" data-radio="kcbi">
     <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
@@ -5834,8 +5833,8 @@ const RADIOS = {
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
-  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Encuentro",
-    ok:x=>/radio\s*encuentro|cadena de vida/i.test(x.name) && /^ES$|spain|espa/i.test((x.countrycode||"")+(x.country||"")), extra:[] }
+  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Radio Encuentro",
+    ok:x=>/radio\s*encuentro|cadena de vida/i.test(x.name) || /radioencuentro|cadenadevida/i.test(x.homepage||""), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
@@ -7015,8 +7014,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.27.0";
+const APP_VERSION = "3.27.1";
 const CHANGELOG = [
+  { v:"3.27.1", d:"novembro de 2026", items:["Seletor de rádios redesenhado: cartões em grade com idioma e destaque na rádio escolhida.","Radio Encuentro: busca da transmissão ampliada."] },
   { v:"3.27.0", d:"novembro de 2026", items:["Novo: Dicionário de grego em Estudos, com mais de 5.500 palavras (número de Strong, transliteração, significado em português e origem). Busca por número, grego, transliteração ou português."] },
   { v:"3.26.0", d:"novembro de 2026", items:["Nova rádio em espanhol: Radio Encuentro (Radio Cadena de Vida, Madrid), na seleção de rádios."] },
   { v:"3.25.7", d:"novembro de 2026", items:["Correção: a lista de notícias voltou a carregar."] },
