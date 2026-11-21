@@ -653,6 +653,10 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-op:first-child{margin-left:auto}.rdx-op:last-child{margin-right:auto}
 .rdx-op{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:700 13px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;cursor:pointer}
 .rdx-op[aria-checked="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.gr-it{border:1px solid var(--line,#ddd);border-radius:12px;margin:8px 0;background:var(--surface)}
+.gr-it>summary{padding:10px 12px;cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.gr-l{font-size:1.25rem;font-weight:600}.gr-x{font-style:italic}.gr-d{flex-basis:100%;color:var(--muted,#666);font-size:.9rem}
+.gr-b{padding:0 12px 10px}.gr-b p{margin:.4em 0}.gr-ref{text-decoration:underline}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
 .rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
@@ -2362,6 +2366,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2399,6 +2404,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2427,6 +2433,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2457,6 +2464,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2476,6 +2484,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2510,6 +2519,26 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     </div>
   </div>
 </section>
+<!-- ===================== DICIONÁRIO DE GREGO ===================== -->
+<section class="view" id="view-grego" hidden aria-labelledby="grTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
+    <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
+  </nav>
+  <div class="view-head"><div><p class="eyebrow">Estudos · língua original</p><h2 id="grTitle">Dicionário de grego</h2>
+    <p>Mais de 5.500 palavras do Novo Testamento, com número de Strong, transliteração e significado em português.</p></div></div>
+  <div class="pen-tools">
+    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar palavra grega</span><input id="grQ" type="search" placeholder="Número (G26), grego, transliteração ou português…" autocomplete="off"></label>
+  </div>
+  <div id="grList"></div>
+  <p class="bp-note">Dicionário de Strong (1890/1894, domínio público), em dados de Open Scriptures (CC-BY-SA), traduzido para o português para o SOLA. A tradução automática pode conter imprecisões; confira em obras de referência.</p>
+</section>
 <!-- ===================== ARTIGOS ===================== -->
 <section class="view" id="view-pensadores" hidden aria-labelledby="penTitle">
   <nav class="sub-tabs" aria-label="Estudos">
@@ -2517,6 +2546,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2536,6 +2566,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -6984,8 +7015,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.26.0";
+const APP_VERSION = "3.27.0";
 const CHANGELOG = [
+  { v:"3.27.0", d:"novembro de 2026", items:["Novo: Dicionário de grego em Estudos, com mais de 5.500 palavras (número de Strong, transliteração, significado em português e origem). Busca por número, grego, transliteração ou português."] },
   { v:"3.26.0", d:"novembro de 2026", items:["Nova rádio em espanhol: Radio Encuentro (Radio Cadena de Vida, Madrid), na seleção de rádios."] },
   { v:"3.25.7", d:"novembro de 2026", items:["Correção: a lista de notícias voltou a carregar."] },
   { v:"3.25.6", d:"novembro de 2026", items:["Janelas abertas (notificações, compartilhar, notas, ajuda, comentários e outras) agora fecham ao arrastar para baixo, com uma barrinha no topo indicando o gesto."] },
@@ -7375,6 +7407,7 @@ const HELP = {
   texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
   devocional:["Devocional",[["▶ Ouvir","Toque no botão redondo ▶ para ouvir o devocional inteiro em voz alta. Toque de novo para pausar; 1× muda a velocidade."],["Modo carro","Tela cheia com botões grandes (voltar, tocar/pausar, avançar), texto grande e a tela sempre ligada. Use com o celular no suporte."],["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
+  grego:["Dicionário de grego",[["Buscar","Digite o número de Strong (ex.: G26), a palavra em grego, a transliteração (agapē) ou uma palavra em português (amor)."],["Toque na palavra","Abre o significado completo, o uso na tradução KJV e a origem."]]],
   pensadores:["Pensadores",[["Áreas","Filtre por Filosofia e teologia, Psicologia e aconselhamento ou Política e sociedade."],["Nome do pensador","Toque para ver quem é, formação e links."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre as ideias daquele pensador na perspectiva reformada."]]],
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
   catecismos:["Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
@@ -7859,8 +7892,8 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","grego","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
+const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", grego:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
@@ -7878,7 +7911,7 @@ document.addEventListener("click",e=>{
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
 const VIEW_TITLE={ noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
-  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", grego:"Estudos · Dicionário de grego", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
@@ -7904,6 +7937,7 @@ function showView(name, {push=true}={}){
   if(name==="meudevocional") renderMeuDevo();
   if(typeof paintMini==="function") setTimeout(paintMini,50);
   if(name==="pensadores") renderPensadores();
+  if(name==="grego") renderGrego();
   if(name==="mapas") renderMapas().then(mpPendencias);
   if(name==="ouvir") renderOuvir();
   if(name==="noticias") renderNoticias();
@@ -8210,6 +8244,40 @@ const PENSADORES = [
 ];
 const PEN_CATS = { fil:["Filosofia e teologia","#3f6c99"], psi:["Psicologia e aconselhamento","#4f7a63"], pol:["Política e sociedade","#8c2f39"] };
 let penCat="";
+
+/* Dicionário de grego (Strong, em português) */
+const Grego={ dados:null, q:"" };
+const grNorm=t=>String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">${m}</a>`); }
+function grCard(n,e,aberto){
+  const [l,x,p,d,k,o]=e;
+  return `<details class="gr-it"${aberto?" open":""} data-g="${n}"><summary><span class="gr-l" lang="grc">${esc(l)}</span> <span class="gr-x">${esc(x)}</span> <span class="count-pill">G${n}</span><span class="gr-d">${esc((d||"").split(/[;:]/)[0])}</span></summary>
+    <div class="gr-b">${p?`<p><b>Pronúncia:</b> ${esc(p)}</p>`:""}${d?`<p><b>Definição:</b> ${grLink(d)}</p>`:""}${k?`<p><b>Uso na KJV:</b> ${esc(k)}</p>`:""}${o?`<p><b>Origem:</b> ${grLink(o)}</p>`:""}</div></details>`;
+}
+function grPintar(){
+  const box=$("#grList"); if(!box||!Grego.dados) return;
+  const q=grNorm(Grego.q).trim(); const D=Grego.dados; let ks;
+  if(!q) ks=["26","3056","4102","5485","1680","2316","4151","3875","4991","40"].filter(k=>D[k]);
+  else if(/^g?\d+$/.test(q)){ const n=q.replace("g",""); ks=Object.keys(D).filter(k=>k===n||k.startsWith(n)).sort((x,y)=>(y===n)-(x===n)||x-y).slice(0,60); }
+  else{
+    const sc=[]; for(const k in D){ const e=D[k]; let s=0;
+      const gl=grNorm(e[0]), tx=grNorm(e[1]), df=grNorm(e[3]), kj=grNorm(e[4]);
+      if(gl===q||tx===q) s=100; else if(gl.startsWith(q)||tx.startsWith(q)) s=60; else if(df.includes(q)) s=40; else if(kj.includes(q)) s=25;
+      if(s) sc.push([s,+k]); }
+    sc.sort((a,b)=>b[0]-a[0]||a[1]-b[1]); ks=sc.slice(0,60).map(a=>String(a[1]));
+  }
+  box.innerHTML=(!q?`<p class="muted">Algumas palavras importantes. Busque acima para ver as demais.</p>`:"")+(ks.length?ks.map(k=>grCard(k,D[k],ks.length===1)).join(""):`<p class="muted">Nada encontrado.</p>`);
+}
+async function renderGrego(){
+  const box=$("#grList"); if(!box) return;
+  if(!Grego.dados){ box.innerHTML=`<p class="muted">Carregando dicionário…</p>`;
+    try{ Grego.dados=await fetch("estudos/lexico-grego.json").then(r=>{ if(!r.ok) throw 0; return r.json(); }); }
+    catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o dicionário. Verifique a conexão e tente de novo.</p>`; return; } }
+  const inp=$("#grQ");
+  if(inp && !inp.dataset.on){ inp.dataset.on=1; let t; inp.addEventListener("input",()=>{ clearTimeout(t); t=setTimeout(()=>{ Grego.q=inp.value; grPintar(); },150); }); }
+  if(!box.dataset.on){ box.dataset.on=1; box.addEventListener("click",ev=>{ const a=ev.target.closest(".gr-ref"); if(!a) return; ev.preventDefault(); Grego.q="G"+a.dataset.g; const i=$("#grQ"); if(i) i.value=Grego.q; grPintar(); window.scrollTo({top:0,behavior:"smooth"}); }); }
+  grPintar();
+}
 function renderPensadores(){
   const q=norm($("#penQ").value.trim());
   $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
