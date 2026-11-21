@@ -7022,8 +7022,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.28.1";
+const APP_VERSION = "3.28.2";
 const CHANGELOG = [
+  { v:"3.28.2", d:"novembro de 2026", items:["Tocar de novo na foto do perfil fecha as Configurações e volta para a tela anterior."] },
   { v:"3.28.1", d:"novembro de 2026", items:["Rádio cristã em espanhol: o app agora procura sozinho uma transmissão cristã em espanhol que esteja no ar e toca a primeira que funcionar."] },
   { v:"3.28.0", d:"novembro de 2026", items:["Seletor de rádios compacto: toque na setinha e escolha a rádio.","Radio Reformada (Chile, em espanhol) no lugar da Radio Encuentro."] },
   { v:"3.27.3", d:"novembro de 2026", items:["Radio Encuentro: transmissão direta adicionada."] },
@@ -7972,6 +7973,10 @@ function goBack(){
   showView("inicio");
 }
 $("#backBtn").addEventListener("click",goBack);
+/* Tocar de novo na foto (perfil) com as Configurações abertas: fecha e volta */
+$("#cfgBtn").addEventListener("click",e=>{ if(currentView!=="config") return; e.preventDefault(); e.stopImmediatePropagation();
+  if($("#cfgTop") && $("#cfgTop").hidden) cfgToIndex();
+  goBack(); },true);
 $("#rdBack").addEventListener("click",()=>{ if(el.dlg.classList.contains("as-view")) goBack(); else closeReader(); });
 /* Voltar/avançar do celular ou do navegador */
 window.addEventListener("hashchange",()=>{
