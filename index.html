@@ -658,6 +658,7 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-op{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;font:700 14px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .rdx-op small{font:500 12px/1.2 system-ui,-apple-system,sans-serif;opacity:.6;margin-left:auto}
 .rdx-op[aria-checked="true"]{background:rgba(224,176,74,.16)}
+.pen-fr{margin:10px 0;padding:10px 12px;border-left:3px solid var(--gold,#e0b04a);background:rgba(224,176,74,.08);border-radius:0 10px 10px 0}.pen-fr b{display:block;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-bottom:4px}.pen-fr p{margin:.5em 0;font-style:italic;line-height:1.45}.pen-fr-go{display:block;margin-top:6px;font-style:normal}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
 .rdx-sel.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-sel.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-sel.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
@@ -2561,7 +2562,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <div class="hl-filter" id="penChips" role="group" aria-label="Área"></div>
   </div>
   <div id="penList"></div>
-  <p class="bp-note">Resumos preparados para este app como ponto de partida; os botões abrem pesquisas externas (Perplexity, ChatGPT, Google Livros, YouTube). Respostas de IA devem ser conferidas nas fontes.</p>
+  <p class="bp-note">As “ideias do mês” são resumos livres do pensamento de cada autor (não são citações literais) e mudam todo mês. Resumos preparados para este app como ponto de partida; os botões abrem pesquisas externas (Perplexity, ChatGPT, Google Livros, YouTube). Respostas de IA devem ser conferidas nas fontes.</p>
 </section>
 <section class="view" id="view-artigos" hidden aria-labelledby="artTitle">
   <nav class="sub-tabs" aria-label="Estudos">
@@ -7022,8 +7023,10 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.28.2";
+const APP_VERSION = "3.29.1";
 const CHANGELOG = [
+  { v:"3.29.1", d:"novembro de 2026", items:["Ideias do mês dos pensadores: botão “Postar ou baixar” gera a imagem para Stories e Feed (Instagram e Facebook), no mesmo cartão dos versículos."] },
+  { v:"3.29.0", d:"novembro de 2026", items:["Pensadores: cada autor ganhou duas “ideias do mês”, que mudam todo mês."] },
   { v:"3.28.2", d:"novembro de 2026", items:["Tocar de novo na foto do perfil fecha as Configurações e volta para a tela anterior."] },
   { v:"3.28.1", d:"novembro de 2026", items:["Rádio cristã em espanhol: o app agora procura sozinho uma transmissão cristã em espanhol que esteja no ar e toca a primeira que funcionar."] },
   { v:"3.28.0", d:"novembro de 2026", items:["Seletor de rádios compacto: toque na setinha e escolha a rádio.","Radio Reformada (Chile, em espanhol) no lugar da Radio Encuentro."] },
@@ -8043,7 +8046,7 @@ async function renderDrawerBody(){
     const q=iaQ(_t("Como {nome} ajudaria a entender e aplicar {ref} (tema: {tema})? Use as ideias e obras dele, na perspectiva da fé reformada. Responda em português, com fontes.",{nome:p.name,ref,tema:theme}));
     body.innerHTML=`<div class="cd-author"><p class="cd-eyebrow">${esc(cat)} · ${esc(ref)}</p><h3>${authorBtn(p.name,p.area)}</h3>
       <p class="meta">${esc([p.years,p.where,p.area].filter(Boolean).join(" · "))}</p></div>
-      <p class="pen-idea">${esc(p.idea)}</p>${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
+      <p class="pen-idea">${esc(p.idea)}</p>
       <p class="hint">Pergunte como ${esc(p.name)} ajuda a entender <strong>${esc(ref)}</strong>:</p>
       <div class="br-links">
         <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
@@ -8295,7 +8298,10 @@ async function renderGrego(){
   if(!box.dataset.on){ box.dataset.on=1; box.addEventListener("click",ev=>{ const a=ev.target.closest(".gr-ref"); if(!a) return; ev.preventDefault(); Grego.q=a.dataset.g; const i=$("#grQ"); if(i) i.value=Grego.q; grPintar(); window.scrollTo({top:0,behavior:"smooth"}); }); }
   grPintar();
 }
+let PenFr=null;
+function penFrases(nome){ const a=PenFr&&PenFr[nome]; if(!a||a.length<2) return []; const d=new Date(), m=d.getFullYear()*12+d.getMonth(), k=m%Math.floor(a.length/2); return [a[2*k],a[2*k+1]]; }
 function renderPensadores(){
+  if(PenFr===null){ PenFr=false; fetch("estudos/pensadores-frases.json").then(r=>r.ok?r.json():{}).then(j=>{ PenFr=j; renderPensadores(); }).catch(()=>{}); }
   const q=norm($("#penQ").value.trim());
   $("#penChips").innerHTML=`<button type="button" class="chip ${penCat?"":"on"}" data-pc="">Todos</button>`+Object.entries(PEN_CATS).map(([k,[n]])=>`<button type="button" class="chip ${penCat===k?"on":""}" data-pc="${k}">${n}</button>`).join("");
   const list=PENSADORES.filter(p=>(!penCat||p.cat===penCat) && (!q || norm(p.name+" "+p.area+" "+p.idea+" "+p.works+" "+p.where).includes(q)));
@@ -8312,6 +8318,7 @@ function penCard(p, color){
     <div class="st-body">
     <p class="pen-meta">${esc(p.where||"")} · ${authorBtn(nm, p.area, "Ver quem é")}</p>
     <p class="pen-idea">${esc(p.idea)}</p>
+    ${penFrases(p.name).length?`<div class="pen-fr"><b>Ideias do mês</b>${penFrases(p.name).map(f=>`<p>${esc(f)}<button type="button" class="btn btn-sm pen-fr-go" data-penfr="${esc(f)}" data-penau="${esc(nm)}">Postar ou baixar</button></p>`).join("")}</div>`:""}${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
     ${p.works?`<p class="pen-works"><span>Obras:</span> ${esc(p.works)}</p>`:""}
     <div class="br-links">
       <a class="btn btn-sm btn-pplx" href="${esc("https://www.perplexity.ai/search?q="+encodeURIComponent(q))}" target="_blank" rel="noopener noreferrer">Perplexity ↗</a>
@@ -8321,6 +8328,7 @@ function penCard(p, color){
     </div></div></details>`;
 }
 $("#penQ").addEventListener("input",renderPensadores);
+$("#penList").addEventListener("click",e=>{ const b=e.target.closest(".pen-fr-go"); if(!b) return; e.preventDefault(); VerseCard.fmt="story"; VerseCard.tab="lugares"; VerseCard.open({ text:b.dataset.penfr, ref:b.dataset.penau, t:"" }); });
 $("#penChips").addEventListener("click",e=>{ const b=e.target.closest("[data-pc]"); if(b){ penCat=b.dataset.pc; renderPensadores(); } });
 
 /* =====================================================================
