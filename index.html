@@ -1788,6 +1788,19 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 .fd-btn{background:rgba(255,255,255,.1)!important;border:1px solid rgba(255,255,255,.22)!important;color:#fff!important;border-radius:999px!important;padding:8px 16px!important;font-weight:650}
 .fd-btn .icon{width:16px;height:16px;stroke:#fff}
 .fd-btn.fd-ghost{background:transparent!important;border-color:transparent!important;color:rgba(255,255,255,.8)!important}
+.gr-card{border:1px solid var(--border);border-left:4px solid var(--gold,#c99a3b);border-radius:14px;margin:12px 0;background:var(--surface);overflow:hidden}
+.gr-card>summary{list-style:none;cursor:pointer;display:grid;gap:3px;padding:14px 16px}
+.gr-card>summary::-webkit-details-marker{display:none}
+.gr-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.gr-card .gr-l{font:600 1.7rem/1.15 Georgia,"Times New Roman",serif}
+.gr-num{font:700 12px/1 system-ui,-apple-system,sans-serif;letter-spacing:.04em;padding:5px 9px;border-radius:999px;background:rgba(201,154,59,.16);color:var(--ink);white-space:nowrap}
+.gr-card .gr-x{font:italic 500 .98rem/1.3 Georgia,serif;opacity:.75}
+.gr-card .gr-d{display:block;margin-top:6px;font:500 .95rem/1.4 system-ui,-apple-system,sans-serif;opacity:.9}
+.gr-card:not([open]) .gr-d{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gr-b{padding:2px 16px 16px;border-top:1px solid var(--border);margin:0 0 0}
+.gr-b h4{margin:14px 0 4px;font:700 11px/1 system-ui,-apple-system,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+.gr-b p{margin:0;font:400 .97rem/1.55 system-ui,-apple-system,sans-serif}
+.gr-ref{color:var(--gold,#9a6f12);font-weight:600;text-decoration:none;border-bottom:1px dotted currentColor}
 </style>
 </head>
 <body>
@@ -7052,8 +7065,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.31.4";
+const APP_VERSION = "3.32.0";
 const CHANGELOG = [
+  { v:"3.32.0", d:"novembro de 2026", items:["Dicionário de grego: visual refeito, com cartões organizados (palavra, transliteração, número, significado resumido) e detalhes ao tocar."] },
   { v:"3.31.4", d:"novembro de 2026", items:["Compartilhe: botão “Instalar aplicativo” retirado (quem já tem o app instalado não precisa dele)."] },
   { v:"3.31.3", d:"novembro de 2026", items:["Imagem de divulgação: estilo “Farol” retirado (ficam Noite e Claro)."] },
   { v:"3.31.2", d:"novembro de 2026", items:["Compartilhe: botões para divulgar o SOLA no Instagram, Threads e Facebook, com a imagem de divulgação e o texto de convite com o link para instalar."] },
@@ -8348,10 +8362,14 @@ let penCat="";
 const Grego={ dados:null, q:"" };
 const grNorm=t=>String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
 function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">nº ${n}</a>`).replace(/\bH(\d{1,4})\b/g,"hebr. nº $1"); }
+function grGloss(e){ const it=String(e[4]||"").replace(/^--/,"").split(/,\s*(?![^()]*\))/).map(x=>x.trim()).filter(Boolean), bom=it.filter(x=>!/^X\s/.test(x)); const k=(bom.length?bom:it.map(x=>x.replace(/^X\s+/,""))).slice(0,4).join(", "); return k||String(e[3]||"").split(/[;:]/)[0]; }
 function grCard(n,e,aberto){
-  const [l,x,p,d,k,o]=e;
-  return `<details class="gr-it"${aberto?" open":""} data-g="${n}"><summary><span class="gr-l" lang="grc">${esc(l)}</span> <span class="gr-x">${esc(x)}</span> <span class="count-pill">nº ${n}</span><span class="gr-d">${esc((d||"").split(/[;:]/)[0])}</span></summary>
-    <div class="gr-b">${p?`<p><b>Pronúncia:</b> ${esc(p)}</p>`:""}${d?`<p><b>Definição:</b> ${grLink(d)}</p>`:""}${k?`<p><b>Uso na KJV:</b> ${esc(k)}</p>`:""}${o?`<p><b>Origem:</b> ${grLink(o)}</p>`:""}</div></details>`;
+  const [l,x,p,d,k,o]=e, sig=[o,d].filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+  return `<details class="gr-card"${aberto?" open":""} data-g="${n}"><summary>
+      <span class="gr-top"><span class="gr-l" lang="grc">${esc(l)}</span><span class="gr-num">nº ${n}</span></span>
+      <span class="gr-x">${esc(x)}${p?` · ${esc(p)}`:""}</span>
+      <span class="gr-d">${esc(grGloss(e))}</span></summary>
+    <div class="gr-b">${sig?`<h4>Significado</h4><p>${grLink(sig)}</p>`:""}${k?`<h4>Traduzido na KJV como</h4><p>${esc(String(k).replace(/^--/,"").replace(/\bX\s+/g,""))}</p>`:""}</div></details>`;
 }
 function grPintar(){
   const box=$("#grList"); if(!box||!Grego.dados) return;
