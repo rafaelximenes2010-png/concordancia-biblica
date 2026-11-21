@@ -1092,6 +1092,7 @@ a.link-btn.btn-gpt{border:0;text-decoration:underline}
 .saved-text{max-height:220px;overflow:auto;font-size:15px}
 .sg-item{font-size:14px;padding:6px 0;border-top:1px solid var(--border)}
 .news-banner span{flex:1}
+dialog.note-dlg[open]::before,dialog.drawer[open]::before,dialog.picker[open]::before,dialog.card-dlg[open]::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:currentColor;opacity:.25;margin:8px auto 0}
 [data-swipe]{touch-action:pan-y;user-select:none;-webkit-user-select:none}
 [data-swipe].swiping{transition:none!important}
 .swipe-x{all:unset;cursor:pointer;flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;font-size:18px;line-height:1;opacity:.6}
@@ -3619,6 +3620,24 @@ const rd = { t:DEFAULT_VERSION, b:"JHN", c:1, cmp:"", hi:null, sel:null, size: s
 const rdEl = { v:$("#rdVersion"), b:$("#rdBook"), c:$("#rdChap"), cmp:$("#rdCmp"), prev:$("#rdPrev"), next:$("#rdNext"),
   pos:$("#rdPos"), actions:$("#rdActions"), selRef:$("#rdSelRef") };
 
+/* Arrastar para baixo fecha a janela aberta (puxando pelo topo da janela, ou de qualquer ponto quando o conteúdo já está no começo) */
+(()=>{ const PULA=new Set(["carMode","farolDlg"]); let d=null, y0=0, x0=0, dy=0, drag=false, sc=null;
+  const aberto=()=>[...document.querySelectorAll("dialog[open]")].filter(x=>!PULA.has(x.id) && !x.classList.contains("as-view")).pop();
+  const rolavel=t=>{ for(let e=t; e && e!==d; e=e.parentElement){ const cs=getComputedStyle(e); if(/(auto|scroll)/.test(cs.overflowY) && e.scrollHeight>e.clientHeight+2) return e; } return null; };
+  document.addEventListener("touchstart",e=>{ const a=aberto(); if(!a || !a.contains(e.target) || e.touches.length>1) { d=null; return; }
+    if(e.target.closest("input,textarea,select,[contenteditable],input[type=range]")) { d=null; return; }
+    const r=a.getBoundingClientRect(), t=e.touches[0]; sc=rolavel(e.target);
+    if(t.clientY-r.top>80 && sc && sc.scrollTop>0){ d=null; return; }
+    d=a; y0=t.clientY; x0=t.clientX; dy=0; drag=false; },{ passive:true });
+  document.addEventListener("touchmove",e=>{ if(!d) return; const t=e.touches[0], my=t.clientY-y0, mx=t.clientX-x0;
+    if(!drag){ if(my>10 && my>Math.abs(mx)*1.4 && !(sc && sc.scrollTop>0)){ drag=true; d.style.transition="none"; } else if(Math.abs(mx)>10 || my<-10){ d=null; return; } else return; }
+    dy=Math.max(0,my); d.style.transform=`translateY(${dy}px)`; d.style.opacity=String(Math.max(.4,1-dy/600)); if(e.cancelable) e.preventDefault(); },{ passive:false });
+  const fim=()=>{ if(!d) return; const a=d; d=null; if(!drag) return;
+    if(dy>Math.min(140,a.offsetHeight*.25)){ a.style.transition="transform .2s ease-in,opacity .2s"; a.style.transform=`translateY(${a.offsetHeight}px)`; a.style.opacity="0";
+      setTimeout(()=>{ if(a.id==="ctxDialog" && typeof closeReader==="function") closeReader(); else a.close(); a.style.transition=a.style.transform=a.style.opacity=""; },200); }
+    else { a.style.transition="transform .2s,opacity .2s"; a.style.transform=""; a.style.opacity=""; setTimeout(()=>{ a.style.transition=""; },220); } };
+  document.addEventListener("touchend",fim); document.addEventListener("touchcancel",fim);
+})();
 function openDialog(d){ if(typeof d.showModal==="function"){ if(!d.open) d.showModal(); } else d.setAttribute("open",""); }
 async function openReader(opts={}){
   const last=store.get("reader",{});
@@ -6961,8 +6980,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.5";
+const APP_VERSION = "3.25.6";
 const CHANGELOG = [
+  { v:"3.25.6", d:"novembro de 2026", items:["Janelas abertas (notificações, compartilhar, notas, ajuda, comentários e outras) agora fecham ao arrastar para baixo, com uma barrinha no topo indicando o gesto."] },
   { v:"3.25.5", d:"novembro de 2026", items:["Notícias do dia trocam todo dia às 5h da manhã (horário de Brasília)."] },
   { v:"3.25.4", d:"novembro de 2026", items:["Arraste para o lado para excluir o aviso de novidades no Início e as notificações da lista (ou toque no ×)."] },
   { v:"3.25.3", d:"novembro de 2026", items:["Notificações: ao tocar num aviso de atualização, ele é marcado como lido e some da lista. Os outros avisos também saem da lista depois de abertos."] },
