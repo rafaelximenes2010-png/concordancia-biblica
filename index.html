@@ -2649,7 +2649,6 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
       <button type="button" class="btn" id="invSite"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Compartilhar site</button>
       <button type="button" class="btn" data-share-sola><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Com a imagem do farol</button>
       <button type="button" class="btn" id="invRedes"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Instagram, Threads e Facebook</button>
-      <button type="button" class="btn" id="invInstall"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Instalar aplicativo</button>
     </div>
   </div>
   <div class="home-card" id="promoCard">
@@ -7053,8 +7052,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.31.3";
+const APP_VERSION = "3.31.4";
 const CHANGELOG = [
+  { v:"3.31.4", d:"novembro de 2026", items:["Compartilhe: botão “Instalar aplicativo” retirado (quem já tem o app instalado não precisa dele)."] },
   { v:"3.31.3", d:"novembro de 2026", items:["Imagem de divulgação: estilo “Farol” retirado (ficam Noite e Claro)."] },
   { v:"3.31.2", d:"novembro de 2026", items:["Compartilhe: botões para divulgar o SOLA no Instagram, Threads e Facebook, com a imagem de divulgação e o texto de convite com o link para instalar."] },
   { v:"3.31.1", d:"novembro de 2026", items:["Mensagem de boas-vindas: arraste o dedo para cima para dispensar."] },
@@ -7856,8 +7856,7 @@ $("#invCopy").addEventListener("click",()=>copyText($("#invMsg").value,"Convite 
 $("#invSite").addEventListener("click",async()=>{ const url=SITE_URL(), title="SOLA | Bíblia & Teologia";
   if(navigator.share){ try{ await navigator.share({ title, text:_t("Conheça o SOLA | Bíblia & Teologia — Estude. Reflita. Aprofunde-se."), url }); return; }catch(e){ if(e && e.name==="AbortError") return; } }
   copyText(url,"Endereço do site copiado."); });
-$("#leveInstall").addEventListener("click",()=>$("#invInstall").click());
-$("#invInstall").addEventListener("click",()=>{
+$("#leveInstall").addEventListener("click",()=>{
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
   if(standalone){ toast("Você já está usando o SOLA instalado. ✓"); return; }
   const b=$("#instTop"); if(b && !b.hidden){ b.click(); return; }
