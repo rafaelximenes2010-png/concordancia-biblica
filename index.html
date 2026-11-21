@@ -2553,16 +2553,16 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
   </nav>
   <div class="view-head"><div><p class="eyebrow">Estudos · língua original</p><h2 id="grTitle">Dicionário de grego</h2>
-    <p>Mais de 5.500 palavras do Novo Testamento, com número de Strong, transliteração e significado em português.</p></div></div>
+    <p>Mais de 5.500 palavras do Novo Testamento, com número de Strong (G), transliteração e significado em português.</p></div></div>
   <div class="pen-tools">
     <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar palavra grega</span><input id="grQ" type="search" placeholder="Número, grego, transliteração ou português…" autocomplete="off"></label>
   </div>
   <details class="gr-help"><summary>O que significam os números?</summary>
-    <p>Os números (como <b>nº 26</b>) são os <b>números de Strong</b>. Cada palavra grega do Novo Testamento recebe um número fixo, criado pelo estudioso James Strong no dicionário que ele publicou em 1890. O número funciona como um “endereço” da palavra: a mesma palavra grega tem sempre o mesmo número, em qualquer obra de estudo que use esse sistema.</p>
+    <p>Os números (como <b>G26</b>) são os <b>números de Strong</b>. Cada palavra grega do Novo Testamento recebe um número fixo, criado pelo estudioso James Strong no dicionário que ele publicou em 1890. O número funciona como um “endereço” da palavra: a mesma palavra grega tem sempre o mesmo número, em qualquer obra de estudo que use esse sistema.</p>
     <ul><li><b>Achar a palavra original:</b> se um comentário cita “G26”, busque 26 aqui e veja que é <i>agápē</i> (amor).</li>
       <li><b>Comparar usos:</b> veja como a mesma palavra grega é traduzida em versículos diferentes.</li>
-      <li><b>Seguir referências:</b> os números dentro de um verbete (por exemplo, nº 25) são links para a palavra de origem.</li></ul>
-    <p class="gr-small">Os números do grego vão de 1 a cerca de 5.600. Em livros e sites aparecem com a letra G na frente (G26). O hebraico usa outra sequência, com a letra H, que não está neste dicionário.</p></details>
+      <li><b>Seguir referências:</b> os números dentro de um verbete (por exemplo, G25) são links para a palavra de origem.</li></ul>
+    <p class="gr-small">Os números do grego vão de 1 a cerca de 5.600. A letra G (de “Greek”, grego) vem sempre na frente do número, como nas obras de estudo (G26). O hebraico usa outra sequência, com a letra H, que não está neste dicionário.</p></details>
   <div id="grList"></div>
   <p class="bp-note">Dicionário de Strong (1890/1894, domínio público), em dados de Open Scriptures (CC-BY-SA), traduzido para o português para o SOLA. A tradução automática pode conter imprecisões; confira em obras de referência.</p>
 </section>
@@ -7075,8 +7075,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.32.1";
+const APP_VERSION = "3.32.2";
 const CHANGELOG = [
+  { v:"3.32.2", d:"novembro de 2026", items:["Dicionário de grego: números de Strong voltam a aparecer com a letra G na frente (G26), como nas obras de estudo."] },
   { v:"3.32.1", d:"novembro de 2026", items:["Dicionário de grego: explicação “O que significam os números?” (números de Strong)."] },
   { v:"3.32.0", d:"novembro de 2026", items:["Dicionário de grego: visual refeito, com cartões organizados (palavra, transliteração, número, significado resumido) e detalhes ao tocar."] },
   { v:"3.31.4", d:"novembro de 2026", items:["Compartilhe: botão “Instalar aplicativo” retirado (quem já tem o app instalado não precisa dele)."] },
@@ -8372,12 +8373,12 @@ let penCat="";
 /* Dicionário de grego (Strong, em português) */
 const Grego={ dados:null, q:"" };
 const grNorm=t=>String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">nº ${n}</a>`).replace(/\bH(\d{1,4})\b/g,"hebr. nº $1"); }
+function grLink(t){ return esc(t).replace(/\bG(\d{1,4})\b/g,(m,n)=>`<a href="#" class="gr-ref" data-g="${n}">G${n}</a>`); }
 function grGloss(e){ const it=String(e[4]||"").replace(/^--/,"").split(/,\s*(?![^()]*\))/).map(x=>x.trim()).filter(Boolean), bom=it.filter(x=>!/^X\s/.test(x)); const k=(bom.length?bom:it.map(x=>x.replace(/^X\s+/,""))).slice(0,4).join(", "); return k||String(e[3]||"").split(/[;:]/)[0]; }
 function grCard(n,e,aberto){
   const [l,x,p,d,k,o]=e, sig=[o,d].filter(Boolean).join(" ").replace(/\s+/g," ").trim();
   return `<details class="gr-card"${aberto?" open":""} data-g="${n}"><summary>
-      <span class="gr-top"><span class="gr-l" lang="grc">${esc(l)}</span><span class="gr-num">nº ${n}</span></span>
+      <span class="gr-top"><span class="gr-l" lang="grc">${esc(l)}</span><span class="gr-num">G${n}</span></span>
       <span class="gr-x">${esc(x)}${p?` · ${esc(p)}`:""}</span>
       <span class="gr-d">${esc(grGloss(e))}</span></summary>
     <div class="gr-b">${sig?`<h4>Significado</h4><p>${grLink(sig)}</p>`:""}${k?`<h4>Traduzido na KJV como</h4><p>${esc(String(k).replace(/^--/,"").replace(/\bX\s+/g,""))}</p>`:""}</div></details>`;
