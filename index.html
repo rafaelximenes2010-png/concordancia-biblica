@@ -648,22 +648,18 @@ div.home-card.rdx{grid-template-columns:auto 1fr auto;gap:12px;padding:10px 12px
 .rdx-eq{height:10px;margin:0 0 0 4px;gap:2px}.rdx-eq i{width:2px}
 @keyframes rdxeq{0%,100%{height:3px}50%{height:10px}}
 .rdx-play{width:42px;height:42px;box-shadow:none}
-.rdx-rolo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 12px}
-.rdx-op{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:12px 12px 12px 54px;min-height:62px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--ink);text-align:left;cursor:pointer;font:700 14px/1.15 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;transition:transform .15s,box-shadow .2s,border-color .2s}
-.rdx-op small{font:500 11.5px/1.2 system-ui,-apple-system,sans-serif;opacity:.65}
-.rdx-op:active{transform:scale(.97)}
-.rdx-op .rdx-dot{position:absolute;left:12px;top:50%;width:32px;height:32px;margin-top:-16px;border-radius:10px;display:grid;place-items:center}
-.rdx-op .rdx-dot::after{content:"";width:12px;height:12px;background:#fff;opacity:.92;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12a7 7 0 0 1 7-7v2a5 5 0 0 0-5 5H5Zm4 0a3 3 0 0 1 3-3v2a1 1 0 0 0-1 1H9Zm-8 0A11 11 0 0 1 12 1v2A9 9 0 0 0 3 12H1Z'/%3E%3C/svg%3E") center/contain no-repeat;transform:scale(1.7)}
-.rdx-op[aria-checked="true"]{border-color:var(--gold,#e0b04a);box-shadow:0 0 0 1px var(--gold,#e0b04a),0 6px 18px rgba(224,176,74,.22);background:linear-gradient(160deg,var(--surface),rgba(224,176,74,.10))}
-.rdx-op[aria-checked="true"]::after{content:"";position:absolute;right:10px;top:10px;width:8px;height:8px;border-radius:50%;background:#e0533f;box-shadow:0 0 0 3px rgba(224,83,63,.25)}
-.gr-it{border:1px solid var(--border);border-radius:14px;margin:10px 0;background:var(--surface)}
-.gr-it>summary{padding:12px 14px;cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;list-style:none}
-.gr-it>summary::-webkit-details-marker{display:none}
-.gr-l{font-size:1.3rem;font-weight:600}.gr-x{font-style:italic;opacity:.8}
-.gr-d{flex-basis:100%;opacity:.7;font-size:.92rem;line-height:1.35;margin-top:2px}
-.gr-b{padding:0 14px 12px}.gr-b p{margin:.5em 0;line-height:1.45}.gr-ref{color:var(--gold,#e0b04a);text-decoration:underline}
+.rdx-rolo{position:relative;margin:0 0 10px}
+.rdx-sel{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--ink);cursor:pointer;font:700 14px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:left}
+.rdx-sel small{font:500 12px/1.2 system-ui,-apple-system,sans-serif;opacity:.6;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdx-sel svg{width:16px;height:16px;flex:none;transition:transform .2s;margin-left:auto}
+.rdx-sel[aria-expanded="true"] svg{transform:rotate(180deg)}
+.rdx-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;display:flex;flex-direction:column;padding:6px;border-radius:14px;border:1px solid var(--border);background:var(--surface);box-shadow:0 14px 32px rgba(0,0,0,.35)}
+.rdx-menu[hidden]{display:none}
+.rdx-op{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:10px;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;font:700 14px/1.2 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.rdx-op small{font:500 12px/1.2 system-ui,-apple-system,sans-serif;opacity:.6;margin-left:auto}
+.rdx-op[aria-checked="true"]{background:rgba(224,176,74,.16)}
 .rdx-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(145deg,#e0533f,#8a1f4a)}
-.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
+.rdx-sel.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-sel.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-sel.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}.rdx-op.rdx-v2 .rdx-dot{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}.rdx-op.rdx-v3 .rdx-dot{background:linear-gradient(145deg,#2f9e6e,#14503f)}.rdx-op.rdx-v4 .rdx-dot{background:linear-gradient(145deg,#e0a526,#8a4a14)}
 .rdx-live{min-width:0}.rdx-livetxt{white-space:nowrap}.rdx-sub{min-width:0}
 .rdx.rdx-v2 .rdx-art{background:linear-gradient(145deg,#3b7dd8,#1d2f6b)}
 .rdx.rdx-v3 .rdx-art{background:linear-gradient(145deg,#2f9e6e,#14503f)}
@@ -2061,12 +2057,14 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <span class="wa3-cta"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>Enviar</span>
   </a></section>
   <section class="hsec" aria-labelledby="hsO"><h3 class="hsec-h" id="hsO">Ouvir</h3>
-  <div class="rdx-rolo" role="radiogroup" aria-label="Escolha a rádio">
+  <div class="rdx-rolo" id="rdxRolo">
+    <button type="button" class="rdx-sel" id="rdxSel" aria-haspopup="true" aria-expanded="false" aria-label="Escolha a rádio"><i class="rdx-dot"></i><span id="rdxSelTxt">KCBI 90.9</span><small id="rdxSelSub">Dallas · inglês</small><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="rdx-menu" id="rdxMenu" role="radiogroup" aria-label="Escolha a rádio" hidden>
     <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9<small>Dallas · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet<small>Reformada · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB<small>São Paulo · português</small></button>
-    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="encuentro" aria-checked="false"><i class="rdx-dot"></i>Radio Encuentro<small>Madrid · espanhol</small></button>
-  </div>
+    <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="reformada" aria-checked="false"><i class="rdx-dot"></i>Radio Reformada<small>Chile · espanhol</small></button>
+    </div></div>
   <div class="home-card rdx" id="rdCard" data-radio="kcbi">
     <span class="rdx-art" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="38" r="5" fill="#fff"/><path d="M22 28a14 14 0 0 1 20 0M16 22a22 22 0 0 1 32 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg></span>
     <span class="rdx-meta">
@@ -5839,8 +5837,8 @@ const RADIOS = {
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
-  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", pre:["http://176.31.245.161:8015/stream"], sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Radio Encuentro",
-    ok:x=>/radio\s*encuentro|cadena de vida/i.test(x.name) || /radioencuentro|cadenadevida/i.test(x.homepage||""), extra:[] }
+  reformada:{ nome:"Radio Reformada", cls:"rdx-v4", sub:" · Linares, Chile", artista:"Rádio cristã reformada em espanhol · Linares, Chile", site:"https://radioreformada.cl/", busca:"Radio Reformada",
+    ok:x=>/radio\s*reformada/i.test(x.name) || /radioreformada/i.test(x.homepage||""), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
@@ -5891,11 +5889,15 @@ function radioEscolher(k,salvar){ const st=RADIOS[k], c=$("#rdCard"); if(!st || 
   c.dataset.radio=k; c.className=`home-card rdx ${st.cls}`.trim();
   c.querySelector(".rdx-title").textContent=st.nome;
   document.querySelectorAll(".rdx-op").forEach(o=>o.setAttribute("aria-checked", String(o.dataset.pick===k)));
+  { const op=document.querySelector(`.rdx-op[data-pick="${k}"]`), sel=$("#rdxSel"); if(op && sel){ sel.className="rdx-sel "+st.cls; $("#rdxSelTxt").textContent=st.nome; $("#rdxSelSub").textContent=op.querySelector("small").textContent; } }
   radioUi(k, Radio.on===k ? "play" : "stop");
   if(salvar) store.set("radio",k);
 }
 document.addEventListener("click",e=>{ const b=e.target.closest(".rdx .rdx-play"); if(b) radioToggle(b.closest(".rdx").dataset.radio);
-  const o=e.target.closest(".rdx-op"); if(o){ radioEscolher(o.dataset.pick,true); o.scrollIntoView({ behavior:"smooth", block:"nearest", inline:"center" }); } });
+  const o=e.target.closest(".rdx-op"); if(o){ radioEscolher(o.dataset.pick,true); rdxMenu(false); return; }
+  if(e.target.closest("#rdxSel")){ rdxMenu($("#rdxMenu").hidden); return; }
+  if(!e.target.closest("#rdxRolo")) rdxMenu(false); });
+function rdxMenu(abrir){ const m=$("#rdxMenu"), b=$("#rdxSel"); if(!m||!b) return; m.hidden=!abrir; b.setAttribute("aria-expanded",String(!!abrir)); }
 { const k=store.get("radio","kcbi"); if(RADIOS[k] && k!=="kcbi") radioEscolher(k,false); }
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-vgtoggle]"); if(!b) return; const d=$("#vgDrop"); d.hidden=!d.hidden; b.setAttribute("aria-expanded",String(!d.hidden)); const on=d.querySelector("li.on"); if(on && !d.hidden) d.scrollTop=on.offsetTop-d.offsetTop-8; });
 
@@ -5910,7 +5912,7 @@ const FS_SECOES = [
   ["Artigos","artigos","artigos textos leitura ensaios"],["Pensadores","pensadores","pensadores autores teologos filosofos"],["Mapas e jornadas","mapas","mapas jornadas geografia paulo"],
   ["Ouvir","ouvir","ouvir audio musica hinos"],["Notícias do mundo cristão","noticias","noticias news missoes perseguicao seminarios"],["Credos e catecismos","catecismos","credos catecismos confissao westminster heidelberg dort"],
   ["Notas","notas","notas anotacoes"],["Meu devocional","meudevocional","meu devocional diario pessoal"],["Configurações","config","configuracoes ajustes tema letra versao notificacoes"],
-  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Encuentro)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
+  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Reformada)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
 ];
 const fsNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const fsNormPos = t => [...String(t||"")].map(c=>fsNorm(c).charAt(0)||c).join("");   /* mesma posição de cada letra, sem acento */
@@ -7020,8 +7022,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.27.3";
+const APP_VERSION = "3.28.0";
 const CHANGELOG = [
+  { v:"3.28.0", d:"novembro de 2026", items:["Seletor de rádios compacto: toque na setinha e escolha a rádio.","Radio Reformada (Chile, em espanhol) no lugar da Radio Encuentro."] },
   { v:"3.27.3", d:"novembro de 2026", items:["Radio Encuentro: transmissão direta adicionada."] },
   { v:"3.27.2", d:"novembro de 2026", items:["Dicionário de grego: numeração simplificada (nº 26, sem a letra G) e visual das entradas melhorado."] },
   { v:"3.27.1", d:"novembro de 2026", items:["Seletor de rádios redesenhado: cartões em grade com idioma e destaque na rádio escolhida.","Radio Encuentro: busca da transmissão ampliada."] },
