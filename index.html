@@ -1801,6 +1801,10 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 .gr-b h4{margin:14px 0 4px;font:700 11px/1 system-ui,-apple-system,sans-serif;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
 .gr-b p{margin:0;font:400 .97rem/1.55 system-ui,-apple-system,sans-serif}
 .gr-ref{color:var(--gold,#9a6f12);font-weight:600;text-decoration:none;border-bottom:1px dotted currentColor}
+.gr-help{border:1px solid var(--border);border-radius:14px;background:var(--surface);margin:0 0 14px;padding:0}
+.gr-help>summary{cursor:pointer;padding:12px 16px;font:700 .95rem/1.3 system-ui,-apple-system,sans-serif}
+.gr-help>p,.gr-help>ul{margin:0;padding:0 16px 12px;font:400 .95rem/1.55 system-ui,-apple-system,sans-serif}
+.gr-help>ul{padding-left:34px}.gr-help li{margin:4px 0}.gr-help .gr-small{font-size:.85rem;opacity:.75}
 </style>
 </head>
 <body>
@@ -2553,6 +2557,12 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div class="pen-tools">
     <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar palavra grega</span><input id="grQ" type="search" placeholder="Número, grego, transliteração ou português…" autocomplete="off"></label>
   </div>
+  <details class="gr-help"><summary>O que significam os números?</summary>
+    <p>Os números (como <b>nº 26</b>) são os <b>números de Strong</b>. Cada palavra grega do Novo Testamento recebe um número fixo, criado pelo estudioso James Strong no dicionário que ele publicou em 1890. O número funciona como um “endereço” da palavra: a mesma palavra grega tem sempre o mesmo número, em qualquer obra de estudo que use esse sistema.</p>
+    <ul><li><b>Achar a palavra original:</b> se um comentário cita “G26”, busque 26 aqui e veja que é <i>agápē</i> (amor).</li>
+      <li><b>Comparar usos:</b> veja como a mesma palavra grega é traduzida em versículos diferentes.</li>
+      <li><b>Seguir referências:</b> os números dentro de um verbete (por exemplo, nº 25) são links para a palavra de origem.</li></ul>
+    <p class="gr-small">Os números do grego vão de 1 a cerca de 5.600. Em livros e sites aparecem com a letra G na frente (G26). O hebraico usa outra sequência, com a letra H, que não está neste dicionário.</p></details>
   <div id="grList"></div>
   <p class="bp-note">Dicionário de Strong (1890/1894, domínio público), em dados de Open Scriptures (CC-BY-SA), traduzido para o português para o SOLA. A tradução automática pode conter imprecisões; confira em obras de referência.</p>
 </section>
@@ -7065,8 +7075,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.32.0";
+const APP_VERSION = "3.32.1";
 const CHANGELOG = [
+  { v:"3.32.1", d:"novembro de 2026", items:["Dicionário de grego: explicação “O que significam os números?” (números de Strong)."] },
   { v:"3.32.0", d:"novembro de 2026", items:["Dicionário de grego: visual refeito, com cartões organizados (palavra, transliteração, número, significado resumido) e detalhes ao tocar."] },
   { v:"3.31.4", d:"novembro de 2026", items:["Compartilhe: botão “Instalar aplicativo” retirado (quem já tem o app instalado não precisa dele)."] },
   { v:"3.31.3", d:"novembro de 2026", items:["Imagem de divulgação: estilo “Farol” retirado (ficam Noite e Claro)."] },
