@@ -5733,10 +5733,14 @@ function ntItem(x){ const nome=NT.data.categorias[x.cat]||"";
     <span class="nt-meta"><span class="nt-tag" style="--c:${NT_COR[x.cat]||"#555"}">${esc(nome)}</span>${x.novo?`<span class="nt-new">Nova</span>`:""}${x.pais?`<span>📍 ${esc(x.pais)}</span>`:""}<span>${esc(ntQuando(x.data))}</span>${x.traduzido?`<span class="nt-tr">· traduzido</span>`:""}</span>
     <b>${esc(x.titulo)}</b>${x.resumo?`<p>${esc(x.resumo)}</p>`:""}
     <span class="nt-fonte">Fonte: <u>${esc(x.fonte)}</u>${x.verif?` · <span class="nt-ok">✓ ${esc(x.verif)}</span>`:""}</span></a>`; }
+/* As notícias do dia trocam às 5h (horário de Brasília): antes disso mostra a seleção do dia anterior */
+function ntDia(){ const dias=(NT.data?.dias||[]).slice().sort((a,b)=>b.dia.localeCompare(a.dia)); if(!dias.length) return null;
+  const br=new Date(Date.now()-3*3600e3), hoje=br.toISOString().slice(0,10), h=br.getUTCHours();
+  return dias.find(d=>d.dia<hoje || (d.dia===hoje && h>=5)) || dias[dias.length-1]; }
 async function renderNoticias(force){
   try{ if(!NT.data || force){ const r=await fetch("noticias/feed.json?t="+Math.floor(Date.now()/600000)); if(!r.ok) throw 0; NT.data=await r.json(); } }
   catch(e){ $("#ntList").innerHTML=`<div class="empty"><h3>Notícias indisponíveis agora</h3><p class="muted">Verifique a internet e tente de novo em instantes.</p></div>`; return; }
-  const d=NT.data, dias=d.dias||[], hoje=dias[0], itens=hoje?hoje.itens:[];
+  const d=NT.data, hoje=ntDia(), itens=hoje?hoje.itens:[];
   if(!itens.length){ $("#ntDest").innerHTML=""; $("#ntChips").innerHTML=""; $("#ntList").innerHTML=`<div class="empty"><h3>As primeiras notícias estão a caminho</h3><p class="muted">A seleção do dia sai todas as manhãs.</p></div>`; return; }
   const dest=itens.find(x=>x.id===hoje.destaque);
   $("#ntDest").innerHTML = dest ? `<a class="nt-dest" href="${esc(dest.url)}" target="_blank" rel="noopener noreferrer"><span class="nt-k">🌍 Ore pela igreja perseguida${dest.pais?` · ${esc(dest.pais)}`:""}</span>
@@ -5754,7 +5758,7 @@ async function renderNoticias(force){
 $("#ntChips").addEventListener("click",e=>{ const b=e.target.closest("[data-ntc]"); if(!b) return; NT.cat=b.dataset.ntc; renderNoticias(); });
 /* Subtítulo do botão no Início: a manchete de missões do momento */
 setTimeout(async()=>{ try{ const r=await fetch("noticias/feed.json?t="+Math.floor(Date.now()/600000)); if(!r.ok) return; NT.data=await r.json();
-  const h=(NT.data.dias||[])[0]; if(!h || !h.itens.length) return; const dest=h.itens.find(x=>x.id===h.destaque)||h.itens[0];
+  const h=ntDia(); if(!h || !h.itens.length) return; const dest=h.itens.find(x=>x.id===h.destaque)||h.itens[0];
   $("#ntHomeSub").textContent=dest.titulo;
   $("#ntxTag").textContent=(NT.data.categorias[dest.cat]||"")+(dest.pais?` · ${dest.pais}`:"");
   $("#ntxSrc").textContent=`${dest.fonte} · ${ntQuando(dest.data)}`;
@@ -5881,7 +5885,7 @@ async function fsBuscar(){
   if(pz.length) grupos.push(["Pensadores",pz.map(x=>({ k:"👤", t:x.name, d:`${x.years} · ${x.area}`, go:()=>{ showView("pensadores"); } }))]);
   // Notícias
   try{ if(!NT.data){ const r=await fetch("noticias/feed.json?t="+Math.floor(Date.now()/600000)); if(r.ok) NT.data=await r.json(); }
-    const nt=((NT.data?.dias||[])[0]?.itens||[]).filter(x=>bate(`${x.titulo} ${x.resumo} ${x.pais} ${x.fonte}`)).slice(0,4);
+    const nt=(ntDia()?.itens||[]).filter(x=>bate(`${x.titulo} ${x.resumo} ${x.pais} ${x.fonte}`)).slice(0,4);
     if(nt.length) grupos.push(["Notícias de hoje",nt.map(x=>({ k:"🌍", t:x.titulo, d:`${x.fonte}${x.pais?" · "+x.pais:""}`, go:()=>window.open(x.url,"_blank","noopener") }))]); }catch(e){}
   // Busca completa na Bíblia/comentários + Perplexity
   const extra=[{ k:"🔎", t:`Buscar “${q}” na Bíblia e nos comentários`, d:"Concordância e comentários reformados", go:()=>{ showView("busca"); goToRef(q); } }];
@@ -6957,8 +6961,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.25.4";
+const APP_VERSION = "3.25.5";
 const CHANGELOG = [
+  { v:"3.25.5", d:"novembro de 2026", items:["Notícias do dia trocam todo dia às 5h da manhã (horário de Brasília)."] },
   { v:"3.25.4", d:"novembro de 2026", items:["Arraste para o lado para excluir o aviso de novidades no Início e as notificações da lista (ou toque no ×)."] },
   { v:"3.25.3", d:"novembro de 2026", items:["Notificações: ao tocar num aviso de atualização, ele é marcado como lido e some da lista. Os outros avisos também saem da lista depois de abertos."] },
   { v:"3.25.2", d:"novembro de 2026", items:["Ouvir: as opções de rádio agora ficam centralizadas."] },

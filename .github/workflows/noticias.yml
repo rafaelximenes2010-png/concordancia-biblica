@@ -1,10 +1,12 @@
 # Notícias do mundo cristão (Estudos › Notícias no app).
-# Todo dia de manhã (6h17 de Brasília, com repescagem às 9h17) escolhe as 5
-# notícias mais importantes de cada tipo, checa as fontes, traduz para o
+# Todo dia de madrugada (4h20 de Brasília, com repescagens às 5h05, 6h17 e 9h17) escolhe as 5
+# notícias mais importantes de cada tipo (o app troca as notícias às 5h), checa as fontes, traduz para o
 # português e publica noticias/feed.json no main e no gh-pages.
 name: Notícias do mundo cristão
 on:
   schedule:
+    - cron: "20 7 * * *"
+    - cron: "5 8 * * *"
     - cron: "17 9,12 * * *"
   workflow_dispatch:
     inputs:

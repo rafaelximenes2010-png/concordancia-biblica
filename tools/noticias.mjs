@@ -180,7 +180,7 @@ for (const f of FONTES) {
 /* =====================================================================
    SELEÇÃO DO DIA: as 5 matérias mais importantes de CADA TIPO
    (igreja perseguida, missões, seminários reformados, igreja no mundo),
-   escolhidas uma vez por dia (a partir das 6h de Brasília).
+   escolhidas uma vez por dia (a partir das 4h de Brasília; o app só mostra a seleção nova a partir das 5h).
    Destaque: igreja perseguida, de preferência em país da Lista Mundial.
    ===================================================================== */
 const FORTE = /killed|mortos|morto|martyr|mártir|arrest|preso|presos|prisão|attack|atacad|sequestr|kidnap|abduct|massacre|burn|queimad|bible translation|tradução da bíblia|unreached|não alcançad|revival|avivamento|baptiz|batiz|first church|primeira igreja|new church|plantad/i;
@@ -256,7 +256,7 @@ let dHoje = dias.find(d => d.dia === HOJE);
 /* REGRA DIÁRIA (pedido do Rafael, nov/2026): todo dia entra pelo menos 1 matéria NOVA em cada
    categoria, no lugar da mais antiga, e o destaque da entrada do celular é sempre uma matéria nova.
    "Nova" = nunca publicada em nenhum dia anterior do feed. */
-if (!dHoje && (brAgora.getUTCHours() >= 6 || process.env.FORCAR || !dias.length)) {
+if (!dHoje && (brAgora.getUTCHours() >= 4 || process.env.FORCAR || !dias.length)) {
   const ontem = dias.filter(d => d.dia < HOJE).sort((x, y) => y.dia.localeCompare(x.dia))[0];
   const jaSaiu = new Set(); dias.forEach(d => d.itens.forEach(x => { jaSaiu.add(x.id); jaSaiu.add(normT(x.titulo)); if (x.orig) jaSaiu.add(normT(x.orig)); }));
   const inedito = x => !jaSaiu.has(x.id) && !jaSaiu.has(normT(x.titulo));
