@@ -5839,7 +5839,7 @@ const RADIOS = {
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
-  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Radio Encuentro",
+  encuentro:{ nome:"Radio Encuentro", cls:"rdx-v4", pre:["http://176.31.245.161:8015/stream"], sub:" · Madrid, Espanha", artista:"Rádio evangélica em espanhol · Radio Cadena de Vida", site:"https://www.radioencuentro.es/", busca:"Radio Encuentro",
     ok:x=>/radio\s*encuentro|cadena de vida/i.test(x.name) || /radioencuentro|cadenadevida/i.test(x.homepage||""), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
@@ -7020,8 +7020,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.27.2";
+const APP_VERSION = "3.27.3";
 const CHANGELOG = [
+  { v:"3.27.3", d:"novembro de 2026", items:["Radio Encuentro: transmissão direta adicionada."] },
   { v:"3.27.2", d:"novembro de 2026", items:["Dicionário de grego: numeração simplificada (nº 26, sem a letra G) e visual das entradas melhorado."] },
   { v:"3.27.1", d:"novembro de 2026", items:["Seletor de rádios redesenhado: cartões em grade com idioma e destaque na rádio escolhida.","Radio Encuentro: busca da transmissão ampliada."] },
   { v:"3.27.0", d:"novembro de 2026", items:["Novo: Dicionário de grego em Estudos, com mais de 5.500 palavras (número de Strong, transliteração, significado em português e origem). Busca por número, grego, transliteração ou português."] },
