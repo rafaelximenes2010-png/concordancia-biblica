@@ -1845,6 +1845,11 @@ dialog.reader #rdSearch .icon{width:32px;height:32px}
 dialog.reader #rdAa{width:54px;height:54px;border-radius:50%;background:var(--gold-soft,#f6ecd2);border:2px solid var(--gold,#c99a3b);color:var(--gold-text,#7a5a1a)}
 dialog.reader #rdAa.on{background:var(--gold,#c99a3b);color:#fff}
 .rd-aa-t{font:700 26px/1 Georgia,serif}.rd-aa-t small{font-size:17px;font-weight:700}
+
+/* leitor: botões menores (3.35.6) */
+dialog.reader #rdSearch,dialog.reader #rdAa{width:44px;height:44px}
+dialog.reader #rdSearch .icon{width:26px;height:26px}
+.rd-aa-t{font-size:21px}.rd-aa-t small{font-size:14px}
 </style>
 </head>
 <body>
@@ -7141,8 +7146,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.5";
+const APP_VERSION = "3.35.6";
 const CHANGELOG = [
+  { v:"3.35.6", d:"novembro de 2026", items:["Leitor da Bíblia: botões do farol e “Aa” um pouco menores."] },
   { v:"3.35.5", d:"novembro de 2026", items:["Leitor da Bíblia: busca com o farol do SOLA e botão “Aa” dourado para letra e comparar versões, ambos maiores."] },
   { v:"3.35.4", d:"novembro de 2026", items:["Barra do leitor da Bíblia maior: botões e seletor de capítulo e versão mais fáceis de tocar."] },
   { v:"3.35.3", d:"novembro de 2026", items:["Ao ler a Bíblia, o topo mantém “SOLA · Bíblia & Teologia”."] },
