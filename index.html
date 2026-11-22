@@ -1839,17 +1839,6 @@ dialog.reader .dlg-head .rd-pick #rdPickLbl{font-size:19px}
 dialog.reader .rd-aa{width:48px;height:48px}
 dialog.reader .rd-aa .icon,dialog.reader #rdSearch .icon{width:26px;height:26px}
 
-/* leitor: farol e Aa (3.35.5) */
-dialog.reader #rdSearch{width:54px;height:54px;border-radius:50%;background:linear-gradient(145deg,#2b3a67,#132447);color:#f4d98a;box-shadow:0 3px 10px rgba(19,36,71,.3)}
-dialog.reader #rdSearch .icon{width:32px;height:32px}
-dialog.reader #rdAa{width:54px;height:54px;border-radius:50%;background:var(--gold-soft,#f6ecd2);border:2px solid var(--gold,#c99a3b);color:var(--gold-text,#7a5a1a)}
-dialog.reader #rdAa.on{background:var(--gold,#c99a3b);color:#fff}
-.rd-aa-t{font:700 26px/1 Georgia,serif}.rd-aa-t small{font-size:17px;font-weight:700}
-
-/* leitor: botões menores (3.35.6) */
-dialog.reader #rdSearch,dialog.reader #rdAa{width:44px;height:44px}
-dialog.reader #rdSearch .icon{width:26px;height:26px}
-.rd-aa-t{font-size:21px}.rd-aa-t small{font-size:14px}
 </style>
 </head>
 <body>
@@ -3104,7 +3093,7 @@ dialog.reader #rdSearch .icon{width:26px;height:26px}
     <span class="rd-verpill"><span id="rdVerLbl">BLIVRE</span><span class="chev" aria-hidden="true">▾</span>
       <label class="sr-only" for="rdVersion">Versão</label><select id="rdVersion"></select></span>
     <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdSearch" aria-label="Buscar na Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
-    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdAa" aria-expanded="false" aria-controls="rdPanel" aria-label="Letra, comparar e versões"><span class="rd-aa-t" aria-hidden="true">A<small>a</small></span></button>
+    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdAa" aria-expanded="false" aria-controls="rdPanel" aria-label="Mais opções: letra, comparar e versões"><svg class="icon" aria-hidden="true"><use href="#i-dots"/></svg></button>
     <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" hidden aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="rd-panel" id="rdPanel" hidden>
@@ -7146,8 +7135,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.6";
+const APP_VERSION = "3.35.7";
 const CHANGELOG = [
+  { v:"3.35.7", d:"novembro de 2026", items:["Leitor da Bíblia: farol no lugar da lupa e menu “…” como antes, sem fundos coloridos."] },
   { v:"3.35.6", d:"novembro de 2026", items:["Leitor da Bíblia: botões do farol e “Aa” um pouco menores."] },
   { v:"3.35.5", d:"novembro de 2026", items:["Leitor da Bíblia: busca com o farol do SOLA e botão “Aa” dourado para letra e comparar versões, ambos maiores."] },
   { v:"3.35.4", d:"novembro de 2026", items:["Barra do leitor da Bíblia maior: botões e seletor de capítulo e versão mais fáceis de tocar."] },
