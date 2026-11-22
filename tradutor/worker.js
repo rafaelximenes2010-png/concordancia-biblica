@@ -644,7 +644,7 @@ export default {
       return json({ text: result, cached: false }, 200, h);
     } catch (e) {
       ISO.azErr++;
-      return json({ error: e.message === "quota" ? "quota" : "upstream" }, e.message === "quota" ? 429 : 502, h);
+      return json({ error: e.message === "quota" ? "quota" : "upstream", detalhe: String(e.message || "").slice(0, 60) }, e.message === "quota" ? 429 : 502, h);
     }
   }
 };
