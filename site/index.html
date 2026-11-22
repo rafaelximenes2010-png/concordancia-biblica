@@ -128,6 +128,12 @@ footer a{color:#dfe5f1;text-decoration:none;display:block;margin:6px 0}
 footer a:hover{color:var(--gold)}
 footer .legal{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-top:18px;font-size:13px}
 .solas{font-family:var(--serif);font-style:italic;color:var(--gold);letter-spacing:.02em}
+.sbtn{background:none;border:0;color:#dfe5f1;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;cursor:pointer}.sbtn:hover,.sbtn[aria-expanded=true]{background:rgba(255,255,255,.12);color:#fff}
+.sbar{position:sticky;top:64px;z-index:19;background:var(--navy);padding:10px 0 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sbar input{width:100%;box-sizing:border-box;font:inherit;font-size:17px;padding:13px 16px;border-radius:12px;border:2px solid var(--gold);background:#fff;color:var(--ink)}
+#sres{margin-top:8px;max-height:50vh;overflow:auto}
+#sres a{display:block;background:#fff;color:var(--ink);text-decoration:none;border-radius:10px;padding:10px 14px;margin:6px 0}#sres a b{display:block}#sres a small{color:var(--ink2)}#sres .nada{color:#dfe5f1;padding:8px 2px}
+.hit{outline:3px solid var(--gold);outline-offset:3px;transition:outline-color .6s}
 </style>
 </head>
 <body>
@@ -140,15 +146,17 @@ footer .legal{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-
       <span><b>SOLA</b><small>BÍBLIA &amp; TEOLOGIA</small></span>
     </a>
     <nav class="links" aria-label="Seções">
+      <a class="hide-m" href="#perguntas">Dúvidas</a>
       <a class="hide-m" href="#recursos">Recursos</a>
       <a class="hide-m" href="#devocional">Devocional</a>
       <a class="hide-m" href="#instalar">Instalar</a>
       <a class="hide-m" href="#diario">Devocional diário</a>
-      <a class="hide-m" href="#perguntas">Perguntas</a>
+            <button type="button" id="sbtn" class="sbtn" aria-label="Buscar no site" aria-expanded="false"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></button>
       <a class="btn btn-gold btn-sm" href="../?instalar">Baixar grátis</a>
     </nav>
   </div>
 </header>
+<div class="sbar" id="sbar" hidden><div class="wrap"><input id="sq" type="search" placeholder="Buscar no site: Bíblia, devocional, grátis…" autocomplete="off" aria-label="Buscar no site"><div id="sres" role="listbox"></div></div></div>
 
 <main id="conteudo">
 <section class="hero" style="padding:0">
@@ -169,6 +177,18 @@ footer .legal{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-
       <div class="phone p2"><img src="img/devocional.jpg" alt="" loading="eager"></div>
       <div class="phone p1"><img src="img/inicio.jpg" alt="" loading="eager"></div>
     </div>
+  </div>
+</section>
+
+<section id="perguntas">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Comece por aqui</span><h2>Dúvidas frequentes</h2></div>
+    <details><summary>O SOLA é gratuito mesmo?</summary><p>Sim. O SOLA | Bíblia &amp; Teologia é gratuito e não exibe anúncios. É um projeto de serviço à igreja.</p></details>
+    <details><summary>Preciso criar conta?</summary><p>Não. Você pode usar tudo sem cadastro. Se quiser, coloque seu nome e uma foto no perfil; esses dados ficam apenas no seu aparelho.</p></details>
+    <details><summary>Qual é a linha teológica?</summary><p>Protestante e reformada, em diálogo com os credos históricos da igreja e com as confissões da Reforma, como Westminster, Heidelberg e a Confissão Belga.</p></details>
+    <details><summary>Funciona sem internet?</summary><p>Sim. Depois de abrir uma Bíblia ou um conteúdo, ele fica salvo no aparelho. Algumas funções, como tradução automática de comentários e vídeos, precisam de conexão.</p></details>
+    <details><summary>Vai estar na App Store e no Google Play?</summary><p>Estamos preparando as versões para as lojas. Enquanto isso, a instalação pelo navegador oferece a mesma experiência e já recebe todas as atualizações.</p></details>
+    <details><summary>Como envio uma sugestão?</summary><p>Dentro do app, em <strong>Configurações › Sugestões</strong>, ou pelo nosso <a href="https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new">canal de sugestões</a>.</p></details>
   </div>
 </section>
 
@@ -247,17 +267,7 @@ footer .legal{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-
   </div>
 </section>
 
-<section id="perguntas">
-  <div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Perguntas frequentes</span><h2>Dúvidas comuns</h2></div>
-    <details><summary>O SOLA é gratuito mesmo?</summary><p>Sim. O SOLA | Bíblia &amp; Teologia é gratuito e não exibe anúncios. É um projeto de serviço à igreja.</p></details>
-    <details><summary>Preciso criar conta?</summary><p>Não. Você pode usar tudo sem cadastro. Se quiser, coloque seu nome e uma foto no perfil; esses dados ficam apenas no seu aparelho.</p></details>
-    <details><summary>Qual é a linha teológica?</summary><p>Protestante e reformada, em diálogo com os credos históricos da igreja e com as confissões da Reforma, como Westminster, Heidelberg e a Confissão Belga.</p></details>
-    <details><summary>Funciona sem internet?</summary><p>Sim. Depois de abrir uma Bíblia ou um conteúdo, ele fica salvo no aparelho. Algumas funções, como tradução automática de comentários e vídeos, precisam de conexão.</p></details>
-    <details><summary>Vai estar na App Store e no Google Play?</summary><p>Estamos preparando as versões para as lojas. Enquanto isso, a instalação pelo navegador oferece a mesma experiência e já recebe todas as atualizações.</p></details>
-    <details><summary>Como envio uma sugestão?</summary><p>Dentro do app, em <strong>Configurações › Sugestões</strong>, ou pelo nosso <a href="https://github.com/rafaelximenes2010-png/concordancia-biblica/issues/new">canal de sugestões</a>.</p></details>
-  </div>
-</section>
+
 </main>
 
 <footer>
@@ -273,6 +283,25 @@ footer .legal{border-top:1px solid rgba(255,255,255,.1);margin-top:30px;padding-
     <div class="legal">© <span id="ano">2026</span> SOLA | Bíblia &amp; Teologia. Textos bíblicos e comentários citados pertencem a seus respectivos detentores; obras em domínio público são indicadas no app.</div>
   </div>
 </footer>
+<script>
+(function(){
+var btn=document.getElementById("sbtn"),bar=document.getElementById("sbar"),q=document.getElementById("sq"),res=document.getElementById("sres");
+var norm=function(t){return (t||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")};
+var items=[];
+document.querySelectorAll("#perguntas details").forEach(function(d){items.push({el:d,t:d.querySelector("summary").textContent,x:d.querySelector("p").textContent,k:"Dúvida frequente"});});
+document.querySelectorAll("#recursos .card").forEach(function(c){items.push({el:c,t:c.querySelector("h3").textContent,x:c.querySelector("p").textContent,k:"Recurso"});});
+document.querySelectorAll("main section:not(#perguntas):not(#recursos)").forEach(function(sc){var h=sc.querySelector("h2");if(h)items.push({el:sc,t:h.textContent,x:sc.textContent,k:"Seção"});});
+function esc(t){return t.replace(/[&<>]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]})}
+function go(it){var e=it.el;if(e.tagName==="DETAILS")e.open=true;e.scrollIntoView({behavior:"smooth",block:"center"});e.classList.add("hit");setTimeout(function(){e.classList.remove("hit")},2200);}
+function run(){var v=norm(q.value.trim());res.innerHTML="";if(!v)return;
+var out=items.filter(function(i){return norm(i.t+" "+i.x).indexOf(v)>-1}).slice(0,8);
+if(!out.length){res.innerHTML='<p class="nada">Nada encontrado. Tente outra palavra, como “gratuito”, “offline” ou “devocional”.</p>';return;}
+out.forEach(function(i){var a=document.createElement("a");a.href="#";a.innerHTML="<b>"+esc(i.t)+"</b><small>"+i.k+"</small>";a.onclick=function(ev){ev.preventDefault();go(i);};res.appendChild(a);});}
+btn.onclick=function(){var o=bar.hidden;bar.hidden=!o;btn.setAttribute("aria-expanded",String(o));if(o)q.focus();else{q.value="";res.innerHTML="";}};
+q.addEventListener("input",run);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!bar.hidden)btn.onclick();});
+})();
+</script>
 <script>document.getElementById("ano").textContent=new Date().getFullYear();</script>
 </body>
 </html>
