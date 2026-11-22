@@ -412,7 +412,7 @@ async function pushRoute(request, env, h){
      · vozes novas (Azure Speech) por aparelho;
      · pedidos ao Worker e leituras/gravações no KV (limites do plano grátis da Cloudflare).
    Quando passa de 70% de algum limite, avisa o administrador:
-     · no Telegram (mensagem privada do robô) — ative uma vez em /telegram/vincular?k=<senha do admin>;
+     · no canal do Telegram (TG_CHANNEL) e, se ligado, em mensagem privada (/telegram/vincular?k=<senha do admin>);
      · e o GitHub abre um "issue" de alerta (workflow monitor-uso.yml), que chega por e-mail.
    GET /uso  → resumo público, só números (sem nenhum dado pessoal).
    Limites podem ser ajustados em Settings › Variables, sem mexer no código:
@@ -561,10 +561,13 @@ export class Cota {
     if (bloq >= 10) marca("bloq10", `🟠 ${bloq} aparelhos atingiram o limite diário de tradução hoje. Pode ser uso intenso legítimo ou abuso.`);
     if (!novos.length) return;
     this.setTot("al:" + dia, A);
-    const chat = this.tot("admin").chat;
-    if (chat && this.env.TG_TOKEN) {
-      const text = "⚠️ <b>SOLA · alerta de uso</b>\n\n" + novos.map(a => a.txt).join("\n") + "\n\nResumo: https://tradutor.rafael-ximenes-2010.workers.dev/uso";
-      try { await fetch(`https://api.telegram.org/bot${this.env.TG_TOKEN}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: chat, text, parse_mode: "HTML", link_preview_options: { is_disabled: true } }) }); } catch {}
+    /* destinos: mensagem privada do administrador (se ligada) e o canal do Telegram (TG_CHANNEL; desligue com ALERTA_CANAL = "nao") */
+    const destinos = [this.tot("admin").chat, this.env.ALERTA_CANAL === "nao" ? "" : this.env.TG_CHANNEL].filter(Boolean);
+    if (destinos.length && this.env.TG_TOKEN) {
+      const text = "⚠️ <b>SOLA · alerta de uso</b>\n\n" + novos.map(a => a.txt).join("\n") + "\n\nPainel: https://solabiblia.net.br/site/uso.html";
+      for (const chat_id of [...new Set(destinos.map(String))]) {
+        try { await fetch(`https://api.telegram.org/bot${this.env.TG_TOKEN}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id, text, parse_mode: "HTML", link_preview_options: { is_disabled: true } }) }); } catch {}
+      }
     }
   }
 }
