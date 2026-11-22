@@ -1808,6 +1808,8 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 #view-grego .picker-search{background:var(--surface);border:2px solid var(--gold,#c99a3b);box-shadow:0 2px 10px rgba(201,154,59,.18)}
 #view-grego .picker-search:focus-within{box-shadow:0 0 0 3px rgba(201,154,59,.3)}
 #view-grego .picker-search input{background:transparent}
+.rdx-op.rdx-v5 .rdx-dot,.rdx-sel.rdx-v5 .rdx-dot{background:linear-gradient(145deg,#d9534f,#7a1f2b)}.rdx-op.rdx-v6 .rdx-dot,.rdx-sel.rdx-v6 .rdx-dot{background:linear-gradient(145deg,#5b6dc9,#232a6b)}
+.rdx.rdx-v5 .rdx-art{background:linear-gradient(145deg,#d9534f,#7a1f2b)}.rdx.rdx-v6 .rdx-art{background:linear-gradient(145deg,#5b6dc9,#232a6b)}
 </style>
 </head>
 <body>
@@ -2084,6 +2086,8 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" role="radio" class="rdx-op" data-pick="kcbi" aria-checked="true"><i class="rdx-dot"></i>KCBI 90.9<small>Dallas · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v2" data-pick="refnet" aria-checked="false"><i class="rdx-dot"></i>RefNet<small>Reformada · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v3" data-pick="ipb" aria-checked="false"><i class="rdx-dot"></i>Rádio IPB<small>São Paulo · português</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v5" data-pick="espana" aria-checked="false"><i class="rdx-dot"></i>Radio Evangélica España<small>Espanha · espanhol</small></button>
+    <button type="button" role="radio" class="rdx-op rdx-v6" data-pick="uk" aria-checked="false"><i class="rdx-dot"></i>Premier Christian Radio<small>Inglaterra · inglês</small></button>
     <button type="button" role="radio" class="rdx-op rdx-v4" data-pick="espanhol" aria-checked="false"><i class="rdx-dot"></i>Radio Cristiana<small>Cristã · espanhol</small></button>
     </div></div>
   <div class="home-card rdx" id="rdCard" data-radio="kcbi">
@@ -5893,19 +5897,28 @@ const RADIOS = {
     ok:x=>/refnet/i.test(x.name) || /refnet\.fm/i.test(x.homepage||""), extra:[] },
   ipb:{ nome:"Rádio IPB", cls:"rdx-v3", sub:" · São Paulo, Brasil", artista:"Rádio oficial da Igreja Presbiteriana do Brasil", site:"https://ipb.org.br/projetos-radio-ipb.php", busca:"IPB",
     ok:x=>/ipb\.org\.br/i.test(x.homepage||"") || /r[aá]dio\s*ipb|presbiteriana do brasil/i.test(x.name), extra:[] },
+  espana:{ nome:"Radio Evangélica España", cls:"rdx-v5", sub:" · Espanha", artista:"Rádio cristã evangélica da Espanha", site:"https://radioscristianasdelmundo.com/", busca:"",
+    qs:["countrycode=ES&tag=evangelical&order=votes&reverse=true&limit=40","countrycode=ES&tag=christian&order=votes&reverse=true&limit=60","countrycode=ES&name=evang&limit=30","countrycode=ES&name=cristian&limit=40"], max:14,
+    ok:x=>!/cat[oó]lic|maria|cope\b/i.test(x.name||""), extra:[] },
+  uk:{ nome:"Premier Christian Radio", cls:"rdx-v6", sub:" · Inglaterra", artista:"Rádio cristã evangélica conservadora · Londres", site:"https://www.premierchristianradio.com/", busca:"",
+    qs:["name=Premier%20Christian&countrycode=GB&limit=20","countrycode=GB&tag=christian&order=votes&reverse=true&limit=40"], max:14,
+    ok:x=>!/cathol|catholic/i.test(x.name||""), extra:[] },
   espanhol:{ nome:"Radio Cristiana", cls:"rdx-v4", sub:" · em espanhol", artista:"Rádio cristã em espanhol", site:"https://radioscristianasdelmundo.com/", busca:"", qs:"language=spanish&tag=christian&order=votes&reverse=true&limit=60", max:14,
     ok:x=>!/cat[oó]lic|maria/i.test(x.name||""), extra:[] }
 };
 const Radio = { audio:null, on:null, erro:{} };
 async function radioUrls(st){
   const urls=[...(st.pre||[])];
-  for(const h of ["de1","nl1","at1"]){
-    try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?${st.qs ? st.qs+"&hidebroken=true" : "name="+encodeURIComponent(st.busca)+"&limit=20&hidebroken=true"}`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
-      const list=await r.json();
-      list.filter(st.ok).sort((a,b)=>(b.votes||0)-(a.votes||0))
-        .forEach(x=>[x.url_resolved,x.url].forEach(u=>{ if(u && /^https:/.test(u) && !urls.includes(u)) urls.push(u); }));
-      break;
-    }catch(e){}
+  const consultas=st.qs ? [].concat(st.qs) : [null];
+  for(const q of consultas){
+    for(const h of ["de1","nl1","at1"]){
+      try{ const r=await fetch(`https://${h}.api.radio-browser.info/json/stations/search?${q ? q+"&hidebroken=true" : "name="+encodeURIComponent(st.busca)+"&limit=20&hidebroken=true"}`,{ signal:AbortSignal.timeout(5000) }); if(!r.ok) continue;
+        const list=await r.json();
+        list.filter(st.ok).sort((a,b)=>(b.votes||0)-(a.votes||0))
+          .forEach(x=>[x.url_resolved,x.url].forEach(u=>{ if(u && /^https:/.test(u) && !urls.includes(u)) urls.push(u); }));
+        break;
+      }catch(e){}
+    }
   }
   st.extra.forEach(u=>{ if(!urls.includes(u)) urls.push(u); });
   return st.max ? urls.slice(0,st.max) : urls;
@@ -5968,7 +5981,7 @@ const FS_SECOES = [
   ["Artigos","artigos","artigos textos leitura ensaios"],["Pensadores","pensadores","pensadores autores teologos filosofos"],["Mapas e jornadas","mapas","mapas jornadas geografia paulo"],
   ["Ouvir","ouvir","ouvir audio musica hinos"],["Notícias do mundo cristão","noticias","noticias news missoes perseguicao seminarios"],["Credos e catecismos","catecismos","credos catecismos confissao westminster heidelberg dort"],
   ["Notas","notas","notas anotacoes"],["Meu devocional","meudevocional","meu devocional diario pessoal"],["Configurações","config","configuracoes ajustes tema letra versao notificacoes"],
-  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Cristiana)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
+  ["Devocional pelo WhatsApp","wa","whatsapp vip canal enviar compartilhar"],["Rádios ao vivo (KCBI, RefNet, Rádio IPB, Radio Evangélica España, Premier Christian Radio, Radio Cristiana)","radio","radio kcbi refnet ligonier ipb presbiteriana musica ao vivo ouvir"]
 ];
 const fsNorm = t => String(t||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
 const fsNormPos = t => [...String(t||"")].map(c=>fsNorm(c).charAt(0)||c).join("");   /* mesma posição de cada letra, sem acento */
@@ -7078,8 +7091,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.32.6";
+const APP_VERSION = "3.33.0";
 const CHANGELOG = [
+  { v:"3.33.0", d:"novembro de 2026", items:["Duas novas rádios: Radio Evangélica España (Espanha, em espanhol) e Premier Christian Radio (Inglaterra, cristã evangélica conservadora)."] },
   { v:"3.32.6", d:"novembro de 2026", items:["Avisos: a central de notificações mostra sempre só as 4 mais recentes, inclusive para quem acabou de instalar o app."] },
   { v:"3.32.5", d:"novembro de 2026", items:["Nome do app na tela inicial: “Bíblia e Teologia” (ao adicionar o ícone novamente)."] },
   { v:"3.32.4", d:"novembro de 2026", items:["Correção: ao escolher um livro do Antigo Testamento numa versão só do Novo Testamento, o app agora abre o livro numa versão completa em vez de ficar travado."] },
