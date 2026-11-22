@@ -1829,6 +1829,15 @@ dialog.reader .dlg-head .rd-verpill{border-radius:0 999px 999px 0!important;marg
 dialog.reader .dlg-head::after{content:"";flex:1 1 0}
 dialog.reader #rdSearch{order:5}dialog.reader #rdAa{order:6}
 dialog.reader .rd-aa{width:40px;height:40px}
+
+/* leitor: barra maior (3.35.4) */
+dialog.reader .dlg-head{padding:10px 10px;gap:6px}
+dialog.reader .dlg-head .rd-back{font-size:32px;width:46px;height:46px}
+dialog.reader .dlg-head .rd-pick{padding:12px 16px!important;font-size:19px!important;min-height:48px}
+dialog.reader .dlg-head .rd-verpill{min-height:48px;font-size:15px;padding-left:14px;padding-right:14px}
+dialog.reader .dlg-head .rd-pick #rdPickLbl{font-size:19px}
+dialog.reader .rd-aa{width:48px;height:48px}
+dialog.reader .rd-aa .icon,dialog.reader #rdSearch .icon{width:26px;height:26px}
 </style>
 </head>
 <body>
@@ -7125,8 +7134,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.3";
+const APP_VERSION = "3.35.4";
 const CHANGELOG = [
+  { v:"3.35.4", d:"novembro de 2026", items:["Barra do leitor da Bíblia maior: botões e seletor de capítulo e versão mais fáceis de tocar."] },
   { v:"3.35.3", d:"novembro de 2026", items:["Ao ler a Bíblia, o topo mantém “SOLA · Bíblia & Teologia”."] },
   { v:"3.35.2", d:"novembro de 2026", items:["A seção agora se chama “Cânticos, Credos e Catecismos”."] },
   { v:"3.35.1", d:"novembro de 2026", items:["O Hinário SOLA agora fica em Credos e Catecismos, acima do Saltério."] },
