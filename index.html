@@ -3724,10 +3724,11 @@ async function openReader(opts={}){
   const asView=!!opts.asView;
   if(el.dlg.open && el.dlg.classList.contains("as-view")!==asView) el.dlg.close();
   el.dlg.classList.toggle("as-view",asView); document.body.classList.toggle("reading",asView);
+  if(asView){ const h=document.querySelector(".app-header"); if(h){ const b=Math.ceil(h.getBoundingClientRect().bottom); if(b>0) el.dlg.style.setProperty("top",(b+2)+"px","important"); } } else el.dlg.style.removeProperty("top");
   if(!el.dlg.open){ if(asView) el.dlg.show(); else openDialog(el.dlg); }
   await renderReader();
 }
-function closeReader(){ if(el.dlg.open) el.dlg.close(); el.dlg.classList.remove("as-view"); document.body.classList.remove("reading"); }
+function closeReader(){ if(el.dlg.open) el.dlg.close(); el.dlg.classList.remove("as-view"); el.dlg.style.removeProperty("top"); document.body.classList.remove("reading"); }
 function openContext(v){ setFocus(v); openReader({ t:v.t, b:v.b, c:v.c, hi:v.v, asView:false }); }
 
 async function renderReader(){
@@ -7091,8 +7092,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.33.0";
+const APP_VERSION = "3.33.1";
 const CHANGELOG = [
+  { v:"3.33.1", d:"novembro de 2026", items:["Ao abrir a Bíblia, o nome SOLA no topo não fica mais cortado."] },
   { v:"3.33.0", d:"novembro de 2026", items:["Duas novas rádios: Radio Evangélica España (Espanha, em espanhol) e Premier Christian Radio (Inglaterra, cristã evangélica conservadora)."] },
   { v:"3.32.6", d:"novembro de 2026", items:["Avisos: a central de notificações mostra sempre só as 4 mais recentes, inclusive para quem acabou de instalar o app."] },
   { v:"3.32.5", d:"novembro de 2026", items:["Nome do app na tela inicial: “Bíblia e Teologia” (ao adicionar o ícone novamente)."] },
