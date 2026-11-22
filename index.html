@@ -1839,7 +1839,7 @@ dialog.reader .dlg-head .rd-pick #rdPickLbl{font-size:19px}
 dialog.reader .rd-aa{width:48px;height:48px}
 dialog.reader .rd-aa .icon,dialog.reader #rdSearch .icon{width:26px;height:26px}
 
-dialog.reader #rdSearch .icon{width:30px;height:30px}
+dialog.reader #rdSearch .icon{width:30px;height:30px;stroke-width:1.7}
 </style>
 </head>
 <body>
@@ -1919,6 +1919,7 @@ dialog.reader #rdSearch .icon{width:30px;height:30px}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 7h6"/></symbol>
   <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="16" cy="12" r=".6"/></symbol>
+  <symbol id="i-farol-busca" viewBox="0 0 24 24"><path d="M9.2 21 10.2 11h3.6l1 10z"/><path d="M10.2 11V8h3.6v3M9.5 8 12 5.5 14.5 8"/><path d="M6.8 9.2H3.5M17.2 9.2h3.3M7.6 5.8 5 4.2M16.4 5.8 19 4.2M6.5 21h11"/><path d="M10.6 15h2.8"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
@@ -3093,7 +3094,7 @@ dialog.reader #rdSearch .icon{width:30px;height:30px}
       <span id="rdPickLbl">João 1</span><span class="chev" aria-hidden="true">▾</span></button>
     <span class="rd-verpill"><span id="rdVerLbl">BLIVRE</span><span class="chev" aria-hidden="true">▾</span>
       <label class="sr-only" for="rdVersion">Versão</label><select id="rdVersion"></select></span>
-    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdSearch" aria-label="Buscar na Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-farol"/></svg></button>
+    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdSearch" aria-label="Buscar na Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-farol-busca"/></svg></button>
     <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdAa" aria-expanded="false" aria-controls="rdPanel" aria-label="Mais opções: letra, comparar e versões"><svg class="icon" aria-hidden="true"><use href="#i-dots"/></svg></button>
     <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" hidden aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
@@ -7136,8 +7137,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.8";
+const APP_VERSION = "3.35.9";
 const CHANGELOG = [
+  { v:"3.35.9", d:"novembro de 2026", items:["Leitor da Bíblia: ícone de busca em formato de farol, mantendo o tamanho e a disposição da barra."] },
   { v:"3.35.8", d:"novembro de 2026", items:["Leitor da Bíblia: farol um pouco maior, no tamanho da barra aprovada."] },
   { v:"3.35.7", d:"novembro de 2026", items:["Leitor da Bíblia: farol no lugar da lupa e menu “…” como antes, sem fundos coloridos."] },
   { v:"3.35.6", d:"novembro de 2026", items:["Leitor da Bíblia: botões do farol e “Aa” um pouco menores."] },
