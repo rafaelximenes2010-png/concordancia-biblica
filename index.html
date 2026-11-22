@@ -4323,7 +4323,7 @@ function renderCommentary(){
   $("#brDefSel").addEventListener("change",e=>{ store.set("brPreferred",e.target.value); toast(`${e.target.value} agora é o seu comentarista brasileiro padrão.`); renderCommentary(); });
   Comm.available().then(async list=>{ const def=await Comm.defaultId(); const sel=$("#comDefSel"); if(!sel) return;
     sel.innerHTML=list.map(c=>`<option value="${c.id}" ${c.id===def?"selected":""}>${esc(c.label)}</option>`).join("");
-    sel.onchange=e=>{ Comm.preferred=e.target.value; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); if(typeof Drawer!=="undefined" && Drawer.list && $("#cdBody")){ Drawer.def=c.dataset.setcom; renderDrawerChips(); if(c.classList.contains("cd-def")) c.remove(); } };
+    sel.onchange=e=>{ Comm.preferred=e.target.value; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); };
   }).catch(()=>{ const sel=$("#comDefSel"); if(sel) sel.innerHTML=`<option>Indisponível sem conexão</option>`; });
 }
 
@@ -7146,8 +7146,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.12";
+const APP_VERSION = "3.35.13";
 const CHANGELOG = [
+  { v:"3.35.13", d:"novembro de 2026", items:["Correção: a estrela do comentarista padrão agora muda sozinha nas abas do topo."] },
   { v:"3.35.12", d:"novembro de 2026", items:["Comentários: ao tornar um comentarista seu padrão, a estrela passa na hora para ele nas abas do topo."] },
   { v:"3.35.11", d:"novembro de 2026", items:["Leitor da Bíblia: o nome do livro ganhou mais espaço e aparece completo."] },
   { v:"3.35.10", d:"novembro de 2026", items:["O farol de busca do leitor abre a busca do SOLA por cima da Bíblia aberta."] },
@@ -7524,7 +7525,7 @@ document.addEventListener("toggle",e=>{ const d=e.target; if(!(d instanceof HTML
   d.parentElement.querySelectorAll(":scope > details"+grp).forEach(x=>{ if(x!==d) x.open=false; }); }, true);
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-setbr]"); if(b){ store.set("brPreferred",b.dataset.setbr); toast(`${b.dataset.setbr} agora é o seu comentarista brasileiro padrão.`); renderCommentary(); if(typeof renderDrawerChips==="function" && $("#cdBody")){ renderDrawerChips(); b.remove(); } return; }
-  const c=e.target.closest("[data-setcom]"); if(c){ Comm.preferred=c.dataset.setcom; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); }
+  const c=e.target.closest("[data-setcom]"); if(c){ Comm.preferred=c.dataset.setcom; store.set("comPreferred",Comm.preferred); toast("Comentário clássico padrão alterado."); renderCommentary(); if(typeof Drawer!=="undefined" && Drawer.list && $("#cdBody")){ Drawer.def=c.dataset.setcom; renderDrawerChips(); if(c.classList.contains("cd-def")) c.remove(); } }
 });
 function brItem(c, v){
   const ref=refLabel(v.b,v.c,v.v), chap=refLabel(v.b,v.c), bookN=BOOK[v.b].name, tst=BOOK[v.b].testament;
