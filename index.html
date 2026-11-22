@@ -1840,6 +1840,15 @@ dialog.reader .rd-aa{width:48px;height:48px}
 dialog.reader .rd-aa .icon,dialog.reader #rdSearch .icon{width:26px;height:26px}
 
 dialog.reader #rdSearch .icon{width:30px;height:30px;stroke-width:1.7}
+
+/* leitor: nome do livro com mais espaço (3.35.11) */
+dialog.reader .dlg-head{gap:2px;padding:10px 6px}
+dialog.reader .dlg-head .rd-back{width:38px;height:44px;font-size:30px}
+dialog.reader .dlg-head .rd-pick{padding:12px 10px 12px 14px!important;gap:4px!important;flex:1 1 auto!important}
+dialog.reader .dlg-head .rd-pick #rdPickLbl{font-size:17px;white-space:nowrap}
+dialog.reader .dlg-head .rd-verpill{padding-left:10px;padding-right:10px;flex:none;font-size:13px}
+dialog.reader .dlg-head::after{display:none}
+dialog.reader .rd-aa{width:42px;height:44px}
 </style>
 </head>
 <body>
@@ -7137,8 +7146,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.10";
+const APP_VERSION = "3.35.11";
 const CHANGELOG = [
+  { v:"3.35.11", d:"novembro de 2026", items:["Leitor da Bíblia: o nome do livro ganhou mais espaço e aparece completo."] },
   { v:"3.35.10", d:"novembro de 2026", items:["O farol de busca do leitor abre a busca do SOLA por cima da Bíblia aberta."] },
   { v:"3.35.9", d:"novembro de 2026", items:["Leitor da Bíblia: ícone de busca em formato de farol, mantendo o tamanho e a disposição da barra."] },
   { v:"3.35.8", d:"novembro de 2026", items:["Leitor da Bíblia: farol um pouco maior, no tamanho da barra aprovada."] },
