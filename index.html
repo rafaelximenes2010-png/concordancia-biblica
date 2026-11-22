@@ -5784,7 +5784,7 @@ const Inbox = {
     const cur=CHANGELOG.find(c=>c.v===APP_VERSION);
     if(cur) add({ id:"v"+APP_VERSION, kind:"versao", title:`SOLA ${APP_VERSION} instalado`, body:cur.items[0], url:"./index.html#config", date:store.get("verSeenAt",new Date().toISOString()) });
     const g=this.gone();
-    return items.filter(x=>!g.includes(this.key(x))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,30);
+    return items.filter(x=>!g.includes(this.key(x))).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,4);   // só as 4 mais recentes
   },
   unread(items){ const s=this.seen(); return items.filter(x=>!s || String(x.date)>s).length; },
   async paint(force){ const items=await this.load(force), n=this.unread(items), b=$("#bellN"); if(!b) return items;
@@ -7078,8 +7078,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.32.5";
+const APP_VERSION = "3.32.6";
 const CHANGELOG = [
+  { v:"3.32.6", d:"novembro de 2026", items:["Avisos: a central de notificações mostra sempre só as 4 mais recentes, inclusive para quem acabou de instalar o app."] },
   { v:"3.32.5", d:"novembro de 2026", items:["Nome do app na tela inicial: “Bíblia e Teologia” (ao adicionar o ícone novamente)."] },
   { v:"3.32.4", d:"novembro de 2026", items:["Correção: ao escolher um livro do Antigo Testamento numa versão só do Novo Testamento, o app agora abre o livro numa versão completa em vez de ficar travado."] },
   { v:"3.32.3", d:"novembro de 2026", items:["Dicionário de grego: campo de pesquisa destacado, com fundo claro e borda dourada."] },
