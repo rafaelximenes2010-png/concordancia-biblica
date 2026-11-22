@@ -125,8 +125,9 @@ async function tts(request, env, h){
   // Se a voz escolhida não existir nesta região, usa a Francisca (feminina) ou o Antônio (masculina)
   const reserva = FEMALE.test(voice) ? "pt-BR-FranciscaNeural" : "pt-BR-AntonioNeural";
   if (!r.ok && r.status !== 429 && r.status !== 403 && voice !== reserva) r = await synth(text, reserva, rate, env);
-  if (r.status === 429 || r.status === 403) { ISO.azErr++; return json({ error: "quota" }, 429, h); }
-  if (!r.ok) { ISO.azErr++; return json({ error: "upstream", status: r.status }, 502, h); }
+  if (!r.ok) { ISO.azErr++; if (res && res.ok) await cota(env, "estorno", { tipo: "tts", dev: q.dev, ip: q.ip, chars: text.length }); }
+  if (r.status === 429 || r.status === 403) return json({ error: "quota" }, 429, h);
+  if (!r.ok) return json({ error: "upstream", status: r.status }, 502, h);
   const audio = await r.arrayBuffer();
   if (env.TR_CACHE) { try { await env.TR_CACHE.put(key, audio); } catch (e) { console.log("kv", e.message); } }   // cada devocional é gerado uma única vez
   return new Response(audio, { headers: { ...h, "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } });
@@ -513,6 +514,11 @@ export class Cota {
         else { add(D, "ttsNovo", 1); add(D, "spChars", n); add(M, "spChars", n); }
         out = { ok: true, resta: tipo === "tr" ? Math.max(0, L.devChars - dv.c - n) : Math.max(0, L.ttsDev - dv.r - 1) };
       }
+    } else if (path === "estorno") {                        // o Azure falhou: devolve o que foi reservado
+      const tipo = b.tipo === "tts" ? "tts" : "tr", n = Math.max(0, Number(b.chars) || 0);
+      if (b.dev) this.soma(dia, tipo + ":d:" + b.dev, -n, -1); if (b.ip) this.soma(dia, tipo + ":i:" + b.ip, -n, -1);
+      if (tipo === "tr") { add(D, "trNovo", -1); add(D, "trChars", -n); add(M, "trChars", -n); }
+      else { add(D, "ttsNovo", -1); add(D, "spChars", -n); add(M, "spChars", -n); }
     } else if (path === "conta") {                           // só os contadores acumulados (vêm em b.iso)
       if (b.bloqueio) { add(D, "trBloq", 1); if (b.dev) this.soma(dia, "bloq:" + b.dev, 0, 1); }
     } else if (path === "admin") {
@@ -644,6 +650,7 @@ export default {
       return json({ text: result, cached: false }, 200, h);
     } catch (e) {
       ISO.azErr++;
+      if (res && res.ok) { const p = cota(env, "estorno", { tipo: "tr", dev: q.dev, ip: q.ip, chars: text.length }); if (ctx && ctx.waitUntil) ctx.waitUntil(p); }
       return json({ error: e.message === "quota" ? "quota" : "upstream", detalhe: String(e.message || "").slice(0, 60) }, e.message === "quota" ? 429 : 502, h);
     }
   }
