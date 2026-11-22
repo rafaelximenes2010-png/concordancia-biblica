@@ -1,0 +1,16 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Uso do servidor · SOLA</title>
+<style>body{font:15px/1.5 system-ui,sans-serif;margin:0;background:#f6f4ef;color:#1d2a33}main{max-width:640px;margin:0 auto;padding:20px}h1{font-size:1.25rem;margin:0 0 4px}.st{display:inline-block;padding:3px 10px;border-radius:99px;font-weight:700;font-size:.85rem}.ok{background:#d8efe0;color:#1d6b3a}.atencao{background:#fde9c8;color:#8a5300}.critico{background:#f8d3cf;color:#9b231a}
+.m{background:#fff;border-radius:12px;padding:10px 14px;margin:8px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}.bar{height:8px;background:#e7e3da;border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:#2f7d55}.m.w .bar i{background:#d98c12}.m.c .bar i{background:#c0392b}.row{display:flex;justify-content:space-between;gap:10px}small{color:#5d6b74}ul{padding-left:18px}</style></head>
+<body><main><h1>SOLA · uso do servidor</h1><p id="top"><small>Carregando…</small></p><div id="m"></div><h2 style="font-size:1rem">Hoje</h2><ul id="h"></ul><h2 style="font-size:1rem">Alertas de hoje</h2><ul id="a"></ul>
+<p><small>Só números agregados, sem nenhum dado pessoal. Os alertas também chegam pelo Telegram (quando ligado) e por e-mail (GitHub).</small></p></main>
+<script>
+const f=n=>Number(n||0).toLocaleString('pt-BR'),e=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+fetch('https://tradutor.rafael-ximenes-2010.workers.dev/uso',{cache:'no-store'}).then(r=>r.json()).then(d=>{
+ const nome={ok:'Tudo bem',atencao:'Atenção',critico:'Crítico'}[d.status]||d.status;
+ document.getElementById('top').innerHTML=`<span class="st ${e(d.status)}">${e(nome)}</span> <small>${e(d.dia||'')} · Telegram ${d.telegramAtivo?'ligado':'desligado'}</small>`;
+ document.getElementById('m').innerHTML=(d.medidas||[]).map(m=>`<div class="m ${m.pct>=90?'c':m.pct>=70?'w':''}"><div class="row"><b>${e(m.nome)}</b><span>${m.pct}%</span></div><small>${f(m.valor)} de ${f(m.limite)} ${e(m.unidade)}</small><div class="bar"><i style="width:${Math.min(100,m.pct)}%"></i></div></div>`).join('');
+ const h=d.hoje||{};document.getElementById('h').innerHTML=[['Traduções do cache (grátis)',h.traducoesDoCache],['Traduções novas',h.traducoesNovas],['Caracteres novos',h.caracteresNovos],['Vozes novas',h.vozesNovas],['Aparelhos que traduziram',h.aparelhosQueTraduziram],['Aparelhos no limite',h.aparelhosNoLimite],['Pedidos recusados por limite',h.pedidosRecusadosPorLimite],['Erros do Azure',h.errosDoAzure],['Falhas de gravação no KV',h.falhasDeGravacaoKV]].map(([k,v])=>`<li>${k}: <b>${f(v)}</b></li>`).join('');
+ document.getElementById('a').innerHTML=(d.alertasHoje||[]).map(a=>`<li>${e(a.txt)}</li>`).join('')||'<li>Nenhum.</li>';
+}).catch(()=>{document.getElementById('top').innerHTML='<span class="st critico">Servidor sem resposta</span>'});
+</script></body></html>

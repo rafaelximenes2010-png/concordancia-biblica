@@ -4148,7 +4148,7 @@ const Tr = {
     if(!out && TR_PROXY){
       try{
         const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),25000);
-        const r=await fetch(TR_PROXY,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, from, to }), signal:ctl.signal });
+        const r=await fetch(TR_PROXY,{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, from, to, dev:store.get("devId","") }), signal:ctl.signal });
         clearTimeout(tm); const d=await r.json().catch(()=>({}));
         if(r.ok && typeof d.text==="string" && d.text) out=d.text; else this.lastProxy=`${r.status}${d.error?" "+d.error:""}${d.message?" ("+d.message+")":""}`;
       }catch(e){ out=null; this.lastProxy=e.name==="AbortError"?"tempo esgotado":(e.message||"sem conexão"); }
@@ -7074,7 +7074,7 @@ const DA = { doc:null, i:0, el:null, playing:false, loading:false, urls:{},
     const p=(async()=>{ const text=await this.text(d,i); const voice=store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural");
       const ck="/__doc/"+encodeURIComponent(d.id+":"+i+":"+voice+":"+Tr.key(text)); const cache=await caches.open("sola-audio-v1").catch(()=>null);
       let blob=null; const hit=cache && await cache.match(ck); if(hit) blob=await hit.blob();
-      if(!blob){ const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice }) });
+      if(!blob){ const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice, dev:store.get("devId","") }) });
         if(!r.ok) throw new Error("tts "+r.status); blob=await r.blob(); try{ cache && await cache.put(ck,new Response(blob,{ headers:{ "Content-Type":"audio/mpeg" } })); }catch(e){} }
       return URL.createObjectURL(blob); })();
     this.urls[k]=p; p.catch(()=>{ delete this.urls[k]; }); return p; },
@@ -7146,8 +7146,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.14";
+const APP_VERSION = "3.36.0";
 const CHANGELOG = [
+  { v:"3.36.0", d:"novembro de 2026", items:["Mais estabilidade para muita gente usar ao mesmo tempo: cada aparelho tem um limite diário justo de traduções e vozes novas (as já traduzidas continuam livres), e o SOLA avisa a equipe antes de qualquer limite do servidor estourar."] },
   { v:"3.35.14", d:"novembro de 2026", items:["Quem já tem o app instalado vê “Abrir no app” no topo da versão web, que tenta abrir o app na hora."] },
   { v:"3.35.13", d:"novembro de 2026", items:["Correção: a estrela do comentarista padrão agora muda sozinha nas abas do topo."] },
   { v:"3.35.12", d:"novembro de 2026", items:["Comentários: ao tornar um comentarista seu padrão, a estrela passa na hora para ele nas abas do topo."] },
@@ -8828,7 +8829,7 @@ async function narrPlay(kind){
     let blob=null; const cache=await caches.open("sola-audio-v1").catch(()=>null);
     const hit=cache && await cache.match("/__narr/"+encodeURIComponent(ck)); if(hit) blob=await hit.blob();
     if(!blob){
-      const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, voice:store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural") }) });
+      const r=await fetch(TR_PROXY.replace(/\/$/,"")+"/tts",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ text, dev:store.get("devId",""), voice:store.get("ttsVoiceNat","pt-BR-MacerioMultilingualNeural") }) });
       if(!r.ok) throw new Error("tts "+r.status); blob=await r.blob();
       try{ cache && await cache.put("/__narr/"+encodeURIComponent(ck), new Response(blob,{ headers:{ "Content-Type":"audio/mpeg" } })); }catch(e){}
     }

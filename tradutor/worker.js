@@ -119,14 +119,16 @@ async function tts(request, env, h){
   if (!text.trim()) return json({ error: "empty" }, 400, h);
   const key = `tts2:${voice}:${rate}:${await sha(text)}`;
   if (env.TR_CACHE) { const hit = await env.TR_CACHE.get(key, "arrayBuffer"); if (hit) return new Response(hit, { headers: { ...h, "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } }); }
+  const q = quem(request, body), res = await cota(env, "reserva", { tipo: "tts", dev: q.dev, ip: q.ip, chars: text.length });
+  if (res && !res.ok) return json(limiteMsg(res.motivo, true), 429, h);
   let r = await synth(text, voice, rate, env);
   // Se a voz escolhida não existir nesta região, usa a Francisca (feminina) ou o Antônio (masculina)
   const reserva = FEMALE.test(voice) ? "pt-BR-FranciscaNeural" : "pt-BR-AntonioNeural";
   if (!r.ok && r.status !== 429 && r.status !== 403 && voice !== reserva) r = await synth(text, reserva, rate, env);
-  if (r.status === 429 || r.status === 403) return json({ error: "quota" }, 429, h);
-  if (!r.ok) return json({ error: "upstream", status: r.status }, 502, h);
+  if (r.status === 429 || r.status === 403) { ISO.azErr++; return json({ error: "quota" }, 429, h); }
+  if (!r.ok) { ISO.azErr++; return json({ error: "upstream", status: r.status }, 502, h); }
   const audio = await r.arrayBuffer();
-  if (env.TR_CACHE) await env.TR_CACHE.put(key, audio);   // cada devocional é gerado uma única vez
+  if (env.TR_CACHE) { try { await env.TR_CACHE.put(key, audio); } catch (e) { console.log("kv", e.message); } }   // cada devocional é gerado uma única vez
   return new Response(audio, { headers: { ...h, "Content-Type": "audio/mpeg", "Cache-Control": "public, max-age=31536000" } });
 }
 
@@ -142,7 +144,7 @@ async function postDevocional(env, force){
   if (!env.TG_TOKEN || !env.TG_CHANNEL) return "Configure TG_TOKEN e TG_CHANNEL.";
   const day = brToday(), flag = "tg-posted:" + day;
   if (!force && new Date(Date.now() - 3 * 3600e3).getUTCHours() < 5) return "Antes das 5h.";
-  if (!force && env.TR_CACHE && await env.TR_CACHE.get(flag)) return "Já postado hoje.";
+  if (!force && await flagGet(env, flag)) return "Já postado hoje.";
   const r = await fetch(`${SITE}devocionais/canal/${day.slice(0, 7)}.json`, { cf: { cacheTtl: 300 } });
   if (!r.ok) return "Mês ainda sem devocionais publicados.";
   const item = (await r.json())[day]; if (!item) return "Sem devocional para hoje.";
@@ -154,7 +156,7 @@ async function postDevocional(env, force){
     await tg(env, "sendPhoto", { chat_id: env.TG_CHANNEL, photo });
     await tg(env, "sendMessage", { chat_id: env.TG_CHANNEL, text: item.caption, parse_mode: "HTML", link_preview_options: { is_disabled: true } });
   }
-  if (env.TR_CACHE) await env.TR_CACHE.put(flag, "1", { expirationTtl: 3 * 86400 });
+  await flagSet(env, flag, 3 * 86400);
   return "Postado: " + item.title;
 }
 
@@ -309,8 +311,8 @@ async function checkVersion(env, ctx){
 async function devoTick(env, ctx){
   const br = new Date(Date.now() - 3 * 3600e3), h = br.getUTCHours(), q = Math.floor(br.getUTCMinutes() / 15), day = brToday();
   const flag = `push:devo:${day}:${h}:${q}`;
-  if (await env.TR_CACHE.get(flag)) return;
-  await env.TR_CACHE.put(flag, "1", { expirationTtl: 86400 });
+  if (await flagGet(env, flag)) return;
+  await flagSet(env, flag, 86400);
   const subs = (await allSubs(env)).filter(s => s.t && s.t.devo && s.h === h && s.q === q);
   if (!subs.length) return;
   let title = "Devocional de hoje", ref = "";
@@ -402,15 +404,201 @@ async function pushRoute(request, env, h){
   return json({ error: "rota" }, 404, h);
 }
 
+/* =====================================================================
+   LIMITES DE USO E ALERTAS — para o SOLA não "estourar" com muita gente
+   ---------------------------------------------------------------------
+   Um Durable Object (COTA, grátis no plano gratuito) conta, por dia:
+     · traduções novas (que custam cota do Microsoft Translator) por aparelho e por rede (IP);
+     · vozes novas (Azure Speech) por aparelho;
+     · pedidos ao Worker e leituras/gravações no KV (limites do plano grátis da Cloudflare).
+   Quando passa de 70% de algum limite, avisa o administrador:
+     · no Telegram (mensagem privada do robô) — ative uma vez em /telegram/vincular?k=<senha do admin>;
+     · e o GitHub abre um "issue" de alerta (workflow monitor-uso.yml), que chega por e-mail.
+   GET /uso  → resumo público, só números (sem nenhum dado pessoal).
+   Limites podem ser ajustados em Settings › Variables, sem mexer no código:
+     LIM_DEV_CHARS (40000)  caracteres novos por aparelho/dia  · LIM_DEV_REQ (600) pedidos por aparelho/dia
+     LIM_IP_CHARS (150000)  caracteres novos por rede/dia      · LIM_TTS_DEV (15) vozes novas por aparelho/dia
+     AZ_MES (2000000) cota mensal do Translator  · SPEECH_MES (500000) cota mensal do Speech
+   ===================================================================== */
+const ALERTA = 0.7;
+function limiteMsg(motivo, voz){
+  const o = voz ? "vozes naturais novas" : "traduções novas";
+  const m = motivo === "mensal" ? `A cota mensal de ${o} do SOLA está quase no fim. Volta a funcionar no início do próximo mês.`
+          : motivo === "rede" ? `Esta rede atingiu o limite diário de ${o} do SOLA. Renova amanhã.`
+          : `Este aparelho atingiu o limite diário de ${o} do SOLA. Renova amanhã (meia-noite).`;
+  return { error: "limite", motivo, message: m };
+}
+function limites(env){
+  const n = (v, d) => (Number(v) > 0 ? Number(v) : d);
+  return { devChars: n(env.LIM_DEV_CHARS, 40000), devReq: n(env.LIM_DEV_REQ, 600), ipChars: n(env.LIM_IP_CHARS, 150000),
+           ipReq: n(env.LIM_IP_REQ, 3000), ttsDev: n(env.LIM_TTS_DEV, 15), azMes: n(env.AZ_MES, 2000000), spMes: n(env.SPEECH_MES, 500000),
+           kvW: 1000, kvR: 100000, kvL: 1000, req: 100000 };
+}
+/* contadores do KV e de pedidos deste isolado, enviados ao COTA junto com a próxima chamada */
+const ISO = { req: 0, kvR: 0, kvW: 0, kvL: 0, kvErr: 0, trCache: 0, azErr: 0, dia: "", porDev: new Map(), porIp: new Map(), ultimo: 0 };
+const ISO_K = ["req", "kvR", "kvW", "kvL", "kvErr", "trCache", "azErr"];
+/* limite de pedidos por aparelho/rede contado neste isolado (traduções do cache não chamam o COTA a cada vez) */
+function pedidoLocal(q, L){
+  const d = brToday(); if (ISO.dia !== d) { ISO.dia = d; ISO.porDev.clear(); ISO.porIp.clear(); }
+  if (q.dev) { const n = (ISO.porDev.get(q.dev) || 0) + 1; ISO.porDev.set(q.dev, n); if (n > L.devReq) return "aparelho"; }
+  if (q.ip) { const n = (ISO.porIp.get(q.ip) || 0) + 1; ISO.porIp.set(q.ip, n); if (n > L.ipReq) return "rede"; }
+  return "";
+}
+/* envia os contadores acumulados ao COTA de vez em quando (a cada ~60 pedidos ou 2 minutos) */
+function talvezEnviar(env, ctx){ if (ISO.req >= 60 || Date.now() - ISO.ultimo > 120000) { ISO.ultimo = Date.now(); const p = cota(env, "conta", {}); if (ctx && ctx.waitUntil) ctx.waitUntil(p); } }
+function wrapKV(kv){
+  if (!kv || kv.__w) return kv;
+  return { __w: true,
+    get: (...a) => { ISO.kvR++; return kv.get(...a); },
+    getWithMetadata: (...a) => { ISO.kvR++; return kv.getWithMetadata(...a); },
+    list: (...a) => { ISO.kvL++; return kv.list(...a); },
+    put: async (...a) => { ISO.kvW++; try { return await kv.put(...a); } catch (e) { ISO.kvErr++; throw e; } },
+    delete: async (...a) => { ISO.kvW++; try { return await kv.delete(...a); } catch (e) { ISO.kvErr++; throw e; } } };
+}
+function wrapEnv(env){ return env.TR_CACHE && !env.TR_CACHE.__w ? { ...env, TR_CACHE: wrapKV(env.TR_CACHE) } : env; }
+function cotaStub(env){ return env.COTA ? env.COTA.get(env.COTA.idFromName("sola-global")) : null; }
+async function cota(env, path, body){
+  const st = cotaStub(env); if (!st) return null;
+  const iso = {}; for (const k of ISO_K) { iso[k] = ISO[k]; ISO[k] = 0; }
+  try { const r = await st.fetch("https://cota/" + path, { method: "POST", body: JSON.stringify({ ...body, iso }) }); return await r.json(); }
+  catch (e) { for (const k of ISO_K) ISO[k] += iso[k]; return null; }
+}
+const devOk = id => (/^[a-f0-9]{16,32}$/.test(String(id || "")) ? String(id) : "");
+const quem = (request, body) => ({ dev: devOk(body && body.dev), ip: request.headers.get("CF-Connecting-IP") || "" });
+/* Marcas "já feito hoje" (devocional, push) no COTA, para não gastar gravações do KV a cada 15 minutos */
+async function flagGet(env, k){ const r = await cota(env, "flag", { op: "get", k }); if (r) return !!r.v; return env.TR_CACHE ? !!(await env.TR_CACHE.get(k)) : false; }
+async function flagSet(env, k, ttl){ const r = await cota(env, "flag", { op: "set", k, ttl }); if (r && r.ok) return; if (env.TR_CACHE) await env.TR_CACHE.put(k, "1", { expirationTtl: ttl || 86400 }); }
+
+export class Cota {
+  constructor(state, env){
+    this.state = state; this.env = env; this.sql = state.storage.sql;
+    this.sql.exec("CREATE TABLE IF NOT EXISTS uso (dia TEXT, k TEXT, c INTEGER DEFAULT 0, r INTEGER DEFAULT 0, PRIMARY KEY (dia, k))");
+    this.sql.exec("CREATE TABLE IF NOT EXISTS tot (p TEXT PRIMARY KEY, j TEXT)");
+    this.sql.exec("CREATE TABLE IF NOT EXISTS flag (k TEXT PRIMARY KEY, ate INTEGER)");
+  }
+  tot(p){ const r = [...this.sql.exec("SELECT j FROM tot WHERE p = ?", p)][0]; return r ? JSON.parse(r.j) : {}; }
+  setTot(p, o){ this.sql.exec("INSERT INTO tot (p, j) VALUES (?, ?) ON CONFLICT(p) DO UPDATE SET j = excluded.j", p, JSON.stringify(o)); }
+  linha(dia, k){ const r = [...this.sql.exec("SELECT c, r FROM uso WHERE dia = ? AND k = ?", dia, k)][0]; return r || { c: 0, r: 0 }; }
+  soma(dia, k, c, r){ this.sql.exec("INSERT INTO uso (dia, k, c, r) VALUES (?, ?, ?, ?) ON CONFLICT(dia, k) DO UPDATE SET c = c + excluded.c, r = r + excluded.r", dia, k, c, r); }
+  async fetch(request){
+    const path = new URL(request.url).pathname.slice(1);
+    let b = {}; try { b = await request.json(); } catch {}
+    const dia = brToday(), mes = dia.slice(0, 7), L = limites(this.env);
+    const D = this.tot("d:" + dia), M = this.tot("m:" + mes);
+    const add = (o, k, v) => { o[k] = (o[k] || 0) + (v || 0); };
+    if (b.iso) { for (const k of ISO_K) add(D, k, b.iso[k]); }
+    let out = { ok: true };
+    if (path === "flag") {
+      const now = Date.now();
+      if (b.op === "set") this.sql.exec("INSERT INTO flag (k, ate) VALUES (?, ?) ON CONFLICT(k) DO UPDATE SET ate = excluded.ate", String(b.k), now + (b.ttl || 86400) * 1000);
+      else { const r = [...this.sql.exec("SELECT ate FROM flag WHERE k = ?", String(b.k))][0]; out = { ok: true, v: !!(r && r.ate > now) }; }
+      if (Math.random() < 0.02) this.sql.exec("DELETE FROM flag WHERE ate < ?", now);
+    } else if (path === "reserva") {                         // antes de chamar o Azure: ainda cabe na cota?
+      const tipo = b.tipo === "tts" ? "tts" : "tr", n = Math.max(0, Number(b.chars) || 0);
+      const dv = b.dev ? this.linha(dia, tipo + ":d:" + b.dev) : { c: 0, r: 0 }, ip = b.ip ? this.linha(dia, tipo + ":i:" + b.ip) : { c: 0, r: 0 };
+      let motivo = "";
+      if (tipo === "tr") {
+        if (b.dev && dv.c + n > L.devChars) motivo = "aparelho";
+        else if (b.ip && ip.c + n > L.ipChars) motivo = "rede";
+        else if ((M.trChars || 0) + n > L.azMes * 0.97) motivo = "mensal";
+      } else {
+        if (b.dev && dv.r + 1 > L.ttsDev) motivo = "aparelho";
+        else if (b.ip && ip.r + 1 > L.ttsDev * 10) motivo = "rede";
+        else if ((M.spChars || 0) + n > L.spMes * 0.97) motivo = "mensal";
+      }
+      if (motivo) { add(D, tipo === "tr" ? "trBloq" : "ttsBloq", 1); if (b.dev) this.soma(dia, "bloq:" + b.dev, 0, 1); out = { ok: false, motivo }; }
+      else {
+        if (b.dev) this.soma(dia, tipo + ":d:" + b.dev, n, 1); if (b.ip) this.soma(dia, tipo + ":i:" + b.ip, n, 1);
+        if (tipo === "tr") { add(D, "trNovo", 1); add(D, "trChars", n); add(M, "trChars", n); }
+        else { add(D, "ttsNovo", 1); add(D, "spChars", n); add(M, "spChars", n); }
+        out = { ok: true, resta: tipo === "tr" ? Math.max(0, L.devChars - dv.c - n) : Math.max(0, L.ttsDev - dv.r - 1) };
+      }
+    } else if (path === "conta") {                           // só os contadores acumulados (vêm em b.iso)
+      if (b.bloqueio) { add(D, "trBloq", 1); if (b.dev) this.soma(dia, "bloq:" + b.dev, 0, 1); }
+    } else if (path === "admin") {
+      if (b.chat) { const A = this.tot("admin"); A.chat = String(b.chat); this.setTot("admin", A); out = { ok: true }; }
+    } else if (path === "uso") {
+      out = this.resumo(D, M, L, dia);
+    }
+    this.setTot("d:" + dia, D); this.setTot("m:" + mes, M);
+    if (Math.random() < 0.01) { const velho = new Date(Date.now() - 40 * 864e5).toISOString().slice(0, 10); this.sql.exec("DELETE FROM uso WHERE dia < ?", velho); this.sql.exec("DELETE FROM tot WHERE p LIKE 'd:%' AND p < ?", "d:" + velho); }
+    await this.alertas(D, M, L, dia);
+    return new Response(JSON.stringify(out), { headers: { "Content-Type": "application/json" } });
+  }
+  medidas(D, M, L){
+    const dm = new Date(); const diaMes = Number(brToday().slice(8, 10)), diasMes = new Date(dm.getUTCFullYear(), dm.getUTCMonth() + 1, 0).getDate();
+    return [
+      ["Tradução (Microsoft) no mês", M.trChars || 0, L.azMes, "caracteres"],
+      ["Voz natural (Azure Speech) no mês", M.spChars || 0, L.spMes, "caracteres"],
+      ["Pedidos ao servidor hoje", D.req || 0, L.req, "pedidos"],
+      ["Leituras do KV hoje", D.kvR || 0, L.kvR, "leituras"],
+      ["Gravações do KV hoje", D.kvW || 0, L.kvW, "gravações"],
+      ["Listagens do KV hoje", D.kvL || 0, L.kvL, "listagens"],
+      ["Ritmo da tradução (projeção do mês)", Math.round((M.trChars || 0) / Math.max(1, diaMes) * diasMes), L.azMes, "caracteres"]
+    ].map(([nome, v, lim, un]) => ({ nome, valor: v, limite: lim, unidade: un, pct: Math.round(v / lim * 100) }));
+  }
+  resumo(D, M, L, dia){
+    const med = this.medidas(D, M, L), max = Math.max(...med.map(m => m.pct));
+    const bloq = [...this.sql.exec("SELECT COUNT(*) AS n FROM uso WHERE dia = ? AND k LIKE 'bloq:%'", dia)][0].n;
+    const aparelhos = [...this.sql.exec("SELECT COUNT(*) AS n FROM uso WHERE dia = ? AND k LIKE 'tr:d:%'", dia)][0].n;
+    const status = max >= 90 || (D.kvErr || 0) > 0 ? "critico" : max >= ALERTA * 100 || bloq >= 10 || (D.azErr || 0) >= 5 ? "atencao" : "ok";
+    return { status, dia, medidas: med,
+      hoje: { traducoesDoCache: D.trCache || 0, traducoesNovas: D.trNovo || 0, caracteresNovos: D.trChars || 0, vozesNovas: D.ttsNovo || 0,
+              aparelhosQueTraduziram: aparelhos, aparelhosNoLimite: bloq, pedidosRecusadosPorLimite: (D.trBloq || 0) + (D.ttsBloq || 0), errosDoAzure: D.azErr || 0, falhasDeGravacaoKV: D.kvErr || 0 },
+      limitesPorAparelho: { caracteresPorDia: L.devChars, pedidosPorDia: L.devReq, vozesNovasPorDia: L.ttsDev },
+      alertasHoje: (this.tot("al:" + dia).lista || []), telegramAtivo: !!this.tot("admin").chat };
+  }
+  async alertas(D, M, L, dia){
+    const A = this.tot("al:" + dia); A.lista = A.lista || []; const novos = [];
+    const marca = (id, txt) => { if (!A.lista.some(x => x.id === id)) { const a = { id, txt, ts: Date.now() }; A.lista.push(a); novos.push(a); } };
+    for (const m of this.medidas(D, M, L)) {
+      if (m.pct >= 90) marca("90:" + m.nome, `🔴 ${m.nome}: ${m.pct}% do limite (${m.valor.toLocaleString("pt-BR")} de ${m.limite.toLocaleString("pt-BR")} ${m.unidade}).`);
+      else if (m.pct >= ALERTA * 100) marca("70:" + m.nome, `🟠 ${m.nome}: ${m.pct}% do limite (${m.valor.toLocaleString("pt-BR")} de ${m.limite.toLocaleString("pt-BR")} ${m.unidade}).`);
+    }
+    if ((D.kvErr || 0) > 0) marca("kvErr", "🔴 O KV da Cloudflare recusou gravações hoje (limite do plano grátis). Traduções novas e inscrições podem falhar até a meia-noite UTC.");
+    if ((D.azErr || 0) >= 5) marca("azErr", `🟠 O Microsoft Translator/Speech recusou ${D.azErr} pedidos hoje (cota esgotada ou chave com problema).`);
+    const bloq = [...this.sql.exec("SELECT COUNT(*) AS n FROM uso WHERE dia = ? AND k LIKE 'bloq:%'", dia)][0].n;
+    if (bloq >= 10) marca("bloq10", `🟠 ${bloq} aparelhos atingiram o limite diário de tradução hoje. Pode ser uso intenso legítimo ou abuso.`);
+    if (!novos.length) return;
+    this.setTot("al:" + dia, A);
+    const chat = this.tot("admin").chat;
+    if (chat && this.env.TG_TOKEN) {
+      const text = "⚠️ <b>SOLA · alerta de uso</b>\n\n" + novos.map(a => a.txt).join("\n") + "\n\nResumo: https://tradutor.rafael-ximenes-2010.workers.dev/uso";
+      try { await fetch(`https://api.telegram.org/bot${this.env.TG_TOKEN}/sendMessage`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ chat_id: chat, text, parse_mode: "HTML", link_preview_options: { is_disabled: true } }) }); } catch {}
+    }
+  }
+}
+
 export default {
   async scheduled(event, env, ctx) {
+    env = wrapEnv(env);
     ctx.waitUntil((async () => {
       await postDevocional(env, false).catch(e => console.log("telegram", e.message));
       await pushTick(env).catch(e => console.log("push", e.message));
+      await cota(env, "conta", {});
     })());
   },
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
+    env = wrapEnv(env); ISO.req++; talvezEnviar(env, ctx);
     const u0 = new URL(request.url);
+    if (u0.pathname === "/uso") {                         // resumo público de uso (só números, sem dados pessoais)
+      const h0 = cors(request.headers.get("Origin") || "", env);
+      const r = await cota(env, "uso", {});
+      return json(r || { status: "sem-contador", mensagem: "Ligue o Durable Object COTA no Worker." }, r ? 200 : 503, { ...h0, "Cache-Control": "no-store" });
+    }
+    if (u0.pathname === "/telegram/vincular") {           // liga os alertas no Telegram: mande /start ao robô e abra este endereço
+      const k = u0.searchParams.get("k");
+      if (!env.TG_TOKEN || !isAdmin(k, env)) return new Response("Não autorizado.", { status: 403 });
+      try {
+        const me = await tg(env, "getMe", {}), up = await tg(env, "getUpdates", { allowed_updates: ["message"] });
+        const msgs = (up.result || []).map(u => u.message).filter(m => m && m.chat && m.chat.type === "private");
+        if (!msgs.length) return new Response(`Abra o Telegram, procure @${me.result.username}, toque em Iniciar (ou mande "oi") e abra este endereço de novo.`, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+        const chat = msgs[msgs.length - 1].chat;
+        await cota(env, "admin", { chat: chat.id });
+        await tg(env, "sendMessage", { chat_id: chat.id, text: "✅ Alertas de uso do SOLA ligados. Vou avisar aqui quando algum limite passar de 70%." });
+        return new Response(`Pronto: alertas ligados para ${chat.first_name || "você"} no Telegram.`, { headers: { "Content-Type": "text/plain; charset=utf-8" } });
+      } catch (e) { return new Response("Erro: " + e.message, { status: 502, headers: { "Content-Type": "text/plain; charset=utf-8" } }); }
+    }
     if (u0.pathname.startsWith("/push/")) return pushRoute(request, env, cors(request.headers.get("Origin") || "", env));
     if (u0.pathname === "/telegram/teste") {             // teste manual: /telegram/teste?k=<últimos 6 caracteres do TG_TOKEN>
       if (!env.TG_TOKEN || u0.searchParams.get("k") !== env.TG_TOKEN.slice(-6)) return new Response("Não autorizado.", { status: 403 });
@@ -431,12 +619,17 @@ export default {
     const to = LANG[String(body.to || "pt").toLowerCase()] ?? "pt";
     if (!text.trim()) return json({ text: "" }, 200, h);
     if (text.length > MAX_CHARS) return json({ error: "size" }, 413, h);
+    const q = quem(request, body), L = limites(env);
+    const lim = pedidoLocal(q, L);
+    if (lim) { if (lim === "aparelho" && ISO.porDev.get(q.dev) === L.devReq + 1) ctx && ctx.waitUntil && ctx.waitUntil(cota(env, "conta", { bloqueio: 1, dev: q.dev })); return json(limiteMsg(lim), 429, h); }
 
     const key = `v1:${from}>${to}:${await sha(text)}`;
     if (env.TR_CACHE) {
       const hit = await env.TR_CACHE.get(key);
-      if (hit !== null) return json({ text: hit, cached: true }, 200, h);
+      if (hit !== null) { ISO.trCache++; return json({ text: hit, cached: true }, 200, h); }
     }
+    const res = await cota(env, "reserva", { tipo: "tr", dev: q.dev, ip: q.ip, chars: text.length });
+    if (res && !res.ok) return json(limiteMsg(res.motivo), 429, h);
     try {
       const parts = chunks(text);
       const out = [];
@@ -444,9 +637,10 @@ export default {
         out.push(...await azure(parts.slice(i, i + 20), from, to, env));
       }
       const result = out.join("");
-      if (env.TR_CACHE) await env.TR_CACHE.put(key, result);  // guardado para sempre
+      if (env.TR_CACHE) { try { await env.TR_CACHE.put(key, result); } catch (e) { console.log("kv", e.message); } }  // guardado para sempre
       return json({ text: result, cached: false }, 200, h);
     } catch (e) {
+      ISO.azErr++;
       return json({ error: e.message === "quota" ? "quota" : "upstream" }, e.message === "quota" ? 429 : 502, h);
     }
   }
