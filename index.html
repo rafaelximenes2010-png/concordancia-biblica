@@ -7078,8 +7078,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.32.3";
+const APP_VERSION = "3.32.4";
 const CHANGELOG = [
+  { v:"3.32.4", d:"novembro de 2026", items:["Correção: ao escolher um livro do Antigo Testamento numa versão só do Novo Testamento, o app agora abre o livro numa versão completa em vez de ficar travado."] },
   { v:"3.32.3", d:"novembro de 2026", items:["Dicionário de grego: campo de pesquisa destacado, com fundo claro e borda dourada."] },
   { v:"3.32.2", d:"novembro de 2026", items:["Dicionário de grego: números de Strong voltam a aparecer com a letra G na frente (G26), como nas obras de estudo."] },
   { v:"3.32.1", d:"novembro de 2026", items:["Dicionário de grego: explicação “O que significam os números?” (números de Strong)."] },
@@ -8811,7 +8812,17 @@ function renderBookGrid(){
 function bkBtn(i, avail){
   const b=CANON_OBJ[i]; const g=BK_GROUPS.find(([,a,z])=>i>=a&&i<z);
   const n = avail.has(b.id) ? Repo.chapterCount(rd.t,b.id) : 0;
-  return `<button type="button" class="bk${b.id===rd.b?" cur":""}" data-bk="${b.id}" style="--gc:${g[3]}" ${n?"":"disabled"}>${esc(b.name)}<small>${n?`${n} ${n===1?"capítulo":"capítulos"}`:"não existe nesta versão"}</small></button>`;
+  return `<button type="button" class="bk${b.id===rd.b?" cur":""}" data-bk="${b.id}" ${n?"":`data-nover="1"`} style="--gc:${g[3]}">${esc(b.name)}<small>${n?`${n} ${n===1?"capítulo":"capítulos"}`:"abre em versão completa"}</small></button>`;
+}
+/* Livro que não existe na versão atual (ex.: versão só com o Novo Testamento): troca para uma versão completa do mesmo idioma */
+async function abrirEmVersaoCompleta(id){
+  try{
+    const cur=Repo.version(rd.t)||{}; const todas=(typeof Repo.versions==="function"?Repo.versions():(Bible.index||[]))||[];
+    const cands=[...todas.filter(v=>v.lang===cur.lang && v.books>=66).map(v=>v.code), DEFAULT_VERSION];
+    for(const code of cands){ try{ await Repo.load(code); }catch(e){ continue; }
+      if(Repo.chapterCount(code,id)){ const nome=(Repo.version(code)||{}).name||code; rd.t=code; if(rdEl && rdEl.v) rdEl.v.value=code; toast(`Este livro não existe na versão anterior. Abrindo em ${nome}.`,4000); return renderChapterGrid(id); } }
+    toast("Não encontrei uma versão com esse livro.");
+  }catch(e){ toast("Não consegui abrir esse livro agora."); }
 }
 function renderChapterGrid(id){
   bp.book=id; const n=Repo.chapterCount(rd.t,id);
@@ -8832,7 +8843,9 @@ el.dlgTitle.style.cursor="pointer"; el.dlgTitle.addEventListener("click",openBoo
 $("#pkQ").addEventListener("input",renderBookGrid);
 picker.querySelector(".seg").addEventListener("click",e=>{ const b=e.target.closest("[data-t]"); if(!b) return; bp.t=b.dataset.t; $("#pkQ").value=""; renderBookGrid(); });
 $("#pkBody").addEventListener("click",e=>{
-  const b=e.target.closest("[data-bk]"); if(b && !b.disabled) return renderChapterGrid(b.dataset.bk);
+  const b=e.target.closest("[data-bk]");
+  if(b && b.dataset.nover){ return abrirEmVersaoCompleta(b.dataset.bk); }
+  if(b && !b.disabled) return renderChapterGrid(b.dataset.bk);
   const c=e.target.closest("[data-ch]"); if(c) return pickChapter(bp.book,+c.dataset.ch);
 });
 $("#pkBack").addEventListener("click",()=>{ if(bp.book) renderBookGrid(); else picker.close(); });
