@@ -7146,8 +7146,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.13";
+const APP_VERSION = "3.35.14";
 const CHANGELOG = [
+  { v:"3.35.14", d:"novembro de 2026", items:["Quem já tem o app instalado vê “Abrir no app” no topo da versão web, que tenta abrir o app na hora."] },
   { v:"3.35.13", d:"novembro de 2026", items:["Correção: a estrela do comentarista padrão agora muda sozinha nas abas do topo."] },
   { v:"3.35.12", d:"novembro de 2026", items:["Comentários: ao tornar um comentarista seu padrão, a estrela passa na hora para ele nas abas do topo."] },
   { v:"3.35.11", d:"novembro de 2026", items:["Leitor da Bíblia: o nome do livro ganhou mais espaço e aparece completo."] },
@@ -9111,6 +9112,7 @@ renderReminders(); Reminders.schedule();
   const bar=$("#installBar"), btn=$("#installBtn"), txt=$("#installText");
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
   let framed=false; try{ framed = window.self!==window.top; }catch(e){ framed=true; }
+  if(standalone){ try{ localStorage.setItem("solaInstalled","1"); }catch(e){} }
   const st=$("#installState"); if(st) st.textContent = standalone ? "✓ Você já está usando o app instalado." : "";
   if(standalone || framed || store.get("installDismissed", false)) return; // dentro de um frame não há como instalar
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform==="MacIntel" && navigator.maxTouchPoints>1);
@@ -9158,7 +9160,19 @@ renderReminders(); Reminders.schedule();
     $("#instCopy")?.addEventListener("click",()=>copyText(APP_URL,"Endereço copiado. Cole no Safari."));
     $("#installDialog").showModal();
   }
+  /* Quem já tem o app: o botão vira "Abrir no app" e tenta abrir o app na hora */
+  let jaTem=false; try{ jaTem=localStorage.getItem("solaInstalled")==="1"; }catch(e){}
+  const rotulo=()=>{ const sp=$("#instTop span"); if(sp) sp.textContent="Abrir no app"; $("#instTop").setAttribute("aria-label","Abrir no app SOLA"); };
+  if(jaTem) rotulo();
+  if(navigator.getInstalledRelatedApps){ navigator.getInstalledRelatedApps().then(a=>{ if(a&&a.length){ jaTem=true; rotulo(); } }).catch(()=>{}); }
+  function abrirNoApp(){
+    const alvo=APP_URL+"?abrir=1"+(location.hash||"#devocional");
+    const t0=Date.now(); location.href=alvo;
+    setTimeout(()=>{ if(document.visibilityState==="visible" && Date.now()-t0<2500){
+      $("#instBody").innerHTML=`<p><strong>Abra o SOLA pelo ícone do farol</strong> na tela inicial do seu aparelho.</p><p class="hint">No Android, o Chrome também mostra “Abrir no app” na barra de endereço. No iPhone, o navegador não permite abrir o app por um botão: use o ícone do SOLA na tela de início.</p>`; $("#installDialog").showModal(); } },1500);
+  }
   async function install(){
+    if(jaTem && !deferred) return abrirNoApp();
     if(deferred){ deferred.prompt(); const r=await deferred.userChoice.catch(()=>null); deferred=null; if(r && r.outcome==="accepted") return; }
     guide();
   }
