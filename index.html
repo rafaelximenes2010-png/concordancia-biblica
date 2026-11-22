@@ -1810,6 +1810,10 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 #view-grego .picker-search input{background:transparent}
 .rdx-op.rdx-v5 .rdx-dot,.rdx-sel.rdx-v5 .rdx-dot{background:linear-gradient(145deg,#d9534f,#7a1f2b)}.rdx-op.rdx-v6 .rdx-dot,.rdx-sel.rdx-v6 .rdx-dot{background:linear-gradient(145deg,#5b6dc9,#232a6b)}
 .rdx.rdx-v5 .rdx-art{background:linear-gradient(145deg,#d9534f,#7a1f2b)}.rdx.rdx-v6 .rdx-art{background:linear-gradient(145deg,#5b6dc9,#232a6b)}
+.hn-n{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(145deg,#2b3a67,#132447);color:#f4ead2;font:800 15px system-ui,sans-serif}
+.hn-row summary{display:flex;align-items:center;gap:12px}.hn-st{margin:0 0 14px;font:400 1.05rem/1.6 Georgia,serif}
+#view-hinario .picker-search{background:var(--surface);border:2px solid var(--gold,#c99a3b);box-shadow:0 2px 10px rgba(201,154,59,.18)}
+#view-hinario .picker-search input{background:transparent}
 </style>
 </head>
 <body>
@@ -2395,6 +2399,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2433,6 +2438,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2462,6 +2468,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2493,6 +2500,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2513,6 +2521,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2555,6 +2564,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2573,6 +2583,26 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
   <div id="grList"></div>
   <p class="bp-note">Dicionário de Strong (1890/1894, domínio público), em dados de Open Scriptures (CC-BY-SA), traduzido para o português para o SOLA. A tradução automática pode conter imprecisões; confira em obras de referência.</p>
 </section>
+<section class="view" id="view-hinario" hidden aria-labelledby="hnTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
+    <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
+  </nav>
+  <div class="view-head"><div><p class="eyebrow">Estudos · louvor</p><h2 id="hnTitle">Hinário SOLA</h2>
+    <p>Hinos clássicos de domínio público, em ordem litúrgica própria: do louvor à esperança da volta de Cristo.</p></div></div>
+  <div class="pen-tools">
+    <label class="picker-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="sr-only">Buscar hino</span><input id="hnQ" type="search" placeholder="Número, título ou primeira linha…" autocomplete="off"></label>
+  </div>
+  <div id="hnList"></div>
+  <p class="bp-note">Hinos de autores falecidos há mais de 70 anos (domínio público). As letras em português são versões livres feitas para o SOLA a partir dos textos originais; não reproduzem hinários protegidos, como o Novo Cântico. A sequência é própria do SOLA.</p>
+</section>
 <!-- ===================== ARTIGOS ===================== -->
 <section class="view" id="view-pensadores" hidden aria-labelledby="penTitle">
   <nav class="sub-tabs" aria-label="Estudos">
@@ -2581,6 +2611,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -2601,6 +2632,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
     <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="hinario"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Hinário</button>
     <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
     <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
     <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
@@ -7092,8 +7124,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.33.1";
+const APP_VERSION = "3.34.0";
 const CHANGELOG = [
+  { v:"3.34.0", d:"novembro de 2026", items:["Novo: Hinário SOLA em Estudos, com 31 hinos de domínio público em ordem litúrgica própria, busca por número, título ou primeira linha e opção de postar ou baixar a letra."] },
   { v:"3.33.1", d:"novembro de 2026", items:["Ao abrir a Bíblia, o nome SOLA no topo não fica mais cortado."] },
   { v:"3.33.0", d:"novembro de 2026", items:["Duas novas rádios: Radio Evangélica España (Espanha, em espanhol) e Premier Christian Radio (Inglaterra, cristã evangélica conservadora)."] },
   { v:"3.32.6", d:"novembro de 2026", items:["Avisos: a central de notificações mostra sempre só as 4 mais recentes, inclusive para quem acabou de instalar o app."] },
@@ -8036,8 +8069,8 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","grego","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", grego:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","grego","hinario","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
+const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", grego:"estudos", hinario:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
@@ -8054,7 +8087,7 @@ document.addEventListener("click",e=>{
   const go=()=>{ const t=document.getElementById(a.dataset.cfg); if(!t) return; t.scrollIntoView({ behavior:"smooth", block:"start" }); t.classList.add("cfg-flash"); setTimeout(()=>t.classList.remove("cfg-flash"),1400); };
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
-const VIEW_TITLE={ noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
+const VIEW_TITLE={ hinario:"Estudos · Hinário", noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
   estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", grego:"Estudos · Dicionário de grego", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
@@ -8082,6 +8115,7 @@ function showView(name, {push=true}={}){
   if(typeof paintMini==="function") setTimeout(paintMini,50);
   if(name==="pensadores") renderPensadores();
   if(name==="grego") renderGrego();
+  if(name==="hinario") renderHinario();
   if(name==="mapas") renderMapas().then(mpPendencias);
   if(name==="ouvir") renderOuvir();
   if(name==="noticias") renderNoticias();
@@ -8429,6 +8463,26 @@ async function renderGrego(){
   if(inp && !inp.dataset.on){ inp.dataset.on=1; let t; inp.addEventListener("input",()=>{ clearTimeout(t); t=setTimeout(()=>{ Grego.q=inp.value; grPintar(); },150); }); }
   if(!box.dataset.on){ box.dataset.on=1; box.addEventListener("click",ev=>{ const a=ev.target.closest(".gr-ref"); if(!a) return; ev.preventDefault(); Grego.q=a.dataset.g; const i=$("#grQ"); if(i) i.value=Grego.q; grPintar(); window.scrollTo({top:0,behavior:"smooth"}); }); }
   grPintar();
+}
+let Hin=null;
+async function renderHinario(){
+  const box=$("#hnList"); if(!box) return;
+  if(!Hin){ box.innerHTML=`<p class="muted">Carregando hinário…</p>`;
+    try{ Hin=await fetch("hinario/hinos.json").then(r=>{ if(!r.ok) throw 0; return r.json(); }); }
+    catch(e){ box.innerHTML=`<p class="muted">Não foi possível carregar o hinário. Verifique a conexão.</p>`; return; } }
+  const inp=$("#hnQ");
+  if(!inp.dataset.on){ inp.dataset.on=1; inp.addEventListener("input",renderHinario);
+    box.addEventListener("click",ev=>{ const b=ev.target.closest("[data-hn]"); if(!b) return; const h=Hin.find(x=>x.n==b.dataset.hn); if(!h) return; VerseCard.fmt="story"; VerseCard.tab="lugares"; VerseCard.open({ text:h.v[+b.dataset.st||0].replace(/\n/g," / "), ref:"Hino "+h.n+" · "+h.t, t:"" }); }); }
+  const q=norm(inp.value.trim()), num=/^\d+$/.test(q);
+  const lista=Hin.filter(h=>!q || (num? String(h.n)===q : norm(h.t+" "+h.p+" "+h.a+" "+h.s+" "+h.v.join(" ")).includes(q)));
+  if(!lista.length){ box.innerHTML=`<p class="muted">Nenhum hino encontrado.</p>`; return; }
+  const open=lista.length===1;
+  let ult="", html="";
+  for(const h of lista){ if(h.s!==ult){ ult=h.s; html+=`<h3 class="st-h">${esc(ult)}</h3>`; }
+    html+=`<details class="st-row hn-row"${open?" open":""}><summary><span class="hn-n">${h.n}</span><span class="st-tx"><b>${esc(h.t)}</b><small>${esc(h.a)}</small></span><span class="chev" aria-hidden="true">›</span></summary><div class="st-body hn-body">`+
+      h.v.map((v,i)=>`<p class="hn-st">${esc(v).replace(/\n/g,"<br>")}</p>`).join("")+
+      `<button type="button" class="btn btn-sm" data-hn="${h.n}" data-st="0">Postar ou baixar</button></div></details>`; }
+  box.innerHTML=html;
 }
 let PenFr=null;
 function penFrases(nome){ const a=PenFr&&PenFr[nome]; if(!a||a.length<2) return []; const d=new Date(), m=d.getFullYear()*12+d.getMonth(), k=m%Math.floor(a.length/2); return [a[2*k],a[2*k+1]]; }
