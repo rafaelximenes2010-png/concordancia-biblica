@@ -7137,8 +7137,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.9";
+const APP_VERSION = "3.35.10";
 const CHANGELOG = [
+  { v:"3.35.10", d:"novembro de 2026", items:["O farol de busca do leitor abre a busca do SOLA por cima da Bíblia aberta."] },
   { v:"3.35.9", d:"novembro de 2026", items:["Leitor da Bíblia: ícone de busca em formato de farol, mantendo o tamanho e a disposição da barra."] },
   { v:"3.35.8", d:"novembro de 2026", items:["Leitor da Bíblia: farol um pouco maior, no tamanho da barra aprovada."] },
   { v:"3.35.7", d:"novembro de 2026", items:["Leitor da Bíblia: farol no lugar da lupa e menu “…” como antes, sem fundos coloridos."] },
@@ -8165,7 +8166,7 @@ $("#backBtn").addEventListener("click",goBack);
 $("#cfgBtn").addEventListener("click",e=>{ if(currentView!=="config") return; e.preventDefault(); e.stopImmediatePropagation();
   if($("#cfgTop") && $("#cfgTop").hidden) cfgToIndex();
   goBack(); },true);
-$("#rdSearch").addEventListener("click",()=>{ closeReader(); showView("busca"); setTimeout(()=>{ const i=document.querySelector("#view-busca input[type=search],#view-busca input"); if(i) i.focus(); },200); });
+$("#rdSearch").addEventListener("click",()=>abrirFarol());
 $("#rdBack").addEventListener("click",()=>{ if(el.dlg.classList.contains("as-view")) goBack(); else closeReader(); });
 /* Voltar/avançar do celular ou do navegador */
 window.addEventListener("hashchange",()=>{
