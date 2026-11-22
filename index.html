@@ -2033,7 +2033,7 @@ dialog.reader .rd-aa{width:40px;height:40px}
       <button type="button" class="nav-btn" data-view="busca"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Busca bíblica</button>
       <button type="button" class="nav-btn" data-view="texto"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto do dia</button>
       <button type="button" class="nav-btn" data-view="devocional" data-group="estudos"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Estudos</button>
-      <button type="button" class="nav-btn" data-view="catecismos"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg>Credos e Catecismos</button>
+      <button type="button" class="nav-btn" data-view="catecismos"><svg class="icon" aria-hidden="true"><use href="#i-scroll"/></svg>Cânticos, Credos e Catecismos</button>
       <button type="button" class="nav-btn" data-view="notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Minhas notas</button>
     </nav>
     <div class="header-tools">
@@ -2144,7 +2144,7 @@ dialog.reader .rd-aa{width:40px;height:40px}
       <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-conc>Abrir a concordância</button></div>
     </article>
     <article class="home-card" id="homeCat">
-      <h3>Credos e Catecismos</h3>
+      <h3>Cânticos, Credos e Catecismos</h3>
       <p style="margin:0;color:var(--ink-2)">Credo Apostólico e Niceno, Catecismo de Heidelberg, Breve e Maior de Westminster, Confissões e Cânones de Dort.</p>
       <div class="row-actions"><button type="button" class="btn btn-sm btn-primary" data-go="catecismos">Abrir</button></div>
     </article>
@@ -2651,7 +2651,7 @@ dialog.reader .rd-aa{width:40px;height:40px}
 
 <!-- ===================== CREDOS E CATECISMOS ===================== -->
 <section class="view" id="view-catecismos" hidden aria-labelledby="catTitle">
-  <div class="view-head"><div><p class="eyebrow">Herança reformada</p><h2 id="catTitle">Credos e Catecismos</h2>
+  <div class="view-head"><div><p class="eyebrow">Herança reformada</p><h2 id="catTitle">Cânticos, Credos e Catecismos</h2>
     <p>Os credos da Igreja antiga e as confissões e catecismos da Reforma, em texto integral.</p></div></div>
   <div id="catHome">
     <p class="bp-note"><strong>Sobre os textos:</strong> os quatro credos estão em português, em tradução feita para este app. As confissões e catecismos aparecem no <strong>texto original em inglês</strong> (domínio público), com o botão “Traduzir para o português” em cada pergunta ou artigo. As traduções brasileiras consagradas, como a da Cultura Cristã, têm direitos autorais e por isso não são reproduzidas.</p>
@@ -6838,7 +6838,7 @@ async function saltLoad(){ if(!SALT.data){ const r=await fetch("salterio/ipr-rec
 async function openSalterio(id){
   const box=$("#catDoc"); $("#catHome").hidden=true; box.hidden=false; curDoc=null; box.classList.remove("da-host");
   box.innerHTML=`<p class="muted">Carregando o Saltério…</p>`;
-  try{ await saltLoad(); }catch(e){ box.innerHTML=`<button type="button" class="btn btn-sm" data-dback>‹ Credos e Catecismos</button><div class="notice error" style="margin-top:12px">Não foi possível abrir o Saltério. ${navigator.onLine?"":"Conecte-se uma vez para baixá-lo."}</div>`; return; }
+  try{ await saltLoad(); }catch(e){ box.innerHTML=`<button type="button" class="btn btn-sm" data-dback>‹ Cânticos, Credos e Catecismos</button><div class="notice error" style="margin-top:12px">Não foi possível abrir o Saltério. ${navigator.onLine?"":"Conecte-se uma vez para baixá-lo."}</div>`; return; }
   if(id) saltPsalm(id); else saltIndex();
 }
 function saltIndex(){
@@ -7125,8 +7125,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.35.1";
+const APP_VERSION = "3.35.2";
 const CHANGELOG = [
+  { v:"3.35.2", d:"novembro de 2026", items:["A seção agora se chama “Cânticos, Credos e Catecismos”."] },
   { v:"3.35.1", d:"novembro de 2026", items:["O Hinário SOLA agora fica em Credos e Catecismos, acima do Saltério."] },
   { v:"3.35.0", d:"novembro de 2026", items:["Leitor da Bíblia mais limpo: topo só com o nome SOLA, seletor de capítulo e versão, busca e menu de opções (letra e comparar)."] },
   { v:"3.34.0", d:"novembro de 2026", items:["Novo: Hinário SOLA em Estudos, com 31 hinos de domínio público em ordem litúrgica própria, busca por número, título ou primeira linha e opção de postar ou baixar a letra."] },
@@ -7547,7 +7548,7 @@ const HELP = {
   grego:["Dicionário de grego",[["Buscar","Digite o número de Strong (ex.: 26), a palavra em grego, a transliteração (agapē) ou uma palavra em português (amor)."],["Toque na palavra","Abre o significado completo, o uso na tradução KJV e a origem."]]],
   pensadores:["Pensadores",[["Áreas","Filtre por Filosofia e teologia, Psicologia e aconselhamento ou Política e sociedade."],["Nome do pensador","Toque para ver quem é, formação e links."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre as ideias daquele pensador na perspectiva reformada."]]],
   artigos:["Artigos",[["Temas","Cada botão abre uma busca filtrada em sites reformados."]]],
-  catecismos:["Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
+  catecismos:["Cânticos, Credos e Catecismos",[["Abrir documento","Mostra o texto completo; toque numa referência bíblica para lê-la."],["Traduzir","Documentos em inglês podem ser traduzidos automaticamente."],["Anotar","Leva uma pergunta ou artigo para Minhas notas."]]],
   notas:["Minhas notas",[["Notas","Anotações de cultos e estudos, com filtros por tipo, data e referência."],["Grifos","Todos os versículos e trechos de comentários que você grifou, por cor."],["Comentários salvos","Comentários que você guardou, para reler, copiar ou enviar pelo WhatsApp."]]],
   config:["Configurações",[["Perfil","Nome, foto, igreja e e-mail. Fica só no aparelho até existir a conta online."],["Cópia de segurança","Exporta um arquivo com notas, grifos, favoritos e configurações; use Importar em outro aparelho."],["Verificar atualizações","Procura uma versão nova do app e a instala."],["Tamanho do texto do app","Aumenta ou diminui as letras de todas as seções. Também fica no botão ? do topo."]]]
 };
@@ -8091,7 +8092,7 @@ document.addEventListener("click",e=>{
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
 const VIEW_TITLE={ hinario:"Credos · Hinário", noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
-  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", grego:"Estudos · Dicionário de grego", catecismos:"Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
+  estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", grego:"Estudos · Dicionário de grego", catecismos:"Cânticos, Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
   if(!VIEWS.includes(name)) name="inicio";
