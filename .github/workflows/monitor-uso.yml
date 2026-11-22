@@ -35,6 +35,7 @@ jobs:
               for (const m of uso.medidas || []) if (m.pct >= 70) prob.push(`${m.pct >= 90 ? '🔴' : '🟠'} ${m.nome}: ${m.pct}% (${m.valor.toLocaleString('pt-BR')} de ${m.limite.toLocaleString('pt-BR')} ${m.unidade})`);
               for (const a of uso.alertasHoje || []) if (!prob.some(p => p.includes(a.txt.slice(2, 40)))) prob.push(a.txt);
             }
+            if (uso.service && !uso.status) { core.warning('Ponte antiga ainda no ar: limites e alertas serão ativados quando a nova for publicada.'); return; }
             if (!uso.status) prob.push('🟠 O servidor do SOLA (tradutor.rafael-ximenes-2010.workers.dev/uso) não respondeu.');
             if (!prob.length) { core.info('Tudo dentro dos limites.'); return; }
             const h = uso.hoje || {};
