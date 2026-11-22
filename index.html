@@ -78,6 +78,8 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--ink);line-heigh
 button,input,select,textarea{font:inherit;color:inherit}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+/* toque/mouse: sem anel de foco (ex.: botão Voltar do leitor ao abrir); teclado continua com o anel */
+html.by-pointer :focus-visible{outline:none}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .icon{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:6px;z-index:50}
@@ -1914,6 +1916,8 @@ dialog.reader .rd-aa{width:42px;height:44px}
 </div>
 <script src="i18n/i18n.js?v=2"></script>
 <script>
+(function(){var h=document.documentElement;h.classList.add("by-pointer");addEventListener("pointerdown",function(){h.classList.add("by-pointer")},true);addEventListener("keydown",function(e){if(e.key==="Tab"||e.key.indexOf("Arrow")===0)h.classList.remove("by-pointer")},true);})();
+
 /* Abertura: mostra o farol e entra no app (mais rápido se já abriu nesta sessão) */
 (function(){ var sp=document.getElementById("splash"); var quick=false; try{ quick=sessionStorage.getItem("cb:splash")==="1"; sessionStorage.setItem("cb:splash","1"); }catch(e){}
   var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches; var ms=rm?500:(quick?900:2300);
@@ -7146,8 +7150,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.36.0";
+const APP_VERSION = "3.36.1";
 const CHANGELOG = [
+  { v:"3.36.1", d:"novembro de 2026", items:["Correção: o botão Voltar do leitor da Bíblia não fica mais com uma moldura escura ao abrir um capítulo."] },
   { v:"3.36.0", d:"novembro de 2026", items:["Mais estabilidade para muita gente usar ao mesmo tempo: cada aparelho tem um limite diário justo de traduções e vozes novas (as já traduzidas continuam livres), e o SOLA avisa a equipe antes de qualquer limite do servidor estourar."] },
   { v:"3.35.14", d:"novembro de 2026", items:["Quem já tem o app instalado vê “Abrir no app” no topo da versão web, que tenta abrir o app na hora."] },
   { v:"3.35.13", d:"novembro de 2026", items:["Correção: a estrela do comentarista padrão agora muda sozinha nas abas do topo."] },
