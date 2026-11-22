@@ -1814,6 +1814,21 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 .hn-row summary{display:flex;align-items:center;gap:12px}.hn-st{margin:0 0 14px;font:400 1.05rem/1.6 Georgia,serif}
 #view-hinario .picker-search{background:var(--surface);border:2px solid var(--gold,#c99a3b);box-shadow:0 2px 10px rgba(201,154,59,.18)}
 #view-hinario .picker-search input{background:transparent}
+
+/* ===== Leitor da Bíblia enxuto (3.35.0) ===== */
+body.reading .app-header .header-inner{padding:6px 14px!important;row-gap:0!important}
+body.reading .brand img{width:30px!important;height:30px!important;border-radius:8px!important}
+body.reading .brand a{gap:10px!important}
+body.reading .brand .brand-name{font-size:22px!important}
+body.reading .brand .brand-sub{display:none!important}
+body.reading #appHeader .header-tools{display:none!important}
+dialog.reader .dlg-head{padding:6px 8px;gap:4px;border-bottom:1px solid var(--border)}
+dialog.reader .dlg-head .rd-back{font-size:26px;width:38px;height:38px}
+dialog.reader .dlg-head .rd-pick{flex:0 1 auto!important;background:var(--surface-2)!important;border-radius:999px 0 0 999px!important;padding:8px 14px!important;font-weight:700}
+dialog.reader .dlg-head .rd-verpill{border-radius:0 999px 999px 0!important;margin-left:-4px}
+dialog.reader .dlg-head::after{content:"";flex:1 1 0}
+dialog.reader #rdSearch{order:5}dialog.reader #rdAa{order:6}
+dialog.reader .rd-aa{width:40px;height:40px}
 </style>
 </head>
 <body>
@@ -1892,6 +1907,7 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 <!-- Ícones SVG reutilizáveis -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/><path d="M9 7h6"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="16" cy="12" r=".6"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
@@ -3079,14 +3095,15 @@ dialog.reader .dlg-body,.cd-body,.rd-panel,dialog{overscroll-behavior:contain;-w
 <!-- Modal de contexto do capítulo -->
 <dialog id="ctxDialog" class="reader" aria-labelledby="ctxTitle">
   <div class="dlg-head">
-    <button type="button" class="btn btn-sm back-btn" id="rdBack" aria-label="Voltar à página anterior"><span aria-hidden="true">‹</span> Voltar</button>
+    <button type="button" class="btn btn-icon btn-ghost back-btn rd-back" id="rdBack" aria-label="Voltar à página anterior"><span aria-hidden="true">‹</span></button>
     <h2 id="ctxTitle" class="sr-only">Bíblia</h2>
     <button type="button" class="rd-pick" id="rdPick" aria-haspopup="dialog" aria-label="Escolher livro e capítulo">
       <span id="rdPickLbl">João 1</span><span class="chev" aria-hidden="true">▾</span></button>
     <span class="rd-verpill"><span id="rdVerLbl">BLIVRE</span><span class="chev" aria-hidden="true">▾</span>
       <label class="sr-only" for="rdVersion">Versão</label><select id="rdVersion"></select></span>
-    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdAa" aria-expanded="false" aria-controls="rdPanel" aria-label="Letra, comparar e outras versões">Aa</button>
-    <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdSearch" aria-label="Buscar na Bíblia"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></button>
+    <button type="button" class="btn btn-icon btn-ghost rd-aa" id="rdAa" aria-expanded="false" aria-controls="rdPanel" aria-label="Mais opções: letra, comparar e versões"><svg class="icon" aria-hidden="true"><use href="#i-dots"/></svg></button>
+    <button type="button" class="btn btn-icon btn-ghost" id="ctxClose" hidden aria-label="Fechar leitura"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <div class="rd-panel" id="rdPanel" hidden>
     <div class="reader-bar">
@@ -7124,8 +7141,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.34.0";
+const APP_VERSION = "3.35.0";
 const CHANGELOG = [
+  { v:"3.35.0", d:"novembro de 2026", items:["Leitor da Bíblia mais limpo: topo só com o nome SOLA, seletor de capítulo e versão, busca e menu de opções (letra e comparar)."] },
   { v:"3.34.0", d:"novembro de 2026", items:["Novo: Hinário SOLA em Estudos, com 31 hinos de domínio público em ordem litúrgica própria, busca por número, título ou primeira linha e opção de postar ou baixar a letra."] },
   { v:"3.33.1", d:"novembro de 2026", items:["Ao abrir a Bíblia, o nome SOLA no topo não fica mais cortado."] },
   { v:"3.33.0", d:"novembro de 2026", items:["Duas novas rádios: Radio Evangélica España (Espanha, em espanhol) e Premier Christian Radio (Inglaterra, cristã evangélica conservadora)."] },
@@ -8142,6 +8160,7 @@ $("#backBtn").addEventListener("click",goBack);
 $("#cfgBtn").addEventListener("click",e=>{ if(currentView!=="config") return; e.preventDefault(); e.stopImmediatePropagation();
   if($("#cfgTop") && $("#cfgTop").hidden) cfgToIndex();
   goBack(); },true);
+$("#rdSearch").addEventListener("click",()=>{ closeReader(); showView("busca"); setTimeout(()=>{ const i=document.querySelector("#view-busca input[type=search],#view-busca input"); if(i) i.focus(); },200); });
 $("#rdBack").addEventListener("click",()=>{ if(el.dlg.classList.contains("as-view")) goBack(); else closeReader(); });
 /* Voltar/avançar do celular ou do navegador */
 window.addEventListener("hashchange",()=>{
