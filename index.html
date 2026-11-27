@@ -1477,6 +1477,10 @@ dialog.reader.has-sel .reader-nav{display:none}
 .pl-card{position:relative}
 @media (max-width:420px){.cq-stats{grid-template-columns:repeat(2,1fr)}}
 .sp-nova{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--gold);color:#fff;font:700 10.5px/1.6 system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;vertical-align:2px}
+.pf-honra{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 4px;padding:12px 14px;border-radius:14px;border:1px solid var(--gold);background:var(--gold-soft);color:inherit;font:inherit;text-align:left;cursor:pointer}
+.pf-honra .pf-hm{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d6a335 70%)}
+.pf-honra .pf-hm .icon{width:24px;height:24px;stroke:#5a3d08}
+.pf-honra .pf-ht{flex:1;min-width:0}.pf-honra b{display:block;font-size:16px}.pf-honra small{color:var(--ink-2)}
 .devo-ponder{margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--gold)}
 .devo-ponder h4,.devo-qs h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
 .devo-ponder p{margin:0;font:italic 18px/1.75 var(--font-text);color:var(--ink)}
@@ -2911,6 +2915,8 @@ dialog.reader .rd-aa{width:42px;height:44px}
           <button type="button" class="btn btn-sm btn-ghost" id="pfPhotoDel">Remover foto</button>
         </div>
       </div>
+      <button type="button" class="pf-honra" id="pfHonra"><span class="pf-hm" aria-hidden="true"><svg class="icon"><use href="#i-medal"/></svg></span>
+        <span class="pf-ht"><b>Quadro de honra</b><small id="pfHonraN">Suas notas de honra e conquistas</small></span><span class="chev" aria-hidden="true">›</span></button>
       <form id="pfForm" class="cfg-form" autocomplete="on">
         <label>Nome<input id="pfName" name="name" autocomplete="name" placeholder="Como quer ser chamado"></label>
         <label>Igreja (opcional)<input id="pfChurch" placeholder="Ex.: Igreja Presbiteriana de…"></label>
@@ -5659,6 +5665,10 @@ const Honra = {
   }
 };
 setTimeout(()=>{ try{ Honra.check(true); }catch(_){} },1200);   // conquistas antigas entram sem alarde
+$("#pfHonra").addEventListener("click",async()=>{   // abre o quadro de honra (Estudos → Planos, com as conquistas abertas)
+  store.set("cqAberto",true); showView("planos");
+  for(let i=0;i<30;i++){ const d=document.querySelector("#plBox details[data-cq]"); if(d){ d.open=true; const hd=document.querySelector("header")?.offsetHeight||0, bb=$("#backBar")?.offsetHeight||0; window.scrollTo({ top:d.getBoundingClientRect().top+window.scrollY-hd-bb-12, behavior:"smooth" }); return; } await new Promise(r=>setTimeout(r,100)); }
+});
 $("#hnClose").addEventListener("click",()=>$("#honraDlg").close());
 $("#honraDlg").addEventListener("click",e=>{ if(e.target.id==="honraDlg") e.target.close(); });
 $("#hnShare").addEventListener("click",()=>{ const id=$("#honraDlg")._id, inf=Honra.info(id); if(!inf) return;
@@ -7429,8 +7439,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.38.1";
+const APP_VERSION = "3.38.2";
 const CHANGELOG = [
+  { v:"3.38.2", d:"novembro de 2026", items:["Meu perfil: botão Quadro de honra, que mostra as suas notas de honra e conquistas."] },
   { v:"3.38.1", d:"novembro de 2026", items:["Ouvir: as entrevistas com pastores e professores também entram no rodízio semanal (3 novas por semana e as 3 da semana anterior ficam mais uma semana), com quatro podcasts reformados novos."] },
   { v:"3.38.0", d:"novembro de 2026", items:["Ouvir: toda semana entram 3 pregações novas e as 3 da semana anterior ficam mais uma semana. Novo grupo de pregações em inglês, com Martyn Lloyd-Jones, R. C. Sproul e John Piper."] },
   { v:"3.37.1", d:"novembro de 2026", items:["Planos e conquistas com os ícones do app: traço fino no mesmo estilo dos outros botões, no lugar dos emojis."] },
@@ -7901,6 +7912,7 @@ document.addEventListener("click",e=>{
 /* ---------- Configurações e atualizações ---------- */
 function renderConfig(){
   const p=Profile.get(); paintAvatar();
+  try{ const n=Honra.list().length, sq=Streak.count(); $("#pfHonraN").textContent=_t(n===1?"1 nota de honra · {d} dias seguidos":"{n} notas de honra · {d} dias seguidos",{n,d:sq}); }catch(_){}
   $("#pfName").value=p.name||""; $("#pfChurch").value=p.church||""; $("#pfEmail").value=p.email||""; $("#pfNews").checked=!!p.news;
   $("#cfgTheme").value=document.documentElement.dataset.theme||"light";
   $("#cfgSize").value=rd.size; $("#cfgSizeV").textContent=rd.size+" px";
