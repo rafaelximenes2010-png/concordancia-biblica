@@ -413,7 +413,7 @@ async function pushRoute(request, env, h){
      · vozes novas (Azure Speech) por aparelho;
      · pedidos ao Worker e leituras/gravações no KV (limites do plano grátis da Cloudflare).
    Quando passa de 70% de algum limite, avisa o administrador:
-     · no canal do Telegram (TG_CHANNEL) e, se ligado, em mensagem privada (/telegram/vincular?k=<senha do admin>);
+     · em mensagem privada no Telegram (/telegram/vincular?k=<senha do admin>); o canal público só se ALERTA_CANAL = "sim";
      · e o GitHub abre um "issue" de alerta (workflow monitor-uso.yml), que chega por e-mail.
    GET /uso  → resumo público, só números (sem nenhum dado pessoal).
    Limites podem ser ajustados em Settings › Variables, sem mexer no código:
@@ -567,8 +567,9 @@ export class Cota {
     if (bloq >= 10) marca("bloq10", `🟠 ${bloq} aparelhos atingiram o limite diário de tradução hoje. Pode ser uso intenso legítimo ou abuso.`);
     if (!novos.length) return;
     this.setTot("al:" + dia, A);
-    /* destinos: mensagem privada do administrador (se ligada) e o canal do Telegram (TG_CHANNEL; desligue com ALERTA_CANAL = "nao") */
-    const destinos = [this.tot("admin").chat, this.env.ALERTA_CANAL === "nao" ? "" : this.env.TG_CHANNEL].filter(Boolean);
+    /* destinos: só a mensagem privada do administrador (ligue em /telegram/vincular).
+       O canal público (TG_CHANNEL) só recebe alertas se ALERTA_CANAL = "sim" (pedido do Rafael, 27/11/2026). */
+    const destinos = [this.tot("admin").chat, this.env.ALERTA_CANAL === "sim" ? this.env.TG_CHANNEL : ""].filter(Boolean);
     if (destinos.length && this.env.TG_TOKEN) {
       const text = "⚠️ <b>SOLA · alerta de uso</b>\n\n" + novos.map(a => a.txt).join("\n") + "\n\nPainel: https://solabiblia.net.br/site/uso.html";
       for (const chat_id of [...new Set(destinos.map(String))]) {
