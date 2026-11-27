@@ -15,7 +15,7 @@ Recomeçar	Start over	Empezar de nuevo
 Uma pausa para pensar	A pause to think	Una pausa para pensar
 Perguntas para o coração	Questions for the heart	Preguntas para el corazón
 Concluir o dia	Complete the day	Completar el día
-✓ Dia concluído · próximo	✓ Day completed · next	✓ Día completado · siguiente
+Dia concluído · próximo	Day completed · next	Día completado · siguiente
 Muito bem! Dia concluído.	Well done! Day completed.	¡Muy bien! Día completado.
 Plano concluído! Que Deus continue falando ao seu coração.	Plan completed! May God keep speaking to your heart.	¡Plan completado! Que Dios siga hablando a tu corazón.
 Os planos não puderam ser carregados agora. Tente de novo em instantes.	The plans couldn't be loaded right now. Try again in a moment.	No se pudieron cargar los planes ahora. Inténtalo de nuevo en un momento.
@@ -28,16 +28,16 @@ re:^(.+) · Capítulo (\d+)$	$1 · Chapter $2	$1 · Capítulo $2
 Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.	Devotional plans in chapters, with themes renewed every month: Patriarchs, Heroes of Faith, Apostles, Major Prophets, Proverbs, the Passion of Christ and Christmas. If you've started a plan, it stays with you until you finish.	Planes devocionales en capítulos, con temas que se renuevan cada mes: Patriarcas, Héroes de la Fe, Apóstoles, Profetas mayores, Proverbios, la Pasión de Cristo y Navidad. Si empezaste un plan, sigue contigo hasta que lo termines.
 Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.	Daily devotionals with a pause to think and questions for the heart, in a more reflective tone.	Devocionales diarios con una pausa para pensar y preguntas para el corazón, en un tono más reflexivo.
 Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.	In Studies → Articles, themes start closed and the app remembers which ones you left open.	En Estudios → Artículos, los temas empiezan cerrados y la app recuerda cuáles dejaste abiertos.
-🔖 Salvar plano	🔖 Save plan	🔖 Guardar plan
-🔖 Plano salvo	🔖 Plan saved	🔖 Plan guardado
-🔖 Salvo	🔖 Saved	🔖 Guardado
-🏅 Concluído	🏅 Completed	🏅 Completado
-🏅 Ver nota de honra	🏅 See honor certificate	🏅 Ver nota de honor
+Salvar plano	Save plan	Guardar plan
+Plano salvo	Plan saved	Plan guardado
+Salvo	Saved	Guardado
+Concluído	Completed	Completado
+Ver nota de honra	See honor certificate	Ver nota de honor
 Plano salvo. Ele fica em Meus planos até você terminar.	Plan saved. It stays in My plans until you finish.	Plan guardado. Se queda en Mis planes hasta que lo termines.
 O plano saiu de Meus planos.	The plan was removed from My plans.	El plan salió de Mis planes.
 Meus planos	My plans	Mis planes
 salvos e em andamento	saved and in progress	guardados y en curso
-🏅 Minhas conquistas	🏅 My achievements	🏅 Mis logros
+Minhas conquistas	My achievements	Mis logros
 re:^(\d+) de (\d+) notas de honra$	$1 of $2 honor certificates	$1 de $2 notas de honor
 dias seguidos	days in a row	días seguidos
 maior sequência	longest streak	racha más larga
@@ -75,3 +75,4 @@ Sete planos concluídos	Seven plans completed	Siete planes completados
 Fechar	Close	Cerrar
 Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.	Save plan: it stays in My plans until you finish. When you complete it, you get an honor certificate.	Guardar plan: se queda en Mis planes hasta que lo termines. Al completarlo, recibes una nota de honor.
 Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho.	My achievements: day streaks, devotionals done and plans completed become honor certificates saved on your device.	Mis logros: rachas de días, devocionales hechos y planes completados se convierten en notas de honor guardadas en tu dispositivo.
+Planos e conquistas com os ícones do app: traço fino no mesmo estilo dos outros botões, no lugar dos emojis.	Plans and achievements now use the app's icons: the same thin-line style as the other buttons, instead of emojis.	Planes y logros con los íconos de la app: trazo fino en el mismo estilo de los demás botones, en lugar de emojis.
