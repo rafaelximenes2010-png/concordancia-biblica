@@ -9,6 +9,7 @@ on:
       - "docs/*.json"
       - "salterio/*.json"
       - "ouvir/spotify.json"
+      - "planos/*.json"
       - "index.html"
       - "tools/traduzir-conteudo.mjs"
   workflow_run:

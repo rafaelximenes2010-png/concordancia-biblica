@@ -1,0 +1,77 @@
+Planos	Plans	Planes
+Plano	Plan	Plan
+Planos de devocionais	Devotional plans	Planes devocionales
+Estudos · Planos	Studies · Plans	Estudios · Planes
+Temas em capítulos, um passo por dia. Novos temas todo mês.	Themes in chapters, one step a day. New themes every month.	Temas en capítulos, un paso por día. Nuevos temas cada mes.
+Patriarcas, Heróis da Fé, Apóstolos, Profetas, Provérbios, Paixão e Natal, em capítulos	Patriarchs, Heroes of Faith, Apostles, Prophets, Proverbs, the Passion and Christmas, in chapters	Patriarcas, Héroes de la Fe, Apóstoles, Profetas, Proverbios, la Pasión y Navidad, en capítulos
+Continue de onde parou	Pick up where you left off	Sigue donde lo dejaste
+novos temas todo mês	new themes every month	nuevos temas cada mes
+Planos concluídos	Completed plans	Planes completados
+‹ Todos os planos	‹ All plans	‹ Todos los planes
+Começar o plano	Start the plan	Empezar el plan
+Continuar	Continue	Continuar
+Ler de novo	Read again	Leer de nuevo
+Recomeçar	Start over	Empezar de nuevo
+Uma pausa para pensar	A pause to think	Una pausa para pensar
+Perguntas para o coração	Questions for the heart	Preguntas para el corazón
+Concluir o dia	Complete the day	Completar el día
+✓ Dia concluído · próximo	✓ Day completed · next	✓ Día completado · siguiente
+Muito bem! Dia concluído.	Well done! Day completed.	¡Muy bien! Día completado.
+Plano concluído! Que Deus continue falando ao seu coração.	Plan completed! May God keep speaking to your heart.	¡Plan completado! Que Dios siga hablando a tu corazón.
+Os planos não puderam ser carregados agora. Tente de novo em instantes.	The plans couldn't be loaded right now. Try again in a moment.	No se pudieron cargar los planes ahora. Inténtalo de nuevo en un momento.
+re:^Temas de (.+)$	$1 themes	Temas de $1
+re:^(\d+) capítulos · (\d+) dias$	$1 chapters · $2 days	$1 capítulos · $2 días
+re:^(\d+) capítulos · (\d+) dias · (\d+)%$	$1 chapters · $2 days · $3%	$1 capítulos · $2 días · $3%
+re:^(\d+) de (\d+) dias$	$1 of $2 days	$1 de $2 días
+re:^Capítulo (\d+) · (.+)$	Chapter $1 · $2	Capítulo $1 · $2
+re:^(.+) · Capítulo (\d+)$	$1 · Chapter $2	$1 · Capítulo $2
+Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.	Devotional plans in chapters, with themes renewed every month: Patriarchs, Heroes of Faith, Apostles, Major Prophets, Proverbs, the Passion of Christ and Christmas. If you've started a plan, it stays with you until you finish.	Planes devocionales en capítulos, con temas que se renuevan cada mes: Patriarcas, Héroes de la Fe, Apóstoles, Profetas mayores, Proverbios, la Pasión de Cristo y Navidad. Si empezaste un plan, sigue contigo hasta que lo termines.
+Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.	Daily devotionals with a pause to think and questions for the heart, in a more reflective tone.	Devocionales diarios con una pausa para pensar y preguntas para el corazón, en un tono más reflexivo.
+Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.	In Studies → Articles, themes start closed and the app remembers which ones you left open.	En Estudios → Artículos, los temas empiezan cerrados y la app recuerda cuáles dejaste abiertos.
+🔖 Salvar plano	🔖 Save plan	🔖 Guardar plan
+🔖 Plano salvo	🔖 Plan saved	🔖 Plan guardado
+🔖 Salvo	🔖 Saved	🔖 Guardado
+🏅 Concluído	🏅 Completed	🏅 Completado
+🏅 Ver nota de honra	🏅 See honor certificate	🏅 Ver nota de honor
+Plano salvo. Ele fica em Meus planos até você terminar.	Plan saved. It stays in My plans until you finish.	Plan guardado. Se queda en Mis planes hasta que lo termines.
+O plano saiu de Meus planos.	The plan was removed from My plans.	El plan salió de Mis planes.
+Meus planos	My plans	Mis planes
+salvos e em andamento	saved and in progress	guardados y en curso
+🏅 Minhas conquistas	🏅 My achievements	🏅 Mis logros
+re:^(\d+) de (\d+) notas de honra$	$1 of $2 honor certificates	$1 de $2 notas de honor
+dias seguidos	days in a row	días seguidos
+maior sequência	longest streak	racha más larga
+devocionais feitos	devotionals done	devocionales hechos
+planos concluídos	plans completed	planes completados
+Nota de honra	Honor certificate	Nota de honor
+Nova nota de honra	New honor certificate	Nueva nota de honor
+Sequência de estudo	Study streak	Racha de estudio
+Devocionais	Devotionals	Devocionales
+Planos	Plans	Planes
+Plano concluído	Plan completed	Plan completado
+{n} dias seguidos lendo a Palavra e fazendo o devocional.	{n} days in a row reading the Word and doing the devotional.	{n} días seguidos leyendo la Palabra y haciendo el devocional.
+O primeiro devocional concluído no SOLA.	Your first devotional completed in SOLA.	Tu primer devocional completado en SOLA.
+{n} devocionais concluídos.	{n} devotionals completed.	{n} devocionales completados.
+{n} planos de devocionais concluídos do começo ao fim.	{n} devotional plans completed from start to finish.	{n} planes devocionales completados de principio a fin.
+Plano concluído: {c} capítulos e {n} dias de leitura e meditação.	Plan completed: {c} chapters and {n} days of reading and meditation.	Plan completado: {c} capítulos y {n} días de lectura y meditación.
+Concedida a {nome}	Awarded to {nome}	Otorgada a {nome}
+“Combati o bom combate, completei a carreira, guardei a fé.” 2 Timóteo 4:7	“I have fought a good fight, I have finished my course, I have kept the faith.” 2 Timothy 4:7	“He peleado la buena batalla, he acabado la carrera, he guardado la fe.” 2 Timoteo 4:7
+Conquistado no SOLA | Bíblia & Teologia	Earned in SOLA | Bible & Theology	Obtenido en SOLA | Biblia y Teología
+Três dias seguidos	Three days in a row	Tres días seguidos
+Uma semana com Deus	A week with God	Una semana con Dios
+Duas semanas de constância	Two steady weeks	Dos semanas de constancia
+Um mês de constância	A steady month	Un mes de constancia
+Dois meses de fidelidade	Two faithful months	Dos meses de fidelidad
+Cem dias na Palavra	A hundred days in the Word	Cien días en la Palabra
+Um ano na Palavra	A year in the Word	Un año en la Palabra
+Primeiro devocional	First devotional	Primer devocional
+Sete devocionais	Seven devotionals	Siete devocionales
+Trinta devocionais	Thirty devotionals	Treinta devocionales
+Cem devocionais	A hundred devotionals	Cien devocionales
+Trezentos e sessenta e cinco devocionais	Three hundred sixty-five devotionals	Trescientos sesenta y cinco devocionales
+Primeiro plano concluído	First plan completed	Primer plan completado
+Três planos concluídos	Three plans completed	Tres planes completados
+Sete planos concluídos	Seven plans completed	Siete planes completados
+Fechar	Close	Cerrar
+Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.	Save plan: it stays in My plans until you finish. When you complete it, you get an honor certificate.	Guardar plan: se queda en Mis planes hasta que lo termines. Al completarlo, recibes una nota de honor.
+Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho.	My achievements: day streaks, devotionals done and plans completed become honor certificates saved on your device.	Mis logros: rachas de días, devocionales hechos y planes completados se convierten en notas de honor guardadas en tu dispositivo.

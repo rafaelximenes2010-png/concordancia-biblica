@@ -174,7 +174,7 @@
 
   /* Conteúdos traduzidos: em inglês/espanhol, os arquivos de conteúdo vêm de i18n/conteudo/<idioma>/…
      (gerados por tools/traduzir-conteudo.mjs). Se a cópia ainda não existir, usa o original. */
-  var CONTEUDO = /^(devocionais\/(\d{4}-\d{2}|series)\.json|artigos\/sola\.json|mapas\/(base|dados)\.json|docs\/[a-z0-9-]+\.json|salterio\/[a-z0-9-]+\.json|noticias\/feed\.json|ouvir\/spotify\.json)$/;
+  var CONTEUDO = /^(devocionais\/(\d{4}-\d{2}|series)\.json|artigos\/sola\.json|mapas\/(base|dados)\.json|docs\/[a-z0-9-]+\.json|salterio\/[a-z0-9-]+\.json|noticias\/feed\.json|ouvir\/spotify\.json|planos\/planos\.json)$/;
   var fetch0 = window.fetch ? window.fetch.bind(window) : null;
   if (fetch0) window.fetch = function (entrada, init) {
     try {

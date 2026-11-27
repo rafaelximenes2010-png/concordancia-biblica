@@ -1450,6 +1450,44 @@ dialog.reader.has-sel .reader-nav{display:none}
 .listen-car{flex:none;display:inline-flex;align-items:center;gap:5px}
 .listen-rate{flex:none}
 @media (max-width:420px){ .listen-bar{flex-wrap:wrap} .listen-lbl{min-width:60%} }
+.honra-dlg{border:none;border-radius:22px;padding:18px;max-width:min(420px,92vw);background:var(--bg);color:var(--ink)}
+.honra-dlg::backdrop{background:rgba(10,16,32,.6)}
+.hn-card{position:relative;text-align:center;padding:26px 20px 22px;border-radius:16px;background:linear-gradient(160deg,#fffaf0,#f6e7c4);color:#2a2214;border:2px solid #c9a24a;box-shadow:inset 0 0 0 6px #fffaf0,inset 0 0 0 7px #d8b86a}
+.hn-card .hn-medal{width:84px;height:84px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;font-size:40px;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d6a335 70%);box-shadow:0 6px 16px rgba(160,110,20,.35)}
+.hn-card .hn-k{font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#8a6a22}
+.hn-card h3{margin:6px 0 4px;font:700 22px/1.25 var(--font-text)}
+.hn-card .hn-to{margin:10px 0 2px;font:italic 16px/1.5 var(--font-text)}
+.hn-card .hn-desc{margin:6px 0 10px;font-size:15px;line-height:1.55}
+.hn-card .hn-vs{margin:12px 0 0;font:italic 14px/1.5 var(--font-text);color:#5c4a24}
+.hn-card .hn-dt{margin-top:10px;font-size:12px;color:#8a6a22}
+.cq-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 12px}
+.cq-stats div{padding:10px 6px;border-radius:12px;background:var(--surface);border:1px solid var(--border);text-align:center}
+.cq-stats b{display:block;font-size:22px}.cq-stats small{font-size:11.5px;color:var(--ink-2)}
+.cq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.cq-b{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font:inherit;color:inherit;cursor:pointer;text-align:center}
+.cq-b .m{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d6a335 70%)}
+.cq-b small{font-size:11.5px;line-height:1.25}
+.cq-b.off{cursor:default;opacity:.45}.cq-b.off .m{background:var(--border);filter:grayscale(1)}
+.pl-save{position:absolute;top:8px;right:8px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font-size:12px}
+.pl-card{position:relative}
+@media (max-width:420px){.cq-stats{grid-template-columns:repeat(2,1fr)}}
+.devo-ponder{margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--gold)}
+.devo-ponder h4,.devo-qs h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
+.devo-ponder p{margin:0;font:italic 18px/1.75 var(--font-text);color:var(--ink)}
+.devo-qs{margin:14px 0;padding:14px 16px;border-radius:14px;background:var(--gold-soft);border:1px dashed var(--gold)}
+.devo-qs ol{margin:0;padding-left:22px;font-family:var(--font-text);font-size:17px;line-height:1.65}
+.devo-qs li{margin:0 0 8px}.devo-qs li:last-child{margin:0}
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.pl-card{display:flex;flex-direction:column;text-align:left;padding:0;border-radius:16px;overflow:hidden;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:inherit;font:inherit}
+.pl-card .pl-art svg{display:block;width:100%;height:110px}
+.pl-card .pl-tx{padding:10px 14px 14px}.pl-card b{display:block;font-size:18px}.pl-card small{color:var(--ink-2)}
+.pl-bar{height:6px;border-radius:6px;background:var(--border);overflow:hidden;margin-top:8px}.pl-bar i{display:block;height:100%;background:var(--gold)}
+.pl-head .pl-art svg{display:block;width:100%;height:auto;border-radius:14px}
+.pl-ch{margin:16px 0 6px;font:700 13px/1.3 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-text)}
+.pl-day{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;margin:0 0 6px;border-radius:12px;border:1px solid var(--border);background:var(--surface);text-align:left;color:inherit;font:inherit;cursor:pointer}
+.pl-day .pl-n{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:700;background:var(--gold-soft);color:var(--gold-text)}
+.pl-day.done .pl-n{background:var(--gold);color:#fff}
+.pl-day span.pl-dt{flex:1;min-width:0}.pl-day small{display:block;color:var(--ink-2)}
 .devo-close{margin:14px 0;padding:16px 18px;border-radius:14px;background:linear-gradient(135deg,#132447,#22396a);color:#f1ece0}
 .devo-close h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#e1b553}
 .devo-close p{margin:0;font:italic 17.5px/1.7 var(--font-text)}
@@ -2436,6 +2474,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view narrow" id="view-devocional" hidden aria-labelledby="devoTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2462,6 +2501,9 @@ dialog.reader .rd-aa{width:42px;height:44px}
     <button type="button" class="btn btn-ghost" data-devo="0">Hoje</button>
     <button type="button" class="btn" data-devo="1">Próximo ›</button>
   </div>
+  <button type="button" class="home-card pl-cta" data-view="planos" style="display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-top:10px;cursor:pointer;font:inherit;color:inherit">
+    <svg class="icon" aria-hidden="true" style="width:28px;height:28px;flex:none"><use href="#i-book"/></svg>
+    <span style="flex:1"><b style="display:block">Planos de devocionais</b><small class="muted">Patriarcas, Heróis da Fé, Apóstolos, Profetas, Provérbios, Paixão e Natal, em capítulos</small></span><span class="chev" aria-hidden="true">›</span></button>
   <div id="devoMonth"></div>
   <a class="home-card wa3" href="site/whatsapp.html" style="margin-top:6px">
     <span class="wa3-vs">“Ide por todo o mundo, pregai o Evangelho a toda criatura.”<cite>Marcos 16:15 · enviar o devocional pelo WhatsApp</cite></span>
@@ -2470,10 +2512,31 @@ dialog.reader .rd-aa{width:42px;height:44px}
   <div class="home-card" id="remindersCard2" style="margin-top:6px"></div>
 </section>
 
+<!-- ===================== PLANOS DE DEVOCIONAIS ===================== -->
+<section class="view narrow" id="view-planos" hidden aria-labelledby="plTitle">
+  <nav class="sub-tabs" aria-label="Estudos">
+    <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
+    <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
+    <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
+    <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
+    <button type="button" class="sub-tab" data-view="grego"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Grego</button>
+    <button type="button" class="sub-tab" data-view="mapas"><svg class="icon" aria-hidden="true"><use href="#i-map"/></svg>Mapas</button>
+    <button type="button" class="sub-tab" data-view="ouvir"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Ouvir</button>
+    <button type="button" class="sub-tab" data-view="noticias"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg>Notícias</button>
+  </nav>
+  <div class="view-head">
+    <svg class="ill" aria-hidden="true"><use href="#ill-lamp"/></svg>
+    <div><p class="eyebrow">Planos de devocionais</p><h2 id="plTitle">Planos</h2><p>Temas em capítulos, um passo por dia. Novos temas todo mês.</p></div>
+  </div>
+  <div id="plBox"><p class="muted">Carregando…</p></div>
+</section>
+
 <!-- ===================== ESTUDOS BIBLEPROJECT ===================== -->
 <section class="view" id="view-estudos" hidden aria-labelledby="bpTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2503,6 +2566,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view narrow" id="view-ouvir" hidden aria-labelledby="spTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2534,6 +2598,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view narrow" id="view-noticias" hidden aria-labelledby="ntTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2554,6 +2619,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view" id="view-mapas" hidden aria-labelledby="mpTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2596,6 +2662,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view" id="view-grego" hidden aria-labelledby="grTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2631,6 +2698,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view" id="view-pensadores" hidden aria-labelledby="penTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2651,6 +2719,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
 <section class="view" id="view-artigos" hidden aria-labelledby="artTitle">
   <nav class="sub-tabs" aria-label="Estudos">
     <button type="button" class="sub-tab" data-view="devocional"><svg class="icon" aria-hidden="true"><use href="#i-lamp"/></svg>Devocional</button>
+    <button type="button" class="sub-tab" data-view="planos"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Planos</button>
     <button type="button" class="sub-tab" data-view="estudos"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>Vídeos</button>
     <button type="button" class="sub-tab" data-view="artigos"><svg class="icon" aria-hidden="true"><use href="#i-article"/></svg>Artigos</button>
     <button type="button" class="sub-tab" data-view="pensadores"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg>Pensadores</button>
@@ -2966,6 +3035,13 @@ dialog.reader .rd-aa{width:42px;height:44px}
 </section>
 </div><!-- /views -->
 
+<dialog id="honraDlg" class="honra-dlg" aria-labelledby="hnTitle">
+  <div class="hn-card" id="hnCard"></div>
+  <div class="row-actions" style="justify-content:center;margin-top:12px">
+    <button type="button" class="btn btn-sm" id="hnShare"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+    <button type="button" class="btn btn-sm btn-primary" id="hnClose">Fechar</button>
+  </div>
+</dialog>
 <dialog id="bookPicker" class="picker" aria-labelledby="bpTitle">
   <div class="picker-head">
     <button type="button" class="btn btn-sm back-btn" id="pkBack"><span aria-hidden="true">‹</span> Voltar</button>
@@ -5292,7 +5368,9 @@ $("#homePV")?.addEventListener("click",e=>{
 const Streak = {
   days(){ return store.get("studyDays",[]); },
   isDone(k=todayKey()){ return this.days().includes(k); },
-  mark(){ const d=this.days(); const k=todayKey(); if(!d.includes(k)){ d.push(k); store.set("studyDays", d.slice(-400)); } renderStreak(); },
+  mark(){ const d=this.days(); const k=todayKey(); if(!d.includes(k)){ d.push(k); store.set("studyDays", d.slice(-400)); } renderStreak(); try{ Honra.check(); }catch(_){} },
+  best(){ const ds=[...new Set(this.days())].sort(); let b=0,n=0,prev=null;
+    for(const k of ds){ const t=new Date(k+"T12:00:00"); n=(prev && Math.round((t-prev)/864e5)===1)?n+1:1; b=Math.max(b,n); prev=t; } return b; },
   count(){
     const set=new Set(this.days()); let n=0; let d=new Date();
     if(!set.has(todayKey(d))) d.setDate(d.getDate()-1);          // ainda dá tempo hoje
@@ -5374,9 +5452,11 @@ async function renderDevo(){
       <p class="day-ref" style="font-size:16px">${esc(ps.label)}</p>${versionTag(ps.t)}
       ${listenBar("devo")}
       <p class="day-text" style="font-size:19px">${passageHtml(ps)}</p>
+      ${dv.ponder?`<div class="devo-ponder"><h4>Uma pausa para pensar</h4><p>${esc(dv.ponder)}</p></div>`:""}
       <div class="devo-block devo-lead"><h4>Em poucas palavras</h4><p>${esc(dv.reflection)}</p></div>
       ${dv.story?.length?`<div class="devo-story"><h4>A história por trás do texto</h4>${dv.story.map((t,i)=>`<p><span class="ds-n">${i+1}</span>${esc(t)}</p>`).join("")}</div>`:""}
       ${dv.close?`<div class="devo-close"><h4>Para pensar</h4><p>${esc(dv.close)}</p></div>`:""}
+      ${dv.questions?.length?`<div class="devo-qs"><h4>Perguntas para o coração</h4><ol>${dv.questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ol></div>`:""}
       <div class="devo-block"><h4>Aplicação prática</h4><p>${esc(dv.application)}</p></div>
       <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px">
         ${devoOffset===0?doneBtn():""}
@@ -5415,12 +5495,184 @@ $("#devoMonth").addEventListener("click",e=>{
   renderDevo(); $("#view-devocional").scrollIntoView({ behavior:"smooth", block:"start" });
 });
 
+
+/* =====================================================================
+   PLANOS DE DEVOCIONAIS — planos/planos.json, organizados em capítulos.
+   Os temas se renovam a cada mês ("meses" de cada plano). Quem já começou
+   um plano continua vendo esse plano até terminar, mesmo que o mês mude.
+   ===================================================================== */
+const PL = { data:null, at:null,
+  async load(){ if(this.data) return this.data; try{ const j=await fetch("planos/planos.json").then(r=>r.ok?r.json():null); this.data=j?.plans||[]; }catch(e){ this.data=[]; } return this.data; },
+  prog(){ const v=store.get("planosProg",{}); return v && typeof v==="object" ? v : {}; },
+  setProg(v){ store.set("planosProg",v); },
+  days(pl){ const out=[]; pl.chapters.forEach((c,ci)=>c.days.forEach((d,di)=>{ const [b,cc,r]=d.ref.split(" "); const [v1,v2]=String(r).split("-").map(Number);
+      out.push({ ...d, ci, di, key:ci+"-"+di, chapter:c.title, p:{ b, c:+cc, v1, v2:v2||v1 }, art:pl.art, palette:pl.palette }); })); return out; },
+  done(id){ return (this.prog()[id]?.done)||[]; },
+  salvos(){ const v=store.get("planosSalvos",[]); return Array.isArray(v)?v:[]; },
+  salvo(id){ return this.salvos().includes(id); },
+  salvar(id,on){ const s=new Set(this.salvos()); on?s.add(id):s.delete(id); store.set("planosSalvos",[...s]); },
+  concluido(pl){ return this.done(pl.id).length>=this.days(pl).length; }
+};
+function plOfertados(list){
+  const mk=monthKey(new Date()); let of=list.filter(p=>(p.meses||[]).includes(mk));
+  if(!of.length && list.length){ // sem temas do mês: gira os planos do acervo, 4 por mês
+    const n=new Date().getFullYear()*12+new Date().getMonth(); of=Array.from({length:Math.min(4,list.length)},(_,k)=>list[(n*4+k)%list.length]); }
+  return of;
+}
+function plCard(pl){
+  const tot=PL.days(pl).length, dn=PL.done(pl.id).length, pct=Math.round(dn/tot*100);
+  return `<button type="button" class="pl-card" data-plopen="${esc(pl.id)}">${PL.salvo(pl.id)?`<span class="pl-save">🔖 Salvo</span>`:PL.concluido(pl)?`<span class="pl-save">🏅 Concluído</span>`:""}<span class="pl-art">${devoArt({ title:pl.title, art:pl.art, palette:pl.palette }).replace("<svg ","<svg preserveAspectRatio=\"xMidYMid slice\" ")}</span>
+    <span class="pl-tx"><b>${esc(pl.title)}</b><small>${esc(pl.subtitle||"")}</small><br><small>${pl.chapters.length} capítulos · ${tot} dias${dn?` · ${pct}%`:""}</small>${dn?`<span class="pl-bar"><i style="width:${pct}%"></i></span>`:""}</span></button>`;
+}
+async function renderPlanos(){
+  PL.at=null; const box=$("#plBox"); const list=await PL.load();
+  if(!list.length){ box.innerHTML=`<p class="muted">Os planos não puderam ser carregados agora. Tente de novo em instantes.</p>`; return; }
+  const pr=PL.prog(), tot=pl=>PL.days(pl).length;
+  // Meus planos: salvos ou em andamento ficam aqui até terminar, mesmo quando os temas do mês mudam
+  const fazendo=list.filter(pl=>{ const d=(pr[pl.id]?.done||[]).length; return d<tot(pl) && (d>0 || PL.salvo(pl.id)); });
+  const of=plOfertados(list).filter(pl=>!fazendo.includes(pl));
+  const feitos=list.filter(pl=>(pr[pl.id]?.done||[]).length>=tot(pl) && !of.includes(pl));
+  const mName=new Date().toLocaleDateString(LOC(),{month:"long"});
+  box.innerHTML=`${conquistasHtml(list)}${fazendo.length?`<h3 class="st-h" style="margin-top:18px">Meus planos <small>salvos e em andamento</small></h3><div class="pl-grid">${fazendo.map(plCard).join("")}</div>`:""}
+    <h3 class="st-h" style="margin-top:${fazendo.length?18:0}px">Temas de ${esc(mName)} <small>novos temas todo mês</small></h3><div class="pl-grid">${of.map(plCard).join("")}</div>
+    ${feitos.length?`<h3 class="st-h" style="margin-top:18px">Planos concluídos</h3><div class="pl-grid">${feitos.map(plCard).join("")}</div>`:""}`;
+}
+async function plOpen(id){
+  const list=await PL.load(), pl=list.find(x=>x.id===id); if(!pl) return renderPlanos();
+  PL.at={ id }; const ds=PL.days(pl), dn=new Set(PL.done(id)), next=ds.find(d=>!dn.has(d.key))||ds[0];
+  const pct=Math.round(dn.size/ds.length*100);
+  $("#plBox").innerHTML=`<button type="button" class="btn btn-sm" data-plhome>‹ Todos os planos</button>
+    <div class="pl-head" style="margin-top:12px"><figure class="pl-art" style="margin:0">${devoArt({ title:pl.title, art:pl.art, palette:pl.palette })}</figure>
+    <h3 style="font-size:24px;margin:12px 0 2px">${esc(pl.title)}</h3><p class="muted" style="margin:0 0 8px">${esc(pl.subtitle||"")}</p>
+    <p style="font-family:var(--font-text);font-size:17px;line-height:1.65">${esc(pl.intro||"")}</p>
+    <p class="muted" style="margin:0">${dn.size} de ${ds.length} dias</p><span class="pl-bar"><i style="width:${pct}%"></i></span>
+    <div class="row-actions" style="margin-top:12px"><button type="button" class="btn btn-primary" data-plday="${next.key}">${dn.size?(dn.size>=ds.length?"Ler de novo":"Continuar"):"Começar o plano"}</button>
+    ${dn.size>=ds.length?"":`<button type="button" class="btn btn-sm" data-plsave aria-pressed="${PL.salvo(id)}">${PL.salvo(id)?"🔖 Plano salvo":"🔖 Salvar plano"}</button>`}
+    ${dn.size>=ds.length?`<button type="button" class="btn btn-sm" data-hnopen="plano-${esc(id)}">🏅 Ver nota de honra</button>`:""}
+    ${dn.size?`<button type="button" class="btn btn-sm btn-ghost" data-plreset>Recomeçar</button>`:""}</div></div>
+    ${pl.chapters.map((c,ci)=>`<h4 class="pl-ch">Capítulo ${ci+1} · ${esc(c.title)}</h4>${ds.filter(d=>d.ci===ci).map(d=>{ const i=ds.indexOf(d)+1;
+      return `<button type="button" class="pl-day${dn.has(d.key)?" done":""}" data-plday="${d.key}"><span class="pl-n">${dn.has(d.key)?"✓":i}</span><span class="pl-dt"><b>${esc(d.title)}</b><small>${esc(passageLabel(d.p))}</small></span><span class="chev" aria-hidden="true">›</span></button>`; }).join("")}`).join("")}`;
+  window.scrollTo({top:0});
+}
+async function plDay(id,key){
+  const list=await PL.load(), pl=list.find(x=>x.id===id); if(!pl) return;
+  const ds=PL.days(pl), i=Math.max(0,ds.findIndex(d=>d.key===key)), d=ds[i]; PL.at={ id, d:key };
+  const box=$("#plBox"); box.innerHTML=`<p class="muted">Carregando…</p>`; window.scrollTo({top:0});
+  let ps=null; try{ ps=await getPassage(d.p); }catch(e){}
+  const feito=PL.done(id).includes(key);
+  box.innerHTML=`<button type="button" class="btn btn-sm" data-plopen="${esc(id)}">‹ ${esc(pl.title)}</button>
+    <div class="day-card" id="plDayCard" style="margin-top:12px">
+    <p class="devo-series"><span>${esc(pl.title)} · Capítulo ${d.ci+1}</span><strong>${esc(d.chapter)}</strong><em>Dia ${i+1} de ${ds.length}</em></p>
+    <figure class="devo-art">${devoArt(d)}</figure>
+    <h3 style="font-size:22px;margin:10px 0 4px">${esc(d.title)}</h3>
+    ${ps?`<p class="day-ref" style="font-size:16px">${esc(ps.label)}</p>${versionTag(ps.t)}<p class="day-text" style="font-size:19px">${passageHtml(ps)}</p>`:`<p class="day-ref">${esc(passageLabel(d.p))}</p>`}
+    <div class="devo-ponder"><h4>Uma pausa para pensar</h4><p>${esc(d.meditation)}</p></div>
+    <div class="devo-qs"><h4>Perguntas para o coração</h4><ol>${d.questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ol></div>
+    <div class="devo-block"><h4>Aplicação prática</h4><p>${esc(d.application)}</p></div>
+    <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:14px">
+      <button type="button" class="btn btn-primary" data-pldone="${d.key}">${feito?"✓ Dia concluído · próximo":"Concluir o dia"}</button>
+      <button type="button" class="btn btn-sm" data-plshare><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
+      <button type="button" class="btn btn-sm" data-plnote><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
+    </div></div>
+    <div class="day-nav">${i>0?`<button type="button" class="btn" data-plday="${ds[i-1].key}">‹ Anterior</button>`:"<span></span>"}${i<ds.length-1?`<button type="button" class="btn" data-plday="${ds[i+1].key}">Próximo ›</button>`:""}</div>`;
+  box._pl={ pl, d, ps, i, ds };
+}
+function plShareText(pl,d,ps){
+  return `📖 *SOLA | Bíblia & Teologia*\n_${_t("Plano")}: ${pl.title} · ${d.chapter}_\n\n*${d.title}*\n${ps?`“${ps.text}” (${ps.label})\n\n`:""}${d.meditation}\n\n${d.questions.map((q,k)=>`${k+1}. ${q}`).join("\n")}\n\n${APP_URL}#planos`;
+}
+$("#plBox").addEventListener("click",e=>{
+  const t=e.target.closest("[data-plopen],[data-plday],[data-plhome],[data-pldone],[data-plreset],[data-plshare],[data-plnote],[data-plsave],[data-hnopen]"); if(!t) return;
+  if(t.dataset.hnopen) return Honra.show(t.dataset.hnopen);
+  if(t.dataset.plsave!=null){ const on=!PL.salvo(PL.at.id); PL.salvar(PL.at.id,on); toast(on?"Plano salvo. Ele fica em Meus planos até você terminar.":"O plano saiu de Meus planos."); return plOpen(PL.at.id); }
+  const box=$("#plBox");
+  if(t.dataset.plhome!=null) return renderPlanos();
+  if(t.dataset.plopen) return plOpen(t.dataset.plopen);
+  if(t.dataset.plday){ if(!PL.done(PL.at.id).length) PL.salvar(PL.at.id,true); return plDay(PL.at.id,t.dataset.plday); }
+  if(t.dataset.plreset!=null){ const pr=PL.prog(); delete pr[PL.at.id]; PL.setProg(pr); return plOpen(PL.at.id); }
+  const c=box._pl; if(!c) return;
+  if(t.dataset.pldone){ const pr=PL.prog(), id=c.pl.id; const o=pr[id]||{ ini:todayKey(new Date()), done:[] }; if(!o.done.includes(c.d.key)) o.done.push(c.d.key);
+    pr[id]=o; PL.setProg(pr); try{ Streak.mark(); }catch(_){}
+    if(o.done.length>=c.ds.length){ o.fim=todayKey(new Date()); pr[id]=o; PL.setProg(pr); PL.salvar(id,false);
+      plOpen(id); Honra.dar("plano-"+id); return; }
+    const nx=c.ds.slice(c.i+1).find(d=>!o.done.includes(d.key))||c.ds.find(d=>!o.done.includes(d.key));
+    toast("Muito bem! Dia concluído."); return nx?plDay(id,nx.key):plOpen(id); }
+  if(t.dataset.plshare!=null) return shareText(`${c.d.title} — ${c.pl.title}`, plShareText(c.pl,c.d,c.ps));
+  if(t.dataset.plnote!=null) return openNoteEditor({ type:"estudo", title:`${_t("Plano")}: ${c.pl.title} · ${c.d.title}`, ref:c.ps?.label||passageLabel(c.d.p),
+    text:`${c.ps?`“${c.ps.text}” (${c.ps.t})\n\n`:""}${c.d.meditation}\n\n${c.d.questions.map((q,k)=>`${k+1}. ${q}`).join("\n")}\n\n${_t("Minhas anotações:")}\n` });
+});
+
+
+/* =====================================================================
+   CONQUISTAS E NOTAS DE HONRA — como no YouVersion: sequência de dias,
+   devocionais feitos e planos concluídos. Cada conquista vira uma
+   "nota de honra" guardada no aparelho (store "honras").
+   ===================================================================== */
+const HONRA_SEQ=[[3,"Três dias seguidos","🔥"],[7,"Uma semana com Deus","🔥"],[14,"Duas semanas de constância","🔥"],[30,"Um mês de constância","🌟"],[60,"Dois meses de fidelidade","🌟"],[100,"Cem dias na Palavra","👑"],[365,"Um ano na Palavra","👑"]];
+const HONRA_DEVO=[[1,"Primeiro devocional","🕯️"],[7,"Sete devocionais","🕯️"],[30,"Trinta devocionais","📖"],[100,"Cem devocionais","📖"],[365,"Trezentos e sessenta e cinco devocionais","🏆"]];
+const HONRA_PLANOS=[[1,"Primeiro plano concluído","🏅"],[3,"Três planos concluídos","🏅"],[7,"Sete planos concluídos","🏆"]];
+const Honra = {
+  list(){ const v=store.get("honras",[]); return Array.isArray(v)?v:[]; },
+  tem(id){ return this.list().some(h=>h.id===id); },
+  devos(){ const v=store.get("devoFeitos",[]); return Array.isArray(v)?v:[]; },
+  devoFeito(d){ const k=todayKey(d), v=this.devos(); if(!v.includes(k)){ v.push(k); store.set("devoFeitos",v.slice(-2000)); } },
+  planosFeitos(){ const pr=PL.prog(); return Object.keys(pr).filter(id=>pr[id]?.fim).length; },
+  info(id){
+    let m;
+    if((m=id.match(/^seq-(\d+)$/))){ const x=HONRA_SEQ.find(a=>a[0]==m[1]); return x&&{ titulo:x[1], icone:x[2], tipo:"Sequência de estudo", desc:_t("{n} dias seguidos lendo a Palavra e fazendo o devocional.",{n:x[0]}) }; }
+    if((m=id.match(/^devo-(\d+)$/))){ const x=HONRA_DEVO.find(a=>a[0]==m[1]); return x&&{ titulo:x[1], icone:x[2], tipo:"Devocionais", desc:x[0]===1?_t("O primeiro devocional concluído no SOLA."):_t("{n} devocionais concluídos.",{n:x[0]}) }; }
+    if((m=id.match(/^planos-(\d+)$/))){ const x=HONRA_PLANOS.find(a=>a[0]==m[1]); return x&&{ titulo:x[1], icone:x[2], tipo:"Planos", desc:_t("{n} planos de devocionais concluídos do começo ao fim.",{n:x[0]}) }; }
+    if((m=id.match(/^plano-(.+)$/))){ const pl=(PL.data||[]).find(p=>p.id===m[1]); const h=this.list().find(h=>h.id===id);
+      const t=pl?.title||h?.titulo||m[1]; const n=pl?PL.days(pl).length:0;
+      return { titulo:t, icone:"🏅", tipo:"Plano concluído", desc:n?_t("Plano concluído: {c} capítulos e {n} dias de leitura e meditação.",{c:pl.chapters.length,n}):"" }; }
+    return null;
+  },
+  dar(id, quieto){
+    if(this.tem(id)) return; const inf=this.info(id); if(!inf) return;
+    const v=this.list(); v.push({ id, titulo:inf.titulo, data:todayKey(new Date()) }); store.set("honras",v);
+    if(id.startsWith("plano-")) HONRA_PLANOS.forEach(([n])=>{ if(this.planosFeitos()>=n) this.dar("planos-"+n,true); });
+    if(!quieto) this.show(id,true);
+  },
+  check(quieto){
+    const best=Math.max(Streak.best(),Streak.count()), dv=this.devos().length;
+    const novas=[]; HONRA_SEQ.forEach(([n])=>{ if(best>=n && !this.tem("seq-"+n)) novas.push("seq-"+n); });
+    HONRA_DEVO.forEach(([n])=>{ if(dv>=n && !this.tem("devo-"+n)) novas.push("devo-"+n); });
+    novas.forEach((id,i)=>this.dar(id, quieto || i<novas.length-1));   // mostra só a maior conquista nova
+    if(currentView==="planos" && !PL.at) renderPlanos();
+  },
+  show(id, nova){
+    const inf=this.info(id), h=this.list().find(x=>x.id===id); if(!inf||!h) return;
+    const nome=(Profile.get().name||"").trim(); const dt=new Date(h.data+"T12:00:00").toLocaleDateString(LOC(),{day:"numeric",month:"long",year:"numeric"});
+    $("#hnCard").innerHTML=`<div class="hn-medal" aria-hidden="true">${inf.icone}</div><div class="hn-k">${nova?esc(_t("Nova nota de honra")):esc(_t("Nota de honra"))} · ${esc(_t(inf.tipo))}</div>
+      <h3 id="hnTitle">${esc(_t(inf.titulo))}</h3>${nome?`<p class="hn-to">${esc(_t("Concedida a {nome}",{nome}))}</p>`:""}<p class="hn-desc">${esc(inf.desc)}</p>
+      <p class="hn-vs">${esc(_t("“Combati o bom combate, completei a carreira, guardei a fé.” 2 Timóteo 4:7"))}</p><div class="hn-dt">SOLA | Bíblia & Teologia · ${esc(dt)}</div>`;
+    $("#honraDlg")._id=id; const dl=$("#honraDlg"); if(!dl.open) dl.showModal();
+  }
+};
+setTimeout(()=>{ try{ Honra.check(true); }catch(_){} },1200);   // conquistas antigas entram sem alarde
+$("#hnClose").addEventListener("click",()=>$("#honraDlg").close());
+$("#honraDlg").addEventListener("click",e=>{ if(e.target.id==="honraDlg") e.target.close(); });
+$("#hnShare").addEventListener("click",()=>{ const id=$("#honraDlg")._id, inf=Honra.info(id); if(!inf) return;
+  shareText(_t("Nota de honra"), `🏅 *${_t(inf.titulo)}*\n${inf.desc}\n\n${_t("Conquistado no SOLA | Bíblia & Teologia")}\n${APP_URL}#planos`); });
+function conquistasHtml(list){
+  const hs=Honra.list(), tem=id=>hs.some(h=>h.id===id);
+  const all=[...HONRA_SEQ.map(([n,t,i])=>["seq-"+n,t,i]),...HONRA_DEVO.map(([n,t,i])=>["devo-"+n,t,i]),...HONRA_PLANOS.map(([n,t,i])=>["planos-"+n,t,i]),
+    ...list.map(pl=>["plano-"+pl.id,pl.title,"🏅"])];
+  const ganhas=all.filter(a=>tem(a[0])), falta=all.filter(a=>!tem(a[0]));
+  const b=(a,on)=>`<button type="button" class="cq-b${on?"":" off"}"${on?` data-hnopen="${esc(a[0])}"`:` disabled`} title="${esc(_t(a[1]))}"><span class="m" aria-hidden="true">${a[2]}</span><small>${esc(_t(a[1]))}</small></button>`;
+  return `<details class="st-group cq" ${store.get("cqAberto",false)?"open":""} data-cq><summary class="st-h" style="cursor:pointer">🏅 Minhas conquistas <small>${ganhas.length} de ${all.length} notas de honra</small></summary>
+    <div class="cq-stats"><div><b>${Streak.count()}</b><small>dias seguidos</small></div><div><b>${Math.max(Streak.best(),Streak.count())}</b><small>maior sequência</small></div>
+    <div><b>${Honra.devos().length}</b><small>devocionais feitos</small></div><div><b>${Honra.planosFeitos()}</b><small>planos concluídos</small></div></div>
+    <div class="cq-grid">${ganhas.map(a=>b(a,true)).join("")}${falta.map(a=>b(a,false)).join("")}</div></details>`;
+}
+$("#plBox").addEventListener("toggle",e=>{ if(e.target.matches && e.target.matches("details[data-cq]")) store.set("cqAberto",e.target.open); },true);
+
 /* Ações comuns dos cartões diários (Texto do dia, Devocional e Início) */
 async function dayAction(act, box){
   const ps=box._ps, p=box._p, dv=box._dv; if(act!=="done" && !ps) return;
   const first = ps && { t:ps.t, b:p.b, c:p.c, v:p.v1, text:ps.verses[0]?.text||"" };
   if(act==="hl"){ const b=box.querySelector('[data-day="hl"]'); return openHlPop(b, ps.verses.map(x=>`${p.b}.${p.c}.${x.v}`)); }
-  if(act==="done"){ Streak.mark(); toast("Muito bem! Estudo de hoje registrado."); return; }
+  if(act==="done"){ if(box.id==="devoBody"||box.id==="homeDevo") Honra.devoFeito(box.id==="devoBody"?addDays(devoOffset):new Date());
+    Streak.mark(); toast("Muito bem! Estudo de hoje registrado."); return; }
   if(act==="ctx") return openContext(first);
   if(act==="fav"){ toggleFav(first); return; }
   if(act==="wa" && dv){
@@ -6397,9 +6649,16 @@ function artRow(x){ return `<button type="button" class="art-row" data-art="${x.
   <span class="st-tx"><b>${esc(x.title)}</b><small>${x.dia?`${+x.dia.slice(8)} de dezembro · `:""}${esc(x.author)} · ${x.min} min${x.dia ? (x.dia===todayKey(new Date())?` · <span class="art-new">hoje</span>`:"") : x.mes===monthKey(new Date())?` · <span class="art-new">novo</span>`:` · ${mesLabel(x.mes)}`}</small></span><span class="chev" aria-hidden="true">›</span></button>`; }
 const ART_MAX = 5;   // artigos em destaque por tema; os mais antigos vão para “Edições anteriores”
 const mesLabel = m => { const [y,mm]=String(m||"").split("-"); return mm?`${["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"][+mm-1]}/${y}`:""; };
+/* Temas dos artigos: todos fechados por padrão; cada pessoa abre o que quiser
+   e o app lembra quais ficaram abertos quando ela voltar. */
+const artAbertos=()=>{ const v=store.get("artAbertos",[]); return Array.isArray(v)?v:[]; };
+$("#artList").addEventListener("toggle",e=>{
+  const d=e.target; if(!d.matches || !d.matches("details[data-arttopic]")) return;
+  const t=d.dataset.arttopic, set=new Set(artAbertos()); if(d.open) set.add(t); else set.delete(t); store.set("artAbertos",[...set]);
+}, true);
 function artCard(title, q, i=0, all=[]){
   const arts=all.slice(0,ART_MAX), old=all.slice(ART_MAX); const ti=ART_TOPICS.findIndex(t=>t&&t[0]===title); const ic=ART_ICONS[ti]||"i-article", co=ART_TCOL[ti]||ART_COLORS[i%ART_COLORS.length];
-  return `<details class="st-row"${i<2?" open":""}><summary><span class="st-thumb art-stk" style="--c:${co}" aria-hidden="true"><svg class="icon"><use href="#${ic}"/></svg></span>
+  return `<details class="st-row" data-arttopic="${esc(title)}"${artAbertos().includes(title)?" open":""}><summary><span class="st-thumb art-stk" style="--c:${co}" aria-hidden="true"><svg class="icon"><use href="#${ic}"/></svg></span>
     <span class="st-tx"><b>${esc(title)}</b><small>${arts.length?`${arts.length} artigos do SOLA · `:""}${esc(arts.map(x=>x.author.split(" (")[0]).join(", ")||"Ministério Fiel, Voltemos ao Evangelho e outros")}</small></span><span class="chev" aria-hidden="true">›</span></summary>
     <div class="st-body">${title==="Violência doméstica"?`<div class="vd-help"><b>Precisa de ajuda agora?</b> Em emergência ligue <a href="tel:190">190</a>. A Central de Atendimento à Mulher atende 24 horas pelo <a href="tel:180">180</a> (ligação gratuita e sigilosa). Procure também alguém de confiança e a liderança da sua igreja. Você não está sozinha.</div>`:""}${arts.map(artRow).join("")}${old.length?`<details class="art-old"><summary>Edições anteriores (${old.length})</summary>${old.map(artRow).join("")}</details>`:""}<div class="row-actions">
       <a class="btn btn-sm btn-ext" href="${esc(artSearch(q,ART_SITES_PT))}" target="_blank" rel="noopener noreferrer">Mais artigos em português ↗</a>
@@ -7150,8 +7409,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.36.1";
+const APP_VERSION = "3.37.0";
 const CHANGELOG = [
+  { v:"3.37.0", d:"novembro de 2026", items:["Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.","Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.","Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.","Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.","Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho."] },
   { v:"3.36.1", d:"novembro de 2026", items:["Correção: o botão Voltar do leitor da Bíblia não fica mais com uma moldura escura ao abrir um capítulo."] },
   { v:"3.36.0", d:"novembro de 2026", items:["Mais estabilidade para muita gente usar ao mesmo tempo: cada aparelho tem um limite diário justo de traduções e vozes novas (as já traduzidas continuam livres), e o SOLA avisa a equipe antes de qualquer limite do servidor estourar."] },
   { v:"3.35.14", d:"novembro de 2026", items:["Quem já tem o app instalado vê “Abrir no app” no topo da versão web, que tenta abrir o app na hora."] },
@@ -8112,8 +8372,8 @@ function newsBanner(){ const seen=store.get("seenVersion",""); if(seen===APP_VER
 /* =====================================================================
    NAVEGAÇÃO EM ABAS (rota pelo #hash: #inicio, #busca, #texto…)
    ===================================================================== */
-const VIEWS=["inicio","biblia","busca","texto","devocional","estudos","artigos","pensadores","grego","hinario","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
-const VIEW_GROUP={ devocional:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", grego:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
+const VIEWS=["inicio","biblia","busca","texto","devocional","planos","estudos","artigos","pensadores","grego","hinario","mapas","ouvir","noticias","catecismos","notas","config","compartilhe","meudevocional"];
+const VIEW_GROUP={ devocional:"estudos", planos:"estudos", estudos:"estudos", artigos:"estudos", pensadores:"estudos", grego:"estudos", mapas:"estudos", ouvir:"estudos", noticias:"estudos" };
 let lastView="inicio";
 let currentView="inicio", bpReady=false;
 document.addEventListener("click",e=>{ if(e.target.closest("[data-opensh]")){ e.preventDefault(); showView("compartilhe"); } });
@@ -8130,7 +8390,7 @@ document.addEventListener("click",e=>{
   const go=()=>{ const t=document.getElementById(a.dataset.cfg); if(!t) return; t.scrollIntoView({ behavior:"smooth", block:"start" }); t.classList.add("cfg-flash"); setTimeout(()=>t.classList.remove("cfg-flash"),1400); };
   if(currentView!=="config"){ showView("config"); setTimeout(go,120); } else go();
 });
-const VIEW_TITLE={ hinario:"Credos · Hinário", noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional",
+const VIEW_TITLE={ hinario:"Credos · Hinário", noticias:"Estudos · Notícias", ouvir:"Estudos · Ouvir", mapas:"Estudos · Mapas e Jornadas", inicio:"Início", biblia:"Bíblia", busca:"Pesquisa", texto:"Texto do dia", devocional:"Estudos · Devocional", planos:"Estudos · Planos",
   estudos:"Estudos · Vídeos", artigos:"Estudos · Artigos", pensadores:"Estudos · Pensadores", grego:"Estudos · Dicionário de grego", catecismos:"Cânticos, Credos e Catecismos", notas:"Minhas notas", config:"Configurações", compartilhe:"Compartilhe o SOLA", meudevocional:"Meu devocional diário" };
 const navStack=[];   // páginas visitadas, para o botão Voltar
 function showView(name, {push=true}={}){
@@ -8162,6 +8422,7 @@ function showView(name, {push=true}={}){
   if(name==="mapas") renderMapas().then(mpPendencias);
   if(name==="ouvir") renderOuvir();
   if(name==="noticias") renderNoticias();
+  if(name==="planos") renderPlanos();
   if(name==="biblia") openReader({ hi:null, asView:true });
   else { if(el.dlg.classList.contains("as-view")) closeReader(); lastView=name; }
 }
@@ -8175,6 +8436,7 @@ function goBack(){
   if(el.dlg.open && !el.dlg.classList.contains("as-view")){ closeReader(); return; }
   if(currentView==="catecismos" && !$("#catDoc").hidden){ catBackToList(); return; }
   if(currentView==="artigos" && !$("#artReader").hidden){ artBackToList(); return; }
+  if(currentView==="planos" && PL.at){ PL.at.d!=null ? plOpen(PL.at.id) : renderPlanos(); window.scrollTo({top:0}); return; }
   if(currentView==="mapas" && $("#mpHome").hidden){ if(document.querySelector("#mpStage.mp-full")){ mpFullscreen(); return; } if(!$("#mpViewer").hidden && MP.fromProfile){ mpOpenProfile(MP.fromProfile); return; } renderMapas(); return; }
   if(currentView==="config" && $("#cfgTop") && !$("#cfgTop").hidden){ cfgToIndex(); return; }
   if(navStack.length){ try{ history.back(); return; }catch(e){} const prev=navStack.pop(); showView(prev,{push:false}); try{ history.replaceState(null,"","#"+prev); }catch(e){} return; }
@@ -9081,7 +9343,7 @@ document.addEventListener("sola:idioma", e=>{
   const aplicado=store.get("idiomaBiblia",null);
   if(aplicado!==d.lang){ store.set("idiomaBiblia",d.lang); if(aplicado!==null || d.lang!=="pt") bibliaDoIdioma(d.lang, !d.inicio); }
   if(!d.inicio){ /* conteúdos no novo idioma: esvazia o que já foi carregado */
-    try{ DevoSeries.cache={}; DevoSeries.pending={}; NT.data=null; Arts.list=null; SP.data=null; MP.base=null; MP.data=null; Docs.list=null; Docs.cache={}; SALT.data=null; }catch(_){}
+    try{ DevoSeries.cache={}; DevoSeries.pending={}; PL.data=null; NT.data=null; Arts.list=null; SP.data=null; MP.base=null; MP.data=null; Docs.list=null; Docs.cache={}; SALT.data=null; }catch(_){}
   }
   if(!d.inicio){ const y=window.scrollY, lendo=el.dlg.open;
     try{ if(!lendo) showView(currentView,{push:false}); }catch(_){}   // com a Bíblia aberta, só o leitor é redesenhado

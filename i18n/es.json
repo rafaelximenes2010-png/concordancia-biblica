@@ -1470,6 +1470,72 @@
 "Exporta um arquivo com notas, grifos, favoritos e configurações; use Importar em outro aparelho.": "Exporta un archivo con notas, resaltados, favoritos y configuración; usa Importar en otro dispositivo.",
 "Procura uma versão nova do app e a instala.": "Busca una versión nueva de la app y la instala.",
 "Aumenta ou diminui as letras de todas as seções. Também fica no botão ? do topo.": "Aumenta o reduce las letras de todas las secciones. También está en el botón ? de arriba.",
+"Planos": "Planes",
+"Plano": "Plan",
+"Planos de devocionais": "Planes devocionales",
+"Estudos · Planos": "Estudios · Planes",
+"Temas em capítulos, um passo por dia. Novos temas todo mês.": "Temas en capítulos, un paso por día. Nuevos temas cada mes.",
+"Patriarcas, Heróis da Fé, Apóstolos, Profetas, Provérbios, Paixão e Natal, em capítulos": "Patriarcas, Héroes de la Fe, Apóstoles, Profetas, Proverbios, la Pasión y Navidad, en capítulos",
+"Continue de onde parou": "Sigue donde lo dejaste",
+"novos temas todo mês": "nuevos temas cada mes",
+"Planos concluídos": "Planes completados",
+"‹ Todos os planos": "‹ Todos los planes",
+"Começar o plano": "Empezar el plan",
+"Recomeçar": "Empezar de nuevo",
+"Uma pausa para pensar": "Una pausa para pensar",
+"Perguntas para o coração": "Preguntas para el corazón",
+"Concluir o dia": "Completar el día",
+"✓ Dia concluído · próximo": "✓ Día completado · siguiente",
+"Muito bem! Dia concluído.": "¡Muy bien! Día completado.",
+"Plano concluído! Que Deus continue falando ao seu coração.": "¡Plan completado! Que Dios siga hablando a tu corazón.",
+"Os planos não puderam ser carregados agora. Tente de novo em instantes.": "No se pudieron cargar los planes ahora. Inténtalo de nuevo en un momento.",
+"Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.": "Planes devocionales en capítulos, con temas que se renuevan cada mes: Patriarcas, Héroes de la Fe, Apóstoles, Profetas mayores, Proverbios, la Pasión de Cristo y Navidad. Si empezaste un plan, sigue contigo hasta que lo termines.",
+"Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.": "Devocionales diarios con una pausa para pensar y preguntas para el corazón, en un tono más reflexivo.",
+"Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.": "En Estudios → Artículos, los temas empiezan cerrados y la app recuerda cuáles dejaste abiertos.",
+"🔖 Salvar plano": "🔖 Guardar plan",
+"🔖 Plano salvo": "🔖 Plan guardado",
+"🔖 Salvo": "🔖 Guardado",
+"🏅 Concluído": "🏅 Completado",
+"🏅 Ver nota de honra": "🏅 Ver nota de honor",
+"Plano salvo. Ele fica em Meus planos até você terminar.": "Plan guardado. Se queda en Mis planes hasta que lo termines.",
+"O plano saiu de Meus planos.": "El plan salió de Mis planes.",
+"Meus planos": "Mis planes",
+"salvos e em andamento": "guardados y en curso",
+"🏅 Minhas conquistas": "🏅 Mis logros",
+"dias seguidos": "días seguidos",
+"maior sequência": "racha más larga",
+"devocionais feitos": "devocionales hechos",
+"planos concluídos": "planes completados",
+"Nota de honra": "Nota de honor",
+"Nova nota de honra": "Nueva nota de honor",
+"Sequência de estudo": "Racha de estudio",
+"Devocionais": "Devocionales",
+"Plano concluído": "Plan completado",
+"{n} dias seguidos lendo a Palavra e fazendo o devocional.": "{n} días seguidos leyendo la Palabra y haciendo el devocional.",
+"O primeiro devocional concluído no SOLA.": "Tu primer devocional completado en SOLA.",
+"{n} devocionais concluídos.": "{n} devocionales completados.",
+"{n} planos de devocionais concluídos do começo ao fim.": "{n} planes devocionales completados de principio a fin.",
+"Plano concluído: {c} capítulos e {n} dias de leitura e meditação.": "Plan completado: {c} capítulos y {n} días de lectura y meditación.",
+"Concedida a {nome}": "Otorgada a {nome}",
+"“Combati o bom combate, completei a carreira, guardei a fé.” 2 Timóteo 4:7": "“He peleado la buena batalla, he acabado la carrera, he guardado la fe.” 2 Timoteo 4:7",
+"Conquistado no SOLA | Bíblia & Teologia": "Obtenido en SOLA | Biblia y Teología",
+"Três dias seguidos": "Tres días seguidos",
+"Uma semana com Deus": "Una semana con Dios",
+"Duas semanas de constância": "Dos semanas de constancia",
+"Um mês de constância": "Un mes de constancia",
+"Dois meses de fidelidade": "Dos meses de fidelidad",
+"Cem dias na Palavra": "Cien días en la Palabra",
+"Um ano na Palavra": "Un año en la Palabra",
+"Primeiro devocional": "Primer devocional",
+"Sete devocionais": "Siete devocionales",
+"Trinta devocionais": "Treinta devocionales",
+"Cem devocionais": "Cien devocionales",
+"Trezentos e sessenta e cinco devocionais": "Trescientos sesenta y cinco devocionales",
+"Primeiro plano concluído": "Primer plan completado",
+"Três planos concluídos": "Tres planes completados",
+"Sete planos concluídos": "Siete planes completados",
+"Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.": "Guardar plan: se queda en Mis planes hasta que lo termines. Al completarlo, recibes una nota de honor.",
+"Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho.": "Mis logros: rachas de días, devocionales hechos y planes completados se convierten en notas de honor guardadas en tu dispositivo.",
 "o Bom Pastor": "el Buen Pastor",
 "Na Bíblia, pastorear é uma imagem de liderança. Abel, Abraão, Moisés e Davi cuidaram de ovelhas antes de cuidar de pessoas, e os reis de Israel eram chamados a ser pastores do povo.": "En la Biblia, pastorear es una imagen de liderazgo. Abel, Abraham, Moisés y David cuidaron ovejas antes de cuidar personas, y los reyes de Israel eran llamados a ser pastores del pueblo.",
 "O Salmo 23 nasce dessa esperança. Davi, o rei-pastor, olha para cima e confessa que ele mesmo precisa de um Pastor. O verbo hebraico ra‘ah fala de guiar, alimentar e proteger: tudo o que uma ovelha frágil não consegue fazer sozinha.": "El Salmo 23 nace de esa esperanza. David, el rey pastor, mira hacia arriba y confiesa que él mismo necesita un Pastor. El verbo hebreo ra‘ah habla de guiar, alimentar y proteger: todo lo que una oveja frágil no puede hacer sola.",
@@ -1697,6 +1763,34 @@
 [
 "^Dia (\\d+) de (\\d+)$",
 "Día $1 de $2"
+],
+[
+"^Temas de (.+)$",
+"Temas de $1"
+],
+[
+"^(\\d+) capítulos · (\\d+) dias$",
+"$1 capítulos · $2 días"
+],
+[
+"^(\\d+) capítulos · (\\d+) dias · (\\d+)%$",
+"$1 capítulos · $2 días · $3%"
+],
+[
+"^(\\d+) de (\\d+) dias$",
+"$1 de $2 días"
+],
+[
+"^Capítulo (\\d+) · (.+)$",
+"Capítulo $1 · $2"
+],
+[
+"^(.+) · Capítulo (\\d+)$",
+"$1 · Capítulo $2"
+],
+[
+"^(\\d+) de (\\d+) notas de honra$",
+"$1 de $2 notas de honor"
 ]
 ]
 }

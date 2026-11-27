@@ -1635,6 +1635,73 @@
 "Exporta um arquivo com notas, grifos, favoritos e configurações; use Importar em outro aparelho.": "Exports a file with notes, highlights, favorites and settings; use Import on another device.",
 "Procura uma versão nova do app e a instala.": "Looks for a new version of the app and installs it.",
 "Aumenta ou diminui as letras de todas as seções. Também fica no botão ? do topo.": "Makes the text larger or smaller in every section. Also available from the ? button at the top.",
+"Planos": "Plans",
+"Plano": "Plan",
+"Planos de devocionais": "Devotional plans",
+"Estudos · Planos": "Studies · Plans",
+"Temas em capítulos, um passo por dia. Novos temas todo mês.": "Themes in chapters, one step a day. New themes every month.",
+"Patriarcas, Heróis da Fé, Apóstolos, Profetas, Provérbios, Paixão e Natal, em capítulos": "Patriarchs, Heroes of Faith, Apostles, Prophets, Proverbs, the Passion and Christmas, in chapters",
+"Continue de onde parou": "Pick up where you left off",
+"novos temas todo mês": "new themes every month",
+"Planos concluídos": "Completed plans",
+"‹ Todos os planos": "‹ All plans",
+"Começar o plano": "Start the plan",
+"Continuar": "Continue",
+"Recomeçar": "Start over",
+"Uma pausa para pensar": "A pause to think",
+"Perguntas para o coração": "Questions for the heart",
+"Concluir o dia": "Complete the day",
+"✓ Dia concluído · próximo": "✓ Day completed · next",
+"Muito bem! Dia concluído.": "Well done! Day completed.",
+"Plano concluído! Que Deus continue falando ao seu coração.": "Plan completed! May God keep speaking to your heart.",
+"Os planos não puderam ser carregados agora. Tente de novo em instantes.": "The plans couldn't be loaded right now. Try again in a moment.",
+"Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.": "Devotional plans in chapters, with themes renewed every month: Patriarchs, Heroes of Faith, Apostles, Major Prophets, Proverbs, the Passion of Christ and Christmas. If you've started a plan, it stays with you until you finish.",
+"Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.": "Daily devotionals with a pause to think and questions for the heart, in a more reflective tone.",
+"Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.": "In Studies → Articles, themes start closed and the app remembers which ones you left open.",
+"🔖 Salvar plano": "🔖 Save plan",
+"🔖 Plano salvo": "🔖 Plan saved",
+"🔖 Salvo": "🔖 Saved",
+"🏅 Concluído": "🏅 Completed",
+"🏅 Ver nota de honra": "🏅 See honor certificate",
+"Plano salvo. Ele fica em Meus planos até você terminar.": "Plan saved. It stays in My plans until you finish.",
+"O plano saiu de Meus planos.": "The plan was removed from My plans.",
+"Meus planos": "My plans",
+"salvos e em andamento": "saved and in progress",
+"🏅 Minhas conquistas": "🏅 My achievements",
+"dias seguidos": "days in a row",
+"maior sequência": "longest streak",
+"devocionais feitos": "devotionals done",
+"planos concluídos": "plans completed",
+"Nota de honra": "Honor certificate",
+"Nova nota de honra": "New honor certificate",
+"Sequência de estudo": "Study streak",
+"Devocionais": "Devotionals",
+"Plano concluído": "Plan completed",
+"{n} dias seguidos lendo a Palavra e fazendo o devocional.": "{n} days in a row reading the Word and doing the devotional.",
+"O primeiro devocional concluído no SOLA.": "Your first devotional completed in SOLA.",
+"{n} devocionais concluídos.": "{n} devotionals completed.",
+"{n} planos de devocionais concluídos do começo ao fim.": "{n} devotional plans completed from start to finish.",
+"Plano concluído: {c} capítulos e {n} dias de leitura e meditação.": "Plan completed: {c} chapters and {n} days of reading and meditation.",
+"Concedida a {nome}": "Awarded to {nome}",
+"“Combati o bom combate, completei a carreira, guardei a fé.” 2 Timóteo 4:7": "“I have fought a good fight, I have finished my course, I have kept the faith.” 2 Timothy 4:7",
+"Conquistado no SOLA | Bíblia & Teologia": "Earned in SOLA | Bible & Theology",
+"Três dias seguidos": "Three days in a row",
+"Uma semana com Deus": "A week with God",
+"Duas semanas de constância": "Two steady weeks",
+"Um mês de constância": "A steady month",
+"Dois meses de fidelidade": "Two faithful months",
+"Cem dias na Palavra": "A hundred days in the Word",
+"Um ano na Palavra": "A year in the Word",
+"Primeiro devocional": "First devotional",
+"Sete devocionais": "Seven devotionals",
+"Trinta devocionais": "Thirty devotionals",
+"Cem devocionais": "A hundred devotionals",
+"Trezentos e sessenta e cinco devocionais": "Three hundred sixty-five devotionals",
+"Primeiro plano concluído": "First plan completed",
+"Três planos concluídos": "Three plans completed",
+"Sete planos concluídos": "Seven plans completed",
+"Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.": "Save plan: it stays in My plans until you finish. When you complete it, you get an honor certificate.",
+"Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho.": "My achievements: day streaks, devotionals done and plans completed become honor certificates saved on your device.",
 "o Bom Pastor": "the Good Shepherd",
 "Na Bíblia, pastorear é uma imagem de liderança. Abel, Abraão, Moisés e Davi cuidaram de ovelhas antes de cuidar de pessoas, e os reis de Israel eram chamados a ser pastores do povo.": "In the Bible, shepherding is an image of leadership. Abel, Abraham, Moses and David tended sheep before they cared for people, and Israel's kings were called to be shepherds of the people.",
 "O Salmo 23 nasce dessa esperança. Davi, o rei-pastor, olha para cima e confessa que ele mesmo precisa de um Pastor. O verbo hebraico ra‘ah fala de guiar, alimentar e proteger: tudo o que uma ovelha frágil não consegue fazer sozinha.": "Psalm 23 is born of that hope. David, the shepherd-king, looks up and confesses that he himself needs a Shepherd. The Hebrew verb ra‘ah speaks of guiding, feeding and protecting: everything a fragile sheep cannot do on its own.",
@@ -1876,6 +1943,34 @@
 [
 "^Dia (\\d+) de (\\d+)$",
 "Day $1 of $2"
+],
+[
+"^Temas de (.+)$",
+"$1 themes"
+],
+[
+"^(\\d+) capítulos · (\\d+) dias$",
+"$1 chapters · $2 days"
+],
+[
+"^(\\d+) capítulos · (\\d+) dias · (\\d+)%$",
+"$1 chapters · $2 days · $3%"
+],
+[
+"^(\\d+) de (\\d+) dias$",
+"$1 of $2 days"
+],
+[
+"^Capítulo (\\d+) · (.+)$",
+"Chapter $1 · $2"
+],
+[
+"^(.+) · Capítulo (\\d+)$",
+"$1 · Chapter $2"
+],
+[
+"^(\\d+) de (\\d+) notas de honra$",
+"$1 of $2 honor certificates"
 ]
 ]
 }

@@ -40,7 +40,7 @@ function fontes() {
   add("artigos/sola.json"); add("mapas/dados.json"); add("mapas/base.json");
   for (const f of fs.readdirSync(path.join(ROOT, "docs"))) if (f.endsWith(".json")) add("docs/" + f);
   for (const f of fs.readdirSync(path.join(ROOT, "salterio"))) if (f.endsWith(".json")) add("salterio/" + f);
-  add("noticias/feed.json"); add("ouvir/spotify.json");
+  add("noticias/feed.json"); add("ouvir/spotify.json"); add("planos/planos.json");
   return lista;
 }
 
@@ -48,7 +48,7 @@ function fontes() {
 const NUNCA = new Set(["id", "ref", "r", "url", "art", "mes", "month", "status", "data", "dia", "p", "img", "tint", "glow", "lang", "source", "kind",
   "icon", "cor", "color", "mel", "code", "author", "autor", "fonte", "cat", "pais", "tipo", "n", "c", "day", "min", "t0", "land", "lakes", "rivers",
   "coords", "x0", "y0", "lat", "lon", "uri", "spotify", "destaque", "usados", "log", "atualizado", "verif", "orig", "titleEn", "qEn", "aEn",
-  "original", "ctEn", "tEn", "year", "license", "palette", "relatorio", "link", "links_url", "voz", "audio", "mp3", "arquivo", "path", "d", "z"]);
+  "original", "ctEn", "tEn", "year", "license", "palette", "meses", "relatorio", "link", "links_url", "voz", "audio", "mp3", "arquivo", "path", "d", "z"]);
 const pulaValor = s => !/[A-Za-zÀ-ú]{2}/.test(s) || /^(https?:|bib:|doc:|#|mailto:|tel:)/.test(s) || /^[MLHVCZmlhvcz0-9 .,-]+$/.test(s)
   || /^#?[0-9a-f]{3,8}$/i.test(s) || /^\d{4}-\d{2}(-\d{2})?/.test(s) || /^[1-3]?[A-Z]{2,3}[ .]\d/.test(s) || (!/\s/.test(s) && /^[a-z0-9_-]+$/.test(s));
 
