@@ -6750,10 +6750,10 @@ async function spLoad(){ if(!SP.data){ try{ SP.data=await fetch("ouvir/spotify.j
    anterior ficam mais uma semana; depois o ciclo recomeça. Para renovar, acrescente
    itens ao fim da lista em ouvir/spotify.json, de 3 em 3. */
 function spRodizio(g){
-  const L=g.itens||[], r=g.rodizio; if(!r || L.length<=(r.por||3)*2) return L;
-  const por=r.por||3, n=Math.floor(L.length/por), [y,m,d]=(r.inicio||"2026-11-23").split("-").map(Number);
-  const hoje=new Date(); const w=Math.floor((Date.UTC(hoje.getFullYear(),hoje.getMonth(),hoje.getDate())-Date.UTC(y,m-1,d))/(7*864e5));
-  const bloco=k=>L.slice((((k%n)+n)%n)*por,(((k%n)+n)%n)*por+por);
+  const L=g.itens||[], r=g.rodizio, por=(r&&r.por)||3; if(!r || L.length<=por*2) return L;
+  const [y,m,d]=(r.inicio||"2026-11-23").split("-").map(Number), hoje=new Date();
+  const w=Math.floor((Date.UTC(hoje.getFullYear(),hoje.getMonth(),hoje.getDate())-Date.UTC(y,m-1,d))/(7*864e5));
+  const bloco=k=>Array.from({length:por},(_,i)=>L[(((k*por+i)%L.length)+L.length)%L.length]);   // percorre a lista em círculo
   return [...bloco(w+1).map(x=>({ ...x, _nova:true })), ...bloco(w)];
 }
 function spItemHtml(it,mine,g){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id; const ic=(g&&g.icone)||(mine?"g-minhas":p.type==="show"||p.type==="episode"?"g-pregacao":"g-louvor"), co=(g&&g.cor)||(mine?"#a8455e":"var(--accent)");
@@ -7429,8 +7429,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.38.0";
+const APP_VERSION = "3.38.1";
 const CHANGELOG = [
+  { v:"3.38.1", d:"novembro de 2026", items:["Ouvir: as entrevistas com pastores e professores também entram no rodízio semanal (3 novas por semana e as 3 da semana anterior ficam mais uma semana), com quatro podcasts reformados novos."] },
   { v:"3.38.0", d:"novembro de 2026", items:["Ouvir: toda semana entram 3 pregações novas e as 3 da semana anterior ficam mais uma semana. Novo grupo de pregações em inglês, com Martyn Lloyd-Jones, R. C. Sproul e John Piper."] },
   { v:"3.37.1", d:"novembro de 2026", items:["Planos e conquistas com os ícones do app: traço fino no mesmo estilo dos outros botões, no lugar dos emojis."] },
   { v:"3.37.0", d:"novembro de 2026", items:["Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.","Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.","Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.","Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.","Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho."] },

@@ -117,10 +117,34 @@
      "nome": "Ensino Fiel",
      "desc": "Podcast · Ministério Fiel: Augustus Nicodemus, Joel Beeke e outros",
      "url": "https://open.spotify.com/show/1lDyzb749cb50XYyn7swPv"
+    },
+    {
+     "nome": "Teológica Mente",
+     "desc": "Podcast · conversas de seminaristas com cosmovisão reformada",
+     "url": "https://open.spotify.com/show/6Od0OB8IkzkqdtXE0h5p7S"
+    },
+    {
+     "nome": "Cá Entre Nós",
+     "desc": "Podcast · conversa franca pelas lentes da teologia reformada",
+     "url": "https://open.spotify.com/show/38f3oL8axELz9rByib4IC2"
+    },
+    {
+     "nome": "+ Que 5 Pontos",
+     "desc": "Podcast · teologia e vida a partir de uma perspectiva reformada",
+     "url": "https://open.spotify.com/show/7pvzRZ6KkvpBfeYUnLdQ4R"
+    },
+    {
+     "nome": "Você Que Pensa",
+     "desc": "Podcast · teologia e vida cristã, com professores convidados",
+     "url": "https://open.spotify.com/show/5ftPRQLYDX5gWAAlfhEp5B"
     }
    ],
    "icone": "g-entrevista",
-   "cor": "#b8862e"
+   "cor": "#b8862e",
+   "rodizio": {
+    "inicio": "2026-11-23",
+    "por": 3
+   }
   }
  ],
  "buscas": [
