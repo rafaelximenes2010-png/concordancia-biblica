@@ -1476,6 +1476,7 @@ dialog.reader.has-sel .reader-nav{display:none}
 .pl-save{position:absolute;top:8px;right:8px;padding:4px 9px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff;font-size:12px}
 .pl-card{position:relative}
 @media (max-width:420px){.cq-stats{grid-template-columns:repeat(2,1fr)}}
+.sp-nova{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--gold);color:#fff;font:700 10.5px/1.6 system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;vertical-align:2px}
 .devo-ponder{margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--gold)}
 .devo-ponder h4,.devo-qs h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
 .devo-ponder p{margin:0;font:italic 18px/1.75 var(--font-text);color:var(--ink)}
@@ -1626,7 +1627,7 @@ body.has-mini{padding-bottom:84px}
 .sp-it .sp-ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--gc,var(--accent));color:#fff;flex:none;box-shadow:0 2px 5px rgba(0,0,0,.15)}
 .sp-it .sp-ic .icon{width:22px;height:22px;stroke:#fff}
 .sp-g{display:flex;align-items:center;gap:8px}.sp-gi{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--gc);flex:none}.sp-gi .icon{width:15px;height:15px;stroke:#fff}
-.sp-it .sp-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}.sp-it .sp-t b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-it .sp-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left}.sp-it .sp-t b{display:block;white-space:normal;overflow-wrap:anywhere}
 .sp-it .sp-t small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--ink-2);font-size:12px;line-height:1.35}
 .sp-it.on{border-color:var(--accent)}
 .sp-x{background:none;border:0;color:var(--ink-2);font-size:18px;padding:4px 6px;cursor:pointer}
@@ -6745,9 +6746,19 @@ function spOpenApp(){ if(!SP.cur) return; const {type,id}=SP.cur; const web=`htt
   const off=()=>{ left=true; }; document.addEventListener("visibilitychange",off,{once:true});
   location.href=`spotify:${type}:${id}`; setTimeout(()=>{ if(!left && !document.hidden) window.open(web,"_blank","noopener"); },1500); }
 async function spLoad(){ if(!SP.data){ try{ SP.data=await fetch("ouvir/spotify.json?v="+APP_VERSION).then(r=>r.json()); }catch(e){ SP.data={ grupos:[], buscas:[] }; } } return SP.data; }
+/* Rodízio semanal das pregações: a cada segunda-feira entram 3 novas e as 3 da semana
+   anterior ficam mais uma semana; depois o ciclo recomeça. Para renovar, acrescente
+   itens ao fim da lista em ouvir/spotify.json, de 3 em 3. */
+function spRodizio(g){
+  const L=g.itens||[], r=g.rodizio; if(!r || L.length<=(r.por||3)*2) return L;
+  const por=r.por||3, n=Math.floor(L.length/por), [y,m,d]=(r.inicio||"2026-11-23").split("-").map(Number);
+  const hoje=new Date(); const w=Math.floor((Date.UTC(hoje.getFullYear(),hoje.getMonth(),hoje.getDate())-Date.UTC(y,m-1,d))/(7*864e5));
+  const bloco=k=>L.slice((((k%n)+n)%n)*por,(((k%n)+n)%n)*por+por);
+  return [...bloco(w+1).map(x=>({ ...x, _nova:true })), ...bloco(w)];
+}
 function spItemHtml(it,mine,g){ const p=spParse(it.url); if(!p) return ""; const k=p.type+":"+p.id; const ic=(g&&g.icone)||(mine?"g-minhas":p.type==="show"||p.type==="episode"?"g-pregacao":"g-louvor"), co=(g&&g.cor)||(mine?"#a8455e":"var(--accent)");
   return `<div class="card sp-it${SP.cur&&SP.cur.k===k?" on":""}"><span class="sp-ic" style="--gc:${co}"><svg class="icon"><use href="#${ic}"/></svg></span>
-  <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
+  <div class="sp-t"><b>${esc(it.nome||SP_TIPO[p.type])}${it._nova?` <span class="sp-nova">Nova</span>`:""}</b><small>${esc(it.desc||SP_TIPO[p.type])}</small></div>
   <button type="button" class="btn btn-sm btn-primary" data-spplay="${esc(k)}" data-spnome="${esc(it.nome||SP_TIPO[p.type])}">▶ Tocar</button>${mine?`<button type="button" class="sp-x" data-spdel="${esc(it.url)}" aria-label="Remover">×</button>`:""}</div>`; }
 const SP_HINOS = [{"id": "castelo-forte", "t": "Castelo Forte", "s": "Ein feste Burg · Lutero"}, {"id": "salmo-42", "t": "Salmo 42 de Genebra", "s": "Saltério de Genebra · Freu dich sehr"}, {"id": "so-a-deus", "t": "Só a Deus nas alturas", "s": "Allein Gott in der Höh'"}, {"id": "bendize-alma", "t": "Bendize, ó minha alma", "s": "Nun lob', mein' Seel', den Herren"}, {"id": "nun-danket", "t": "Damos graças a Deus", "s": "Nun danket alle Gott"}, {"id": "jesus-minha-alegria", "t": "Jesus, minha alegria", "s": "Jesu, meine Freude"}, {"id": "jesus-confianca", "t": "Jesus, minha confiança", "s": "Jesus, meine Zuversicht"}, {"id": "o-fronte", "t": "Ó fronte ensanguentada", "s": "O Haupt voll Blut und Wunden"}, {"id": "despertai", "t": "Despertai!", "s": "Wachet auf"}, {"id": "in-dulci-jubilo", "t": "In dulci jubilo", "s": "Hino de Natal"}];
 const SP_HDOC = { id:"hinos-sola", kind:"hino", title:"Hinos do SOLA", items:SP_HINOS.map(h=>({ t:h.t, s:h.s, src:"ouvir/hinos/"+h.id+".mp3" })) };
@@ -6760,7 +6771,7 @@ async function renderOuvir(){ const D=await spLoad(); const u=spUser(); let h=""
   const gh=g=>`<h3 class="sp-g"><span class="sp-gi" style="--gc:${g.cor}"><svg class="icon"><use href="#${g.icone}"/></svg></span>${esc(g.titulo)}</h3>`;
   const mineG={ titulo:"Minhas listas", icone:"g-minhas", cor:"#a8455e" };
   if(u.length) h+=gh(mineG)+u.map(it=>spItemHtml(it,true,mineG)).join("");
-  (D.grupos||[]).forEach(g=>{ g.icone=g.icone||"g-louvor"; g.cor=g.cor||"#2b3a67"; const it=(g.itens||[]).map(x=>spItemHtml(x,false,g)).join(""); if(it) h+=gh(g)+it; });
+  (D.grupos||[]).forEach(g=>{ g.icone=g.icone||"g-louvor"; g.cor=g.cor||"#2b3a67"; const it=spRodizio(g).map(x=>spItemHtml(x,false,g)).join(""); if(it) h+=gh(g)+it; });
   if(!h) h=`<div class="notice info">Ainda não há listas aqui. Cole abaixo o link de uma playlist ou podcast do Spotify, ou comece por uma das buscas sugeridas.</div>`;
   $("#spList").innerHTML=spHinosHtml()+h;
   $("#spSearch").innerHTML=(D.buscas||[]).length?`<h3 class="sp-g"><span class="sp-gi" style="--gc:#1DB954"><svg class="icon"><use href="#i-search"/></svg></span>Procurar no Spotify</h3><div class="sp-chips">${D.buscas.map(b=>`<a href="https://open.spotify.com/search/${encodeURIComponent(b.q)}" target="_blank" rel="noopener">${esc(b.nome)} ↗</a>`).join("")}</div><p class="muted" style="font-size:13px;margin-top:6px">Abre o Spotify; ao achar, copie o link e cole acima para tocar aqui.</p>`:"";
@@ -7418,8 +7429,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.37.1";
+const APP_VERSION = "3.38.0";
 const CHANGELOG = [
+  { v:"3.38.0", d:"novembro de 2026", items:["Ouvir: toda semana entram 3 pregações novas e as 3 da semana anterior ficam mais uma semana. Novo grupo de pregações em inglês, com Martyn Lloyd-Jones, R. C. Sproul e John Piper."] },
   { v:"3.37.1", d:"novembro de 2026", items:["Planos e conquistas com os ícones do app: traço fino no mesmo estilo dos outros botões, no lugar dos emojis."] },
   { v:"3.37.0", d:"novembro de 2026", items:["Planos de devocionais em capítulos, com temas que se renovam todo mês: Patriarcas, Heróis da Fé, Apóstolos, Profetas maiores, Provérbios, Paixão de Cristo e Natal. Quem começou um plano continua nele até terminar.","Devocionais diários com uma pausa para pensar e perguntas para o coração, num tom mais reflexivo.","Em Estudos → Artigos, os temas começam fechados e o app lembra quais você deixou abertos.","Salvar plano: o plano fica guardado em Meus planos até você terminar. Ao concluir, você ganha uma nota de honra.","Minhas conquistas: sequência de dias, devocionais feitos e planos concluídos viram notas de honra guardadas no seu aparelho."] },
   { v:"3.36.1", d:"novembro de 2026", items:["Correção: o botão Voltar do leitor da Bíblia não fica mais com uma moldura escura ao abrir um capítulo."] },
