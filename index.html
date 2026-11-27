@@ -1481,6 +1481,11 @@ dialog.reader.has-sel .reader-nav{display:none}
 .pf-honra .pf-hm{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d6a335 70%)}
 .pf-honra .pf-hm .icon{width:24px;height:24px;stroke:#5a3d08}
 .pf-honra .pf-ht{flex:1;min-width:0}.pf-honra b{display:block;font-size:16px}.pf-honra small{color:var(--ink-2)}
+.deep{margin:16px 0;padding:12px 14px;border-radius:14px;border:1px dashed var(--border);background:var(--surface)}
+.deep-h{display:flex;align-items:center;gap:8px;margin:0;font-weight:700;font-size:15px}.deep-h .icon{width:18px;height:18px}
+.deep-s{margin:2px 0 10px;font-size:13px;color:var(--ink-2)}
+.deep-row{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.deep-row .btn{justify-content:center;white-space:nowrap;padding-left:6px;padding-right:6px}
+.btn-bp{border-color:#c9a24a99!important}
 .devo-ponder{margin:16px 0;padding:4px 0 4px 16px;border-left:3px solid var(--gold)}
 .devo-ponder h4,.devo-qs h4{margin:0 0 8px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-text)}
 .devo-ponder p{margin:0;font:italic 18px/1.75 var(--font-text);color:var(--ink)}
@@ -5590,6 +5595,7 @@ async function plDay(id,key){
       <button type="button" class="btn btn-sm" data-plshare><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
       <button type="button" class="btn btn-sm" data-plnote><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
     </div></div>
+    ${aprofundarHtml(_t("Quero me aprofundar no tema “{tema}” ({ref}), do plano de devocionais “{plano}”. Explique o texto bíblico no seu contexto, com base em bons comentaristas reformados, e sugira perguntas para reflexão e leituras complementares. Responda em português.",{tema:d.title,ref:ps?.label||passageLabel(d.p),plano:pl.title}), bpPara(d.p.b,d.p.c))}
     <div class="day-nav">${i>0?`<button type="button" class="btn" data-plday="${ds[i-1].key}">‹ Anterior</button>`:"<span></span>"}${i<ds.length-1?`<button type="button" class="btn" data-plday="${ds[i+1].key}">Próximo ›</button>`:""}</div>`;
   box._pl={ pl, d, ps, i, ds };
 }
@@ -5685,6 +5691,25 @@ function conquistasHtml(list){
     <div class="cq-grid">${ganhas.map(a=>b(a,true)).join("")}${falta.map(a=>b(a,false)).join("")}</div></details>`;
 }
 $("#plBox").addEventListener("toggle",e=>{ if(e.target.matches && e.target.matches("details[data-cq]")) store.set("cqAberto",e.target.open); },true);
+
+
+/* "Quer se aprofundar?" — três atalhos discretos (Perplexity, ChatGPT e BibleProject)
+   no fim de cada dia dos planos e de cada artigo. */
+function bpPara(book, ch){
+  const L=BP.filter(x=>x.book===book); if(!L.length) return "";
+  const hit=L.find(x=>{ const m=String(x.ref||x.title).match(/(\d+)\s*[–-]\s*(\d+)/); return m && ch>=+m[1] && ch<=+m[2]; }) || L.find(x=>x.type==="Visão geral") || L[0];
+  return hit.url||BP_BASE+hit.slug+"/";
+}
+function bpTema(txt){
+  const w=String(txt||"").toLowerCase(); const hit=BP.find(x=>(x.themes||[]).some(t=>t.length>3 && w.includes(t.toLowerCase())));
+  return hit?(hit.url||BP_BASE+hit.slug+"/"):"";
+}
+function aprofundarHtml(q, bpUrl){
+  const a=(cls,href,txt)=>`<a class="btn btn-sm ${cls}" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${txt} ↗</a>`;
+  return `<div class="deep"><p class="deep-h"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>Quer se aprofundar?</p>
+    <p class="deep-s">Continue o estudo fora do app, com a pergunta já pronta.</p>
+    <div class="deep-row">${a("btn-pplx","https://www.perplexity.ai/search?q="+encodeURIComponent(iaQ(q)),"Perplexity")}${a("btn-gpt",gptUrl(q),"ChatGPT")}${a("btn-bp",bpUrl||"https://bibleproject.com/explore/","BibleProject")}</div></div>`;
+}
 
 /* Ações comuns dos cartões diários (Texto do dia, Devocional e Início) */
 async function dayAction(act, box){
@@ -6719,6 +6744,7 @@ async function openArticle(id){
       <p class="art-by">A partir de <b>${esc(x.author)}</b><br><small>${esc(x.work)}</small></p>
       ${daBarHtml(d)}
       ${d.secs.map((it,i)=>`<section class="art-sec">${i>0&&it.h?`<h3>${esc(it.h)}</h3>`:""}${it.paras.map(p=>`<p>${esc(p)}</p>`).join("")}</section>`).join("")}
+      ${aprofundarHtml(_t("Quero me aprofundar no tema do artigo “{titulo}”, que apresenta o pensamento de {autor} ({obra}). Explique as ideias principais, os textos bíblicos relacionados e outras leituras reformadas sobre o tema. Responda em português.",{titulo:x.title,autor:x.author,obra:x.work}), (()=>{ const b=(x.links||[]).find(l=>/^bib:/.test(l.url)); if(!b) return ""; const [bk,ch]=b.url.slice(4).split("."); return bpPara(bk,+ch||1); })() || bpTema(topic))}
       <div class="art-links"><h3>Para ir além</h3>${x.links.map(l=>/^bib:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artbib="${esc(l.url.slice(4))}">📖 ${esc(l.label)}</button>`:/^doc:/.test(l.url)?`<button type="button" class="btn btn-sm" data-artdoc="${esc(l.url.slice(4))}">📜 ${esc(l.label)}</button>`:`<a class="btn btn-sm btn-ext" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${esc(l.label)} ↗</a>`).join("")}
         <a class="btn btn-sm btn-wa" href="${esc(waUrl(artShareText(x,d)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar artigo completo</a>
         <button type="button" class="btn btn-sm" data-artcopy="1"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copiar texto</button></div>
@@ -7439,8 +7465,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.38.2";
+const APP_VERSION = "3.39.0";
 const CHANGELOG = [
+  { v:"3.39.0", d:"novembro de 2026", items:["Planos e artigos: no fim de cada leitura, “Quer se aprofundar?” com atalhos para o Perplexity, o ChatGPT e o BibleProject, com a pergunta já pronta."] },
   { v:"3.38.2", d:"novembro de 2026", items:["Meu perfil: botão Quadro de honra, que mostra as suas notas de honra e conquistas."] },
   { v:"3.38.1", d:"novembro de 2026", items:["Ouvir: as entrevistas com pastores e professores também entram no rodízio semanal (3 novas por semana e as 3 da semana anterior ficam mais uma semana), com quatro podcasts reformados novos."] },
   { v:"3.38.0", d:"novembro de 2026", items:["Ouvir: toda semana entram 3 pregações novas e as 3 da semana anterior ficam mais uma semana. Novo grupo de pregações em inglês, com Martyn Lloyd-Jones, R. C. Sproul e John Piper."] },
