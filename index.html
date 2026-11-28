@@ -3002,7 +3002,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
       <div class="cfg-form">
         <label>Comentarista brasileiro padrão<select id="cfgBr"></select></label>
         <label>Comentário clássico padrão<select id="cfgCom"><option value="">Carregando…</option></select></label>
-        <label class="radio"><input type="checkbox" id="cfgAutoTr"><span>Mostrar comentários sempre em português (tradução automática)</span></label>
+        <label class="radio"><input type="checkbox" id="cfgAutoTr"><span>Traduzir automaticamente textos em outro idioma (comentários e Bíblias). Desligado: o texto fica no original e você toca em Traduzir quando quiser. Bom para treinar o inglês.</span></label>
         <label class="radio"><input type="checkbox" id="cfgInline"><span>Mostrar trecho do comentário em cada resultado da busca</span></label>
         <label class="radio"><input type="checkbox" id="cfgTrEmail"><span>Usar meu e-mail do perfil no tradutor gratuito (MyMemory), para aumentar o limite diário</span></label>
         <p class="hint">A tradução usa primeiro o tradutor do próprio aparelho, quando existe; senão, o serviço gratuito MyMemory. O e-mail só é enviado a esse serviço se você marcar a opção acima. Traduções ficam guardadas no aparelho para abrir mais rápido.</p>
@@ -4256,9 +4256,13 @@ const comErr = () => navigator.onLine
    Vazio = usa o tradutor do aparelho e, na falta dele, o MyMemory. */
 const TR_PROXY = "https://tradutor.rafael-ximenes-2010.workers.dev";
 try{ if(store.get("trVer",1)<2){ store.set("trCache",{}); store.set("trVer",2); } }catch(e){}
+try{ if(!store.get("trManual",false)){ store.set("comAutoTr",false); store.set("trManual",true); } }catch(e){}   // desliga a tradução automática uma vez para todos
 const Tr = {
   autoKey:"comAutoTr",
-  get auto(){ return store.get(this.autoKey,true); },
+  /* Tradução só quando a pessoa pede (botão Traduzir). Assim gastamos menos o tradutor
+     e quem quiser treina o inglês lendo o original. Quem preferir pode ligar de novo em
+     Configurações → Comentários e tradução. */
+  get auto(){ return store.get(this.autoKey,false); },
   set auto(v){ store.set(this.autoKey,v); },
   key(t){ let h=0; for(let i=0;i<t.length;i++){ h=(h*31+t.charCodeAt(i))|0; } return "tr:"+t.length+":"+h; },
   mem:new Map(),
@@ -7575,8 +7579,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.42.1";
+const APP_VERSION = "3.43.0";
 const CHANGELOG = [
+  { v:"3.43.0", d:"novembro de 2026", items:["Traduções só quando você pedir: comentários e Bíblias em inglês aparecem no original, com o botão Traduzir. Assim o app gasta menos com o tradutor e quem quiser treina o inglês. Dá para ligar a tradução automática em Configurações → Comentários e tradução."] },
   { v:"3.42.1", d:"novembro de 2026", items:["Tela inicial: o card do Texto da noite agora segue o mesmo padrão do Texto do dia, com versão da Bíblia, palavra resumida, botão “Ler o texto da noite” e os atalhos de favoritar, WhatsApp, compartilhar e notas."] },
   { v:"3.42.0", d:"novembro de 2026", items:["Texto do dia e Texto da noite: botões organizados em grupos (Enviar, Estudar e Guardar), com “Concluído hoje” em destaque e a sugestão de louvores mais limpa. O Texto da noite ganhou os mesmos recursos: contexto, comentários, grifar, favoritar, notas e louvores."] },
   { v:"3.41.0", d:"novembro de 2026", items:["Texto do dia: agora sempre com uma palavra de ânimo, no mesmo estilo do Texto da noite, também na tela inicial e na mensagem do WhatsApp."] },
@@ -8088,7 +8093,7 @@ $("#cfgVersion").addEventListener("change",e=>{ const v=e.target.value; if(!Repo
   el.tr.value=v; el.tr.dispatchEvent(new Event("change")); rd.t=v; toast(`Versão padrão: ${v}.`); });
 $("#cfgBr").addEventListener("change",e=>{ store.set("brPreferred",e.target.value); toast("Comentarista brasileiro padrão alterado."); });
 $("#cfgCom").addEventListener("change",e=>{ if(!e.target.value) return; Comm.preferred=e.target.value; store.set("comPreferred",Comm.preferred); toast("Comentário padrão alterado."); });
-$("#cfgAutoTr").addEventListener("change",e=>{ Tr.auto=e.target.checked; toast(Tr.auto?"Comentários sempre em português.":"Comentários no original em inglês; use o botão Traduzir."); });
+$("#cfgAutoTr").addEventListener("change",e=>{ Tr.auto=e.target.checked; toast(Tr.auto?"Tradução automática ligada.":"Textos no original; toque em Traduzir quando quiser."); });
 $("#cfgInline").addEventListener("change",e=>{ Comm.inline=e.target.checked; store.set("comInline",Comm.inline); });
 $("#cfgTrEmail").addEventListener("change",e=>{ if(e.target.checked && !/\S+@\S+\.\S+/.test(Profile.get().email||"")){ e.target.checked=false; toast("Salve um e-mail no perfil primeiro."); return; } store.set("trEmail",e.target.checked); });
 $("#cfgTrClear").addEventListener("click",()=>{ store.set("trCache",{}); Tr.mem.clear(); toast("Traduções guardadas apagadas."); });
