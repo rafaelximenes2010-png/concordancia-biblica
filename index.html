@@ -55,6 +55,16 @@
   --font-text:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
   color-scheme:light;
 }
+[data-theme="oliveira"]{
+  --bg:#eaf5ee; --surface:#ffffff; --surface-2:#d6ebdd; --border:#c3dfcc;
+  --ink:#1d3a2c; --ink-2:#36574a; --ink-3:#4d6b5a; --gold-text:#7a5a12;
+  --accent:#2e7d57; --accent-ink:#ffffff; --accent-soft:#dcefe3;
+  --gold:#c9962e; --gold-soft:#f6ecd2; --coral:#cf6a4c; --sage:#3f8f68; --sage-soft:#dcefe3;
+  --sky:#3f7fae; --sky-soft:#e0edf6; --plum:#7d5a92; --hero-a:#24603f; --hero-b:#3f8f68;
+  --mark:#f3dd8c; --mark-ink:#1d3a2c;
+  --shadow:0 1px 2px rgba(29,58,44,.05),0 4px 14px rgba(29,58,44,.07);
+  color-scheme:light;
+}
 [data-theme="dark"]{
   --bg:#12172a; --surface:#1b2238; --surface-2:#242c46; --border:#323b5a;
   --ink:#eef0f7; --ink-2:#cfd3e2; --ink-3:#a7adc4; --gold-text:#e8c06a;
@@ -2017,6 +2027,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
   <symbol id="i-farol-busca" viewBox="0 0 24 24"><path d="M9.2 21 10.2 11h3.6l1 10z"/><path d="M10.2 11V8h3.6v3M9.5 8 12 5.5 14.5 8"/><path d="M6.8 9.2H3.5M17.2 9.2h3.3M7.6 5.8 5 4.2M16.4 5.8 19 4.2M6.5 21h11"/><path d="M10.6 15h2.8"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 21c.5-4.5 2.5-8 7-10"/><path d="M9 18c6.2 0 10.5-3.3 11-12-6.5-.3-12.4 1.4-13.6 7.4-.3 1.6-.2 3.1.6 4.6z"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></symbol>
@@ -2984,7 +2995,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
     <section class="cfg-card" id="cfgLeitura" aria-labelledby="cfgLeituraT">
       <h3 id="cfgLeituraT"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Leitura e aparência</h3>
       <div class="cfg-form">
-        <label>Tema<select id="cfgTheme"><option value="light">Claro</option><option value="dark">Escuro</option></select></label>
+        <label>Tema<select id="cfgTheme"><option value="light">Claro</option><option value="dark">Escuro</option><option value="oliveira">Oliveira (verde claro)</option></select></label>
         <div class="zoom-ctl"><span>Tamanho do texto do app <strong id="cfgZoomV"></strong></span>
           <div class="zoom-btns"><button type="button" class="btn btn-sm" data-zoom="-1" aria-label="Diminuir o texto do app">A−</button>
           <input type="range" id="cfgZoom" min="85" max="145" step="5" aria-label="Tamanho do texto do app">
@@ -3680,14 +3691,21 @@ function updateTranslationHint(){
   el.trHint.textContent = v ? `${v.license} ${v.books} livros · ${v.verses.toLocaleString(LOC())} versículos.` : "";
 }
 /* ---------- Tema ---------- */
+/* três aparências em ciclo: Dia (light) → Noite (dark) → Oliveira (verde claro) → Dia. O botão mostra a próxima. */
+const TEMAS = { light:{ prox:"dark", ic:"#i-moon", lb:"Noite", tt:"Modo noite (escuro)", cor:"#1c2747" },
+                dark:{ prox:"oliveira", ic:"#i-leaf", lb:"Oliveira", tt:"Modo Oliveira (verde claro)", cor:"#12172a" },
+                oliveira:{ prox:"light", ic:"#i-sun", lb:"Dia", tt:"Modo dia (claro)", cor:"#24603f" } };
 function applyTheme(t){
+  if(!TEMAS[t]) t="light";
+  const T=TEMAS[t];
   document.documentElement.dataset.theme=t;
-  el.themeIcon.setAttribute("href", t==="dark" ? "#i-sun" : "#i-moon");
-  el.theme.setAttribute("aria-label", t==="dark" ? "Alternar para tema claro" : "Alternar para tema escuro");
-  el.theme.dataset.label = t==="dark" ? "Dia" : "Noite"; el.theme.title = t==="dark" ? "Modo dia (claro)" : "Modo noite (escuro)";
+  el.themeIcon.setAttribute("href", T.ic);
+  el.theme.setAttribute("aria-label", "Alternar para o " + T.tt.toLowerCase());
+  el.theme.dataset.label = T.lb; el.theme.title = T.tt;
+  try{ const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content", T.cor); }catch(e){}
 }
 applyTheme(store.get("theme", matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
-el.theme.addEventListener("click",()=>{ const t=document.documentElement.dataset.theme==="dark"?"light":"dark"; applyTheme(t); store.set("theme",t); });
+el.theme.addEventListener("click",()=>{ const t=(TEMAS[document.documentElement.dataset.theme]||TEMAS.light).prox; applyTheme(t); store.set("theme",t); });
 
 /* =====================================================================
    FLUXO DE BUSCA
@@ -7579,8 +7597,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.43.0";
+const APP_VERSION = "3.44.0";
 const CHANGELOG = [
+  { v:"3.44.0", d:"novembro de 2026", items:["Nova aparência Oliveira: um verde-menta claro e calmo para leitura longa, além de Dia e Noite. Toque no botão de tema no topo para alternar entre as três, ou escolha em Configurações → Tema."] },
   { v:"3.43.0", d:"novembro de 2026", items:["Traduções só quando você pedir: comentários e Bíblias em inglês aparecem no original, com o botão Traduzir. Assim o app gasta menos com o tradutor e quem quiser treina o inglês. Dá para ligar a tradução automática em Configurações → Comentários e tradução."] },
   { v:"3.42.1", d:"novembro de 2026", items:["Tela inicial: o card do Texto da noite agora segue o mesmo padrão do Texto do dia, com versão da Bíblia, palavra resumida, botão “Ler o texto da noite” e os atalhos de favoritar, WhatsApp, compartilhar e notas."] },
   { v:"3.42.0", d:"novembro de 2026", items:["Texto do dia e Texto da noite: botões organizados em grupos (Enviar, Estudar e Guardar), com “Concluído hoje” em destaque e a sugestão de louvores mais limpa. O Texto da noite ganhou os mesmos recursos: contexto, comentários, grifar, favoritar, notas e louvores."] },
