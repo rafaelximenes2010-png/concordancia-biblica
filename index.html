@@ -435,6 +435,15 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .home-card .verse-sm{font-family:var(--font-text);font-size:17px;line-height:1.55;margin:0}
 .home-card .row-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
 .home-card.wide{grid-column:1/-1}
+.hc-noite{border-top:5px solid #2b3a6b;background:linear-gradient(170deg,rgba(43,58,107,.10),transparent 60%),var(--surface)}
+.hc-noite h3 .noite-ic{width:26px;height:26px;color:var(--gold)}
+.texto-abas{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:0 0 12px;border-radius:14px;background:var(--surface);border:1px solid var(--border)}
+.texto-aba{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 8px;border:0;border-radius:10px;background:none;color:var(--ink-2);font:600 14px/1.2 system-ui,sans-serif;cursor:pointer}
+.texto-aba.on{background:var(--accent,#2b3a6b);color:#fff}
+.noite-card{background:linear-gradient(170deg,rgba(43,58,107,.12),transparent 55%),var(--surface)}
+.noite-box{margin:14px 0 10px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:var(--gold-soft)}
+.noite-k{display:flex;align-items:center;gap:6px;margin:0 0 4px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text)}
+.noite-fr{margin:8px 0 0;font:italic 17px/1.6 var(--font-text);color:var(--ink)}
 .hc-texto{border-top:5px solid var(--gold)} .hc-devo{border-top:5px solid var(--coral)}
 .hc-estudo{border-top:5px solid var(--sage)} .hc-notas{border-top:5px solid var(--accent)}
 .hc-busca{border-top:5px solid var(--sky)} .hc-ler{border-top:5px solid var(--plum)}
@@ -2201,6 +2210,7 @@ dialog.reader .rd-aa{width:42px;height:44px}
     <button type="button" class="rdx-play" aria-label="Tocar a rádio KCBI 90.9 FM ao vivo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path class="rdx-ico" d="M8 5v14l11-7z" fill="currentColor"/></svg></button>
   </div></section>
   <div class="home-grid">
+    <article class="home-card hc-noite" id="homeNoite" hidden></article>
     <article class="home-card hc-texto" id="homeTexto"><p class="muted">Carregando o texto do dia…</p></article>
     <article class="home-card hc-devo" id="homeDevo"></article>
     <article class="home-card hc-estudo" id="homeEstudo"></article>
@@ -2480,7 +2490,12 @@ dialog.reader .rd-aa{width:42px;height:44px}
     <svg class="ill" aria-hidden="true"><use href="#ill-sunrise"/></svg>
     <div><p class="eyebrow">Sugestão diária</p><h2 id="votdTitle">Texto do dia</h2><p id="votdDate"></p></div>
   </div>
+  <div class="texto-abas" role="tablist" aria-label="Texto do dia e da noite">
+    <button type="button" class="texto-aba on" role="tab" aria-selected="true" data-textoaba="dia"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Texto do dia</button>
+    <button type="button" class="texto-aba" role="tab" aria-selected="false" data-textoaba="noite"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Texto da noite</button>
+  </div>
   <div class="day-card" id="votdBody"><p class="muted">Carregando…</p></div>
+  <div class="day-card noite-card" id="noiteBody" hidden></div>
   <div class="day-nav">
     <button type="button" class="btn" data-votd="-1">‹ Dia anterior</button>
     <button type="button" class="btn btn-ghost" data-votd="0">Hoje</button>
@@ -5415,6 +5430,8 @@ const doneBtn = () => `<button type="button" class="btn btn-sm done-btn" data-da
 let votdOffset=0;
 const votdFor = d => VOTD[((dayIndex(d)%VOTD.length)+VOTD.length)%VOTD.length];
 async function renderVotd(){
+  if(textoAba===null) textoAba=ehNoite()?"noite":"dia";
+  textoAbaSet(textoAba);
   const d=addDays(votdOffset), p=votdFor(d), box=$("#votdBody");
   $("#votdDate").textContent = (votdOffset===0?"Hoje, ":"")+fmtDate(d);
   box.innerHTML=`<p class="muted">Carregando…</p>`;
@@ -5743,12 +5760,65 @@ async function dayAction(act, box){
 document.querySelectorAll("[data-votd]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.votd; votdOffset = n===0?0:votdOffset+n; renderVotd(); }));
 document.querySelectorAll("[data-devo]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.devo; devoOffset = n===0?0:devoOffset+n; renderDevo(); }));
 
+
+/* ---------- Boa noite (a partir das 19h até as 4h59): texto bíblico para a noite + frase de descanso ---------- */
+const NOITE_VERSOS=["PSA 4 8", "PSA 91 1-2", "PSA 121 3-4", "PSA 127 2", "MAT 11 28-30", "PSA 23 1-3", "ISA 26 3", "JHN 14 27", "PHP 4 6-7", "PSA 139 11-12", "PRO 3 24", "PSA 63 6-7", "LAM 3 22-23", "PSA 46 10", "1PE 5 7", "PSA 3 5", "PSA 16 7-8", "PSA 30 5", "PSA 34 4", "PSA 42 8", "PSA 55 22", "PSA 62 1-2", "ISA 40 28-29", "ISA 43 1-2", "MAT 6 34", "2CO 4 16-17", "PSA 103 13-14", "PSA 116 7", "HEB 4 9-10", "ROM 8 38-39", "PSA 131 2"];
+const NOITE_FRASES=["Entregue a Deus o que não cabe nas suas mãos. Ele não dorme, e você pode descansar.", "O dia terminou, mas a fidelidade de Deus não. Durma em paz.", "Você não precisa resolver tudo hoje. Amanhã as misericórdias se renovam.", "Descansar também é confiar: é admitir que o mundo continua nas mãos de Deus.", "Deixe as preocupações na porta. Quem guarda a sua casa nunca cochila.", "O que ficou por fazer pode esperar. A graça de Deus não tem horário de expediente.", "Feche os olhos lembrando de uma bênção de hoje. A gratidão é um bom travesseiro.", "A noite não é ausência de Deus; é um convite para confiar sem ver.", "Perdoe, entregue e solte. Um coração leve dorme melhor.", "Deus trabalha enquanto você dorme. Descanse no cuidado dele.", "Nem todo cansaço se resolve com sono; alguns só com a paz de Cristo. Peça essa paz hoje.", "Hoje você fez o que pôde. Deixe o resto com aquele que pode tudo.", "A ansiedade fala alto à noite. Responda com uma oração curta: Senhor, eu confio.", "Antes de dormir, diga a Deus uma coisa que você agradece e uma que você entrega.", "O sono é um presente de Deus para quem aprende a parar.", "Você é amado mesmo nos dias improdutivos. Durma com essa certeza.", "Desligue a tela, acenda a esperança. Deus continua no controle.", "Amanhã é outro dia, e Deus já está lá.", "Descanse: o seu valor não está no que você produziu hoje.", "Que a última palavra do seu dia seja de confiança, não de medo.", "A paz de Deus não depende de tudo estar resolvido. Ela guarda o coração no meio do caminho.", "Quem confia não precisa vigiar tudo. Durma em paz.", "As lágrimas de hoje podem virar alegria pela manhã. Espere no Senhor.", "Faça silêncio por um minuto. Deus também fala na quietude.", "Você não carrega o mundo nas costas. Cristo já carregou o que era pesado demais.", "Encerre o dia com um abraço em quem você ama e uma oração por quem você não entende.", "O descanso de Deus é um lugar seguro. Entre nele hoje.", "Durma como criança no colo do Pai: sem pressa, sem medo.", "Toda noite é um pequeno ensaio de confiança. Deus nos acorda pela graça.", "Agradeça pelo dia, peça perdão pelo que faltou e descanse na misericórdia.", "Nada do que aconteceu hoje pode separar você do amor de Deus. Boa noite."];
+const ehNoite=(d=new Date())=>d.getHours()>=19 || d.getHours()<5;
+async function noiteConteudo(d){   // d = data da noite (a madrugada conta como a noite anterior)
+  const i=dayIndex(d), [b,c,r]=NOITE_VERSOS[i%NOITE_VERSOS.length].split(" "), [v1,v2]=r.split("-").map(Number);
+  const frase=_t(NOITE_FRASES[i%NOITE_FRASES.length]);
+  let ps=null; try{ ps=await getPassage({ b, c:+c, v1, v2:v2||v1 }); }catch(e){}
+  const msg=`🌙 *${_t("Boa noite!")}*\n\n${ps?`“${ps.text}”\n${ps.label}\n\n`:""}${frase}\n\n_SOLA | Bíblia & Teologia_ · ${APP_URL}`;
+  const acoes=`<div class="row-actions">
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(msg))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar boa noite</a>
+      <button type="button" class="btn btn-sm" data-noite="share" aria-label="Compartilhar mensagem de boa noite"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
+      <button type="button" class="btn btn-sm" data-noite="copy" aria-label="Copiar mensagem de boa noite"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></button>
+    </div>`;
+  return { ps, frase, msg, acoes };
+}
+const noiteHoje=()=>{ const d=new Date(); if(d.getHours()<5) d.setDate(d.getDate()-1); return d; };
+async function renderNoite(){
+  const box=$("#homeNoite"); if(!box) return;
+  if(!ehNoite()){ box.hidden=true; box.innerHTML=""; return; }
+  const { ps, frase, msg, acoes }=await noiteConteudo(noiteHoje());
+  box._msg=msg; box.hidden=false;
+  box.innerHTML=`<h3><svg class="icon noite-ic" aria-hidden="true"><use href="#i-moon"/></svg>Texto da noite</h3>
+    ${ps?`<p class="day-ref" style="font-size:16px;margin:0">${esc(ps.label)}</p><p class="verse-sm">${esc(ps.text)}</p>`:""}
+    <p class="noite-fr">${esc(frase)}</p>
+    ${acoes}
+    <button type="button" class="btn btn-sm btn-ghost" data-go="texto" data-noitego="1" style="margin-top:6px">Ver em Texto da noite ›</button>`;
+}
+/* Aba Texto: seções "Texto do dia" e "Texto da noite" (a noite abre sozinha depois das 19h) */
+let textoAba=null;
+async function renderTextoNoite(){
+  const box=$("#noiteBody"); const d=addDays(votdOffset); if(votdOffset===0 && new Date().getHours()<5) d.setDate(d.getDate()-1);
+  box.innerHTML=`<p class="muted">Carregando…</p>`;
+  const { ps, frase, msg, acoes }=await noiteConteudo(d); box._msg=msg;
+  box.innerHTML=`${ps?`<p class="day-ref">${esc(ps.label)}</p>${versionTag(ps.t)}<p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p>`:""}
+    <div class="noite-box"><p class="noite-k"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Para descansar</p><p class="noite-fr">${esc(frase)}</p></div>
+    ${acoes}`;
+}
+function textoAbaSet(aba){
+  textoAba=aba; const n=aba==="noite";
+  $("#votdBody").hidden=n; $("#noiteBody").hidden=!n;
+  document.querySelectorAll("[data-textoaba]").forEach(b=>{ const on=b.dataset.textoaba===aba; b.classList.toggle("on",on); b.setAttribute("aria-selected",on); });
+  $("#votdTitle").textContent=_t(n?"Texto da noite":"Texto do dia");
+  if(n) renderTextoNoite();
+}
+document.querySelectorAll("[data-textoaba]").forEach(b=>b.addEventListener("click",()=>textoAbaSet(b.dataset.textoaba)));
+["#homeNoite","#noiteBody"].forEach(sel=>$(sel).addEventListener("click",e=>{ const t=e.target.closest("[data-noite]"); if(!t) return; const msg=e.currentTarget._msg||"";
+  if(t.dataset.noite==="share") return shareText(_t("Boa noite!"), msg);
+  navigator.clipboard?.writeText(msg).then(()=>toast("Mensagem copiada."),()=>toast("Não foi possível copiar.")); }));
+$("#homeNoite").addEventListener("click",e=>{ if(e.target.closest("[data-noitego]")) textoAba="noite"; },true);
+setInterval(()=>{ if(currentView==="inicio" && ehNoite()!==!$("#homeNoite").hidden) renderNoite(); }, 60000);
+
 /* ---------- Início ---------- */
 async function renderHome(){
   const h=new Date().getHours();
   { const nm=(Profile.get().name||"").trim().split(/\s+/)[0]; $("#greet").textContent = (h<12?"Bom dia":h<18?"Boa tarde":"Boa noite")+(nm?`, ${nm}`:""); }
   $("#heroDate").textContent = fmtDate(new Date()).replace(/^./,c=>c.toUpperCase());
-  renderStreak(); renderReminderBanner(); $("#newsBanner").innerHTML=newsBanner();
+  renderStreak(); renderReminderBanner(); $("#newsBanner").innerHTML=newsBanner(); renderNoite();
   const ht=$("#homeTexto"), hd=$("#homeDevo");
   try{
     const p=votdFor(new Date()), ps=await getPassage(p); ht._ps=ps; ht._p=p;
@@ -7465,8 +7535,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.39.0";
+const APP_VERSION = "3.40.0";
 const CHANGELOG = [
+  { v:"3.40.0", d:"novembro de 2026", items:["Texto da noite: na aba Texto agora há “Texto do dia” e “Texto da noite”, com um versículo para a noite e uma frase de descanso. A partir das 19h ele abre sozinho e aparece também na tela inicial, pronto para enviar pelo WhatsApp."] },
   { v:"3.39.0", d:"novembro de 2026", items:["Planos e artigos: no fim de cada leitura, “Quer se aprofundar?” com atalhos para o Perplexity, o ChatGPT e o BibleProject, com a pergunta já pronta."] },
   { v:"3.38.2", d:"novembro de 2026", items:["Meu perfil: botão Quadro de honra, que mostra as suas notas de honra e conquistas."] },
   { v:"3.38.1", d:"novembro de 2026", items:["Ouvir: as entrevistas com pastores e professores também entram no rodízio semanal (3 novas por semana e as 3 da semana anterior ficam mais uma semana), com quatro podcasts reformados novos."] },
