@@ -633,6 +633,7 @@ export default {
     const lim = pedidoLocal(q, L);
     if (lim) { if (lim === "aparelho" && ISO.porDev.get(q.dev) === L.devReq + 1) ctx && ctx.waitUntil && ctx.waitUntil(cota(env, "conta", { bloqueio: 1, dev: q.dev })); return json(limiteMsg(lim), 429, h); }
 
+    const lote = body.lote === true;   // tradução em lote do GitHub (traduzir-conteudo.mjs): já guarda tudo no repositório, então não grava no KV
     const key = `v1:${from}>${to}:${await sha(text)}`;
     if (env.TR_CACHE) {
       const hit = await env.TR_CACHE.get(key);
@@ -647,7 +648,7 @@ export default {
         out.push(...await azure(parts.slice(i, i + 20), from, to, env));
       }
       const result = out.join("");
-      if (env.TR_CACHE) { try { await env.TR_CACHE.put(key, result); } catch (e) { console.log("kv", e.message); } }  // guardado para sempre
+      if (env.TR_CACHE && !lote) { try { await env.TR_CACHE.put(key, result); } catch (e) { console.log("kv", e.message); } }  // guardado para sempre
       return json({ text: result, cached: false }, 200, h);
     } catch (e) {
       ISO.azErr++;

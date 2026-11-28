@@ -61,7 +61,7 @@ async function traduzirTexto(texto, de, para, memoria) {
   if (semCota || process.env.OFFLINE) return null;
   for (let tentativa = 0; tentativa < 3; tentativa++) {
     try {
-      const r = await fetch(PONTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: texto, from: de, to: para }) });
+      const r = await fetch(PONTE, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text: texto, from: de, to: para, lote: true }) });
       if (r.status === 429) { semCota = true; return null; }
       if (!r.ok) throw new Error("http " + r.status);
       const j = await r.json(); if (j.error) throw new Error(j.error);
