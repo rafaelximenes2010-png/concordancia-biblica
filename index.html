@@ -441,6 +441,10 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .texto-aba{display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 8px;border:0;border-radius:10px;background:none;color:var(--ink-2);font:600 14px/1.2 system-ui,sans-serif;cursor:pointer}
 .texto-aba.on{background:var(--accent,#2b3a6b);color:#fff}
 .noite-card{background:linear-gradient(170deg,rgba(43,58,107,.12),transparent 55%),var(--surface)}
+.animo-box{margin:14px 0 10px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:var(--gold-soft)}
+.animo-k{display:flex;align-items:center;gap:6px;margin:0 0 4px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text)}
+.animo-tx{margin:0;font:italic 17px/1.65 var(--font-text);color:var(--ink)}
+.animo-mini{margin:8px 0 0;font-size:14.5px;line-height:1.55;color:var(--ink-2)}.animo-mini b{color:var(--gold-text)}
 .noite-box{margin:14px 0 10px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:var(--gold-soft)}
 .noite-k{display:flex;align-items:center;gap:6px;margin:0 0 4px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text)}
 .noite-fr{margin:8px 0 0;font:italic 17px/1.6 var(--font-text);color:var(--ink)}
@@ -5436,15 +5440,16 @@ async function renderVotd(){
   $("#votdDate").textContent = (votdOffset===0?"Hoje, ":"")+fmtDate(d);
   box.innerHTML=`<p class="muted">Carregando…</p>`;
   try{
-    const ps=await getPassage(p);
+    const ps=await getPassage(p), animo=animoFor(d); box._animo=animo;
     box.innerHTML = `<p class="day-ref">${esc(ps.label)}</p>${versionTag(ps.t)}
       <p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p>
       <p class="day-meta">${esc(Repo.version(ps.t).license)}</p>
+      <div class="animo-box"><p class="animo-k"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Uma palavra de ânimo</p><p class="animo-tx">${esc(animo)}</p></div>
       <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
         ${votdOffset===0?doneBtn():""}
         <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
         <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps,null,animo)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
         <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
         <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
         <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
@@ -5738,14 +5743,14 @@ async function dayAction(act, box){
   if(act==="ctx") return openContext(first);
   if(act==="fav"){ toggleFav(first); return; }
   if(act==="wa" && dv){
-    const txt=dayShareText(ps,dv);
+    const txt=dayShareText(ps,dv,box._animo);
     try{ await navigator.clipboard.writeText(txt); }catch(e){}
     if(navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
         if(navigator.canShare && navigator.canShare({ files:[f] })){ toast("Escolha o WhatsApp. O texto completo também foi copiado: se não aparecer junto, cole na legenda.",5000); await navigator.share({ files:[f], text:txt }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
     (IS_MOBILE?location.assign(waUrl(txt)):window.open(waUrl(txt),"_blank","noopener")); return;
   }
   if(act==="share"){
-    const txt=dayShareText(ps,dv);
+    const txt=dayShareText(ps,dv,box._animo);
     if(dv && navigator.share){ try{ const blob=await devoArtPng(dv); const f=new File([blob],"devocional-SOLA.jpg",{type:"image/jpeg"});
         if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], text:txt, title:dv.title }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
     return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`, txt);
@@ -5811,6 +5816,7 @@ document.querySelectorAll("[data-textoaba]").forEach(b=>b.addEventListener("clic
   if(t.dataset.noite==="share") return shareText(_t("Boa noite!"), msg);
   navigator.clipboard?.writeText(msg).then(()=>toast("Mensagem copiada."),()=>toast("Não foi possível copiar.")); }));
 $("#homeNoite").addEventListener("click",e=>{ if(e.target.closest("[data-noitego]")) textoAba="noite"; },true);
+$("#homeTexto").addEventListener("click",e=>{ if(e.target.closest("[data-diago]")) textoAba="dia"; },true);
 setInterval(()=>{ if(currentView==="inicio" && ehNoite()!==!$("#homeNoite").hidden) renderNoite(); }, 60000);
 
 /* ---------- Início ---------- */
@@ -5821,15 +5827,16 @@ async function renderHome(){
   renderStreak(); renderReminderBanner(); $("#newsBanner").innerHTML=newsBanner(); renderNoite();
   const ht=$("#homeTexto"), hd=$("#homeDevo");
   try{
-    const p=votdFor(new Date()), ps=await getPassage(p); ht._ps=ps; ht._p=p;
+    const p=votdFor(new Date()), ps=await getPassage(p), animo=animoFor(new Date()); ht._ps=ps; ht._p=p; ht._animo=animo;
     ht.innerHTML = `<h3><svg class="badge-ill" aria-hidden="true"><use href="#ill-sunrise"/></svg>Texto do dia</h3>
       <p class="day-ref" style="font-size:16px;margin:0">${esc(ps.label)}</p>
       <p class="verse-sm">${esc(ps.text.length>260?ps.text.slice(0,260).replace(/\s+\S*$/,"")+"…":ps.text)}</p>
       <div>${versionTag(ps.t)}</div>
+      <p class="animo-mini"><b>Uma palavra de ânimo:</b> ${esc(animo.length>170?animo.slice(0,170).replace(/\s+\S*$/,"")+"…":animo)}</p>
       <div class="row-actions">
-        <button type="button" class="btn btn-sm btn-primary" data-go="texto">Ler o texto do dia</button>
+        <button type="button" class="btn btn-sm btn-primary" data-go="texto" data-diago="1">Ler o texto do dia</button>
         <button type="button" class="btn btn-sm" data-day="fav" aria-label="Favoritar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps)))}" target="_blank" rel="noopener noreferrer" aria-label="Enviar texto do dia pelo WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></a>
+        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps,null,animo)))}" target="_blank" rel="noopener noreferrer" aria-label="Enviar texto do dia pelo WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></a>
         <button type="button" class="btn btn-sm" data-day="share" aria-label="Compartilhar texto do dia"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
         <button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar texto do dia nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>
       </div>`;
@@ -6510,9 +6517,11 @@ function verseShareText(v){
   const ver=Repo.version(v.t);
   return `“${v.text}”\n— ${refLabel(v.b,v.c,v.v)} (${ver?_t(ver.name):v.t})\n\n${_t("Via app SOLA | Bíblia & Teologia:")} ${APP_URL}`;
 }
-function dayShareText(ps, dv){
+const ANIMO=["Bom dia! Você não começa este dia sozinho. Antes de abrir os olhos, Deus já estava trabalhando na sua história. As misericórdias dele são novas hoje, prontas para os desafios que você ainda nem conhece. Não precisa ter todas as respostas; basta dar o próximo passo com ele. Coragem: quem chamou você é fiel.", "Talvez hoje pareça mais um dia comum. Mas Deus gosta de agir no comum: numa mesa de trabalho, numa conversa no corredor, num serviço que ninguém vê. Faça o que estiver diante de você com o coração inteiro, como quem serve ao Senhor. Nada do que é feito para ele se perde.", "Se ontem foi difícil, hoje é uma nova página. Deus não guarda os seus erros para jogar na sua cara; em Cristo, ele os lançou no fundo do mar. Levante a cabeça. Você não é definido pelo pior dia que teve, mas pela graça que recebeu. Comece de novo, com humildade e esperança.", "A força de que você precisa para hoje não está na sua reserva, está em Deus. Isaías diz que os que esperam no Senhor renovam as forças. Não é energia de café; é ânimo que vem de dentro, do Espírito. Peça essa força logo cedo e siga em frente. Você vai mais longe do que imagina.", "Antes de olhar o celular, olhe para cima. As notícias e as mensagens podem esperar alguns minutos. Comece o dia lembrando quem governa o mundo e quem cuida de você. Uma oração curta muda o tom de todo o resto: Senhor, este dia é teu. Usa a minha vida para o bem de alguém.", "Você tem um propósito hoje, mesmo que ninguém aplauda. Ser fiel no pouco é grande aos olhos de Deus. A palavra gentil, o trabalho bem-feito, a paciência com quem incomoda: tudo isso é adoração. Não despreze os dias pequenos. É neles que o caráter é formado e a fé fica firme.", "Medo e fé podem até caminhar juntos, mas só um deve guiar. Hoje, quando o medo falar, responda com o que Deus já disse: Não temas, porque eu sou contigo. Essa promessa não depende de o dia ser fácil. Ela vale no hospital, no escritório, na estrada e em casa. Siga com coragem.", "Deus não chamou você para ser perfeito, mas para ser fiel. Você vai errar hoje em alguma coisa, e tudo bem reconhecer isso. A graça não é licença para relaxar, é força para continuar. Quando tropeçar, levante, peça perdão e prossiga. Os santos não são os que nunca caem, mas os que sempre voltam.", "Bom dia! Que tal escolher hoje ser bênção para alguém? Uma mensagem de incentivo, um elogio sincero, uma ajuda sem esperar retorno. O amor de Deus que alcançou você quer passar por você. Quem encoraja os outros acaba encorajado também. Seja hoje a resposta da oração de alguém.", "Talvez você esteja esperando uma resposta de Deus há muito tempo. A espera não é desperdício. Enquanto você espera, ele está trabalhando em você e nas circunstâncias. José esperou anos, e Deus transformou o mal em bem. Não desista hoje. O tempo de Deus é diferente, mas nunca é atrasado.", "Você não precisa carregar o dia inteiro de uma vez. Jesus ensinou a pedir o pão de cada dia, não o estoque do mês. Viva um passo de cada vez, uma tarefa de cada vez, uma oração de cada vez. Hoje tem graça suficiente para hoje. Amanhã, a mesma graça estará esperando por você.", "O mesmo Deus que pintou o amanhecer conhece o seu nome. Você não é um número na multidão; é alguém amado e chamado. Quando se sentir pequeno ou esquecido, lembre-se: ele contou até os fios do seu cabelo. Comece o dia com essa certeza. Você importa para Deus.", "Coragem não é ausência de medo; é obedecer apesar dele. Josué ouviu três vezes: Sê forte e corajoso. Deus repete porque sabe que precisamos ouvir de novo. Talvez hoje você enfrente uma conversa difícil ou uma decisão importante. Vá com Deus. Ele vai à sua frente.", "Gratidão é um bom jeito de começar o dia. Antes de listar os problemas, liste três presentes: a vida, as pessoas, a graça. Quem agradece enxerga melhor. A gratidão não ignora as dificuldades, mas coloca cada uma no tamanho certo. Comece dizendo: obrigado, Senhor, por mais um dia.", "Às vezes a fé é simplesmente continuar. Levantar, se arrumar, trabalhar, cuidar, orar, mesmo sem sentir grande coisa. Isso também é fé. Deus honra a perseverança silenciosa. Paulo disse: Não nos cansemos de fazer o bem, porque a seu tempo ceifaremos. A colheita vem.", "Hoje você vai encontrar pessoas cansadas, apressadas, feridas. Seja gentil. Você não sabe a batalha que cada uma está travando. Uma palavra branda desvia o furor e abre portas. Deixe que a sua presença lembre os outros do Deus que é paciente e cheio de amor.", "Bom dia! O Evangelho não é só a notícia de que você foi perdoado no passado; é força para viver hoje. Cristo vive em você. Isso muda a maneira de trabalhar, de falar, de reagir. Você não depende apenas da sua força de vontade. Conte com a vida de Cristo em você hoje.", "Se a sua lista de hoje está longa, comece pela oração. Lutero dizia que, quanto mais trabalho tinha, mais tempo precisava orar. Orar não atrasa o dia; organiza o coração. Entregue a Deus a agenda, as pessoas e os imprevistos. Depois, trabalhe com calma e diligência.", "Você pode recomeçar a qualquer hora do dia. Se a manhã começou mal, não precisa esperar amanhã para mudar. Pare, respire, ore e retome. A misericórdia de Deus não tem horário marcado. Ela alcança você às 7h, às 15h e às 22h. Hoje ainda pode ser um bom dia.", "A Palavra de Deus é lâmpada para os pés. Ela não ilumina a estrada inteira, mas o suficiente para o próximo passo. Não se angustie por não ver o fim do caminho. Leia, obedeça e siga. Quem anda com Deus nunca está perdido, mesmo quando não sabe exatamente onde vai chegar.", "Você foi criado para mais do que sobreviver ao dia. Foi criado para glorificar a Deus e desfrutar dele. Isso pode acontecer numa planilha, numa sala de aula, numa cozinha ou num caminhão. Faça tudo para a glória de Deus. Até as tarefas mais simples ganham sentido quando são oferecidas a ele.", "Quando o desânimo bater, lembre-se do que Deus já fez. Davi encorajava a si mesmo lembrando as vitórias passadas. Faça uma lista mental: as orações respondidas, os livramentos, as portas abertas. O Deus que foi fiel ontem não vai falhar hoje.", "Não compare o seu bastidor com o palco dos outros. Cada um tem o seu caminho, o seu tempo e o seu chamado. Deus não está pedindo que você seja outra pessoa, mas que seja fiel onde ele colocou você. Corra a sua corrida, olhando para Jesus, e não para a pista ao lado.", "Bom dia! Hoje, escolha a esperança. Não é ingenuidade; é confiar que a história está nas mãos de um Deus bom. Os problemas são reais, mas não são a última palavra. A ressurreição de Cristo garante que o mal não vence no final. Viva hoje com os olhos nessa vitória.", "Ouvir é um ato de amor. Hoje, tente ouvir mais e falar menos, como ensina Tiago. Ouvir a Deus na Palavra e ouvir as pessoas com atenção. Muitos conflitos se dissolvem quando alguém se sente realmente ouvido. Seja essa pessoa hoje.", "Seu trabalho tem valor para Deus. Não importa se é visto ou anônimo, bem pago ou simples. A Reforma lembrou que toda vocação honesta pode ser feita para a glória de Deus. Hoje, trabalhe com excelência, integridade e alegria. Você está servindo a Cristo, o Senhor.", "Deus não desperdiça nenhuma dor. Romanos 8 diz que todas as coisas cooperam para o bem dos que amam a Deus. Isso não significa que tudo é bom, mas que Deus é bom em tudo. Se hoje começa com uma dificuldade, entregue-a a ele. Ele sabe transformar até isso em algo bom.", "Pequenos hábitos constroem uma vida firme. Um capítulo da Bíblia, uma oração sincera, um gesto de bondade. Repetidos dia após dia, eles moldam o coração. Não subestime o que você faz hoje. A árvore plantada junto às águas cresce devagar, mas dá fruto no tempo certo.", "Você é mais do que vencedor, não pelo que conquista, mas por aquele que amou você. Isso dá segurança para enfrentar o dia sem precisar provar nada a ninguém. Já foi aceito, já é amado. Agora pode servir com liberdade, alegria e coragem.", "Se hoje for um dia de luta, lembre-se: o Senhor é o seu pastor. Ele conduz, restaura e acompanha, inclusive no vale. Você não está andando sozinho. O bordão e o cajado dele dão direção e proteção. Siga confiante: a bondade e a misericórdia vão acompanhar você hoje.", "Bom dia! Que hoje o seu coração esteja aberto para as surpresas de Deus. Ele pode falar numa conversa inesperada, num versículo lido de novo, num desvio no caminho. Ande atento. O mesmo Deus que guiou os discípulos guia você. Viva este dia como quem espera ver a mão dele."];   // palavras de ânimo do Texto do dia (até 450 caracteres)
+const animoFor=d=>_t(ANIMO[dayIndex(d)%ANIMO.length]);
+function dayShareText(ps, dv, animo){
   const ver=Repo.version(ps.t);
-  if(!dv) return `*${_t("Texto do dia")}*\n\n“${ps.text}”\n— ${ps.label} (${ver?_t(ver.name):ps.t})\n\n${_t("Via app SOLA | Bíblia & Teologia:")} ${APP_URL}`;
+  if(!dv) return `☀️ *${_t("Texto do dia")}*\n\n“${ps.text}”\n— ${ps.label} (${ver?_t(ver.name):ps.t})\n\n${animo?`*${_t("Uma palavra de ânimo")}*\n${animo}\n\n`:""}${_t("Via app SOLA | Bíblia & Teologia:")} ${APP_URL}`;
   /* Devocional completo, do título às sugestões de louvor */
   const theme=dv.theme||themeOf(ps.text+" "+dv.title);
   return [
@@ -7535,8 +7544,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.40.1";
+const APP_VERSION = "3.41.0";
 const CHANGELOG = [
+  { v:"3.41.0", d:"novembro de 2026", items:["Texto do dia: agora sempre com uma palavra de ânimo, no mesmo estilo do Texto da noite, também na tela inicial e na mensagem do WhatsApp."] },
   { v:"3.40.1", d:"novembro de 2026", items:["Texto da noite: a frase de descanso virou uma palavra de descanso mais completa, de até 450 caracteres, também na mensagem de boa noite."] },
   { v:"3.40.0", d:"novembro de 2026", items:["Texto da noite: na aba Texto agora há “Texto do dia” e “Texto da noite”, com um versículo para a noite e uma frase de descanso. A partir das 19h ele abre sozinho e aparece também na tela inicial, pronto para enviar pelo WhatsApp."] },
   { v:"3.39.0", d:"novembro de 2026", items:["Planos e artigos: no fim de cada leitura, “Quer se aprofundar?” com atalhos para o Perplexity, o ChatGPT e o BibleProject, com a pergunta já pronta."] },
