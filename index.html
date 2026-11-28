@@ -448,6 +448,22 @@ body{padding-bottom:env(safe-area-inset-bottom)}
 .noite-box{margin:14px 0 10px;padding:12px 14px;border-left:3px solid var(--gold);border-radius:0 12px 12px 0;background:var(--gold-soft)}
 .noite-k{display:flex;align-items:center;gap:6px;margin:0 0 4px;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-text)}
 .noite-fr{margin:8px 0 0;font:italic 17px/1.6 var(--font-text);color:var(--ink)}
+/* Ações do Texto do dia / da noite: concluir + grupos Enviar · Estudar · Guardar */
+.tx-acts{display:flex;flex-direction:column;gap:12px;margin-top:14px}
+.tx-acts>.done-btn{width:100%;justify-content:center;padding:11px 12px;font-size:15px;font-weight:600;border-radius:12px}
+.tx-acts>.done-btn[aria-pressed="true"]{background:var(--sage);border-color:var(--sage);color:#fff}
+.tx-acts>.done-btn[aria-pressed="true"] .icon{stroke:#fff}
+.tx-k{margin:0 0 6px 2px;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.tx-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.tx-grid .btn{flex-direction:column;justify-content:center;gap:5px;min-height:64px;padding:9px 4px;border-radius:12px;font-size:12.5px;line-height:1.15;white-space:normal;text-align:center}
+.tx-grid .btn .icon{width:21px;height:21px}
+.tx-grid .btn-wa{background:#1fa85514}
+.tx-acts .spotify-box{margin-top:2px}
+.spotify-box .sp-t{display:block;margin:0 0 8px;font:700 11px/1.2 system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.spotify-box .sp-t .icon{width:14px;height:14px;vertical-align:-2px;margin-right:4px}
+.spotify-box .sp-theme{display:block;margin-top:4px;font:600 16px/1.3 var(--font-text);letter-spacing:0;text-transform:none;color:var(--ink)}
+.tx-acts .spotify-box .br-links{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.tx-acts .spotify-box .btn-sp{white-space:normal;justify-content:center;text-align:center;min-height:44px;border-radius:10px}
 .hc-texto{border-top:5px solid var(--gold)} .hc-devo{border-top:5px solid var(--coral)}
 .hc-estudo{border-top:5px solid var(--sage)} .hc-notas{border-top:5px solid var(--accent)}
 .hc-busca{border-top:5px solid var(--sky)} .hc-ler{border-top:5px solid var(--plum)}
@@ -5430,6 +5446,20 @@ function renderStreak(){
 }
 const doneBtn = () => `<button type="button" class="btn btn-sm done-btn" data-day="done" aria-pressed="${Streak.isDone()}"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>${Streak.isDone()?"Concluído hoje":"Marcar como concluído"}</button>`;
 
+/* Ações do Texto do dia e do Texto da noite (mesmo padrão): concluir, depois Enviar · Estudar · Guardar */
+function textoAcoes({ done, wa, share, copy, ps }){
+  const b=(a,ic,t)=>`<button type="button" class="btn btn-sm" ${a}><svg class="icon" aria-hidden="true"><use href="#${ic}"/></svg>${t}</button>`;
+  return `<div class="tx-acts">${done?doneBtn():""}
+    <div class="tx-grp"><p class="tx-k">Enviar</p><div class="tx-grid">
+      <a class="btn btn-sm btn-wa" href="${esc(wa)}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
+      ${b(share,"i-share","Compartilhar")}${b(copy,"i-copy","Copiar")}</div></div>
+    <div class="tx-grp"><p class="tx-k">Estudar</p><div class="tx-grid">
+      ${b('data-day="ctx"',"i-open","Contexto")}${b('data-day="com"',"i-book","Comentários")}${b('data-day="hl"',"i-marker","Grifar")}</div></div>
+    <div class="tx-grp"><p class="tx-k">Guardar</p><div class="tx-grid">
+      ${b('data-day="fav"',"i-star","Favoritar")}${b('data-day="note"',"i-note","Notas")}</div></div>
+    ${ps?spotifyBox(themeOf(ps.text), ps):""}</div>`;
+}
+
 /* ---------- Texto do dia ---------- */
 let votdOffset=0;
 const votdFor = d => VOTD[((dayIndex(d)%VOTD.length)+VOTD.length)%VOTD.length];
@@ -5445,16 +5475,7 @@ async function renderVotd(){
       <p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p>
       <p class="day-meta">${esc(Repo.version(ps.t).license)}</p>
       <div class="animo-box"><p class="animo-k"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg>Uma palavra de ânimo</p><p class="animo-tx">${esc(animo)}</p></div>
-      <div class="row-actions" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
-        ${votdOffset===0?doneBtn():""}
-        <button type="button" class="btn btn-sm" data-day="ctx"><svg class="icon" aria-hidden="true"><use href="#i-open"/></svg>Abrir contexto</button>
-        <button type="button" class="btn btn-sm" data-day="fav"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg>Favoritar</button>
-        <a class="btn btn-sm btn-wa" href="${esc(waUrl(dayShareText(ps,null,animo)))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</a>
-        <button type="button" class="btn btn-sm" data-day="share"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg>Compartilhar</button>
-        <button type="button" class="btn btn-sm" data-day="note"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg>Salvar nas notas</button>
-        <button type="button" class="btn btn-sm" data-day="hl"><svg class="icon" aria-hidden="true"><use href="#i-marker"/></svg>Grifar</button>
-        <button type="button" class="btn btn-sm" data-day="com"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Comentários</button>
-      </div>${spotifyBox(themeOf(ps.text), ps)}`;
+      ${textoAcoes({ done:votdOffset===0, wa:waUrl(dayShareText(ps,null,animo)), share:'data-day="share"', copy:'data-day="copy"', ps })}`;
     box.querySelector(".day-ref")?.insertAdjacentHTML("afterend", listenBar("votd"));
     box.dataset.kind="votd"; box._ps=ps; box._p=p;
   }catch(e){ box.innerHTML=`<div class="notice error">Não foi possível carregar a Bíblia. ${navigator.onLine?"Tente novamente.":"Conecte-se uma vez para baixá-la."}</div>`; }
@@ -5755,11 +5776,12 @@ async function dayAction(act, box){
         if(navigator.canShare && navigator.canShare({ files:[f] })){ await navigator.share({ files:[f], text:txt, title:dv.title }); return; } }catch(e){ if(e && e.name==="AbortError") return; } }
     return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`, txt);
   }
-  if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`Texto do dia: ${ps.label}`, ref:ps.label,
+  if(act==="copy") return navigator.clipboard?.writeText(dayShareText(ps,dv,box._animo)).then(()=>toast("Texto copiado."),()=>toast("Não foi possível copiar."));
+  if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`${box.id==="noiteBody"?_t("Texto da noite"):_t("Texto do dia")}: ${ps.label}`, ref:ps.label,
       text:`“${ps.text}” (${ps.t})\n\n${dv?`${_t("Reflexão:")} ${dv.reflection}\n\n${_t("Aplicação:")} ${dv.application}\n\n`:""}${_t("Minhas anotações:")}\n` });
   if(act==="com"){ showView("busca"); el.q.value=ps.label; setMode("ref"); await runSearch({auto:false}); selectTab("com"); openStudyOnMobile(); }
 }
-["#votdBody","#devoBody","#homeTexto","#homeDevo"].forEach(sel=>$(sel).addEventListener("click",e=>{
+["#votdBody","#noiteBody","#devoBody","#homeTexto","#homeDevo"].forEach(sel=>$(sel).addEventListener("click",e=>{
   const b=e.target.closest("button[data-day]"); if(b){ e.preventDefault(); dayAction(b.dataset.day, e.currentTarget); }
 }));
 document.querySelectorAll("[data-votd]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.votd; votdOffset = n===0?0:votdOffset+n; renderVotd(); }));
@@ -5773,14 +5795,14 @@ const ehNoite=(d=new Date())=>d.getHours()>=19 || d.getHours()<5;
 async function noiteConteudo(d){   // d = data da noite (a madrugada conta como a noite anterior)
   const i=dayIndex(d), [b,c,r]=NOITE_VERSOS[i%NOITE_VERSOS.length].split(" "), [v1,v2]=r.split("-").map(Number);
   const frase=_t(NOITE_FRASES[i%NOITE_FRASES.length]);
-  let ps=null; try{ ps=await getPassage({ b, c:+c, v1, v2:v2||v1 }); }catch(e){}
+  const p={ b, c:+c, v1, v2:v2||v1 }; let ps=null; try{ ps=await getPassage(p); }catch(e){}
   const msg=`🌙 *${_t("Boa noite!")}*\n\n${ps?`“${ps.text}”\n${ps.label}\n\n`:""}${frase}\n\n_SOLA | Bíblia & Teologia_ · ${APP_URL}`;
   const acoes=`<div class="row-actions">
       <a class="btn btn-sm btn-wa" href="${esc(waUrl(msg))}" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Enviar boa noite</a>
       <button type="button" class="btn btn-sm" data-noite="share" aria-label="Compartilhar mensagem de boa noite"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
       <button type="button" class="btn btn-sm" data-noite="copy" aria-label="Copiar mensagem de boa noite"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></button>
     </div>`;
-  return { ps, frase, msg, acoes };
+  return { ps, p, frase, msg, acoes };
 }
 const noiteHoje=()=>{ const d=new Date(); if(d.getHours()<5) d.setDate(d.getDate()-1); return d; };
 async function renderNoite(){
@@ -5799,10 +5821,10 @@ let textoAba=null;
 async function renderTextoNoite(){
   const box=$("#noiteBody"); const d=addDays(votdOffset); if(votdOffset===0 && new Date().getHours()<5) d.setDate(d.getDate()-1);
   box.innerHTML=`<p class="muted">Carregando…</p>`;
-  const { ps, frase, msg, acoes }=await noiteConteudo(d); box._msg=msg;
-  box.innerHTML=`${ps?`<p class="day-ref">${esc(ps.label)}</p>${versionTag(ps.t)}<p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p>`:""}
+  const { ps, p, frase, msg }=await noiteConteudo(d); box._msg=msg; box._ps=ps; box._p=p; box._dv=null; box.dataset.kind="noite";
+  box.innerHTML=`${ps?`<p class="day-ref">${esc(ps.label)}</p>${versionTag(ps.t)}<p class="day-text" lang="${Repo.version(ps.t).lang}">${passageHtml(ps)}</p><p class="day-meta">${esc(Repo.version(ps.t).license)}</p>`:""}
     <div class="noite-box"><p class="noite-k"><svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>Uma palavra para descansar</p><p class="noite-fr">${esc(frase)}</p></div>
-    ${acoes}`;
+    ${ps?textoAcoes({ done:votdOffset===0, wa:waUrl(msg), share:'data-noite="share"', copy:'data-noite="copy"', ps }):""}`;
 }
 function textoAbaSet(aba){
   textoAba=aba; const n=aba==="noite";
@@ -7544,8 +7566,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.41.0";
+const APP_VERSION = "3.42.0";
 const CHANGELOG = [
+  { v:"3.42.0", d:"novembro de 2026", items:["Texto do dia e Texto da noite: botões organizados em grupos (Enviar, Estudar e Guardar), com “Concluído hoje” em destaque e a sugestão de louvores mais limpa. O Texto da noite ganhou os mesmos recursos: contexto, comentários, grifar, favoritar, notas e louvores."] },
   { v:"3.41.0", d:"novembro de 2026", items:["Texto do dia: agora sempre com uma palavra de ânimo, no mesmo estilo do Texto da noite, também na tela inicial e na mensagem do WhatsApp."] },
   { v:"3.40.1", d:"novembro de 2026", items:["Texto da noite: a frase de descanso virou uma palavra de descanso mais completa, de até 450 caracteres, também na mensagem de boa noite."] },
   { v:"3.40.0", d:"novembro de 2026", items:["Texto da noite: na aba Texto agora há “Texto do dia” e “Texto da noite”, com um versículo para a noite e uma frase de descanso. A partir das 19h ele abre sozinho e aparece também na tela inicial, pronto para enviar pelo WhatsApp."] },
@@ -7974,7 +7997,7 @@ function spotifyBox(theme, ps, inner){
     ps && ps.b==="PSA" ? [`Salmo ${ps.c} cantado`, sp(`Salmo ${ps.c} cantado`)] : [`Saltério e salmos cantados`, sp("salmos cantados saltério reformado")],
     ["Hinário Novo Cântico", sp("Hinário Novo Cântico")]
   ];
-  return `<div class="spotify-box${inner?" inner":""}"><p class="sp-t"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Para cantar sobre este texto · <strong>${esc(theme)}</strong></p>
+  return `<div class="spotify-box${inner?" inner":""}"><p class="sp-t"><svg class="icon" aria-hidden="true"><use href="#i-music"/></svg>Para cantar sobre este texto<strong class="sp-theme">${esc(theme)}</strong></p>
     <div class="br-links">${links.map(([n,u])=>`<a class="btn btn-sm btn-sp" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(n)} ↗</a>`).join("")}</div>
     <p class="hint">Abre a busca do Spotify (no app, se instalado). O tema é sugerido automaticamente; o app não escolhe faixas nem tem vínculo com o Spotify. Avalie as letras à luz das Escrituras.</p></div>`;
 }
@@ -7984,7 +8007,7 @@ const HELP = {
   inicio:["Início",[["Texto do dia / Devocional","Abrem a leitura do dia. Toque em “Concluí” para manter sua sequência de estudos."],["Pesquisar","Escolha Comentário bíblico (versículos + comentários) ou Concordância (todas as ocorrências de uma palavra)."],["Microfone","Fale a palavra ou a referência (ex.: “João três dezesseis”)."],["Círculo azul com aro dourado","Seu perfil e cadastro, configurações (inclusive o tamanho do texto), cópia de segurança e atualizações."],["Navegar rápido","Toque nas abas de baixo para trocar de seção: cada uma guarda onde você parou. Tocar de novo na aba aberta volta ao topo. No app instalado, deslize da borda esquerda para voltar."]]],
   biblia:["Bíblia",[["Versão, livro e capítulo","Toque no nome do livro para trocar e na sigla da versão para mudar a Bíblia. As setas ‹ e › embaixo mudam de capítulo."],["Aa","Abre os ajustes: tamanho da letra, comparar com outra versão e abrir o capítulo em ARA, NVI e outras."],["Comparar","Mostra uma segunda versão abaixo de cada versículo (no botão Aa)."],["Tocar nos versículos","Marca o versículo (sublinhado pontilhado). Toque em quantos quiser; embaixo aparece a barra com as cores para grifar e as ações: Comentário, Copiar, WhatsApp, Compartilhar, Anotar, Favoritar e Todos. Deslize a fileira de ações para o lado para ver todas. O X limpa a seleção."],["Comentário","Abre o painel de comentários e o versículo continua visível em cima. Escolha o comentarista nos botões redondos."],["Grifar","Pinta o versículo com marca-texto (5 cores). Os grifos ficam em Minhas notas › Grifos."],["Selecionar trecho do comentário","Arraste o dedo sobre o texto do comentário e escolha uma cor para grifar o trecho."],["Salvar","Guarda o comentário inteiro em Minhas notas › Comentários salvos."],["Perplexity e ChatGPT","Abrem uma pergunta pronta sobre o que aquele comentarista diz do versículo. O ChatGPT funciona na versão gratuita, mesmo sem conta. Respostas de IA: confira as fontes."],["ARA, NVI, NVT…","Versões com direitos autorais abrem no site oficial (Bíblia Online ou YouVersion)."]]],
   busca:["Pesquisa",[["Comentário bíblico / Concordância","Alterna entre ver versículos com comentários ou a lista de todas as ocorrências de uma palavra."],["Câmera","Tire foto de um texto e o app lê e pesquisa."],["Tocar no versículo","Abre a gaveta de comentários ao lado, onde você escolhe o comentarista."],["Grifar","Pinta o versículo com uma cor."],["Comentários","Abre o painel com os comentaristas brasileiros primeiro, os clássicos traduzidos e louvores sobre o tema."],["Contexto","Abre o capítulo inteiro na Bíblia."],["Relacionadas","Outras passagens ligadas ao versículo."]]],
-  texto:["Texto do dia",[["Concluí","Marca o estudo de hoje e mantém sua sequência."],["Grifar","Pinta o texto com marca-texto."],["Comentários","Leva à pesquisa com os comentários da passagem."],["Spotify","Busca louvores e hinos sobre o tema do texto."]]],
+  texto:["Texto do dia e da noite",[["Concluído","Marca o estudo de hoje e mantém sua sequência."],["Enviar","WhatsApp, Compartilhar ou Copiar o texto com a palavra de ânimo (de dia) ou de descanso (à noite)."],["Estudar","Contexto abre o capítulo; Comentários leva aos comentários da passagem; Grifar pinta o texto com marca-texto."],["Guardar","Favoritar guarda a passagem; Notas cria uma nota com o texto."],["Para cantar","Busca louvores e hinos sobre o tema do texto no Spotify."]]],
   devocional:["Devocional",[["▶ Ouvir","Toque no botão redondo ▶ para ouvir o devocional inteiro em voz alta. Toque de novo para pausar; 1× muda a velocidade."],["Modo carro","Tela cheia com botões grandes (voltar, tocar/pausar, avançar), texto grande e a tela sempre ligada. Use com o celular no suporte."],["Lembrete","Ative um lembrete diário (o celular pede permissão só quando você ativa)."],["Grifar","Pinta a passagem com marca-texto."],["Salvar nas notas","Cria uma nota com o texto, a reflexão e espaço para você escrever."]]],
   estudos:["Vídeos",[["Vídeos BibleProject","Abrem no site oficial. O app não tem vínculo com o BibleProject."]]],
   grego:["Dicionário de grego",[["Buscar","Digite o número de Strong (ex.: 26), a palavra em grego, a transliteração (agapē) ou uma palavra em português (amor)."],["Toque na palavra","Abre o significado completo, o uso na tradução KJV e a origem."]]],
