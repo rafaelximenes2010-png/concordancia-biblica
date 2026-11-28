@@ -5777,11 +5777,11 @@ async function dayAction(act, box){
     return shareText(dv?`${dv.title} — ${ps.label}`:`${ps.label} (${ps.t})`, txt);
   }
   if(act==="copy") return navigator.clipboard?.writeText(dayShareText(ps,dv,box._animo)).then(()=>toast("Texto copiado."),()=>toast("Não foi possível copiar."));
-  if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`${box.id==="noiteBody"?_t("Texto da noite"):_t("Texto do dia")}: ${ps.label}`, ref:ps.label,
+  if(act==="note") return openNoteEditor({ type:"estudo", title: dv?`Devocional: ${dv.title}`:`${box.id==="noiteBody"||box.id==="homeNoite"?_t("Texto da noite"):_t("Texto do dia")}: ${ps.label}`, ref:ps.label,
       text:`“${ps.text}” (${ps.t})\n\n${dv?`${_t("Reflexão:")} ${dv.reflection}\n\n${_t("Aplicação:")} ${dv.application}\n\n`:""}${_t("Minhas anotações:")}\n` });
   if(act==="com"){ showView("busca"); el.q.value=ps.label; setMode("ref"); await runSearch({auto:false}); selectTab("com"); openStudyOnMobile(); }
 }
-["#votdBody","#noiteBody","#devoBody","#homeTexto","#homeDevo"].forEach(sel=>$(sel).addEventListener("click",e=>{
+["#votdBody","#noiteBody","#devoBody","#homeTexto","#homeNoite","#homeDevo"].forEach(sel=>$(sel).addEventListener("click",e=>{
   const b=e.target.closest("button[data-day]"); if(b){ e.preventDefault(); dayAction(b.dataset.day, e.currentTarget); }
 }));
 document.querySelectorAll("[data-votd]").forEach(b=>b.addEventListener("click",()=>{ const n=+b.dataset.votd; votdOffset = n===0?0:votdOffset+n; renderVotd(); }));
@@ -5808,13 +5808,22 @@ const noiteHoje=()=>{ const d=new Date(); if(d.getHours()<5) d.setDate(d.getDate
 async function renderNoite(){
   const box=$("#homeNoite"); if(!box) return;
   if(!ehNoite()){ box.hidden=true; box.innerHTML=""; return; }
-  const { ps, frase, msg, acoes }=await noiteConteudo(noiteHoje());
-  box._msg=msg; box.hidden=false;
+  const { ps, p, frase, msg }=await noiteConteudo(noiteHoje());
+  box._msg=msg; box._ps=ps; box._p=p; box._dv=null; box.hidden=false;
+  const corta=(t,n)=>t.length>n?t.slice(0,n).replace(/\s+\S*$/,"")+"…":t;
+  /* Mesmo padrão do card "Texto do dia": referência, versículo, versão, palavra resumida e ações */
   box.innerHTML=`<h3><svg class="icon noite-ic" aria-hidden="true"><use href="#i-moon"/></svg>Texto da noite</h3>
-    ${ps?`<p class="day-ref" style="font-size:16px;margin:0">${esc(ps.label)}</p><p class="verse-sm">${esc(ps.text)}</p>`:""}
-    <p class="noite-fr">${esc(frase)}</p>
-    ${acoes}
-    <button type="button" class="btn btn-sm btn-ghost" data-go="texto" data-noitego="1" style="margin-top:6px">Ver em Texto da noite ›</button>`;
+    ${ps?`<p class="day-ref" style="font-size:16px;margin:0">${esc(ps.label)}</p>
+    <p class="verse-sm">${esc(corta(ps.text,260))}</p>
+    <div>${versionTag(ps.t)}</div>`:""}
+    <p class="animo-mini"><b>Uma palavra para descansar:</b> ${esc(corta(frase,170))}</p>
+    <div class="row-actions">
+      <button type="button" class="btn btn-sm btn-primary" data-go="texto" data-noitego="1">Ler o texto da noite</button>
+      ${ps?`<button type="button" class="btn btn-sm" data-day="fav" aria-label="Favoritar texto da noite"><svg class="icon" aria-hidden="true"><use href="#i-star"/></svg></button>`:""}
+      <a class="btn btn-sm btn-wa" href="${esc(waUrl(msg))}" target="_blank" rel="noopener noreferrer" aria-label="Enviar boa noite pelo WhatsApp"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg></a>
+      <button type="button" class="btn btn-sm" data-noite="share" aria-label="Compartilhar mensagem de boa noite"><svg class="icon" aria-hidden="true"><use href="#i-share"/></svg></button>
+      ${ps?`<button type="button" class="btn btn-sm" data-day="note" aria-label="Salvar texto da noite nas notas"><svg class="icon" aria-hidden="true"><use href="#i-note"/></svg></button>`:""}
+    </div>`;
 }
 /* Aba Texto: seções "Texto do dia" e "Texto da noite" (a noite abre sozinha depois das 19h) */
 let textoAba=null;
@@ -7566,8 +7575,9 @@ document.addEventListener("click",e=>{ const da=e.target.closest("[data-da]"); i
 /* =====================================================================
    PERFIL, GRIFOS, COMENTÁRIOS SALVOS, LOUVORES, AJUDA E CONFIGURAÇÕES
    ===================================================================== */
-const APP_VERSION = "3.42.0";
+const APP_VERSION = "3.42.1";
 const CHANGELOG = [
+  { v:"3.42.1", d:"novembro de 2026", items:["Tela inicial: o card do Texto da noite agora segue o mesmo padrão do Texto do dia, com versão da Bíblia, palavra resumida, botão “Ler o texto da noite” e os atalhos de favoritar, WhatsApp, compartilhar e notas."] },
   { v:"3.42.0", d:"novembro de 2026", items:["Texto do dia e Texto da noite: botões organizados em grupos (Enviar, Estudar e Guardar), com “Concluído hoje” em destaque e a sugestão de louvores mais limpa. O Texto da noite ganhou os mesmos recursos: contexto, comentários, grifar, favoritar, notas e louvores."] },
   { v:"3.41.0", d:"novembro de 2026", items:["Texto do dia: agora sempre com uma palavra de ânimo, no mesmo estilo do Texto da noite, também na tela inicial e na mensagem do WhatsApp."] },
   { v:"3.40.1", d:"novembro de 2026", items:["Texto da noite: a frase de descanso virou uma palavra de descanso mais completa, de até 450 caracteres, também na mensagem de boa noite."] },
